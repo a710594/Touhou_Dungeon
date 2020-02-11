@@ -20,20 +20,26 @@ public class GameSystem : MonoBehaviour
             return;
         }
 
-        Job.Load();
-        Skill.Load();
-        Enemy.Load();
+        JobData.Load();
+        SkillData.Load();
+        EnemyData.Load();
+        BattleTileData.Load();
+        BattlefieldData.Load();
+        BattleGroupData.Load();
+        BattleStatusData.Load();
+        ItemData.Load();
+        EquipData.Load();
+        FoodData.Load();
 
-        Enemy.Data data = Enemy.GetData(3);
-        for (int i=0; i<10; i++)
+        TeamManager.Instance.Init();
+
+        //wait for init
+        Timer timer = new Timer();
+        timer.Start(1, ()=> 
         {
-            List<int> dropItemList = data.GetDropItemList();
-            for (int j=0; j<dropItemList.Count; j++)
-            {
-                Debug.Log(dropItemList[j]);
-            }
-            Debug.Log("///");
-        }
+            List<KeyValuePair<int, int>> enemyList = BattleGroupData.GetEnemy(1);
+            BattleController.Instance.Init(1, enemyList);
+        });
     }
 
     private void Update()

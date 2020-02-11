@@ -1,0 +1,3 @@
+[{"ID":4,"Name":"蘋果","AddHP":10,"AddMP":0,"HasBuff":0,"ATK":null,"DEF":null,"MTK":null,"MEF":null,"AGI":null,"SEN":null,"BuffComment":""},
+{"ID":9,"Name":"香菇肉","AddHP":20,"AddMP":0,"HasBuff":0,"ATK":null,"DEF":null,"MTK":null,"MEF":null,"AGI":null,"SEN":null,"BuffComment":""},
+{"ID":10,"Name":"香菇湯","AddHP":30,"AddMP":20,"HasBuff":1,"ATK":150,"DEF":100,"MTK":100,"MEF":100,"AGI":100,"SEN":100,"BuffComment":"攻擊力1.5倍"}]

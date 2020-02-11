@@ -1,0 +1,404 @@
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class BattleCharacter : MonoBehaviour
+{
+    protected static readonly int _maxActionCount = 2;
+
+    public enum CampEnum
+    {
+        Partner = 0,
+        Enemy,
+        All,
+        None,
+    }
+
+    public enum LiveStateEnum
+    {
+        Alive,
+        Dying,
+        Dead,
+    }
+
+    public enum NotActReason
+    {
+        Sleeping,
+        Paralysis,
+        None,
+    }
+
+    public Action OnDeathHandler;
+
+    public int Lv;
+    public string Name;
+    public string SmallImage;
+    public string MediumImage;
+    public string LargeImage;
+    public SpriteRenderer Sprite;
+    public CampEnum Camp;
+    public LiveStateEnum LiveState;
+    public Skill SelectedSkill;
+    public List<Skill> SkillList = new List<Skill>();
+    public Dictionary<int, BattleStatus> StatusDic = new Dictionary<int, BattleStatus>();
+
+    protected int _sleepingId = -1;
+    protected float _paralysisProbability = 0;
+    protected Vector2 _originalPosition = new Vector2();
+    protected Vector2Int _lookAt = Vector2Int.right;
+    protected Queue<Vector2Int> _path;
+    protected List<int> _poisonIdList = new List<int>();
+    protected List<Vector2Int> _moveRangeList = new List<Vector2Int>();
+
+    public int MaxHP;
+    protected int _currentHP;
+    public int CurrentHP
+    {
+        get
+        {
+            return _currentHP;
+        }
+
+        set
+        {
+            _currentHP = value;
+            if (_currentHP <= 0)
+            {
+                _currentHP = 0;
+
+                if (OnDeathHandler != null)
+                {
+                    OnDeathHandler();
+                }
+            }
+            else if (_currentHP > MaxHP)
+            {
+                _currentHP = MaxHP;
+            }
+        }
+    }
+
+    protected int _atk; //不含buff的總和攻擊力
+    public int ATK
+    {
+        get
+        {
+            return Mathf.RoundToInt((float)_atk * GetBuffATK() * BattleFieldManager.Instance.GetFieldBuff(transform.position).ATK);
+        }
+    }
+
+    protected int _def; //不含buff的總和防禦力
+    public int DEF
+    {
+        get
+        {
+            return Mathf.RoundToInt((float)_def * GetBuffDEF() * BattleFieldManager.Instance.GetFieldBuff(transform.position).DEF);
+        }
+    }
+
+    protected int _mtk; //不含buff的總和魔法攻擊力
+    public int MTK
+    {
+        get
+        {
+            return Mathf.RoundToInt((float)_mtk * GetBuffMTK() * BattleFieldManager.Instance.GetFieldBuff(transform.position).MTK);
+        }
+    }
+
+    protected int _mef; //不含buff的總和魔法防禦力
+    public int MEF
+    {
+        get
+        {
+            return Mathf.RoundToInt((float)_mef * GetBuffMEF() * BattleFieldManager.Instance.GetFieldBuff(transform.position).MEF);
+        }
+    }
+
+    protected int _agi; //不含buff的敏捷(影響迴避)
+    public int AGI
+    {
+        get
+        {
+            return Mathf.RoundToInt((float)_agi * GetBuffAGI() * BattleFieldManager.Instance.GetFieldBuff(transform.position).AGI);
+        }
+    }
+
+    protected int _sen; //不含buff的感知(影響命中)
+    public int SEN
+    {
+        get
+        {
+            return Mathf.RoundToInt((float)_sen * GetBuffSEN() * BattleFieldManager.Instance.GetFieldBuff(transform.position).SEN);
+        }
+    }
+
+    protected int _moveDistance; //不含buff的移動距離
+    public int MoveDistance
+    {
+        get
+        {
+            return _moveDistance;
+        }
+    }
+
+    public bool IsPoisoning
+    {
+        get
+        {
+            return _poisonIdList.Count > 0;
+        }
+    }
+
+    public bool IsSleeping
+    {
+        get
+        {
+            return _sleepingId != -1;
+        }
+    }
+
+    protected int _actionCount; //不含buff的總和攻擊力
+    public int ActionCount
+    {
+        get
+        {
+            return _actionCount;
+        }
+    }
+
+    public void CheckBattleStatus()
+    {
+        List<int> keyList = new List<int>(StatusDic.Keys);
+        List<BattleStatus> statusList = new List<BattleStatus>(StatusDic.Values);
+
+        foreach (KeyValuePair<int, BattleStatus> item in StatusDic)
+        {
+            if (item.Value.RemainTurn != -1) //-1代表永久
+            {
+                item.Value.RemainTurn--;
+                if (item.Value.RemainTurn == 0)
+                {
+                    if (item.Value is Poison)
+                    {
+                        _poisonIdList.Remove(item.Value.Data.ID);
+                    }
+                    else if (item.Value is Paralysis)
+                    {
+                        _paralysisProbability = 0;
+                    }
+                    else if (item.Value is Sleeping)
+                    {
+                        _sleepingId = -1;
+                    }
+
+                    StatusDic.Remove(item.Key);
+                }
+            }
+        }
+    }
+
+    public bool CanAct(out NotActReason reason)
+    {
+        if (IsSleeping)
+        {
+            reason = NotActReason.Sleeping;
+            return false;
+        }
+        else if (UnityEngine.Random.Range(0, 100) < _paralysisProbability)
+        {
+            reason = NotActReason.Paralysis;
+            return false;
+        }
+        else
+        {
+            reason = NotActReason.None;
+            return true;
+        }
+    }
+
+    public virtual void SetDamage(List<int> damageList, FloatingNumber.Type type, Action callback)
+    {
+    }
+
+    public void SetPoison(Action callback)
+    {
+        List<int> poisonDamageList = new List<int>();
+        for (int i = 0; i < _poisonIdList.Count; i++)
+        {
+            poisonDamageList.Add(((Poison)(StatusDic[_poisonIdList[i]])).Damage);
+        }
+
+        SetDamage(poisonDamageList, FloatingNumber.Type.Poison, callback);
+    }
+
+    public void InitOrignalPosition()
+    {
+        _originalPosition = transform.position;
+    }
+
+    public void GetMoveRange()
+    {
+        _moveRangeList.Clear();
+
+        Vector2Int orign = Vector2Int.FloorToInt(_originalPosition);
+        List<Vector2Int> positionList = Utility.GetRhombusPositionList(MoveDistance, orign, false);
+        for (int i = 0; i < positionList.Count; i++)
+        {
+            //BattleFieldManager.Instance.Refresh(orign, positionList[i], false);
+            //int pathLength = BattleFieldManager.Instance.GetPathLength(orign, positionList[i], false);
+            int pathLength = BattleFieldManager.Instance.GetPathLength(orign, positionList[i], Camp);
+            if (pathLength != -1 && pathLength - 1 <= MoveDistance) //pathLength - 1 是因為要扣掉自己那一格
+            {
+                _moveRangeList.Add(positionList[i]);
+            }
+        }
+    }
+
+    public void ShowMoveRange()
+    {
+        TilePainter.Instance.Clear(2);
+
+        for (int i = 0; i < _moveRangeList.Count; i++)
+        {
+            TilePainter.Instance.Painting("Yellow", 2, _moveRangeList[i]);
+        }
+    }
+
+    public bool InMoveRange(Vector2Int pos)
+    {
+        return _moveRangeList.Contains(pos);
+    }
+
+    public void GetPath(Vector2Int position)
+    {
+        List<Vector2Int> list = BattleFieldManager.Instance.GetPath(transform.position, position, Camp);
+        if (list != null)
+        {
+            //list = Utility.CutFrontAndTail(list);
+            _path = new Queue<Vector2Int>(list);
+        }
+        else
+        {
+            _path = null;
+        }
+    }
+
+    public void InitActionCount()
+    {
+        _actionCount = _maxActionCount;
+    }
+
+    public void ActionDone()
+    {
+        _actionCount--;
+    }
+
+    public void GetSkillDistance()
+    {
+        Vector2Int orign = Vector2Int.FloorToInt(transform.position);
+        SelectedSkill.GetSkillDistance(orign, this, BattleController.Instance.CharacterList);
+    }
+
+    private float GetBuffATK()
+    {
+        float buffAtk = 1;
+        Buff buff;
+
+        foreach (KeyValuePair<int, BattleStatus> item in StatusDic)
+        {
+            if (item.Value is Buff)
+            {
+                buff = (Buff)item.Value;
+                buffAtk *= buff.ATK;
+            }
+        }
+
+        return buffAtk;
+    }
+
+    private float GetBuffDEF()
+    {
+        float buffDef = 1;
+        Buff buff;
+
+        foreach (KeyValuePair<int, BattleStatus> item in StatusDic)
+        {
+            if (item.Value is Buff)
+            {
+                buff = (Buff)item.Value;
+                buffDef *= buff.DEF;
+            }
+        }
+
+        return buffDef;
+    }
+
+    private float GetBuffMTK()
+    {
+        float buffMtk = 1;
+        Buff buff;
+
+        foreach (KeyValuePair<int, BattleStatus> item in StatusDic)
+        {
+            if (item.Value is Buff)
+            {
+                buff = (Buff)item.Value;
+                buffMtk *= buff.MTK;
+            }
+        }
+
+        return buffMtk;
+    }
+
+    private float GetBuffMEF()
+    {
+        float buffMef = 1;
+        Buff buff;
+
+        foreach (KeyValuePair<int, BattleStatus> item in StatusDic)
+        {
+            if (item.Value is Buff)
+            {
+                buff = (Buff)item.Value;
+                buffMef *= buff.MEF;
+            }
+        }
+
+        return buffMef;
+    }
+
+    private float GetBuffAGI()
+    {
+        float buffAgi = 1;
+        Buff buff;
+
+        foreach (KeyValuePair<int, BattleStatus> item in StatusDic)
+        {
+            if (item.Value is Buff)
+            {
+                buff = (Buff)item.Value;
+                buffAgi *= buff.AGI;
+            }
+        }
+
+        return buffAgi;
+    }
+
+    private float GetBuffSEN()
+    {
+        float buffSen = 1;
+        Buff buff;
+
+        foreach (KeyValuePair<int, BattleStatus> item in StatusDic)
+        {
+            if (item.Value is Buff)
+            {
+                buff = (Buff)item.Value;
+                buffSen *= buff.SEN;
+            }
+        }
+
+        return buffSen;
+    }
+}
