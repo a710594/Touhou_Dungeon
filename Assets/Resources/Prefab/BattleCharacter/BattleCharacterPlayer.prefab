@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 8103420129886012919}
   - component: {fileID: 8103420129886012913}
   - component: {fileID: 8103420129886012918}
+  - component: {fileID: 5305268051862911260}
   m_Layer: 0
   m_Name: BattleCharacterPlayer
   m_TagString: Untagged
@@ -51,10 +52,14 @@ MonoBehaviour:
   SmallImage: 
   MediumImage: 
   LargeImage: 
-  Sprite: {fileID: 8103420130433894375}
+  TargetPosition: {x: 0, y: 0}
   Camp: 0
   LiveState: 0
+  Sprite: {fileID: 8103420130433894375}
+  ValueBarAnchor: {fileID: 8103420130587875331}
+  SpriteOutline: {fileID: 5305268051862911260}
   MaxHP: 0
+  GrayScale: {fileID: 8103420129886012918}
   MaxMP: 0
 --- !u!114 &8103420129886012918
 MonoBehaviour:
@@ -70,6 +75,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   GrayscaleAmount: 1
   SpriteRenderer: {fileID: 8103420130433894375}
+  Material: {fileID: 2100000, guid: 277d26c39fa1d6b4fa3ef6611f506bb1, type: 2}
+--- !u!114 &5305268051862911260
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8103420129886012914}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 12e784731b4b31a449bab40e2786b913, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  color: {r: 1, g: 1, b: 0, a: 1}
+  showOutline: 0
+  OutlineSize: 1
+  SpriteRenderer: {fileID: 8103420130433894375}
+  Material: {fileID: 2100000, guid: d59a5e7a4ea39584e9a0e2fda598c302, type: 2}
 --- !u!1 &8103420130433894368
 GameObject:
   m_ObjectHideFlags: 0
@@ -118,7 +141,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 277d26c39fa1d6b4fa3ef6611f506bb1, type: 2}
+  - {fileID: 2100000, guid: d59a5e7a4ea39584e9a0e2fda598c302, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

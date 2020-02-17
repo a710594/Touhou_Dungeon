@@ -6,6 +6,13 @@ using ByTheTale.StateMachine;
 
 public class BattleController : MachineBehaviour
 {
+    public enum ResultType
+    {
+        Win,
+        Lose,
+        None,
+    }
+
     public Action TurnEndHandler;
 
     public static BattleController Instance;
@@ -47,7 +54,7 @@ public class BattleController : MachineBehaviour
         //ChangeSceneUI.Instance.EndClock(() =>
         //{
         BattleUI.Open();
-        //BattleUI.Instance.Init(CharacterList);
+        BattleUI.Instance.Init(CharacterList);
         //BattleUI.Instance.SetPriorityQueueVisible(true);
         ChangeState<TurnStartState>();
         //});
@@ -59,6 +66,9 @@ public class BattleController : MachineBehaviour
         AddState<SelectCharacterState>();
         AddState<SelectActionState>();
         AddState<MoveState>();
+        AddState<SelectSkillState>();
+        AddState<SelectTargetState>();
+        AddState<ConfirmState>();
         AddState<AIState>();
         AddState<ShowState>();
         AddState<TurnEndState>();
@@ -88,6 +98,11 @@ public class BattleController : MachineBehaviour
         ChangeState<MoveState>();
     }
 
+    public void ChangeToSelectSkillState()
+    {
+        ChangeState<SelectSkillState>();
+    }
+
     public void MoveConfirm()
     {
         TilePainter.Instance.Clear(2);
@@ -100,6 +115,13 @@ public class BattleController : MachineBehaviour
         {
             ChangeState<SelectCharacterState>();
         }
+    }
+
+    public void MoveCancel()
+    {
+        ((BattleCharacterPlayer)SelectedCharacter).ReturnToOriginalPosition();
+        TilePainter.Instance.Clear(2);
+        ChangeState<SelectActionState>();
     }
 
     public virtual void SelectSkill(Skill skill)
@@ -132,6 +154,40 @@ public class BattleController : MachineBehaviour
         });
     }
 
+    private ResultType CheckResult()
+    {
+        int partnerCount = 0;
+        int enemyCount = 0;
+
+        for (int i=0; i<CharacterList.Count; i++)
+        {
+            if (CharacterList[i].LiveState == BattleCharacter.LiveStateEnum.Alive)
+            {
+                if (CharacterList[i].Camp == BattleCharacter.CampEnum.Partner)
+                {
+                    partnerCount++;
+                }
+                else if (CharacterList[i].Camp == BattleCharacter.CampEnum.Enemy)
+                {
+                    enemyCount++;
+                }
+            }
+        }
+
+        if (enemyCount == 0)
+        {
+            return ResultType.Win;
+        }
+        else if (partnerCount == 0)
+        {
+            return ResultType.Lose;
+        }
+        else
+        {
+            return ResultType.None;
+        }
+    }
+
     //
     //State
     //
@@ -145,7 +201,6 @@ public class BattleController : MachineBehaviour
         }
 
         public virtual void ScreenOnClick(Vector2Int position) { }
-        //public virtual void SelectSkill(Skill skill) { }
     }
 
     private class TurnStartState : BattleState
@@ -188,47 +243,58 @@ public class BattleController : MachineBehaviour
 
                 BattleCharacter character = parent._actionQueue[0];
                 parent._actionQueue.RemoveAt(0);
-                CameraController.Instance.SetParent(character.Sprite.transform, true,()=> 
+                if (character.LiveState == BattleCharacter.LiveStateEnum.Alive)
                 {
+                    CameraController.Instance.SetParent(character.Sprite.transform, true, () =>
+                     {
+                         BattleCharacter.NotActReason reason;
+                         if (character.CanAct(out reason))
+                         {
+                             if (parent.SelectedCharacter != null)
+                             {
+                                 parent.SelectedCharacter.SetOutline(false);
+                             }
 
-                    BattleCharacter.NotActReason reason;
-                    if (character.CanAct(out reason))
-                    {
-                        parent.SelectedCharacter = character;
-                        //BattleUI.Instance.SetInfo(true, parent.SelectedCharacter);
+                             parent.SelectedCharacter = character;
+                             parent.SelectedCharacter.SetOutline(true);
+                             BattleUI.Instance.SetInfo(true, parent.SelectedCharacter);
 
-                        if (parent.SelectedCharacter is BattleCharacterPlayer)
-                        {
-                            parent.ChangeState<SelectActionState>();
-                        }
-                        else if (parent.SelectedCharacter is BattleCharacterAI)
-                        {
-                            parent.ChangeState<AIState>();
-                        }
-                        return;
-                    }
-                    else
-                    {
-                        string text = "";
-                        FloatingNumber.Type type = FloatingNumber.Type.Other;
-                        if (reason == BattleCharacter.NotActReason.Paralysis)
-                        {
-                            text = "麻痺";
-                            type = FloatingNumber.Type.Paralysis;
-                        }
-                        else if (reason == BattleCharacter.NotActReason.Sleeping)
-                        {
-                            text = "睡眠";
-                            type = FloatingNumber.Type.Sleeping;
-                        }
+                             if (parent.SelectedCharacter is BattleCharacterPlayer)
+                             {
+                                 parent.ChangeState<SelectActionState>();
+                             }
+                             else if (parent.SelectedCharacter is BattleCharacterAI)
+                             {
+                                 parent.ChangeState<AIState>();
+                             }
+                             return;
+                         }
+                         else
+                         {
+                             string text = "";
+                             FloatingNumber.Type type = FloatingNumber.Type.Other;
+                             if (reason == BattleCharacter.NotActReason.Paralysis)
+                             {
+                                 text = "麻痺";
+                                 type = FloatingNumber.Type.Paralysis;
+                             }
+                             else if (reason == BattleCharacter.NotActReason.Sleeping)
+                             {
+                                 text = "睡眠";
+                                 type = FloatingNumber.Type.Sleeping;
+                             }
 
-                        //BattleUI.Instance.SetStatus(character, text, type, () =>
-                        //{
-                        parent.ChangeState<SelectCharacterState>();
-                        //});
-                        character.SelectedSkill = null;
-                    }
-                });
+                             BattleUI.Instance.SetStatus(character, text, type, () =>
+                             {
+                                 parent.ChangeState<SelectCharacterState>();
+                             });
+                         }
+                     });
+                }
+                else
+                {
+                    parent.ChangeState<SelectCharacterState>();
+                }
             }
             else
             {
@@ -244,6 +310,27 @@ public class BattleController : MachineBehaviour
             base.Enter();
 
             BattleUI.Instance.SetActionGroupVisible(true);
+        }
+
+        public override void ScreenOnClick(Vector2Int position)
+        {
+            BattleCharacter character = parent.GetCharacterByPosition(position);
+            if (character != null)
+            {
+                BattleUI.Instance.SetInfo(true, character);
+
+                if (character is BattleCharacterAI)
+                {
+                    BattleCharacterAI characterAI = (BattleCharacterAI)character;
+                    characterAI.GetDetectRange();
+                    characterAI.ShowDetectRange();
+
+                }
+            }
+            else
+            {
+                BattleUI.Instance.SetInfo(false);
+            }
         }
 
         public override void Exit()
@@ -271,13 +358,21 @@ public class BattleController : MachineBehaviour
         public override void ScreenOnClick(Vector2Int position)
         {
             BattleCharacter character = parent.GetCharacterByPosition(position);
-            if (character != null && character != parent.SelectedCharacter)
+            if (character != null)
             {
-                //BattleUI.Instance.SetSubInfo(true, character);
+                BattleUI.Instance.SetInfo(true, character);
+
+                if (character is BattleCharacterAI)
+                {
+                    BattleCharacterAI characterAI = (BattleCharacterAI)character;
+                    characterAI.GetDetectRange();
+                    characterAI.ShowDetectRange();
+
+                }
             }
             else
             {
-                //BattleUI.Instance.SetSubInfo(false);
+                BattleUI.Instance.SetInfo(false);
 
                 if (parent.SelectedCharacter.InMoveRange(position))
                 {
@@ -303,6 +398,7 @@ public class BattleController : MachineBehaviour
 
             BattleUI.Instance.SetInfo(false);
             BattleUI.Instance.SetSkillData(parent.SelectedCharacter);
+            TilePainter.Instance.Clear(2);
         }
 
         public override void ScreenOnClick(Vector2Int position)
@@ -311,6 +407,18 @@ public class BattleController : MachineBehaviour
             if (character != null)
             {
                 BattleUI.Instance.SetInfo(true, character);
+
+                if (character is BattleCharacterAI)
+                {
+                    BattleCharacterAI characterAI = (BattleCharacterAI)character;
+                    characterAI.GetDetectRange();
+                    characterAI.ShowDetectRange();
+
+                }
+            }
+            else
+            {
+                BattleUI.Instance.SetInfo(false);
             }
         }
 
@@ -335,17 +443,39 @@ public class BattleController : MachineBehaviour
             }
             else
             {
-                parent.ChangeState<MoveState>();
-            }
-
-            BattleCharacter character = parent.GetCharacterByPosition(position);
-            if (character != null)
-            {
-                BattleUI.Instance.SetInfo(true, character);
+                parent.ChangeState<SelectSkillState>();
             }
         }
 
         public override void Exit() { }
+    }
+
+    private class ConfirmState : BattleState //玩家確定是否施放技能
+    {
+        public override void Enter()
+        {
+            base.Enter();
+
+            parent.SelectedCharacter.GetSkillRange();
+        }
+
+        public override void ScreenOnClick(Vector2Int position)
+        {
+            if (parent.SelectedCharacter.IsTarget(position))
+            {
+                parent.ChangeState<ShowState>();
+            }
+            else
+            {
+                parent.ChangeState<SelectTargetState>();
+            }
+        }
+
+        public override void Exit()
+        {
+            TilePainter.Instance.Clear(2);
+            TilePainter.Instance.Clear(3);
+        }
     }
 
     private class AIState : BattleState //AI行動
@@ -357,8 +487,7 @@ public class BattleController : MachineBehaviour
             //CameraController.Instance.SetParent(parent.SelectedCharacter.Sprite.transform, true);
             ((BattleCharacterAI)parent.SelectedCharacter).StartAI(() =>
             {
-                //parent.ChangeState<ShowState>();
-                parent.ChangeState<SelectCharacterState>();
+                parent.ChangeState<ShowState>();
             });
 
 
@@ -382,6 +511,48 @@ public class BattleController : MachineBehaviour
         public override void Enter()
         {
             base.Enter();
+
+            BattleUI.Instance.SetInfo(false);
+            if (parent.SelectedCharacter is BattleCharacterAI && ((BattleCharacterAI)parent.SelectedCharacter).Target == null)
+            {
+                parent.ChangeState<SelectCharacterState>();
+            }
+            else
+            {
+                parent.SelectedCharacter.UseSkill(() =>
+                {
+                    TilePainter.Instance.Clear(2);
+
+                    ResultType result = parent.CheckResult();
+                    if (result == ResultType.None)
+                    {
+                        parent.SelectedCharacter.ActionDone();
+                        if (parent.SelectedCharacter.ActionCount > 0)
+                        {
+                            if (parent.SelectedCharacter is BattleCharacterPlayer)
+                            {
+                                parent.ChangeState<SelectActionState>();
+                            }
+                            else
+                            {
+                                parent.ChangeState<AIState>();
+                            }
+                        }
+                        else
+                        {
+                            parent.ChangeState<SelectCharacterState>();
+                        }
+                    }
+                    else if (result == ResultType.Win)
+                    {
+                        Debug.Log("Win");
+                    }
+                    else if (result == ResultType.Lose)
+                    {
+                        Debug.Log("Lose");
+                    }
+                });
+            }
         }
     }
 
@@ -415,7 +586,7 @@ public class BattleController : MachineBehaviour
                 BattleCharacter character = _poisonQueue.Dequeue();
                 CameraController.Instance.SetParent(character.Sprite.transform, true, () =>
                 {
-                    character.SetPoison(SetPoison);
+                    character.SetPoisonDamage(SetPoison);
                 });
             }
             else
@@ -423,6 +594,20 @@ public class BattleController : MachineBehaviour
                 if (parent.TurnEndHandler != null)
                 {
                     parent.TurnEndHandler();
+                }
+
+                ResultType result = parent.CheckResult();
+                if (result == ResultType.None)
+                {
+                    parent.ChangeState<TurnStartState>();
+                }
+                else if (result == ResultType.Win)
+                {
+                    Debug.Log("Win");
+                }
+                else if (result == ResultType.Lose)
+                {
+                    Debug.Log("Lose");
                 }
             }
         }

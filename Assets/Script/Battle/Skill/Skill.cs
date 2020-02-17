@@ -8,6 +8,7 @@ public class Skill
     public SkillData.RootObject Data;
 
     protected int _currentCD = 0;
+    protected int _skillCallBackCount = 0;
     protected Action _skillCallback;
     protected BattleCharacter _executor;
     protected List<Vector2Int> _skillDistanceList = new List<Vector2Int>();
@@ -126,11 +127,21 @@ public class Skill
     public virtual void Use(BattleCharacter executor, Action callback)
     {
         _executor = executor;
-        _currentCD = Data.CD + 1;
+        if (Data.CD > 0)
+        {
+            _currentCD = Data.CD + 1; //要加一是因為本回合不減CD
+        }
+        _skillCallBackCount = 0;
+        _skillCallback = callback;
+        GetSkillTargetList();
+    }
+
+    public void SetCallback(Action callback) //給 subSkill 用的
+    {
         _skillCallback = callback;
     }
 
-    public virtual void SetEffect()
+    public virtual void SetEffect(BattleCharacter target)
     {
 
     }
@@ -193,5 +204,34 @@ public class Skill
         }
 
         return positionList;
+    }
+
+    protected void CheckSkillCallback(BattleCharacter target)
+    {
+        if (Data.SubID != 0 && target != null)
+        {
+            SkillData.RootObject skillData = SkillData.GetData(Data.SubID);
+            Skill skill = SkillFactory.GetNewSkill(skillData);
+
+            skill.SetCallback(_skillCallback);
+            skill.SetEffect(target);
+        }
+
+        _skillCallBackCount++;
+        if (_skillCallBackCount == _targetList.Count)
+        {
+            OnSkillEnd();
+        }
+    }
+
+    protected void OnSkillEnd()
+    {
+        if (Data.SubID == 0)
+        {
+            if (_skillCallback != null)
+            {
+                _skillCallback();
+            }
+        }
     }
 }

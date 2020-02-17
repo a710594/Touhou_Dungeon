@@ -37,11 +37,11 @@ public class FloatingNumber : MonoBehaviour
     {
         if (Encoding.Default.GetByteCount(text) > 10)
         {
-            Label.fontSize = 50;
+            Label.fontSize = 40;
         }
         else
         {
-            Label.fontSize = 100;
+            Label.fontSize = 80;
         }
 
         this.transform.localPosition = _originalPosition;

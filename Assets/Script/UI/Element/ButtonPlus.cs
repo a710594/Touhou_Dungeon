@@ -12,8 +12,8 @@ public class ButtonPlus : UIBehaviour, IPointerDownHandler, IPointerUpHandler, I
     public Action<object> DownHandler;
     public Action<object> UpHandler;
 
-    public float DownThreshold; //開始 Down 事件
-    public float PressDuration; //Down 之後執行 Press 的週期
+    public float DownThreshold = 1; //開始 Down 事件
+    public float PressDuration = 0.1f; //Down 之後執行 Press 的週期
 
     private bool _isPointerDown = false;
     private bool _longPressTriggered = false;

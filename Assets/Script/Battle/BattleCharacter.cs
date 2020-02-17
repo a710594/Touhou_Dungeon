@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 public class BattleCharacter : MonoBehaviour
 {
@@ -29,6 +30,13 @@ public class BattleCharacter : MonoBehaviour
         None,
     }
 
+    public enum HitType
+    {
+        Miss,
+        Hit,
+        Critical
+    }
+
     public Action OnDeathHandler;
 
     public int Lv;
@@ -36,10 +44,13 @@ public class BattleCharacter : MonoBehaviour
     public string SmallImage;
     public string MediumImage;
     public string LargeImage;
-    public SpriteRenderer Sprite;
+    public Vector2Int TargetPosition = new Vector2Int();
     public CampEnum Camp;
     public LiveStateEnum LiveState;
+    public SpriteRenderer Sprite;
+    public Transform ValueBarAnchor;
     public Skill SelectedSkill;
+    public SpriteOutline SpriteOutline;
     public List<Skill> SkillList = new List<Skill>();
     public Dictionary<int, BattleStatus> StatusDic = new Dictionary<int, BattleStatus>();
 
@@ -217,21 +228,6 @@ public class BattleCharacter : MonoBehaviour
         }
     }
 
-    public virtual void SetDamage(List<int> damageList, FloatingNumber.Type type, Action callback)
-    {
-    }
-
-    public void SetPoison(Action callback)
-    {
-        List<int> poisonDamageList = new List<int>();
-        for (int i = 0; i < _poisonIdList.Count; i++)
-        {
-            poisonDamageList.Add(((Poison)(StatusDic[_poisonIdList[i]])).Damage);
-        }
-
-        SetDamage(poisonDamageList, FloatingNumber.Type.Poison, callback);
-    }
-
     public void InitOrignalPosition()
     {
         _originalPosition = transform.position;
@@ -270,18 +266,19 @@ public class BattleCharacter : MonoBehaviour
         return _moveRangeList.Contains(pos);
     }
 
-    public void GetPath(Vector2Int position)
+    public Queue<Vector2Int> GetPath(Vector2Int position)
     {
         List<Vector2Int> list = BattleFieldManager.Instance.GetPath(transform.position, position, Camp);
         if (list != null)
         {
-            //list = Utility.CutFrontAndTail(list);
             _path = new Queue<Vector2Int>(list);
         }
         else
         {
             _path = null;
         }
+
+        return _path;
     }
 
     public void InitActionCount()
@@ -298,6 +295,148 @@ public class BattleCharacter : MonoBehaviour
     {
         Vector2Int orign = Vector2Int.FloorToInt(transform.position);
         SelectedSkill.GetSkillDistance(orign, this, BattleController.Instance.CharacterList);
+    }
+
+    public bool IsInSkillDistance(Vector2Int position)
+    {
+        return SelectedSkill.IsInSkillDistance(position);
+    }
+
+    public void GetSkillRange()
+    {
+        Vector2Int orign = Vector2Int.FloorToInt(transform.position);
+        SelectedSkill.GetSkillRange(TargetPosition, orign, this, BattleController.Instance.CharacterList);
+    }
+
+    public void SetTarget(Vector2Int position)
+    {
+        TargetPosition = position;
+    }
+
+    public bool IsTarget(Vector2Int position)
+    {
+        return position == TargetPosition;
+    }
+
+    public void UseSkill(Action callback)
+    {
+        if (SelectedSkill != null)
+        {
+            SelectedSkill.Use(this, callback);
+        }
+        else
+        {
+            if (callback != null)
+            {
+                callback();
+            }
+        }
+    }
+
+    public virtual void SetDamage(BattleCharacter executor, SkillData.RootObject skillData, Action<BattleCharacter> callback)
+    {
+    }
+
+    public virtual void SetPoisonDamage(Action callback) //回合結束時計算毒傷害
+    {
+    }
+
+    public virtual void SetRecover(int recover, Action<BattleCharacter> callback)
+    {
+    }
+
+    public void SetBuff(int id, Action<BattleCharacter> callback)
+    {
+        Buff buff;
+
+        if (!StatusDic.ContainsKey(id))
+        {
+            buff = new Buff(id);
+            StatusDic.Add(id, buff);
+        }
+        else
+        {
+            buff = (Buff)StatusDic[id];
+            buff.ResetTurn();
+        }
+
+        BattleUI.Instance.SetStatus(this, buff.Comment, FloatingNumber.Type.Other, () =>
+        {
+            callback(this);
+        });
+    }
+
+    public void SetOutline(bool show)
+    {
+        SpriteOutline.SetOutline(show);
+    }
+
+    protected HitType CheckHit(BattleCharacter executor)
+    {
+        float misssRate;
+        misssRate = (float)(AGI - executor.SEN) / (float)AGI; //迴避率
+
+        if (misssRate >= 0) //迴避率為正,骰迴避
+        {
+            if (misssRate < UnityEngine.Random.Range(0f, 1f))
+            {
+                return HitType.Hit;
+            }
+            else
+            {
+                return HitType.Miss;
+            }
+        }
+        else //迴避率為負,骰爆擊
+        {
+            if (misssRate < UnityEngine.Random.Range(0f, 1f) * -1f)
+            {
+                return HitType.Critical;
+            }
+            else
+            {
+                return HitType.Hit;
+            }
+        }
+    }
+
+    protected int CalculateDamage(BattleCharacter executor, SkillData.RootObject skill, bool isCritical)
+    {
+        int damage;
+        if (skill.IsMagic)
+        {
+            damage = Mathf.RoundToInt(((float)executor.MTK / (float)MEF) * skill.Damage);
+        }
+        else
+        {
+            damage = Mathf.RoundToInt(((float)executor.ATK / (float)DEF) * skill.Damage);
+        }
+        if (isCritical)
+        {
+            damage = (int)(damage * 1.5f);
+            Debug.Log("爆擊");
+        }
+        if (IsSleeping)
+        {
+            damage = (int)(damage * 2f);
+        }
+        damage = (int)(damage * (UnityEngine.Random.Range(100f, 110f) / 100f)); //加上10%的隨機傷害
+
+        return damage;
+    }
+
+    protected virtual void SetDeath(Action callback)
+    {
+        LiveState = LiveStateEnum.Dead;
+        Sprite.DOFade(0, 0.5f).OnComplete(() =>
+        {
+            BattleUI.Instance.SetLittleHPBar(this, false);
+
+            if (callback != null)
+            {
+                callback();
+            }
+        });
     }
 
     private float GetBuffATK()

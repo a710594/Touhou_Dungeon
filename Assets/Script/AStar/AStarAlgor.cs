@@ -125,7 +125,6 @@ public class AStarAlgor
 
     private List<Vector2Int> GetNeighborPos(Vector2Int current)
     {
-        Vector2Int pos;
         List<Vector2Int> list = new List<Vector2Int>();
 
         if (_mapDic.ContainsKey(current + Vector2Int.left))

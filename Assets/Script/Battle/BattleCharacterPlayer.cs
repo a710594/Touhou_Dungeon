@@ -1,10 +1,13 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 
 public class BattleCharacterPlayer : BattleCharacter
 {
+    public GrayScale GrayScale;
+
     public int MaxMP;
     protected int _currentMP;
     public int CurrentMP
@@ -95,5 +98,148 @@ public class BattleCharacterPlayer : BattleCharacter
     public void SelectSkill(Skill skill)
     {
         SelectedSkill = skill;
+    }
+
+    public override void SetDamage(BattleCharacter executor, SkillData.RootObject skillData, Action<BattleCharacter> callback)
+    {
+        HitType hitType;
+        int damage = -1;
+        int callbackCount = 0;
+        string text;
+        FloatingNumber.Type type = FloatingNumber.Type.Other;
+        for (int i = 0; i < skillData.Hits; i++)
+        {
+            hitType = (CheckHit(executor));
+            if (hitType == HitType.Critical)
+            {
+                damage = CalculateDamage(executor, skillData, true);
+                CurrentHP -= damage;
+                type = FloatingNumber.Type.Critical;
+            }
+            else if (hitType == HitType.Hit)
+            {
+                damage = CalculateDamage(executor, skillData, false);
+                CurrentHP -= damage;
+                type = FloatingNumber.Type.Damage;
+            }
+            else if (hitType == HitType.Miss)
+            {
+                type = FloatingNumber.Type.Miss;
+            }
+
+            if (damage == -1)
+            {
+                text = "Miss";
+            }
+            else
+            {
+                text = damage.ToString();
+            }
+
+            BattleUI.Instance.SetFloatingNumber(this, text, type, () =>
+            {
+                callbackCount++;
+                if (CurrentHP <= 0)
+                {
+                    if (LiveState == LiveStateEnum.Dying)
+                    {
+                        SetDeath(() =>
+                        {
+                            if (callback != null)
+                            {
+                                callback(this);
+                            }
+                        });
+                    }
+                    else
+                    {
+                        SetDying(() =>
+                        {
+                            if (callback != null)
+                            {
+                                callback(this);
+                            }
+                        });
+                    }
+                }
+                else
+                {
+                    if (callbackCount == skillData.Hits && callback != null)
+                    {
+                        callback(this);
+                    }
+                }
+            });
+        }
+
+        if (IsSleeping)
+        {
+            //解除睡眠狀態
+            StatusDic.Remove(_sleepingId);
+            _sleepingId = -1;
+        }
+    }
+
+    public override void SetPoisonDamage(Action callback) //回合結束時計算毒傷害
+    {
+        int damage;
+        int callbackCount = 0;
+        for (int i = 0; i < _poisonIdList.Count; i++)
+        {
+            damage = ((Poison)(StatusDic[_poisonIdList[i]])).Damage;
+
+            CurrentHP -= damage;
+
+            BattleUI.Instance.SetFloatingNumber(this, damage.ToString(), FloatingNumber.Type.Poison, () =>
+            {
+                callbackCount++;
+                if (CurrentHP <= 0)
+                {
+                    if (LiveState == LiveStateEnum.Dying)
+                    {
+                        SetDeath(callback);
+                    }
+                    else
+                    {
+                        SetDying(callback);
+                    }
+                }
+                else
+                {
+                    if (callbackCount == _poisonIdList.Count && callback != null)
+                    {
+                        callback();
+                    }
+                }
+            });
+        }
+    }
+
+    public override void SetRecover(int recover, Action<BattleCharacter> callback)
+    {
+        CurrentHP += recover;
+        BattleUI.Instance.SetFloatingNumber(this, recover.ToString(), FloatingNumber.Type.Recover, () =>
+        {
+            if (callback != null)
+            {
+                callback(this);
+            }
+        });
+
+        if (LiveState == LiveStateEnum.Dying)
+        {
+            LiveState = LiveStateEnum.Alive;
+            GrayScale.SetScale(1);
+        }
+    }
+
+    private void SetDying(Action callback)
+    {
+        LiveState = LiveStateEnum.Dying;
+        GrayScale.SetScale(0);
+        if (callback != null)
+        {
+            callback();
+        }
     }
 }

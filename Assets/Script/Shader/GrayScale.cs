@@ -6,11 +6,13 @@ public class GrayScale : MonoBehaviour
 {
     public float GrayscaleAmount = 1;
     public SpriteRenderer SpriteRenderer;
+    public Material Material;
 
     // Start is called before the first frame update
     public void SetScale(float scale)
     {
         MaterialPropertyBlock mpb = new MaterialPropertyBlock();
+        SpriteRenderer.material = Material;
         SpriteRenderer.GetPropertyBlock(mpb);
         mpb.SetFloat("_GrayScale", scale);
         SpriteRenderer.SetPropertyBlock(mpb);

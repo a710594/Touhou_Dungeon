@@ -13,6 +13,23 @@ public class SkillFactory
     {
         Skill skill = new Skill();
 
+        if (skillData.Type == SkillData.TypeEnum.Attack)
+        {
+            skill = new AttackSkill(skillData);
+        }
+        else if (skillData.Type == SkillData.TypeEnum.Cure)
+        {
+            skill = new CureSkill(skillData);
+        }
+        else if (skillData.Type == SkillData.TypeEnum.Buff)
+        {
+            skill = new BuffSkill(skillData);
+        }
+        else if (skillData.Type == SkillData.TypeEnum.Field)
+        {
+            skill = new FieldSkill(skillData);
+        }
+
         return skill;
     }
 }

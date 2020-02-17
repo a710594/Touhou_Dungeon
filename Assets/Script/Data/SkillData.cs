@@ -47,7 +47,7 @@ public class SkillData
         public int Range { get; set; }
         public RangeTypeEnum RangeType { get; set; }
         public TargetEnum Target { get; set; }
-        public int IsMagic { get; set; }
+        public bool IsMagic { get; set; }
         public int Priority { get; set; }
         public int MP { get; set; }
         public int CD { get; set; }
