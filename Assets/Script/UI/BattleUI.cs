@@ -12,6 +12,7 @@ public class BattleUI : MonoBehaviour
     public Button MoveActionButton;
     public Button SkillActionButton;
     public Button ItemActionButton;
+    public Button IdleButton;
     public Button MoveConfirmButton;
     public Button ReturnActionButton; //返回選擇行動
     public Button SkillConfirmButton;
@@ -19,10 +20,12 @@ public class BattleUI : MonoBehaviour
     public AnchorValueBar LittleHPBar;
     public FloatingNumberPool FloatingNumberPool;
     public BattleInfoUI InfoUI;
-    public BattleSkillGroup SkillGroup;
+    public BattleSkillUI SkillInfoUI;
     public TipLabel TipLabel;
+    public TipLabel TurnLabel;
     public LoopScrollView SkillScrollView;
     public GameObject ActionGroup;
+    public BattleResultUI ResultUI;
 
     private Skill _tempSkill = null;
     private Dictionary<BattleCharacter, AnchorValueBar> _littleHPBarDic = new Dictionary<BattleCharacter, AnchorValueBar>();
@@ -103,13 +106,50 @@ public class BattleUI : MonoBehaviour
         });
     }
 
-    public void SetSkillData(BattleCharacter character)
+    public void SetSkillScrollViewVisible(bool isVisible)
     {
-        //SkillGroup.gameObject.SetActive(true);
-        SkillScrollView.gameObject.SetActive(true);
+        SkillScrollView.gameObject.SetActive(isVisible);
+        SkillConfirmButton.gameObject.SetActive(false);
+
+        if (!isVisible)
+        {
+            SkillInfoUI.gameObject.SetActive(false);
+        }
+    }
+
+    public void SetSkill(BattleCharacter character = null)
+    {
         SkillScrollView.SetData(new ArrayList(character.SkillList));
         SkillScrollView.AddClickHandler(SkillOnClick);
-        SkillConfirmButton.gameObject.SetActive(false);
+    }
+
+    public void SetItem()
+    {
+        int itemId;
+        ItemData.RootObject itemData;
+        SkillData.RootObject skillData;
+        ItemSkill skill;
+        List<ItemSkill> itemSkillList = new List<ItemSkill>();
+        Dictionary<object, int> itemDic = ItemManager.Instance.GetItemDicByType(ItemManager.Type.Bag, ItemData.TypeEnum.Medicine);
+
+        if (itemDic != null)
+        {
+            foreach (KeyValuePair<object, int> item in itemDic)
+            {
+                itemId = (int)item.Key;
+                itemData = ItemData.GetData(itemId);
+                skillData = SkillData.GetData(itemData.Skill);
+                skill = (ItemSkill)SkillFactory.GetNewSkill(skillData);
+                skill.ItemID = itemId;
+                itemSkillList.Add(skill);
+            }
+            SkillScrollView.SetData(new ArrayList(itemSkillList));
+            SkillScrollView.AddClickHandler(SkillOnClick);
+        }
+        else
+        {
+            SkillScrollView.SetData(new ArrayList());
+        }
     }
 
     public void SetFloatingNumber(BattleCharacter character, string text, FloatingNumber.Type type, Action callback)
@@ -127,55 +167,20 @@ public class BattleUI : MonoBehaviour
         });
     }
 
-    //public void SetDamage(BattleCharacter character, int damage, FloatingNumber.Type type, Action callback)
-    //{
-    //    _floatingNumberPoolDic[character].transform.position = Camera.main.WorldToScreenPoint(character.Sprite.transform.position);
-    //    _floatingNumberPoolDic[character].Play(damage.ToString(), type, () =>
-    //    {
-    //        SetLittleHPBar(character, true);
-    //    }, () =>
-    //    {
-    //        if (callback != null)
-    //        {
-    //            callback();
-    //        }
-    //    });
-    //}
-
-    //public void SetMiss(BattleCharacter character, Action callback)
-    //{
-    //    _floatingNumberPoolDic[character].transform.position = Camera.main.WorldToScreenPoint(character.Sprite.transform.position);
-    //    _floatingNumberPoolDic[character].Play("Miss", FloatingNumber.Type.Miss, () =>
-    //    {
-    //    }, () =>
-    //    {
-    //        if (callback != null)
-    //        {
-    //            callback();
-    //        }
-    //    });
-    //}
-
-    //public void SetRecover(BattleCharacter character, int recover, Action callback)
-    //{
-    //    _floatingNumberPoolDic[character].transform.position = Camera.main.WorldToScreenPoint(character.Sprite.transform.position);
-
-    //    _floatingNumberPoolDic[character].Play(recover.ToString(), FloatingNumber.Type.Recover, () =>
-    //    {
-    //        SetLittleHPBar(character, true);
-    //    }, () =>
-    //    {
-    //        if (callback != null)
-    //        {
-    //            callback();
-    //        }
-    //    });
-    //}
-
     public void SetLittleHPBar(BattleCharacter character, bool isVisible)
     {
         _littleHPBarDic[character].gameObject.SetActive(isVisible);
         _littleHPBarDic[character].SetValueTween(character.CurrentHP, character.MaxHP, null);
+    }
+
+    public void SetTurnLabel(int turn)
+    {
+        TurnLabel.SetLabel("Turn" + turn.ToString());
+    }
+
+    public void SetResult(bool isWin, List<int> orignalLvList = null, List<int> orignalExpList = null, List<int> itemList = null)
+    {
+        ResultUI.Open(isWin, orignalLvList, orignalExpList, itemList);
     }
 
     private void MoveActionOnClick()
@@ -188,10 +193,20 @@ public class BattleUI : MonoBehaviour
     {
         BattleController.Instance.ChangeToSelectSkillState();
         SetActionGroupVisible(false);
+        SetSkill(BattleController.Instance.SelectedCharacter);
     }
 
     private void ItemActionOnClick()
     {
+        BattleController.Instance.ChangeToSelectSkillState();
+        SetActionGroupVisible(false);
+        SetItem();
+    }
+
+    private void IdleOnClick()
+    {
+        BattleController.Instance.SetIdle();
+        SetActionGroupVisible(false);
     }
 
     private void MoveConfirmOnClick()
@@ -212,6 +227,16 @@ public class BattleUI : MonoBehaviour
         BattleController.Instance.ScreenOnClick(intPosition);
     }
 
+    private void StartDragCamera(object data)
+    {
+        CameraController.Instance.StartDrag(Input.mousePosition);
+    }
+
+    private void OnDragCamera(object data)
+    {
+        CameraController.Instance.OnDrag(Input.mousePosition);
+    }
+
     private void SkillOnClick(object data)
     {
         SkillScrollItem scrollItem = (SkillScrollItem)data;
@@ -223,20 +248,20 @@ public class BattleUI : MonoBehaviour
             _tempSkill = skill;
             TipLabel.SetVisible(false);
             SkillConfirmButton.gameObject.SetActive(true);
-            SkillConfirmButton.transform.SetParent(scrollItem.transform);
-            SkillConfirmButton.transform.localPosition = new Vector3(-200, 0, 0);
         }
         else
         {
             TipLabel.SetLabel(scrollItem.NotUseReason);
         }
+
+        SkillInfoUI.gameObject.SetActive(true);
+        SkillInfoUI.SetData(scrollItem.Skill.Data);
     }
 
     private void SkillConfirmOnClick()
     {
         BattleController.Instance.SelectSkill(_tempSkill);
         _tempSkill = null;
-        SkillScrollView.gameObject.SetActive(false);
         SkillConfirmButton.gameObject.SetActive(false);
     }
 
@@ -245,14 +270,19 @@ public class BattleUI : MonoBehaviour
         SetActionGroupVisible(false);
         SetMoveConfirmVisible(false);
         SetReturnActionVisible(false);
+        SkillConfirmButton.gameObject.SetActive(false);
         SkillScrollView.gameObject.SetActive(false);
+        ResultUI.gameObject.SetActive(false);
 
         MoveActionButton.onClick.AddListener(MoveActionOnClick);
         SkillActionButton.onClick.AddListener(SkillActionOnClick);
         ItemActionButton.onClick.AddListener(ItemActionOnClick);
+        IdleButton.onClick.AddListener(IdleOnClick);
         MoveConfirmButton.onClick.AddListener(MoveConfirmOnClick);
         ReturnActionButton.onClick.AddListener(ReturnActionOnClick);
         SkillConfirmButton.onClick.AddListener(SkillConfirmOnClick);
         Screen.ClickHandler = ScreenOnClick;
+        Screen.DownHandler = StartDragCamera;
+        Screen.PressHandler = OnDragCamera;
     }
 }

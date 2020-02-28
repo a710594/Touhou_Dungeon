@@ -17,15 +17,19 @@ public class BattleController : MachineBehaviour
 
     public static BattleController Instance;
 
+    public int Turn = 1;
     public BattleCharacter SelectedCharacter;
     public List<BattleCharacter> CharacterList = new List<BattleCharacter>();
 
+    private List<int> _enemyList = new List<int>();
     private List<BattleCharacter> _actionQueue = new List<BattleCharacter>();
+    private List<BattleCharacterPlayer> _playerList = new List<BattleCharacterPlayer>(); //戰鬥結束時需要的友方資料
 
     public void Init(int battlefieldId, List<KeyValuePair<int, int>> enemyList)
     {
         BattlefieldGenerator.Instance.Generate(battlefieldId);
 
+        Turn = 1;
         CharacterList.Clear();
 
         TeamMember member;
@@ -36,13 +40,15 @@ public class BattleController : MachineBehaviour
             member = TeamManager.Instance.MemberList[i];
             characterPlayer.Init(member);
             CharacterList.Add(characterPlayer);
-            //PlayerCharacterList.Add(characterPlayer);
+            _playerList.Add(characterPlayer);
             characterPlayer.transform.position = (Vector2)(TeamManager.Instance.MemberPositionDic[member] + BattleFieldManager.Instance.Center);
         }
 
+        _enemyList.Clear();
         BattleCharacterAI characterAI;
         for (int i = 0; i < enemyList.Count; i++)
         {
+            _enemyList.Add(enemyList[i].Key);
             characterAI = ResourceManager.Instance.Spawn("BattleCharacter/BattleCharacterAI", ResourceManager.Type.Other).GetComponent<BattleCharacterAI>();
             characterAI.Init(enemyList[i].Key, enemyList[i].Value);
             CharacterList.Add(characterAI);
@@ -62,6 +68,7 @@ public class BattleController : MachineBehaviour
 
     public override void AddStates()
     {
+        AddState<BattleState>(); //空白的state,初始化用
         AddState<TurnStartState>();
         AddState<SelectCharacterState>();
         AddState<SelectActionState>();
@@ -72,8 +79,10 @@ public class BattleController : MachineBehaviour
         AddState<AIState>();
         AddState<ShowState>();
         AddState<TurnEndState>();
+        AddState<WinState>();
+        AddState<LoseState>();
 
-        SetInitialState<TurnStartState>();
+        SetInitialState<BattleState>();
     }
 
     public BattleCharacter GetCharacterByPosition(Vector2 position) //取得該格子上的角色
@@ -106,7 +115,9 @@ public class BattleController : MachineBehaviour
     public void MoveConfirm()
     {
         TilePainter.Instance.Clear(2);
+        TilePainter.Instance.Clear(3);
         SelectedCharacter.ActionDone();
+        SelectedCharacter.InitOrignalPosition();
         if (SelectedCharacter.ActionCount > 0)
         {
             ChangeState<SelectActionState>();
@@ -121,15 +132,22 @@ public class BattleController : MachineBehaviour
     {
         ((BattleCharacterPlayer)SelectedCharacter).ReturnToOriginalPosition();
         TilePainter.Instance.Clear(2);
+        TilePainter.Instance.Clear(3);
         ChangeState<SelectActionState>();
     }
 
-    public virtual void SelectSkill(Skill skill)
+    public void SelectSkill(Skill skill)
     {
         BattleCharacterPlayer character = (BattleCharacterPlayer)SelectedCharacter;
 
         character.SelectSkill(skill);
         ChangeState<SelectTargetState>();
+    }
+
+    public void SetIdle() //角色待機
+    {
+        SelectedCharacter.ActionDoneCompletely();
+        ChangeState<SelectCharacterState>();
     }
 
     private void SortCharacter(List<BattleCharacter> list) //按照敏捷和技能優先權來排序
@@ -209,6 +227,8 @@ public class BattleController : MachineBehaviour
         {
             base.Enter();
 
+            BattleUI.Instance.SetTurnLabel(parent.Turn);
+
             parent.SortCharacter(parent.CharacterList);
 
             parent._actionQueue.Clear();
@@ -218,6 +238,7 @@ public class BattleController : MachineBehaviour
                 {
                     parent._actionQueue.Add(parent.CharacterList[i]);
                     parent.CharacterList[i].InitActionCount();
+                    parent.CharacterList[i].InitOrignalPosition();
                 }
             }
             parent.ChangeState<SelectCharacterState>();
@@ -310,6 +331,7 @@ public class BattleController : MachineBehaviour
             base.Enter();
 
             BattleUI.Instance.SetActionGroupVisible(true);
+            BattleUI.Instance.SetInfo(parent.SelectedCharacter);
         }
 
         public override void ScreenOnClick(Vector2Int position)
@@ -329,6 +351,7 @@ public class BattleController : MachineBehaviour
             }
             else
             {
+                TilePainter.Instance.Clear(3);
                 BattleUI.Instance.SetInfo(false);
             }
         }
@@ -347,12 +370,12 @@ public class BattleController : MachineBehaviour
         {
             base.Enter();
 
-            parent.SelectedCharacter.InitOrignalPosition();
             parent.SelectedCharacter.GetMoveRange();
             parent.SelectedCharacter.ShowMoveRange();
 
             BattleUI.Instance.SetMoveConfirmVisible(true);
             BattleUI.Instance.SetReturnActionVisible(true);
+            BattleUI.Instance.SetInfo(true, parent.SelectedCharacter);
         }
 
         public override void ScreenOnClick(Vector2Int position)
@@ -380,6 +403,10 @@ public class BattleController : MachineBehaviour
                     ((BattleCharacterPlayer)parent.SelectedCharacter).GetPath(position);
                     ((BattleCharacterPlayer)parent.SelectedCharacter).Move();
                 }
+                else
+                {
+                    TilePainter.Instance.Clear(3);
+                }
             }
         }
 
@@ -397,8 +424,9 @@ public class BattleController : MachineBehaviour
             base.Enter();
 
             BattleUI.Instance.SetInfo(false);
-            BattleUI.Instance.SetSkillData(parent.SelectedCharacter);
-            TilePainter.Instance.Clear(2);
+            BattleUI.Instance.SetReturnActionVisible(true);
+            BattleUI.Instance.SetSkillScrollViewVisible(true);
+            BattleUI.Instance.SetInfo(true, parent.SelectedCharacter);
         }
 
         public override void ScreenOnClick(Vector2Int position)
@@ -422,7 +450,12 @@ public class BattleController : MachineBehaviour
             }
         }
 
-        public override void Exit() { }
+        public override void Exit()
+        {
+            TilePainter.Instance.Clear(3);
+            BattleUI.Instance.SetReturnActionVisible(false);
+            BattleUI.Instance.SetSkillScrollViewVisible(false);
+        }
     }
 
     private class SelectTargetState : BattleState //玩家選擇技能的施放目標
@@ -443,6 +476,7 @@ public class BattleController : MachineBehaviour
             }
             else
             {
+                TilePainter.Instance.Clear(2);
                 parent.ChangeState<SelectSkillState>();
             }
         }
@@ -475,6 +509,7 @@ public class BattleController : MachineBehaviour
         {
             TilePainter.Instance.Clear(2);
             TilePainter.Instance.Clear(3);
+            TilePainter.Instance.Clear(4);
         }
     }
 
@@ -503,6 +538,7 @@ public class BattleController : MachineBehaviour
         {
             TilePainter.Instance.Clear(2);
             TilePainter.Instance.Clear(3);
+            TilePainter.Instance.Clear(4);
         }
     }
 
@@ -545,11 +581,11 @@ public class BattleController : MachineBehaviour
                     }
                     else if (result == ResultType.Win)
                     {
-                        Debug.Log("Win");
+                        parent.ChangeState<WinState>();
                     }
                     else if (result == ResultType.Lose)
                     {
-                        Debug.Log("Lose");
+                        parent.ChangeState<LoseState>();
                     }
                 });
             }
@@ -591,6 +627,8 @@ public class BattleController : MachineBehaviour
             }
             else
             {
+                parent.Turn++;
+
                 if (parent.TurnEndHandler != null)
                 {
                     parent.TurnEndHandler();
@@ -603,18 +641,78 @@ public class BattleController : MachineBehaviour
                 }
                 else if (result == ResultType.Win)
                 {
-                    Debug.Log("Win");
+                    parent.ChangeState<WinState>();
                 }
                 else if (result == ResultType.Lose)
                 {
-                    Debug.Log("Lose");
+                    parent.ChangeState<LoseState>();
                 }
             }
         }
     }
 
+    private class WinState : BattleState
+    {
+        public override void Enter()
+        {
+            base.Enter();
+
+            int getExp = 0;
+            EnemyData.RootObject data;
+            List<int> itemList = new List<int>(); //單隻怪的掉落物
+            List<int> dropItemList = new List<int>(); //全部的掉落物
+            for (int i=0; i<parent._enemyList.Count; i++)
+            {
+                data = EnemyData.GetData(parent._enemyList[i]);
+                itemList = data.GetDropItemList();
+                for (int j = 0; j < itemList.Count; j++)
+                {
+                    dropItemList.Add(itemList[j]);
+                }
+                getExp += data.Exp;
+            }
+
+
+            ItemManager.Instance.AddItem(dropItemList, ItemManager.Type.Bag);
+            TeamManager.Instance.Refresh(parent._playerList);
+            List<int> orignalLvList = TeamManager.Instance.GetLvList();
+            List<int> orignalExpList = TeamManager.Instance.GetExpList();
+            TeamManager.Instance.AddExp(getExp);
+            BattleUI.Instance.SetResult(true, orignalLvList, orignalExpList, dropItemList);
+        }
+
+        public override void ScreenOnClick(Vector2Int position) { }
+
+        public override void Exit() { }
+    }
+
+    private class LoseState : BattleState
+    {
+        public override void Enter()
+        {
+            base.Enter();
+
+            Debug.Log("Lose");
+            BattleUI.Instance.SetResult(false);
+        }
+
+        public override void ScreenOnClick(Vector2Int position) { }
+
+        public override void Exit() { }
+    }
+
     void Awake()
     {
         Instance = this;
+    }
+
+    public override void Update()
+    {
+        base.Update();
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            ChangeState<WinState>();
+        }
     }
 }

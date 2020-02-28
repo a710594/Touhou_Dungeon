@@ -29,7 +29,7 @@ public class TipLabel : MonoBehaviour
         }
     }
 
-    void Start()
+    void Awake()
     {
         CanvasGroup.alpha = 0;
     }

@@ -1,0 +1,79 @@
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+
+public class ConfirmUI : MonoBehaviour
+{
+    public Text CommentLabel;
+    public ButtonPlus ConfirmButton;
+    public ButtonPlus CancelButton;
+
+    private Action _onConfirmHandler;
+    private Action _onCancelHandler;
+
+    private static ConfirmUI _instance;
+
+    public static void Open(string commentText, string confirmText, Action confirmCallback)
+    {
+        if (_instance == null)
+        {
+            _instance = ResourceManager.Instance.Spawn("ConfirmUI", ResourceManager.Type.UI).GetComponent<ConfirmUI>();
+        }
+        _instance.Init(commentText, confirmText, confirmCallback);
+    }
+
+    public static void Open(string commentText, string confirmText, string cancelText, Action confirmCallback, Action cancelCallback)
+    {
+        if (_instance == null)
+        {
+            _instance = ResourceManager.Instance.Spawn("ConfirmUI", ResourceManager.Type.UI).GetComponent<ConfirmUI>();
+        }
+        _instance.Init(commentText, confirmText, cancelText, confirmCallback, cancelCallback);
+    }
+
+    private void Close()
+    {
+        Destroy(_instance.gameObject);
+        _instance = null;
+    }
+
+    private void Init(string commentText, string confirmText, Action confirmCallback)
+    {
+        CommentLabel.text = commentText;
+        ConfirmButton.Label.text = confirmText;
+        CancelButton.gameObject.SetActive(false);
+        _onConfirmHandler = confirmCallback;
+    }
+
+    private void Init(string commentText, string confirmText, string cancelText, Action confirmCallback, Action cancelCallback)
+    {
+        CommentLabel.text = commentText;
+        ConfirmButton.Label.text = confirmText;
+        CancelButton.Label.text = cancelText;
+        _onConfirmHandler = confirmCallback;
+        _onCancelHandler = cancelCallback;
+    }
+
+    private void ConfirmOnClick(object data)
+    {
+        _instance.Close();
+        if (_onConfirmHandler != null)
+        {
+            _onConfirmHandler();
+            _onConfirmHandler = null;
+        }
+    }
+
+    private void CancelOnClick(object data)
+    {
+        _instance.Close();
+    }
+
+    void Awake()
+    {
+        ConfirmButton.ClickHandler = ConfirmOnClick;
+        CancelButton.ClickHandler = CancelOnClick;
+    }
+}

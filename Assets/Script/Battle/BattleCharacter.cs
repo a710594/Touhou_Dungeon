@@ -257,7 +257,7 @@ public class BattleCharacter : MonoBehaviour
 
         for (int i = 0; i < _moveRangeList.Count; i++)
         {
-            TilePainter.Instance.Painting("Yellow", 2, _moveRangeList[i]);
+            TilePainter.Instance.Painting("BlueGrid", 2, _moveRangeList[i]);
         }
     }
 
@@ -291,6 +291,11 @@ public class BattleCharacter : MonoBehaviour
         _actionCount--;
     }
 
+    public void ActionDoneCompletely()
+    {
+        _actionCount = 0;
+    }
+
     public void GetSkillDistance()
     {
         Vector2Int orign = Vector2Int.FloorToInt(transform.position);
@@ -318,19 +323,9 @@ public class BattleCharacter : MonoBehaviour
         return position == TargetPosition;
     }
 
-    public void UseSkill(Action callback)
+    public virtual void UseSkill(Action callback)
     {
-        if (SelectedSkill != null)
-        {
-            SelectedSkill.Use(this, callback);
-        }
-        else
-        {
-            if (callback != null)
-            {
-                callback();
-            }
-        }
+        SelectedSkill.Use(this, callback);
     }
 
     public virtual void SetDamage(BattleCharacter executor, SkillData.RootObject skillData, Action<BattleCharacter> callback)

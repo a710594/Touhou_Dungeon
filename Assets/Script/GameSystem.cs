@@ -32,10 +32,12 @@ public class GameSystem : MonoBehaviour
         FoodData.Load();
 
         TeamManager.Instance.Init();
+        ItemManager.Instance.Init();
+        MySceneManager.Instance.Init();
 
         //wait for init
         Timer timer = new Timer();
-        timer.Start(1, ()=> 
+        timer.Start(0.5f, ()=> 
         {
             List<KeyValuePair<int, int>> enemyList = BattleGroupData.GetEnemy(1);
             BattleController.Instance.Init(1, enemyList);

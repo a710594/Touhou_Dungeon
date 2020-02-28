@@ -100,6 +100,12 @@ public class BattleCharacterPlayer : BattleCharacter
         SelectedSkill = skill;
     }
 
+    public override void UseSkill(Action callback)
+    {
+        base.UseSkill(callback);
+        CurrentMP -= SelectedSkill.Data.MP;
+    }
+
     public override void SetDamage(BattleCharacter executor, SkillData.RootObject skillData, Action<BattleCharacter> callback)
     {
         HitType hitType;

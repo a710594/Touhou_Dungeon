@@ -200,11 +200,11 @@ public class BattleCharacterAI : BattleCharacter
 
     public void ShowDetectRange()
     {
-        TilePainter.Instance.Clear(2);
+        TilePainter.Instance.Clear(3);
 
         for (int i = 0; i < _detectRangeList.Count; i++)
         {
-            TilePainter.Instance.Painting("Red", 2, _detectRangeList[i]);
+            TilePainter.Instance.Painting("RedBlock", 3, _detectRangeList[i]);
         }
     }
 

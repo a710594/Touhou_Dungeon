@@ -4,19 +4,18 @@ using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
 
-public class BattleSkillGroup : MonoBehaviour
+public class BattleSkillUI : MonoBehaviour
 {
+    public Text NameLabel;
     public Text CommentLabel;
     public Text MpLabel;
     public Text CdLabel;
-    public Text NeedEpLabel;
-    public Text AddEpLabel;
     public Text DistanceLabel;
     public Text RangeLabel;
-    public Text PriorityLabel;
 
     public void SetData(SkillData.RootObject data)
     {
+        NameLabel.text = data.Name;
         CommentLabel.text = data.Comment;
         MpLabel.text = "MP:" + data.MP.ToString();
         CdLabel.text = "CD:" + data.CD.ToString();

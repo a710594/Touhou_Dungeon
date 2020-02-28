@@ -14,6 +14,7 @@ public class ButtonPlus : UIBehaviour, IPointerDownHandler, IPointerUpHandler, I
 
     public float DownThreshold = 1; //開始 Down 事件
     public float PressDuration = 0.1f; //Down 之後執行 Press 的週期
+    public Text Label;
 
     private bool _isPointerDown = false;
     private bool _longPressTriggered = false;
@@ -40,7 +41,6 @@ public class ButtonPlus : UIBehaviour, IPointerDownHandler, IPointerUpHandler, I
                     {
                         DownHandler(_data);
                     }
-                    Debug.Log("Down");
                 }
             }
             else if(Time.time -_startPressTime > PressDuration)
@@ -50,7 +50,6 @@ public class ButtonPlus : UIBehaviour, IPointerDownHandler, IPointerUpHandler, I
                 {
                     PressHandler(_data);
                 }
-                Debug.Log("Press");
             }
         }
     }
@@ -80,7 +79,6 @@ public class ButtonPlus : UIBehaviour, IPointerDownHandler, IPointerUpHandler, I
             {
                 ClickHandler(_data);
             }
-            Debug.Log("Clcik");
         }
     }
 }

@@ -29,6 +29,10 @@ public class SkillFactory
         {
             skill = new FieldSkill(skillData);
         }
+        else if (skillData.Type == SkillData.TypeEnum.CureItem)
+        {
+            skill = new CureItemSkill(skillData);
+        }
 
         return skill;
     }

@@ -377,14 +377,16 @@ public class ItemManager
 
     public Dictionary<object, int> GetItemDicByType(Type type, ItemData.TypeEnum itemType)
     {
+        Dictionary<object, int> itemDic;
         if (type == Type.Bag)
         {
-            return _typeBagDic[itemType];
+            _typeBagDic.TryGetValue(itemType, out itemDic);
         }
         else
         {
-            return _typeWarehouseDic[itemType];
+            _typeWarehouseDic.TryGetValue(itemType, out itemDic);
         }
+        return itemDic;
     }
 
     /*private void SortBag()

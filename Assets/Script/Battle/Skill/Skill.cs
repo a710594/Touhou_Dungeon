@@ -53,7 +53,7 @@ public class Skill
 
         for (int i = 0; i < positionList.Count; i++)
         {
-            TilePainter.Instance.Painting("Orange", 2, positionList[i]);
+            TilePainter.Instance.Painting("RedGrid", 2, positionList[i]);
             _skillDistanceList.Add(positionList[i]);
         }
     }
@@ -64,7 +64,7 @@ public class Skill
         TilePainter.Instance.Clear(2);
         _skillRangeList.Clear();
 
-        TilePainter.Instance.Painting("FrontSight", 3, target);
+        TilePainter.Instance.Painting("FrontSight", 4, target);
         if (Data.RangeType == SkillData.RangeTypeEnum.Point)
         {
             positionList.Add(target);
@@ -83,7 +83,7 @@ public class Skill
             {
                 if (positionList[i] != target)
                 {
-                    TilePainter.Instance.Painting("Red", 2, positionList[i]);
+                    TilePainter.Instance.Painting("RedGrid", 2, positionList[i]);
                 }
                 _skillRangeList.Add(positionList[i]);
             }
@@ -97,7 +97,7 @@ public class Skill
             {
                 if (positionList[i] != target)
                 {
-                    TilePainter.Instance.Painting("Red", 2, positionList[i]);
+                    TilePainter.Instance.Painting("RedGrid", 2, positionList[i]);
                 }
                 _skillRangeList.Add(positionList[i]);
             }
