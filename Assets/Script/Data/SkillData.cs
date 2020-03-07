@@ -53,8 +53,7 @@ public class SkillData
         public int CD { get; set; }
         public int StatusID { get; set; }
         public string ParticleName { get; set; }
-        public int AddEP { get; set; }
-        public int NeedEP { get; set; }
+        public int NeedPower { get; set; }
         public string Comment { get; set; }
         public int SubID { get; set; }
     }

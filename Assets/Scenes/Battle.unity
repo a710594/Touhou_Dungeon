@@ -930,6 +930,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6128fe90f46818d4f802c95e169c79fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Turn: 1
   SelectedCharacter: {fileID: 0}
   CharacterList: []
 --- !u!4 &1416170889

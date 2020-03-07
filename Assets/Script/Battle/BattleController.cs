@@ -17,10 +17,19 @@ public class BattleController : MachineBehaviour
 
     public static BattleController Instance;
 
-    public int Turn = 1;
     public BattleCharacter SelectedCharacter;
     public List<BattleCharacter> CharacterList = new List<BattleCharacter>();
 
+    public int Power
+    {
+        get
+        {
+            return _power;
+        }
+    }
+
+    private int _turn = 1;
+    private int _power = 0;
     private List<int> _enemyList = new List<int>();
     private List<BattleCharacter> _actionQueue = new List<BattleCharacter>();
     private List<BattleCharacterPlayer> _playerList = new List<BattleCharacterPlayer>(); //戰鬥結束時需要的友方資料
@@ -29,7 +38,8 @@ public class BattleController : MachineBehaviour
     {
         BattlefieldGenerator.Instance.Generate(battlefieldId);
 
-        Turn = 1;
+        _turn = 1;
+        _power = 0;
         CharacterList.Clear();
 
         TeamMember member;
@@ -74,7 +84,6 @@ public class BattleController : MachineBehaviour
         AddState<SelectActionState>();
         AddState<MoveState>();
         AddState<SelectSkillState>();
-        AddState<SelectTargetState>();
         AddState<ConfirmState>();
         AddState<AIState>();
         AddState<ShowState>();
@@ -139,15 +148,26 @@ public class BattleController : MachineBehaviour
     public void SelectSkill(Skill skill)
     {
         BattleCharacterPlayer character = (BattleCharacterPlayer)SelectedCharacter;
-
         character.SelectSkill(skill);
-        ChangeState<SelectTargetState>();
+        //ChangeState<SelectTargetState>();
     }
 
     public void SetIdle() //角色待機
     {
         SelectedCharacter.ActionDoneCompletely();
         ChangeState<SelectCharacterState>();
+    }
+
+    public void AddPower(int value) 
+    {
+        _power += value;
+        BattleUI.Instance.SetPower(_power);
+    }
+
+    public void MinusPower(int value) 
+    {
+        _power -= value;
+        BattleUI.Instance.SetPower(_power);
     }
 
     private void SortCharacter(List<BattleCharacter> list) //按照敏捷和技能優先權來排序
@@ -227,7 +247,7 @@ public class BattleController : MachineBehaviour
         {
             base.Enter();
 
-            BattleUI.Instance.SetTurnLabel(parent.Turn);
+            BattleUI.Instance.SetTurnLabel(parent._turn);
 
             parent.SortCharacter(parent.CharacterList);
 
@@ -423,6 +443,7 @@ public class BattleController : MachineBehaviour
         {
             base.Enter();
 
+            parent.SelectedCharacter.SelectedSkill = null;
             BattleUI.Instance.SetInfo(false);
             BattleUI.Instance.SetReturnActionVisible(true);
             BattleUI.Instance.SetSkillScrollViewVisible(true);
@@ -448,27 +469,7 @@ public class BattleController : MachineBehaviour
             {
                 BattleUI.Instance.SetInfo(false);
             }
-        }
 
-        public override void Exit()
-        {
-            TilePainter.Instance.Clear(3);
-            BattleUI.Instance.SetReturnActionVisible(false);
-            BattleUI.Instance.SetSkillScrollViewVisible(false);
-        }
-    }
-
-    private class SelectTargetState : BattleState //玩家選擇技能的施放目標
-    {
-        public override void Enter()
-        {
-            base.Enter();
-
-            parent.SelectedCharacter.GetSkillDistance();
-        }
-
-        public override void ScreenOnClick(Vector2Int position)
-        {
             if (parent.SelectedCharacter.IsInSkillDistance(position))
             {
                 parent.SelectedCharacter.SetTarget(position);
@@ -477,11 +478,15 @@ public class BattleController : MachineBehaviour
             else
             {
                 TilePainter.Instance.Clear(2);
-                parent.ChangeState<SelectSkillState>();
             }
         }
 
-        public override void Exit() { }
+        public override void Exit()
+        {
+            TilePainter.Instance.Clear(3);
+            BattleUI.Instance.SetReturnActionVisible(false);
+            BattleUI.Instance.SetSkillScrollViewVisible(false);
+        }
     }
 
     private class ConfirmState : BattleState //玩家確定是否施放技能
@@ -501,7 +506,7 @@ public class BattleController : MachineBehaviour
             }
             else
             {
-                parent.ChangeState<SelectTargetState>();
+                parent.ChangeState<SelectSkillState>();
             }
         }
 
@@ -627,7 +632,7 @@ public class BattleController : MachineBehaviour
             }
             else
             {
-                parent.Turn++;
+                parent._turn++;
 
                 if (parent.TurnEndHandler != null)
                 {

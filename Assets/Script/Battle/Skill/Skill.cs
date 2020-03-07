@@ -15,6 +15,14 @@ public class Skill
     protected List<Vector2Int> _skillRangeList = new List<Vector2Int>();
     protected List<BattleCharacter> _targetList = new List<BattleCharacter>();
 
+    public bool IsSpellCard
+    {
+        get
+        {
+            return Data.NeedPower > 0;
+        }
+    }
+
     public void SetCD()
     {
         if (_currentCD > 0)
@@ -37,16 +45,22 @@ public class Skill
             notUseReason = "還要 " + _currentCD + " 回合才能使用";
             return false;
         }
+        else if (Data.NeedPower > BattleController.Instance.Power)
+        {
+            notUseReason = "Power 不足";
+            return false;
+        }
 
         return true;
     }
 
     //有可能出現沒有任何格子可選的情況,有空要修
-    public void GetSkillDistance(Vector2Int orign, BattleCharacter executor, List<BattleCharacter> characterList)
+    public void GetSkillDistance(BattleCharacter executor, List<BattleCharacter> characterList)
     {
         TilePainter.Instance.Clear(2);
         _skillDistanceList.Clear();
 
+        Vector2Int orign = Vector2Int.FloorToInt(executor.transform.position);
         List<Vector2Int> positionList = Utility.GetRhombusPositionList(Data.Distance, orign, false);
         positionList = RemovePosition(executor, characterList, positionList);
         positionList = BattleFieldManager.Instance.RemoveBound(positionList);
@@ -83,7 +97,7 @@ public class Skill
             {
                 if (positionList[i] != target)
                 {
-                    TilePainter.Instance.Painting("RedGrid", 2, positionList[i]);
+                    TilePainter.Instance.Painting("YellowGrid", 2, positionList[i]);
                 }
                 _skillRangeList.Add(positionList[i]);
             }
@@ -97,7 +111,7 @@ public class Skill
             {
                 if (positionList[i] != target)
                 {
-                    TilePainter.Instance.Painting("RedGrid", 2, positionList[i]);
+                    TilePainter.Instance.Painting("YellowGrid", 2, positionList[i]);
                 }
                 _skillRangeList.Add(positionList[i]);
             }
@@ -134,6 +148,11 @@ public class Skill
         _skillCallBackCount = 0;
         _skillCallback = callback;
         GetSkillTargetList();
+
+        if (_targetList.Count > 0 && executor.Camp == BattleCharacter.CampEnum.Partner && !IsSpellCard)
+        {
+            BattleController.Instance.AddPower(1);
+        }
     }
 
     public void SetCallback(Action callback) //給 subSkill 用的

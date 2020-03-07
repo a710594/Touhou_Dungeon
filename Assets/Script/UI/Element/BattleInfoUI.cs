@@ -11,6 +11,8 @@ public class BattleInfoUI : MonoBehaviour
     public Text LvLabel;
     public ValueBar HpBar;
     public ValueBar MpBar;
+    public Button BattleStatusButton;
+    public BattleStatusUI BattleStatusUI;
     public Image[] BuffIcon;
 
     private bool _isScrollViewShow = false;
@@ -71,8 +73,17 @@ public class BattleInfoUI : MonoBehaviour
         MpBar.SetValue(currentMP, maxMp);
     }
 
+    private void BattleStatusOnClick() 
+    {
+        if (_statusList.Count > 0)
+        {
+            BattleStatusUI.Open(_statusList);
+        }
+    }
+
     void Awake()
     {
+        BattleStatusButton.onClick.AddListener(BattleStatusOnClick);
     }
 }
 

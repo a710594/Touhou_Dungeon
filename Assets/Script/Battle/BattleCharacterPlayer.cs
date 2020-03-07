@@ -61,7 +61,14 @@ public class BattleCharacterPlayer : BattleCharacter
             skill = SkillFactory.GetNewSkill(skillData);
             BattleController.Instance.TurnEndHandler += skill.SetCD;
 
-            SkillList.Add(skill);
+            if (skill.IsSpellCard)
+            {
+                SpellCardList.Add(skill);
+            }
+            else
+            {
+                SkillList.Add(skill);
+            }
         }
 
         BattleController.Instance.TurnEndHandler += CheckBattleStatus;
@@ -104,6 +111,7 @@ public class BattleCharacterPlayer : BattleCharacter
     {
         base.UseSkill(callback);
         CurrentMP -= SelectedSkill.Data.MP;
+        BattleController.Instance.MinusPower(SelectedSkill.Data.NeedPower);
     }
 
     public override void SetDamage(BattleCharacter executor, SkillData.RootObject skillData, Action<BattleCharacter> callback)

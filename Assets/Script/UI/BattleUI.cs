@@ -11,12 +11,13 @@ public class BattleUI : MonoBehaviour
 
     public Button MoveActionButton;
     public Button SkillActionButton;
+    public Button SpellCardActionButton;
     public Button ItemActionButton;
     public Button IdleButton;
     public Button MoveConfirmButton;
     public Button ReturnActionButton; //返回選擇行動
-    public Button SkillConfirmButton;
     public ButtonPlus Screen; //偵測整個畫面的點擊事件
+    public Text PowerLabel;
     public AnchorValueBar LittleHPBar;
     public FloatingNumberPool FloatingNumberPool;
     public BattleInfoUI InfoUI;
@@ -109,7 +110,6 @@ public class BattleUI : MonoBehaviour
     public void SetSkillScrollViewVisible(bool isVisible)
     {
         SkillScrollView.gameObject.SetActive(isVisible);
-        SkillConfirmButton.gameObject.SetActive(false);
 
         if (!isVisible)
         {
@@ -117,9 +117,15 @@ public class BattleUI : MonoBehaviour
         }
     }
 
-    public void SetSkill(BattleCharacter character = null)
+    public void SetSkill(BattleCharacter character)
     {
         SkillScrollView.SetData(new ArrayList(character.SkillList));
+        SkillScrollView.AddClickHandler(SkillOnClick);
+    }
+
+    public void SetSpellCard(BattleCharacter character)
+    {
+        SkillScrollView.SetData(new ArrayList(character.SpellCardList));
         SkillScrollView.AddClickHandler(SkillOnClick);
     }
 
@@ -183,6 +189,11 @@ public class BattleUI : MonoBehaviour
         ResultUI.Open(isWin, orignalLvList, orignalExpList, itemList);
     }
 
+    public void SetPower(int power) 
+    {
+        PowerLabel.text = "Power:" + power.ToString();
+    }
+
     private void MoveActionOnClick()
     {
         BattleController.Instance.ChangeToMoveState();
@@ -194,6 +205,13 @@ public class BattleUI : MonoBehaviour
         BattleController.Instance.ChangeToSelectSkillState();
         SetActionGroupVisible(false);
         SetSkill(BattleController.Instance.SelectedCharacter);
+    }
+
+    private void SpellCardActionOnClick()
+    {
+        BattleController.Instance.ChangeToSelectSkillState();
+        SetActionGroupVisible(false);
+        SetSpellCard(BattleController.Instance.SelectedCharacter);
     }
 
     private void ItemActionOnClick()
@@ -244,10 +262,11 @@ public class BattleUI : MonoBehaviour
         {
             Skill skill = scrollItem.Skill;
 
-            //SkillGroup.SetData(skill.Data);
+            skill.GetSkillDistance(BattleController.Instance.SelectedCharacter, BattleController.Instance.CharacterList);
             _tempSkill = skill;
             TipLabel.SetVisible(false);
-            SkillConfirmButton.gameObject.SetActive(true);
+            BattleController.Instance.SelectSkill(_tempSkill);
+            //SkillConfirmButton.gameObject.SetActive(true);
         }
         else
         {
@@ -262,7 +281,6 @@ public class BattleUI : MonoBehaviour
     {
         BattleController.Instance.SelectSkill(_tempSkill);
         _tempSkill = null;
-        SkillConfirmButton.gameObject.SetActive(false);
     }
 
     private void Awake()
@@ -270,17 +288,16 @@ public class BattleUI : MonoBehaviour
         SetActionGroupVisible(false);
         SetMoveConfirmVisible(false);
         SetReturnActionVisible(false);
-        SkillConfirmButton.gameObject.SetActive(false);
         SkillScrollView.gameObject.SetActive(false);
         ResultUI.gameObject.SetActive(false);
 
         MoveActionButton.onClick.AddListener(MoveActionOnClick);
         SkillActionButton.onClick.AddListener(SkillActionOnClick);
+        SpellCardActionButton.onClick.AddListener(SpellCardActionOnClick);
         ItemActionButton.onClick.AddListener(ItemActionOnClick);
         IdleButton.onClick.AddListener(IdleOnClick);
         MoveConfirmButton.onClick.AddListener(MoveConfirmOnClick);
         ReturnActionButton.onClick.AddListener(ReturnActionOnClick);
-        SkillConfirmButton.onClick.AddListener(SkillConfirmOnClick);
         Screen.ClickHandler = ScreenOnClick;
         Screen.DownHandler = StartDragCamera;
         Screen.PressHandler = OnDragCamera;

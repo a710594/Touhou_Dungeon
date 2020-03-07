@@ -52,6 +52,7 @@ public class BattleCharacter : MonoBehaviour
     public Skill SelectedSkill;
     public SpriteOutline SpriteOutline;
     public List<Skill> SkillList = new List<Skill>();
+    public List<Skill> SpellCardList = new List<Skill>();
     public Dictionary<int, BattleStatus> StatusDic = new Dictionary<int, BattleStatus>();
 
     protected int _sleepingId = -1;
@@ -298,13 +299,19 @@ public class BattleCharacter : MonoBehaviour
 
     public void GetSkillDistance()
     {
-        Vector2Int orign = Vector2Int.FloorToInt(transform.position);
-        SelectedSkill.GetSkillDistance(orign, this, BattleController.Instance.CharacterList);
+        SelectedSkill.GetSkillDistance(this, BattleController.Instance.CharacterList);
     }
 
     public bool IsInSkillDistance(Vector2Int position)
     {
-        return SelectedSkill.IsInSkillDistance(position);
+        if (SelectedSkill != null)
+        {
+            return SelectedSkill.IsInSkillDistance(position);
+        }
+        else
+        {
+            return false;
+        }
     }
 
     public void GetSkillRange()
