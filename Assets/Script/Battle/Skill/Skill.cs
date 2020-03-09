@@ -9,7 +9,9 @@ public class Skill
 
     protected int _currentCD = 0;
     protected int _skillCallBackCount = 0;
+    private int _targetCount = 0;
     protected Action _skillCallback;
+    protected Skill _subSkill;
     protected BattleCharacter _executor;
     protected List<Vector2Int> _skillDistanceList = new List<Vector2Int>();
     protected List<Vector2Int> _skillRangeList = new List<Vector2Int>();
@@ -135,6 +137,7 @@ public class Skill
                 _targetList.Add(target);
             }
         }
+        _targetCount = _targetList.Count;
         return _targetList;
     }
 
@@ -153,16 +156,55 @@ public class Skill
         {
             BattleController.Instance.AddPower(1);
         }
-    }
 
-    public void SetCallback(Action callback) //給 subSkill 用的
-    {
-        _skillCallback = callback;
+        if (IsSpellCard)
+        {
+            BattleUI.Instance.ShowSpellCard(UseCallback);
+        }
+        else
+        {
+            UseCallback();
+        }
     }
 
     public virtual void SetEffect(BattleCharacter target)
     {
 
+    }
+
+    protected virtual void UseCallback() //Use 之後會呼叫的方法
+    {
+        if (Data.ParticleName != "x")
+        {
+            GameObject particle;
+            for (int i = 0; i < _skillRangeList.Count; i++)
+            {
+                particle = ResourceManager.Instance.Spawn("Particle/" + Data.ParticleName, ResourceManager.Type.Other);
+                particle.transform.position = _skillRangeList[i] + Vector2.up; // + Vector2.up 是為了調整特效生成的位置
+            }
+        }
+    }
+
+    protected void CheckSkillCallback(BattleCharacter target)
+    {
+        if (_subSkill != null)
+        {
+            _subSkill.SetCallback(_targetCount, _skillCallback);
+            _subSkill.SetEffect(target);
+        }
+        else
+        {
+            OnSkillEnd();
+        }
+    }
+
+    protected void OnSkillEnd()
+    {
+        _skillCallBackCount++;
+        if (_skillCallBackCount == _targetCount && _skillCallback != null)
+        {
+            _skillCallback();
+        }
     }
 
     //移除非技能目標
@@ -225,32 +267,9 @@ public class Skill
         return positionList;
     }
 
-    protected void CheckSkillCallback(BattleCharacter target)
+    private void SetCallback(int targetCount, Action callback) //給 subSkill 用的
     {
-        if (Data.SubID != 0 && target != null)
-        {
-            SkillData.RootObject skillData = SkillData.GetData(Data.SubID);
-            Skill skill = SkillFactory.GetNewSkill(skillData);
-
-            skill.SetCallback(_skillCallback);
-            skill.SetEffect(target);
-        }
-
-        _skillCallBackCount++;
-        if (_skillCallBackCount == _targetList.Count)
-        {
-            OnSkillEnd();
-        }
-    }
-
-    protected void OnSkillEnd()
-    {
-        if (Data.SubID == 0)
-        {
-            if (_skillCallback != null)
-            {
-                _skillCallback();
-            }
-        }
+        _targetCount = targetCount;
+        _skillCallback = callback;
     }
 }

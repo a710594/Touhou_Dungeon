@@ -25,6 +25,10 @@ public class SkillFactory
         {
             skill = new BuffSkill(skillData);
         }
+        else if (skillData.Type == SkillData.TypeEnum.Poison)
+        {
+            skill = new PoisonSkill(skillData);
+        }
         else if (skillData.Type == SkillData.TypeEnum.Field)
         {
             skill = new FieldSkill(skillData);

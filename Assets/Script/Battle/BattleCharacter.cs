@@ -368,6 +368,31 @@ public class BattleCharacter : MonoBehaviour
         });
     }
 
+    public void SetPoison(int id, Action<BattleCharacter> callback)
+    {
+        Poison poison;
+
+        if (!StatusDic.ContainsKey(id))
+        {
+            poison = new Poison(id);
+            StatusDic.Add(id, poison);
+            _poisonIdList.Add(poison.Data.ID);
+        }
+        else
+        {
+            poison = (Poison)StatusDic[id];
+            poison.ResetTurn();
+        }
+
+        BattleUI.Instance.SetStatus(this, poison.Comment, FloatingNumber.Type.Other, () =>
+        {
+            if (callback != null)
+            {
+                callback(this);
+            }
+        });
+    }
+
     public void SetOutline(bool show)
     {
         SpriteOutline.SetOutline(show);

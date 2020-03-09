@@ -18,6 +18,8 @@ public class BattleUI : MonoBehaviour
     public Button ReturnActionButton; //返回選擇行動
     public ButtonPlus Screen; //偵測整個畫面的點擊事件
     public Text PowerLabel;
+    public Text ActionCountLabel;
+    public Text SkillLabel;
     public AnchorValueBar LittleHPBar;
     public FloatingNumberPool FloatingNumberPool;
     public BattleInfoUI InfoUI;
@@ -27,8 +29,10 @@ public class BattleUI : MonoBehaviour
     public LoopScrollView SkillScrollView;
     public GameObject ActionGroup;
     public BattleResultUI ResultUI;
+    public GameObject SpellCardGroup;
 
     private Skill _tempSkill = null;
+    private Timer _timer = new Timer();
     private Dictionary<BattleCharacter, AnchorValueBar> _littleHPBarDic = new Dictionary<BattleCharacter, AnchorValueBar>();
     private Dictionary<BattleCharacter, FloatingNumberPool> _floatingNumberPoolDic = new Dictionary<BattleCharacter, FloatingNumberPool>();
 
@@ -71,6 +75,11 @@ public class BattleUI : MonoBehaviour
     public void SetActionGroupVisible(bool isVisible)
     {
         ActionGroup.SetActive(isVisible);
+
+        if (isVisible)
+        {
+            ActionCountLabel.text = "行動次數:" + BattleController.Instance.SelectedCharacter.ActionCount;
+        }
     }
 
     public void SetMoveConfirmVisible(bool isVisible)
@@ -117,15 +126,9 @@ public class BattleUI : MonoBehaviour
         }
     }
 
-    public void SetSkill(BattleCharacter character)
+    public void SetSkillScrollViewData(List<Skill> list)
     {
-        SkillScrollView.SetData(new ArrayList(character.SkillList));
-        SkillScrollView.AddClickHandler(SkillOnClick);
-    }
-
-    public void SetSpellCard(BattleCharacter character)
-    {
-        SkillScrollView.SetData(new ArrayList(character.SpellCardList));
+        SkillScrollView.SetData(new ArrayList(list));
         SkillScrollView.AddClickHandler(SkillOnClick);
     }
 
@@ -194,6 +197,32 @@ public class BattleUI : MonoBehaviour
         PowerLabel.text = "Power:" + power.ToString();
     }
 
+    public void SetSkillLabel(bool isVisible, string text = "")
+    {
+        SkillLabel.gameObject.SetActive(isVisible);
+        SkillLabel.text = text;
+    }
+
+    public void ShowSpellCard(Action callback)
+    {
+        SpellCardGroup.SetActive(true);
+        SpellCardGroup.transform.localPosition = Vector3.right * 1280;
+        SpellCardGroup.transform.DOLocalMoveX(0, 0.5f).SetEase(Ease.OutCubic).OnComplete(()=> 
+        {
+            _timer.Start(1f, ()=> 
+            {
+                SpellCardGroup.transform.DOLocalMoveX(-1280, 0.5f).SetEase(Ease.OutCubic).OnComplete(()=> 
+                {
+                    SpellCardGroup.SetActive(false);
+                    if (callback != null)
+                    {
+                        callback();
+                    }
+                });
+            });
+        });
+    }
+
     private void MoveActionOnClick()
     {
         BattleController.Instance.ChangeToMoveState();
@@ -204,14 +233,14 @@ public class BattleUI : MonoBehaviour
     {
         BattleController.Instance.ChangeToSelectSkillState();
         SetActionGroupVisible(false);
-        SetSkill(BattleController.Instance.SelectedCharacter);
+        SetSkillScrollViewData(BattleController.Instance.SelectedCharacter.SkillList);
     }
 
     private void SpellCardActionOnClick()
     {
         BattleController.Instance.ChangeToSelectSkillState();
         SetActionGroupVisible(false);
-        SetSpellCard(BattleController.Instance.SelectedCharacter);
+        SetSkillScrollViewData(BattleController.Instance.SelectedCharacter.SpellCardList);
     }
 
     private void ItemActionOnClick()

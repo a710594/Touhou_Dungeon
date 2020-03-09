@@ -560,8 +560,10 @@ public class BattleController : MachineBehaviour
             }
             else
             {
+                BattleUI.Instance.SetSkillLabel(true, parent.SelectedCharacter.SelectedSkill.Data.Name);
                 parent.SelectedCharacter.UseSkill(() =>
                 {
+                    BattleUI.Instance.SetSkillLabel(false);
                     TilePainter.Instance.Clear(2);
 
                     ResultType result = parent.CheckResult();

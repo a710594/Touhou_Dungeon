@@ -8,18 +8,16 @@ public class AttackSkill : Skill
     public AttackSkill(SkillData.RootObject data)
     {
         Data = data;
+        if (data.SubID != 0)
+        {
+            SkillData.RootObject skillData = SkillData.GetData(Data.SubID);
+            _subSkill = SkillFactory.GetNewSkill(skillData);
+        }
     }
 
-    public override void Use(BattleCharacter executor, Action callback)
+    protected override void UseCallback()
     {
-        base.Use(executor, callback);
-
-        GameObject particle;
-        for (int i = 0; i < _skillRangeList.Count; i++)
-        {
-            particle = ResourceManager.Instance.Spawn("Particle/" + Data.ParticleName, ResourceManager.Type.Other);
-            particle.transform.position = _skillRangeList[i] + Vector2.up; // + Vector2.up 是為了調整特效生成的位置
-        }
+        base.UseCallback();
 
         for (int i = 0; i < _targetList.Count; i++)
         {

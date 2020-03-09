@@ -8,14 +8,19 @@ public class FieldSkill : Skill
     public FieldSkill(SkillData.RootObject data)
     {
         Data = data;
+        if (data.SubID != 0)
+        {
+            SkillData.RootObject skillData = SkillData.GetData(Data.SubID);
+            _subSkill = SkillFactory.GetNewSkill(skillData);
+        }
     }
 
-    public override void Use(BattleCharacter executor, Action callback)
+    protected override void UseCallback()
     {
-        base.Use(executor, callback);
+        base.UseCallback();
 
         SetEffect(null);
-        OnSkillEnd();
+        BattleUI.Instance.SetFloatingNumber(_executor, Data.Comment, FloatingNumber.Type.Other, _skillCallback);
     }
 
     public override void SetEffect(BattleCharacter target)
