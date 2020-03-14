@@ -374,6 +374,13 @@ public class BattleController : MachineBehaviour
                 TilePainter.Instance.Clear(3);
                 BattleUI.Instance.SetInfo(false);
             }
+
+            BattleField battleField = BattleFieldManager.Instance.GetField(position);
+            if (battleField != null)
+            {
+                BattleUI.Instance.SetBattleFieldVisible(true);
+                BattleUI.Instance.SetBattleFieldData(battleField);
+            }
         }
 
         public override void Exit()
@@ -381,6 +388,7 @@ public class BattleController : MachineBehaviour
             base.Exit();
 
             BattleUI.Instance.SetActionGroupVisible(false);
+            BattleUI.Instance.SetBattleFieldVisible(false);
         }
     }
 
@@ -428,12 +436,20 @@ public class BattleController : MachineBehaviour
                     TilePainter.Instance.Clear(3);
                 }
             }
+
+            BattleField battleField = BattleFieldManager.Instance.GetField(position);
+            if (battleField != null)
+            {
+                BattleUI.Instance.SetBattleFieldVisible(true);
+                BattleUI.Instance.SetBattleFieldData(battleField);
+            }
         }
 
         public override void Exit()
         {
             BattleUI.Instance.SetMoveConfirmVisible(false);
             BattleUI.Instance.SetReturnActionVisible(false);
+            BattleUI.Instance.SetBattleFieldVisible(false);
         }
     }
 
@@ -479,6 +495,13 @@ public class BattleController : MachineBehaviour
             {
                 TilePainter.Instance.Clear(2);
             }
+
+            BattleField battleField = BattleFieldManager.Instance.GetField(position);
+            if (battleField != null)
+            {
+                BattleUI.Instance.SetBattleFieldVisible(true);
+                BattleUI.Instance.SetBattleFieldData(battleField);
+            }
         }
 
         public override void Exit()
@@ -486,6 +509,7 @@ public class BattleController : MachineBehaviour
             TilePainter.Instance.Clear(3);
             BattleUI.Instance.SetReturnActionVisible(false);
             BattleUI.Instance.SetSkillScrollViewVisible(false);
+            BattleUI.Instance.SetBattleFieldVisible(false);
         }
     }
 
@@ -609,7 +633,7 @@ public class BattleController : MachineBehaviour
 
             for (int i = 0; i < parent.CharacterList.Count; i++)
             {
-                if (parent.CharacterList[i].IsPoisoning)
+                if (parent.CharacterList[i].LiveState == BattleCharacter.LiveStateEnum.Alive && parent.CharacterList[i].IsPoisoning)
                 {
                     _poisonQueue.Enqueue(parent.CharacterList[i]);
                 }

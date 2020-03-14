@@ -60,7 +60,7 @@ public class BattleCharacter : MonoBehaviour
     protected Vector2 _originalPosition = new Vector2();
     protected Vector2Int _lookAt = Vector2Int.right;
     protected Queue<Vector2Int> _path;
-    protected List<int> _poisonIdList = new List<int>();
+    protected Dictionary<int, BattleStatus> _poisonDic = new Dictionary<int, BattleStatus>();
     protected List<Vector2Int> _moveRangeList = new List<Vector2Int>();
 
     public int MaxHP;
@@ -158,7 +158,7 @@ public class BattleCharacter : MonoBehaviour
     {
         get
         {
-            return _poisonIdList.Count > 0;
+            return _poisonDic.Count > 0;
         }
     }
 
@@ -181,30 +181,31 @@ public class BattleCharacter : MonoBehaviour
 
     public void CheckBattleStatus()
     {
+        //不能在 foreach 中刪除元件,所以要用 for
         List<int> keyList = new List<int>(StatusDic.Keys);
         List<BattleStatus> statusList = new List<BattleStatus>(StatusDic.Values);
 
-        foreach (KeyValuePair<int, BattleStatus> item in StatusDic)
+        for(int i=0; i<keyList.Count; i++)
         {
-            if (item.Value.RemainTurn != -1) //-1代表永久
+            if (statusList[i].RemainTurn != -1) //-1代表永久
             {
-                item.Value.RemainTurn--;
-                if (item.Value.RemainTurn == 0)
+                statusList[i].RemainTurn--;
+                if (statusList[i].RemainTurn == 0)
                 {
-                    if (item.Value is Poison)
+                    if (statusList[i] is Poison)
                     {
-                        _poisonIdList.Remove(item.Value.Data.ID);
+                        _poisonDic.Remove(keyList[i]);
                     }
-                    else if (item.Value is Paralysis)
+                    else if (statusList[i] is Paralysis)
                     {
                         _paralysisProbability = 0;
                     }
-                    else if (item.Value is Sleeping)
+                    else if (statusList[i] is Sleeping)
                     {
                         _sleepingId = -1;
                     }
 
-                    StatusDic.Remove(item.Key);
+                    StatusDic.Remove(keyList[i]);
                 }
             }
         }
@@ -376,7 +377,7 @@ public class BattleCharacter : MonoBehaviour
         {
             poison = new Poison(id);
             StatusDic.Add(id, poison);
-            _poisonIdList.Add(poison.Data.ID);
+            _poisonDic.Add(id, poison);
         }
         else
         {

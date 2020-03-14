@@ -5,20 +5,22 @@ using Newtonsoft.Json;
 
 public class BattleTileData
 {
-    public class Data
+    public class RootObject
     {
         public int ID { get; set; }
         public string Name { get; set; }
+        public string TileName { get; set; }
         public int MoveCost { get; set; }
+        public string Comment { get; set; }
     }
 
-    private static Dictionary<int, Data> _dataDic = new Dictionary<int, Data>();
+    private static Dictionary<int, RootObject> _dataDic = new Dictionary<int, RootObject>();
 
     public static void Load()
     {
         TextAsset textAsset = Resources.Load<TextAsset>("Json/BattleTile");
         string jsonString = textAsset.text;
-        var dataList = JsonConvert.DeserializeObject<List<Data>>(jsonString);
+        var dataList = JsonConvert.DeserializeObject<List<RootObject>>(jsonString);
 
         for (int i = 0; i < dataList.Count; i++)
         {
@@ -26,9 +28,9 @@ public class BattleTileData
         }
     }
 
-    public static Data GetData(int id)
+    public static RootObject GetData(int id)
     {
-        Data data = null;
+        RootObject data = null;
         _dataDic.TryGetValue(id, out data);
         return data;
     }

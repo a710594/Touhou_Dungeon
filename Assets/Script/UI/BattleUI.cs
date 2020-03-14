@@ -24,12 +24,14 @@ public class BattleUI : MonoBehaviour
     public FloatingNumberPool FloatingNumberPool;
     public BattleInfoUI InfoUI;
     public BattleSkillUI SkillInfoUI;
+    public BattleFieldUI BattleFieldUI;
     public TipLabel TipLabel;
     public TipLabel TurnLabel;
     public LoopScrollView SkillScrollView;
+    public GameObject PowerPoint;
     public GameObject ActionGroup;
-    public BattleResultUI ResultUI;
     public GameObject SpellCardGroup;
+    public BattleResultUI ResultUI;
 
     private Skill _tempSkill = null;
     private Timer _timer = new Timer();
@@ -219,6 +221,39 @@ public class BattleUI : MonoBehaviour
                         callback();
                     }
                 });
+            });
+        });
+    }
+
+    public void SetBattleFieldVisible(bool isVisible) 
+    {
+        BattleFieldUI.SetVisible(isVisible);
+    }
+
+    public void SetBattleFieldData(BattleField battleField) 
+    {
+        BattleFieldUI.SetData(battleField);
+    }
+
+    public void DropPowerPoint(List<BattleCharacter> targetList) 
+    {
+        GameObject obj;
+        for (int i=0; i<targetList.Count; i++) 
+        {
+            obj = Instantiate(PowerPoint, Vector3.zero, Quaternion.identity);
+            obj.transform.parent = PowerPoint.transform.parent;
+            obj.transform.position = Camera.main.WorldToScreenPoint(targetList[i].transform.position + Vector3.up * 0.5f);
+            JumpPowerPoint(obj);
+        }
+    }
+
+    private void JumpPowerPoint(GameObject obj) 
+    {
+        obj.transform.DOLocalJump(obj.transform.localPosition + Vector3.right * UnityEngine.Random.Range(-50, 50), 50, 1, 0.5f).OnComplete(() =>
+        {
+            obj.transform.DOMove(PowerLabel.transform.position, 0.5f).OnComplete(() =>
+            {
+                Destroy(obj);
             });
         });
     }

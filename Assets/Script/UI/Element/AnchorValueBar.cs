@@ -11,8 +11,9 @@ public class AnchorValueBar : ValueBar
         _anchor = anchor;
     }
 
-    void Update()
+    protected override void UpdateData()
     {
+        base.UpdateData();
         if (_anchor != null)
         {
             this.transform.position = Camera.main.WorldToScreenPoint(_anchor.position);

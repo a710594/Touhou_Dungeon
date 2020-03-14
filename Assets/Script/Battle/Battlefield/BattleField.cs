@@ -5,13 +5,24 @@ using UnityEngine;
 public class BattleField
 {
     public Vector2Int Position;
-    public int MoveCost; 
+    public int MoveCost;
+    public string Name;
+    public string Comment;
     public Buff Buff = null;
 
-    public BattleField(Vector2Int position, int moveCost)
+    public BattleField(Vector2Int position, BattleTileData.RootObject data)
     {
         Position = position;
-        MoveCost = moveCost;
+        MoveCost = data.MoveCost;
+        Name = data.Name;
+        Comment = data.Comment;
+    }
+
+    public void SetData(BattleTileData.RootObject data)
+    {
+        MoveCost = data.MoveCost;
+        Name = data.Name;
+        Comment = data.Comment;
     }
 
     public void SetBuff(int id)

@@ -39,7 +39,7 @@ public class BattlefieldGenerator
         reservedLits.Add(center + Vector2Int.right + Vector2Int.down);
 
         Vector2Int pos = new Vector2Int();
-        BattleTileData.Data tileData;
+        BattleTileData.RootObject tileData;
 
         //地板
         tileData = BattleTileData.GetData(battlefieldData.GroundID);
@@ -49,8 +49,8 @@ public class BattlefieldGenerator
             {
                 pos.x = i;
                 pos.y = j;
-                mapDic.Add(pos, new BattleField(pos, tileData.MoveCost));
-                TilePainter.Instance.Painting(tileData.Name, 0, pos);
+                mapDic.Add(pos, new BattleField(pos, tileData));
+                TilePainter.Instance.Painting(tileData.TileName, 0, pos);
             }
         }
 
@@ -67,8 +67,8 @@ public class BattlefieldGenerator
         for (int i = 0; i < blockCount; i++)
         {
             pos = tempPositionList[Random.Range(0, tempPositionList.Count)];
-            mapDic[pos].MoveCost = tileData.MoveCost;
-            TilePainter.Instance.Painting(tileData.Name, 0, pos);
+            mapDic[pos].SetData(tileData);
+            TilePainter.Instance.Painting(tileData.TileName, 0, pos);
             tempPositionList.Remove(pos);
         }
 
@@ -78,8 +78,8 @@ public class BattlefieldGenerator
         for (int i = 0; i < grassCount; i++)
         {
             pos = tempPositionList[Random.Range(0, tempPositionList.Count)];
-            mapDic[pos].MoveCost = tileData.MoveCost;
-            TilePainter.Instance.Painting(tileData.Name, 0, pos);
+            mapDic[pos].SetData(tileData);
+            TilePainter.Instance.Painting(tileData.TileName, 0, pos);
             tempPositionList.Remove(pos);
         }
 

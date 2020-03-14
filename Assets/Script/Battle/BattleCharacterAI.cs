@@ -123,9 +123,9 @@ public class BattleCharacterAI : BattleCharacter
     {
         int damage;
         int callbackCount = 0;
-        for (int i = 0; i < _poisonIdList.Count; i++)
+        foreach (KeyValuePair<int, BattleStatus> item in _poisonDic)
         {
-            damage = ((Poison)(StatusDic[_poisonIdList[i]])).Damage;
+            damage = ((Poison)item.Value).Damage;
 
             CurrentHP -= damage;
 
@@ -138,7 +138,7 @@ public class BattleCharacterAI : BattleCharacter
                 }
                 else
                 {
-                    if (callbackCount == _poisonIdList.Count && callback != null)
+                    if (callbackCount == _poisonDic.Count && callback != null)
                     {
                         callback();
                     }

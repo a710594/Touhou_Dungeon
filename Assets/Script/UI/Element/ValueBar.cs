@@ -29,7 +29,7 @@ public class ValueBar : MonoBehaviour
         _bar.DOFillAmount((float)current / (float)max, 0.5f).OnComplete(()=> 
         {
             _timer.Start(0.5f, callback);
-            _isTweening = false;
+            //_isTweening = false;
         });
 
     }
@@ -42,17 +42,22 @@ public class ValueBar : MonoBehaviour
         _bar.DOFillAmount((float)to / (float)max, 0.5f).OnComplete(() =>
         {
             _timer.Start(0.5f, callback);
-            _isTweening = false;
+           //_isTweening = false;
         });
 
     }
 
-    void Update()
+    protected virtual void UpdateData() 
     {
         if (_isTweening)
         {
             _label.text = Mathf.RoundToInt(_maxHP * _bar.fillAmount).ToString() + "/" + _maxHP.ToString();
         }
+    }
+
+    void Update()
+    {
+        UpdateData();
     }
 
     private void OnDestroy()

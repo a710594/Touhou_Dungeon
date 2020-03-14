@@ -64,15 +64,20 @@ public class BattleFieldManager
 
     public int GetPathLength(Vector2 from, Vector2 to, BattleCharacter.CampEnum camp)
     {
+        int pathLength = 0;
         List<Vector2Int> pathList = GetPath(from, to, camp);
         if (pathList != null)
         {
-            return pathList.Count;
+            for (int i=0; i<pathList.Count; i++) 
+            {
+                pathLength += GetField(pathList[i]).MoveCost;
+            }
         }
         else
         {
-            return -1;
+            pathLength = -1;
         }
+        return pathLength;
     }
 
     public List<Vector2Int> RemoveBound(List<Vector2Int> positionList)
@@ -115,12 +120,19 @@ public class BattleFieldManager
         }
     }
 
+    public BattleField GetField(Vector2 position) 
+    {
+        BattleField battleField = null;
+        MapDic.TryGetValue(Vector2Int.RoundToInt(position), out battleField);
+        return battleField;
+    }
+
     public Buff GetFieldBuff(Vector2 position)
     {
         Buff buff = MapDic[Vector2Int.RoundToInt(position)].Buff;
         if (buff != null)
         {
-            return MapDic[Vector2Int.RoundToInt(position)].Buff;
+            return buff;
         }
         else
         {
