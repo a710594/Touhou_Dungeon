@@ -49,12 +49,16 @@ public class Utility //各種和 TileMap 有關的計算方法
      *   OXXXX
      *   O:使用技能的人 X:技能範圍
     */
-    public static List<Vector2Int> GetLinePositionList(int length, Vector2Int origin, Vector2Int direction)
+    public static List<Vector2Int> GetLinePositionList(int length, int width, Vector2Int origin, Vector2Int direction)
     {
+        Vector2Int widthDirection = Vector2Int.RoundToInt(Quaternion.AngleAxis(90, Vector3.forward) * (Vector3Int)direction);
         List<Vector2Int> positionList = new List<Vector2Int>();
         for (int i = 1; i <= length; i++)
         {
-            positionList.Add(origin + direction * i);
+            for (int j=width / 2 * -1; j<= width / 2; j++)
+            {
+                positionList.Add(origin + direction * i + widthDirection * j);
+            }
         }
 
         return positionList;

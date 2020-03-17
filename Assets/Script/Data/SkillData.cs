@@ -24,7 +24,7 @@ public class SkillData
     {
         Point = 0,
         Circle,
-        Line
+        Rectangle
     }
 
     public enum TargetEnum
@@ -44,7 +44,8 @@ public class SkillData
         public int Damage { get; set; }
         public int Hits { get; set; }
         public int Distance { get; set; }
-        public int Range { get; set; }
+        public int Range_1 { get; set; }
+        public int Range_2 { get; set; }
         public RangeTypeEnum RangeType { get; set; }
         public TargetEnum Target { get; set; }
         public bool IsMagic { get; set; }

@@ -92,7 +92,7 @@ public class Skill
         }
         else if (Data.RangeType == SkillData.RangeTypeEnum.Circle)
         {
-            positionList = Utility.GetRhombusPositionList(Data.Range - 1, target, false);
+            positionList = Utility.GetRhombusPositionList(Data.Range_1 - 1, target, false);
             positionList = RemovePosition(executor, characterList, positionList);
             positionList = BattleFieldManager.Instance.RemoveBound(positionList);
             for (int i = 0; i < positionList.Count; i++)
@@ -104,9 +104,9 @@ public class Skill
                 _skillRangeList.Add(positionList[i]);
             }
         }
-        else if (Data.RangeType == SkillData.RangeTypeEnum.Line)
+        else if (Data.RangeType == SkillData.RangeTypeEnum.Rectangle)
         {
-            positionList = Utility.GetLinePositionList(Data.Range, orign, target - orign);
+            positionList = Utility.GetLinePositionList(Data.Range_1, Data.Range_2, orign, target - orign);
             positionList = RemovePosition(executor, characterList, positionList);
             positionList = BattleFieldManager.Instance.RemoveBound(positionList);
             for (int i = 0; i < positionList.Count; i++)
@@ -160,10 +160,11 @@ public class Skill
 
         if (IsSpellCard)
         {
-            BattleUI.Instance.ShowSpellCard(UseCallback);
+            BattleUI.Instance.ShowSpellCard(Data.Name, UseCallback);
         }
         else
         {
+            BattleUI.Instance.SetSkillLabel(true, Data.Name);
             UseCallback();
         }
     }
@@ -204,6 +205,7 @@ public class Skill
         _skillCallBackCount++;
         if (_skillCallBackCount == _targetCount && _skillCallback != null)
         {
+            BattleUI.Instance.SetSkillLabel(false);
             _skillCallback();
         }
     }

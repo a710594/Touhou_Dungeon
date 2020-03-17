@@ -291,7 +291,7 @@ public class BattleController : MachineBehaviour
                          BattleCharacter.NotActReason reason;
                          if (character.CanAct(out reason))
                          {
-                             if (parent.SelectedCharacter != null)
+                             if (parent.SelectedCharacter != null && parent.SelectedCharacter.LiveState == BattleCharacter.LiveStateEnum.Alive)
                              {
                                  parent.SelectedCharacter.SetOutline(false);
                              }
@@ -351,7 +351,7 @@ public class BattleController : MachineBehaviour
             base.Enter();
 
             BattleUI.Instance.SetActionGroupVisible(true);
-            BattleUI.Instance.SetInfo(parent.SelectedCharacter);
+            BattleUI.Instance.SetInfo(true, parent.SelectedCharacter);
         }
 
         public override void ScreenOnClick(Vector2Int position)
@@ -548,7 +548,7 @@ public class BattleController : MachineBehaviour
         {
             base.Enter();
 
-            //CameraController.Instance.SetParent(parent.SelectedCharacter.Sprite.transform, true);
+            BattleUI.Instance.SetInfo(true, parent.SelectedCharacter);
             ((BattleCharacterAI)parent.SelectedCharacter).StartAI(() =>
             {
                 parent.ChangeState<ShowState>();
@@ -584,10 +584,8 @@ public class BattleController : MachineBehaviour
             }
             else
             {
-                BattleUI.Instance.SetSkillLabel(true, parent.SelectedCharacter.SelectedSkill.Data.Name);
                 parent.SelectedCharacter.UseSkill(() =>
                 {
-                    BattleUI.Instance.SetSkillLabel(false);
                     TilePainter.Instance.Clear(2);
 
                     ResultType result = parent.CheckResult();

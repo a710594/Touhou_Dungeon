@@ -30,7 +30,6 @@ public class BattleUI : MonoBehaviour
     public LoopScrollView SkillScrollView;
     public GameObject PowerPoint;
     public GameObject ActionGroup;
-    public GameObject SpellCardGroup;
     public BattleResultUI ResultUI;
 
     private Skill _tempSkill = null;
@@ -205,23 +204,13 @@ public class BattleUI : MonoBehaviour
         SkillLabel.text = text;
     }
 
-    public void ShowSpellCard(Action callback)
+    public void ShowSpellCard(string name, Action callback)
     {
-        SpellCardGroup.SetActive(true);
-        SpellCardGroup.transform.localPosition = Vector3.right * 1280;
-        SpellCardGroup.transform.DOLocalMoveX(0, 0.5f).SetEase(Ease.OutCubic).OnComplete(()=> 
+        gameObject.SetActive(false);
+        BattleFrontUI.Instance.ShowSpellCard(name, ()=> 
         {
-            _timer.Start(1f, ()=> 
-            {
-                SpellCardGroup.transform.DOLocalMoveX(-1280, 0.5f).SetEase(Ease.OutCubic).OnComplete(()=> 
-                {
-                    SpellCardGroup.SetActive(false);
-                    if (callback != null)
-                    {
-                        callback();
-                    }
-                });
-            });
+            callback();
+            gameObject.SetActive(true);
         });
     }
 

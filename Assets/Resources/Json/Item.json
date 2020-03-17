@@ -18,4 +18,4 @@
 {"ID":18,"Name":"紅蘑菇","Comment":"紅色的蘑菇","Icon":"RedMashroom","Type":3,"SeedType":0,"Price":10,"Volume":1,"Skill":0},
 {"ID":19,"Name":"藍蘑菇種子","Comment":"可以種出藍蘑菇","Icon":"BlueMashroom_Seed","Type":5,"SeedType":2,"Price":5,"Volume":1,"Skill":0},
 {"ID":20,"Name":"藍蘑菇","Comment":"藍色的蘑菇","Icon":"BlueMashroom","Type":3,"SeedType":0,"Price":10,"Volume":1,"Skill":0},
-{"ID":21,"Name":"補血藥","Comment":"回復 HP 10","Icon":"Medicine_Green","Type":2,"SeedType":0,"Price":20,"Volume":1,"Skill":19}]
+{"ID":21,"Name":"補血藥","Comment":"回復 HP 10","Icon":"Medicine_Green","Type":2,"SeedType":0,"Price":20,"Volume":1,"Skill":20}]

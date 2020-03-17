@@ -37,7 +37,7 @@ public class FloatingNumber : MonoBehaviour
     {
         if (Encoding.Default.GetByteCount(text) > 10)
         {
-            Label.fontSize = 40;
+            Label.fontSize = 30;
         }
         else
         {

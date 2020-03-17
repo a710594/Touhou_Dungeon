@@ -20,7 +20,7 @@ public class BattleSkillUI : MonoBehaviour
         MpLabel.text = "MP:" + data.MP.ToString();
         CdLabel.text = "CD:" + data.CD.ToString();
         DistanceLabel.text = "射程:" + data.Distance.ToString();
-        RangeLabel.text = "範圍:" + data.Range.ToString();
+        RangeLabel.text = "範圍:" + data.Range_1.ToString();
     }
 
     private void Awake()
