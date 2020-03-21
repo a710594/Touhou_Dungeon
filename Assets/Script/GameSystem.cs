@@ -1,13 +1,42 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class GameSystem : MonoBehaviour
 {
+    public static Action LanguageChangeHandler;
+
+    public static LanguageData.Language CurrentLanguage = LanguageData.Language.English;
+
     private static bool _exists;
 
     // Start is called before the first frame update
-    void Awake()
+    private IEnumerator Init()
+    {
+        JobData.Load();
+        SkillData.Load();
+        EnemyData.Load();
+        BattleTileData.Load();
+        BattlefieldData.Load();
+        BattleGroupData.Load();
+        BattleStatusData.Load();
+        ItemData.Load();
+        EquipData.Load();
+        FoodData.Load();
+        LanguageData.Load();
+
+        TeamManager.Instance.Init();
+        ItemManager.Instance.Init();
+        MySceneManager.Instance.Init();
+
+        yield return new WaitForEndOfFrame();
+
+        List<KeyValuePair<int, int>> enemyList = BattleGroupData.GetEnemy(1);
+        BattleController.Instance.Init(1, enemyList);
+    }
+
+    private void Awake()
     {
         if (!_exists)
         {
@@ -20,32 +49,14 @@ public class GameSystem : MonoBehaviour
             return;
         }
 
-        JobData.Load();
-        SkillData.Load();
-        EnemyData.Load();
-        BattleTileData.Load();
-        BattlefieldData.Load();
-        BattleGroupData.Load();
-        BattleStatusData.Load();
-        ItemData.Load();
-        EquipData.Load();
-        FoodData.Load();
-
-        TeamManager.Instance.Init();
-        ItemManager.Instance.Init();
-        MySceneManager.Instance.Init();
-
-        //wait for init
-        Timer timer = new Timer();
-        timer.Start(0.5f, ()=> 
-        {
-            List<KeyValuePair<int, int>> enemyList = BattleGroupData.GetEnemy(1);
-            BattleController.Instance.Init(1, enemyList);
-        });
+        StartCoroutine(Init());
     }
 
     private void Update()
     {
-
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            CurrentLanguage = LanguageData.Language.English;
+        }
     }
 }
