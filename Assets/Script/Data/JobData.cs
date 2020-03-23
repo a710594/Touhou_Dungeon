@@ -8,12 +8,12 @@ public class JobData
     public class RootObject
     {
         public int ID { get; set; }
-        public string Name { get; set; }
         public string Comment { get; set; }
         public string Image { get; set; }
         public string SmallImage { get; set; }
         public string MediumImage { get; set; }
         public string LargeImage { get; set; }
+        public string Animator { get; set; }
         public int HP { get; set; }
         public int MP { get; set; }
         public int ATK { get; set; }
@@ -35,9 +35,12 @@ public class JobData
         public int UnlockLv_5 { get; set; }
         public int Skill_6 { get; set; }
         public int UnlockLv_6 { get; set; }
+        public string Name_Chinese { get; set; }
+        public string Name_English { get; set; }
 
         public List<int> SkillList = new List<int>();
         public List<int> UnlockList = new List<int>();
+        public Dictionary<LanguageSystem.Language, string> NameDic = new Dictionary<LanguageSystem.Language, string>();
 
         public List<int> GetUnlockSkill(int lv)
         {
@@ -51,6 +54,11 @@ public class JobData
             }
 
             return unlockList;
+        }
+
+        public string GetName()
+        {
+            return NameDic[LanguageSystem.Instance.CurrentLanguage];
         }
     }
 
@@ -99,6 +107,9 @@ public class JobData
                 dataList[i].SkillList.Add(dataList[i].Skill_6);
                 dataList[i].UnlockList.Add(dataList[i].UnlockLv_6);
             }
+
+            dataList[i].NameDic.Add(LanguageSystem.Language.Chinese, dataList[i].Name_Chinese);
+            dataList[i].NameDic.Add(LanguageSystem.Language.English, dataList[i].Name_English);
 
             _dataDic.Add(dataList[i].ID, dataList[i]);
         }

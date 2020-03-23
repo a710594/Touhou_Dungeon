@@ -19,7 +19,7 @@ public class BattleFieldUI : MonoBehaviour
     public void SetData(BattleField battleField) 
     {
         NameLabel.text = battleField.Name;
-        MoveCostLabel.text = "移動消耗:" + battleField.MoveCost.ToString();
+        MoveCostLabel.text =  LanguageData.GetText(9, LanguageSystem.Instance.CurrentLanguage) + ":" + battleField.MoveCost.ToString(); //移動消耗
         CommentLabel.text = battleField.Comment;
 
         if (battleField.Buff != null)

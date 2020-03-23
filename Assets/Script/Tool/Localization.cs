@@ -8,13 +8,14 @@ public class Localization : MonoBehaviour
     public int ID;
     public Text Label;
 
-    public void SetLanguage() 
+    public void SetLanguage(LanguageSystem.Language language) 
     {
-        Label.text = LanguageData.GetText(ID, GameSystem.CurrentLanguage);
+        Label.text = LanguageData.GetText(ID, language);
     }
 
     private void Awake()
     {
-        SetLanguage();
+        SetLanguage(LanguageSystem.Instance.CurrentLanguage);
+        LanguageSystem.Instance.LanguageChangeHandler += SetLanguage;
     }
 }

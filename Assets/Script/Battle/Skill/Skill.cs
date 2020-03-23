@@ -160,11 +160,11 @@ public class Skill
 
         if (IsSpellCard)
         {
-            BattleUI.Instance.ShowSpellCard(Data.Name, UseCallback);
+            BattleUI.Instance.ShowSpellCard(Data.GetName(), executor.LargeImage, UseCallback);
         }
         else
         {
-            BattleUI.Instance.SetSkillLabel(true, Data.Name);
+            BattleUI.Instance.SetSkillLabel(true, Data.GetName());
             UseCallback();
         }
     }

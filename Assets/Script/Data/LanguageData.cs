@@ -5,16 +5,13 @@ using Newtonsoft.Json;
 
 public class LanguageData
 {
-    public enum Language
-    {
-        Chinese,
-        English,
-    }
     public class RootObject
     {
         public int ID { get; set; }
         public string Chinese { get; set; }
         public string English { get; set; }
+
+        public Dictionary<LanguageSystem.Language, string> LanguageDic = new Dictionary<LanguageSystem.Language, string>();
     }
 
     private static Dictionary<int, RootObject> _dataDic = new Dictionary<int, RootObject>();
@@ -27,6 +24,8 @@ public class LanguageData
 
         for (int i = 0; i < dataList.Count; i++)
         {
+            dataList[i].LanguageDic.Add(LanguageSystem.Language.Chinese, dataList[i].Chinese);
+            dataList[i].LanguageDic.Add(LanguageSystem.Language.English, dataList[i].English);
             _dataDic.Add(dataList[i].ID, dataList[i]);
         }
     }
@@ -38,19 +37,12 @@ public class LanguageData
         return data;
     }
 
-    public static string GetText(int id, Language language)
+    public static string GetText(int id, LanguageSystem.Language language)
     {
         RootObject data = null;
         if (_dataDic.TryGetValue(id, out data))
         {
-            if (language == Language.Chinese)
-            {
-                return data.Chinese;
-            }
-            else
-            {
-                return data.English;
-            }
+            return data.LanguageDic[language];
         }
         else
         {

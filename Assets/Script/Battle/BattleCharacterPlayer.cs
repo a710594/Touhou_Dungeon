@@ -45,11 +45,17 @@ public class BattleCharacterPlayer : BattleCharacter
         _agi = member.AGI;
         _sen = member.SEN;
         _moveDistance = member.MoveDistance;
-        Name = member.JobName;
-        SmallImage = member.SmallImage;
-        MediumImage = member.MediumImage;
-        LargeImage = member.LargeImage;
+        Name = member.Data.GetName();
+        SmallImage = member.Data.SmallImage;
+        MediumImage = member.Data.MediumImage;
+        LargeImage = member.Data.LargeImage;
+
+
         Sprite.sprite = Resources.Load<Sprite>("Image/Character/Small/" + SmallImage);
+        if (member.Data.Animator != string.Empty)
+        {
+            Animator.runtimeAnimatorController = Resources.Load<RuntimeAnimatorController>("Animator/" + member.Data.Animator);
+        }
 
         int id;
         SkillData.RootObject skillData;

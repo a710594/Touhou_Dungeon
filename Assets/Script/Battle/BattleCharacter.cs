@@ -48,6 +48,7 @@ public class BattleCharacter : MonoBehaviour
     public CampEnum Camp;
     public LiveStateEnum LiveState;
     public SpriteRenderer Sprite;
+    public Animator Animator;
     public Transform ValueBarAnchor;
     public Skill SelectedSkill;
     public SpriteOutline SpriteOutline;

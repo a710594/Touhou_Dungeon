@@ -17,7 +17,7 @@ public class SkillScrollItem : ScrollItem
         Skill = (Skill)obj;
         _data = this;
         //Icon.overrideSprite = Resources.Load<Sprite>("Image/" + skill.Data.Icon);
-        Label.text = Skill.Data.Name;
+        Label.text = Skill.Data.GetName();
 
         CanUse = Skill.CanUse(((BattleCharacterPlayer)BattleController.Instance.SelectedCharacter).CurrentMP, out NotUseReason);
         if (CanUse)

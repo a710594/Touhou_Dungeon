@@ -7,8 +7,6 @@ public class GameSystem : MonoBehaviour
 {
     public static Action LanguageChangeHandler;
 
-    public static LanguageData.Language CurrentLanguage = LanguageData.Language.English;
-
     private static bool _exists;
 
     // Start is called before the first frame update
@@ -54,9 +52,9 @@ public class GameSystem : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.A))
         {
-            CurrentLanguage = LanguageData.Language.English;
+            LanguageSystem.Instance.ChangeLanguage(LanguageSystem.Language.English);
         }
     }
 }

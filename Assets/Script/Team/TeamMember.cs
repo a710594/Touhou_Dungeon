@@ -5,13 +5,6 @@ using UnityEngine;
 
 public class TeamMember
 {
-    public string CharacterName;
-    public string JobName;
-    public string JobComment;
-    public string Image;
-    public string SmallImage;
-    public string MediumImage;
-    public string LargeImage;
     public int Lv;
     public int Exp;
     public int MaxHP;
@@ -129,12 +122,6 @@ public class TeamMember
     public void Init(int jobId)
     {
         Data = JobData.GetData(jobId);
-        JobName = Data.Name;
-        JobComment = Data.Comment;
-        Image = Data.Image;
-        SmallImage = Data.SmallImage;
-        MediumImage = Data.MediumImage;
-        LargeImage = Data.LargeImage;
         Lv = 1;
         MaxHP = Mathf.RoundToInt(Data.HP * (1 + ((Lv - 1) * 0.1f)));
         CurrentHP = MaxHP;

@@ -20,7 +20,7 @@ public class FieldSkill : Skill
         base.UseCallback();
 
         SetEffect(null);
-        BattleUI.Instance.SetFloatingNumber(_executor, Data.Comment, FloatingNumber.Type.Other, _skillCallback);
+        BattleUI.Instance.SetFloatingNumber(_executor, Data.GetComment(), FloatingNumber.Type.Other, _skillCallback);
     }
 
     public override void SetEffect(BattleCharacter target)

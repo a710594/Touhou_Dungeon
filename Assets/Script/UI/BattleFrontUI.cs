@@ -12,11 +12,22 @@ public class BattleFrontUI : MonoBehaviour
     public GameObject Mask;
     public GameObject SpellCardGroup;
     public Text NameLabel;
+    public Image Image;
 
     private Timer _timer = new Timer();
 
-    public void ShowSpellCard(string name, Action callback)
+    public void ShowSpellCard(string name, string image, Action callback)
     {
+        if (image != string.Empty)
+        {
+            Image.overrideSprite = Resources.Load<Sprite>("Image/Character/Large/" + image);
+        }
+        else
+        {
+            Image.overrideSprite = Resources.Load<Sprite>("Image/Character/Medium/Large_M");
+        }
+        Image.SetNativeSize();
+
         Mask.SetActive(true);
         SpellCardGroup.SetActive(true);
         NameLabel.gameObject.SetActive(true);

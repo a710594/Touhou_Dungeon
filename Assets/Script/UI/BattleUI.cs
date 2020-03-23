@@ -79,7 +79,7 @@ public class BattleUI : MonoBehaviour
 
         if (isVisible)
         {
-            ActionCountLabel.text = "行動次數:" + BattleController.Instance.SelectedCharacter.ActionCount;
+            ActionCountLabel.text = LanguageData.GetText(10, LanguageSystem.Instance.CurrentLanguage) +  ":" + BattleController.Instance.SelectedCharacter.ActionCount; //行動次數
         }
     }
 
@@ -204,10 +204,10 @@ public class BattleUI : MonoBehaviour
         SkillLabel.text = text;
     }
 
-    public void ShowSpellCard(string name, Action callback)
+    public void ShowSpellCard(string name, string image, Action callback)
     {
         gameObject.SetActive(false);
-        BattleFrontUI.Instance.ShowSpellCard(name, ()=> 
+        BattleFrontUI.Instance.ShowSpellCard(name, image, ()=> 
         {
             callback();
             gameObject.SetActive(true);

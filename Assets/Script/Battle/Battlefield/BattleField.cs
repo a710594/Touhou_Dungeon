@@ -14,15 +14,15 @@ public class BattleField
     {
         Position = position;
         MoveCost = data.MoveCost;
-        Name = data.Name;
-        Comment = data.Comment;
+        Name = data.GetName();
+        Comment = data.GetComment();
     }
 
     public void SetData(BattleTileData.RootObject data)
     {
         MoveCost = data.MoveCost;
-        Name = data.Name;
-        Comment = data.Comment;
+        Name = data.GetName();
+        Comment = data.GetComment();
     }
 
     public void SetBuff(int id)

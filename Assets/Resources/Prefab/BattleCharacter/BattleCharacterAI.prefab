@@ -55,10 +55,12 @@ MonoBehaviour:
   Camp: 1
   LiveState: 0
   Sprite: {fileID: 5242374421797416661}
+  Animator: {fileID: 2818569064895119062}
   ValueBarAnchor: {fileID: 5242374422198474570}
   SpriteOutline: {fileID: 7302107712132786811}
   MaxHP: 0
   AI: {fileID: 0}
+  Target: {fileID: 0}
 --- !u!114 &7302107712132786811
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -86,6 +88,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5242374421797416666}
   - component: {fileID: 5242374421797416661}
+  - component: {fileID: 2818569064895119062}
   m_Layer: 0
   m_Name: Sprite
   m_TagString: Untagged
@@ -156,6 +159,25 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!95 &2818569064895119062
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5242374421797416660}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &5242374422198474565
 GameObject:
   m_ObjectHideFlags: 0
