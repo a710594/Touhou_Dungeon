@@ -20,7 +20,6 @@ public class FieldSkill : Skill
         base.UseCallback();
 
         SetEffect(null);
-        BattleUI.Instance.SetFloatingNumber(_executor, Data.GetComment(), FloatingNumber.Type.Other, _skillCallback);
     }
 
     public override void SetEffect(BattleCharacter target)
@@ -31,5 +30,11 @@ public class FieldSkill : Skill
         {
             BattleFieldManager.Instance.MapDic[_skillRangeList[i]].SetBuff(Data.StatusID);
         }
+
+        BattleUI.Instance.SetFloatingNumber(_executor, Data.GetComment(), FloatingNumber.Type.Other, () =>
+        {
+            BattleUI.Instance.SetSkillLabel(false);
+            _skillCallback();
+        });
     }
 }

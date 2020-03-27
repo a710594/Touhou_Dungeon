@@ -87,6 +87,11 @@ public class BattleCharacterPlayer : BattleCharacter
 
     public void Move()
     {
+        if (Animator != null)
+        {
+            Animator.SetBool("IsMoving", true);
+        }
+
         Vector2Int destination = _path.Dequeue();
         if (transform.position.x - destination.x > 0 && _lookAt == Vector2Int.right)
         {
@@ -104,6 +109,10 @@ public class BattleCharacterPlayer : BattleCharacter
             if (_path.Count > 0)
             {
                 Move();
+            }
+            else
+            {
+                Animator.SetBool("IsMoving", false);
             }
         });
     }

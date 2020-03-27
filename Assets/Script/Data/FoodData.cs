@@ -11,7 +11,7 @@ public class FoodData
         public string Name { get; set; }
         public int AddHP { get; set; }
         public int AddMP { get; set; }
-        public int HasBuff { get; set; }
+        public bool HasBuff { get; set; }
         public int? ATK { get; set; }
         public int? DEF { get; set; }
         public int? MTK { get; set; }

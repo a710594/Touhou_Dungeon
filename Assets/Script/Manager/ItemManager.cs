@@ -389,6 +389,20 @@ public class ItemManager
         return itemDic;
     }
 
+    public List<Equip> GetEquipListByType(Type type, EquipData.TypeEnum equipType)
+    {
+        List<Equip> equipList;
+        if (type == Type.Bag)
+        {
+            _bagEquipDic.TryGetValue(equipType, out equipList);
+        }
+        else
+        {
+            _warehouseEquipDic.TryGetValue(equipType, out equipList);
+        }
+        return equipList;
+    }
+
     /*private void SortBag()
     {
         List<int> itemIdList = new List<int>(BagDic.Keys);

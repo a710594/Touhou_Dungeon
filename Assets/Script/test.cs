@@ -7,11 +7,29 @@ public class test : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Vector3 vector = Vector3.right;
-        List<Vector2Int> positionList = Utility.GetLinePositionList(5, 3, Vector2Int.zero, Vector2Int.down);
-        for (int i=0; i<positionList.Count; i++)
+        Vector2Int circlePoint = new Vector2Int();
+        List<Vector2Int> circleList = new List<Vector2Int>();
+        List<Vector2Int> lineList = new List<Vector2Int>();
+
+        circleList = Utility.GetCirclePositionList(Vector2Int.zero, 6, false);
+        for (int i = 0; i < circleList.Count; i++)
         {
-            TilePainter.Instance.Painting("RedGrid", 0, positionList[i]);
+            circlePoint = circleList[i];
+            lineList = Utility.GetLinePositionList(Vector2Int.zero, circlePoint);
+
+            if (lineList[0] != Vector2Int.zero)
+            {
+                lineList.Reverse();
+            }
+            for (int j = 0; j < lineList.Count; j++)
+            {
+                circleList.Remove(lineList[j]);
+                if (lineList[j] == circlePoint)
+                {
+                    i--;
+                }
+                TilePainter.Instance.Painting("Ground", 2, lineList[j]);
+            }
         }
     }
 

@@ -133,6 +133,11 @@ public class BattleUI : MonoBehaviour
         SkillScrollView.AddClickHandler(SkillOnClick);
     }
 
+    public void RemoveSelectedSkill() 
+    {
+        SkillScrollView.RemoveSelectedItem();
+    }
+
     public void SetItem()
     {
         int itemId;
@@ -290,7 +295,7 @@ public class BattleUI : MonoBehaviour
         BattleController.Instance.MoveCancel();
     }
 
-    private void ScreenOnClick(object data)
+    private void ScreenOnClick(ButtonPlus button)
     {
         Vector2 worldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         Vector2Int intPosition = Vector2Int.RoundToInt(worldPosition);

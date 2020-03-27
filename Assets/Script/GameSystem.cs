@@ -23,6 +23,10 @@ public class GameSystem : MonoBehaviour
         EquipData.Load();
         FoodData.Load();
         LanguageData.Load();
+        DungeonData.Load();
+        RoomData.Load();
+        TreasureData.Load();
+        DungeonBattleGroupData.Load();
 
         TeamManager.Instance.Init();
         ItemManager.Instance.Init();
@@ -30,8 +34,11 @@ public class GameSystem : MonoBehaviour
 
         yield return new WaitForEndOfFrame();
 
-        List<KeyValuePair<int, int>> enemyList = BattleGroupData.GetEnemy(1);
-        BattleController.Instance.Init(1, enemyList);
+        //List<KeyValuePair<int, int>> enemyList = BattleGroupData.GetEnemy(1);
+        //BattleController.Instance.Init(1, enemyList);
+        MapInfo info;
+        DungeonBuilder.Instance.Generate(1, out info);
+        ExploreController.Instance.SetData(info);
     }
 
     private void Awake()

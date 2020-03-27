@@ -1,0 +1,40 @@
+﻿[
+  {
+    "ID": 1,
+    "Floor": 1,
+    "RoomAmount": 8,
+    "Room_1": 1,
+    "Probability_1": 8,
+    "Room_2": 2,
+    "Probability_2": 1,
+    "Room_3": 3,
+    "Probability_3": 1,
+    "GroundTile": "Ground",
+    "WallTile": "Wall",
+    "DoorTile": "Door",
+    "GrassTile": "Grass",
+    "MinExplorePoint": 2,
+    "MaxExplorePoint": 3,
+    "Event_1": 1,
+    "Event_2": 2
+  },
+  {
+    "ID": 2,
+    "Floor": 2,
+    "RoomAmount": 9,
+    "Room_1": 1,
+    "Probability_1": 8,
+    "Room_2": 2,
+    "Probability_2": 1,
+    "Room_3": 3,
+    "Probability_3": 1,
+    "GroundTile": "Ground",
+    "WallTile": "Wall",
+    "DoorTile": "Door",
+    "GrassTile": "Grass",
+    "MinExplorePoint": 2,
+    "MaxExplorePoint": 3,
+    "Event_1": 1,
+    "Event_2": 2
+  }
+]

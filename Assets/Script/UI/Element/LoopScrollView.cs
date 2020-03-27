@@ -311,6 +311,15 @@ public class LoopScrollView : MonoBehaviour
         _onUpHandler -= callback;
     }
 
+    public void RemoveSelectedItem() 
+    {
+        if (_selectedItem != null)
+        {
+            _selectedItem.SetSelected(false);
+            _selectedItem = null;
+        }
+    }
+
     private void Init()
     {
         //int itemAmount = 0;

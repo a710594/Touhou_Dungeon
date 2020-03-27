@@ -289,6 +289,7 @@ MonoBehaviour:
   DownThreshold: 1
   PressDuration: 0.5
   Label: {fileID: 0}
+  Image: {fileID: 0}
 --- !u!114 &265373492
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -361,7 +362,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 519420028}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a5ea36d6212c62c489f0c558f2398f8c, type: 3}
+  m_Script: {fileID: 11500000, guid: 111cb7faed308374bbe5a4e0d12808a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!20 &519420031

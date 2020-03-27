@@ -67,13 +67,13 @@ public class BattleController : MachineBehaviour
         }
 
         Camera.main.transform.position = new Vector3(BattleFieldManager.Instance.Center.x, BattleFieldManager.Instance.Center.y, Camera.main.transform.position.z);
-        //ChangeSceneUI.Instance.EndClock(() =>
-        //{
-        BattleUI.Open();
-        BattleUI.Instance.Init(CharacterList);
-        //BattleUI.Instance.SetPriorityQueueVisible(true);
-        ChangeState<TurnStartState>();
-        //});
+        ChangeSceneUI.Instance.EndClock(() =>
+        {
+            BattleUI.Open();
+            BattleUI.Instance.Init(CharacterList);
+            //BattleUI.Instance.SetPriorityQueueVisible(true);
+            ChangeState<TurnStartState>();
+        });
     }
 
     public override void AddStates()
@@ -463,6 +463,7 @@ public class BattleController : MachineBehaviour
             BattleUI.Instance.SetInfo(false);
             BattleUI.Instance.SetReturnActionVisible(true);
             BattleUI.Instance.SetSkillScrollViewVisible(true);
+            BattleUI.Instance.RemoveSelectedSkill();
             BattleUI.Instance.SetInfo(true, parent.SelectedCharacter);
         }
 
@@ -490,10 +491,6 @@ public class BattleController : MachineBehaviour
             {
                 parent.SelectedCharacter.SetTarget(position);
                 parent.ChangeState<ConfirmState>();
-            }
-            else
-            {
-                TilePainter.Instance.Clear(2);
             }
 
             BattleField battleField = BattleFieldManager.Instance.GetField(position);

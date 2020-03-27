@@ -1,0 +1,5 @@
+﻿[{"ID":1,"Image":"Treasure","MinAmount":1,"MaxAmount":3,"Item_1":11,"Probability_1":1,"Item_2":12,"Probability_2":1},
+{"ID":2,"Image":"Tree","MinAmount":1,"MaxAmount":3,"Item_1":3,"Probability_1":1,"Item_2":4,"Probability_2":1},
+{"ID":3,"Image":"Flower","MinAmount":1,"MaxAmount":3,"Item_1":5,"Probability_1":1,"Item_2":6,"Probability_2":1},
+{"ID":4,"Image":"Mineral","MinAmount":1,"MaxAmount":3,"Item_1":1,"Probability_1":2,"Item_2":2,"Probability_2":1},
+{"ID":5,"Image":"Treasure","MinAmount":1,"MaxAmount":3,"Item_1":8,"Probability_1":1,"Item_2":0,"Probability_2":0}]

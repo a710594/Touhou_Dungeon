@@ -29,7 +29,7 @@ public class ScrollItem : MonoBehaviour
         SelectedImage.gameObject.SetActive(show);
     }
 
-    private void OnClick(object data)
+    private void OnClick(ButtonPlus button)
     {
         if (OnClickHandler != null)
         {
