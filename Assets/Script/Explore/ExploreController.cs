@@ -238,10 +238,9 @@ public class ExploreController
         Vector2Int circlePoint = new Vector2Int();
         List<Vector2Int> circleList = new List<Vector2Int>();
         List<Vector2Int> lineList = new List<Vector2Int>();
-        List<Vector2Int> checkList = new List<Vector2Int>();
 
         TilePainter.Instance.Clear(2, playerPosition);
-        circleList = Utility.GetCirclePositionList(playerPosition, 6, false);
+        circleList = Utility.GetCirclePositionList(playerPosition, 6, !isInit);
         for (int i=0; i<circleList.Count; i++)
         {
             circlePoint = circleList[i];
@@ -255,29 +254,25 @@ public class ExploreController
 
             for (int j = 0; j < lineList.Count; j++)
             {
-                if (!_exploredList.Contains(lineList[j]))
-                {
+                //if (!_exploredList.Contains(lineList[j]))
+                //{
                     if (!_mapInfo.MapList.Contains(lineList[j]) || _mapInfo.DoorDic.ContainsKey(lineList[j]))
                     {
-                        _wallList.Add(lineList[j]);
+                        if(!_wallList.Contains(lineList[j]))
+                            _wallList.Add(lineList[j]);
+                        
+                        if(!_exploredList.Contains(lineList[j]))
+                            _exploredList.Add(lineList[j]);
                         TilePainter.Instance.Clear(2, lineList[j]);
                         _mapInfo.MistList.Remove(lineList[j]);
                         break;
                     }
 
-                    _exploredList.Add(lineList[j]);
-                    circleList.Remove(lineList[j]);
-                    if (lineList[j] == circlePoint)
-                    {
-                        i--;
-                    }
-                    if (j == lineList.Count - 1)
-                    {
-                        checkList.Add(lineList[j]);
-                    }
+                    if (!_exploredList.Contains(lineList[j]))
+                        _exploredList.Add(lineList[j]);
                     TilePainter.Instance.Clear(2, lineList[j]);
                     _mapInfo.MistList.Remove(lineList[j]);
-                }
+                //}
             }
         }
 
