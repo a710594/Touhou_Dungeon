@@ -16,7 +16,7 @@ public class FoodBuff
 
     public FoodBuff(int id)
     {
-        FoodData.RootObject data = FoodData.GetData(id);
+        ItemEffectData.RootObject data = ItemEffectData.GetData(id);
 
         ATK = (float)data.ATK / 100f;
         DEF = (float)data.DEF / 100f;

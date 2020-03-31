@@ -35,7 +35,7 @@ public class ExploreController
         _player.transform.position = (Vector2)info.Start;
         SetVisibleRange(true);
         ExploreUI.Open();
-        ExploreUI.Instance.InitLittleMap(Vector2Int.RoundToInt(_player.transform.position), _mapInfo.MapBound, _mapInfo.MapList, _exploredList);
+        ExploreUI.Instance.InitLittleMap(Vector2Int.RoundToInt(_player.transform.position), _mapInfo.Start, _mapInfo.Goal, _mapInfo.MapBound, _mapInfo.MapList);
         ExploreUI.Instance.RefreshLittleMap(Vector2Int.RoundToInt(_player.transform.position), _exploredList, _wallList);
 
         SetInteractive(Vector2Int.RoundToInt(_player.transform.position));
@@ -49,9 +49,11 @@ public class ExploreController
 
         _player = GameObject.Find("ExploreCharacter").GetComponent<ExploreCharacter>();
         _player.transform.position = _playerPosition;
+        SetVisibleRange(true);
 
+        ExploreUI.Open();
         SetInteractive(Vector2Int.RoundToInt(_player.transform.position));
-        ExploreUI.Instance.ReloadLittleMap(Vector2Int.RoundToInt(_player.transform.position), _mapInfo.MapBound, _mapInfo.MapList, _exploredList);
+        ExploreUI.Instance.InitLittleMap(Vector2Int.RoundToInt(_player.transform.position), _mapInfo.Start, _mapInfo.Goal, _mapInfo.MapBound, _mapInfo.MapList);
         ExploreUI.Instance.RefreshLittleMap(Vector2Int.RoundToInt(_player.transform.position), _exploredList, _wallList);
         GenerateEnemy();
     }
@@ -134,7 +136,7 @@ public class ExploreController
     public void ForceEnterBattle() //作弊用,強迫進入戰鬥
     {
         Vector2Int newPosition = Vector2Int.RoundToInt(_player.transform.position);
-        //EnterBattle();
+        EnterBattle();
     }
 
     public void BackToVilliage()
@@ -239,7 +241,8 @@ public class ExploreController
         List<Vector2Int> circleList = new List<Vector2Int>();
         List<Vector2Int> lineList = new List<Vector2Int>();
 
-        TilePainter.Instance.Clear(2, playerPosition);
+        _exploredList.Add(playerPosition);
+        _mapInfo.MistList.Remove(playerPosition);
         circleList = Utility.GetCirclePositionList(playerPosition, 6, !isInit);
         for (int i=0; i<circleList.Count; i++)
         {
@@ -263,32 +266,32 @@ public class ExploreController
                         
                         if(!_exploredList.Contains(lineList[j]))
                             _exploredList.Add(lineList[j]);
-                        TilePainter.Instance.Clear(2, lineList[j]);
+                        //TilePainter.Instance.Clear(2, lineList[j]);
                         _mapInfo.MistList.Remove(lineList[j]);
                         break;
                     }
 
                     if (!_exploredList.Contains(lineList[j]))
                         _exploredList.Add(lineList[j]);
-                    TilePainter.Instance.Clear(2, lineList[j]);
+                    //TilePainter.Instance.Clear(2, lineList[j]);
                     _mapInfo.MistList.Remove(lineList[j]);
                 //}
             }
         }
 
-        //for (int i=0; i<_exploredList.Count; i++) 
-        //{
-        //    TilePainter.Instance.Painting("Mask", 2, _exploredList[i]);
-        //    if (_exploredList.Contains(_exploredList[i] + Vector2Int.up) && _exploredList.Contains(_exploredList[i] + Vector2Int.down) && _exploredList.Contains(_exploredList[i] + Vector2Int.left) && _exploredList.Contains(_exploredList[i] + Vector2Int.right))
-        //    {
-        //        TilePainter.Instance.Clear(2, _exploredList[i]);
-        //    }
+        for (int i = 0; i < _exploredList.Count; i++)
+        {
+            TilePainter.Instance.Painting("Mask", 2, _exploredList[i]);
+            if (_exploredList.Contains(_exploredList[i] + Vector2Int.up) && _exploredList.Contains(_exploredList[i] + Vector2Int.down) && _exploredList.Contains(_exploredList[i] + Vector2Int.left) && _exploredList.Contains(_exploredList[i] + Vector2Int.right))
+            {
+                TilePainter.Instance.Clear(2, _exploredList[i]);
+            }
 
-        //    if (_wallList.Contains(_exploredList[i] + Vector2Int.up) || _wallList.Contains(_exploredList[i] + Vector2Int.down) || _wallList.Contains(_exploredList[i] + Vector2Int.left) || _wallList.Contains(_exploredList[i] + Vector2Int.right))
-        //    {
-        //        TilePainter.Instance.Clear(2, _exploredList[i]);
-        //    }
-        //}
+            //if (_wallList.Contains(_exploredList[i] + Vector2Int.up) || _wallList.Contains(_exploredList[i] + Vector2Int.down) || _wallList.Contains(_exploredList[i] + Vector2Int.left) || _wallList.Contains(_exploredList[i] + Vector2Int.right))
+            //{
+            //    TilePainter.Instance.Clear(2, _exploredList[i]);
+            //}
+        }
     }
 
     private void EnterBattle()

@@ -34,6 +34,11 @@ public class CureSkill : Skill
     {
         base.SetEffect(target);
 
-        target.SetRecover(-Data.Damage, CheckSkillCallback);
+        target.SetRecover(CalculateRecover(), CheckSkillCallback);
+    }
+
+    private int CalculateRecover()
+    {
+        return (int)((float)_executor.MEF / 10f * (float)-Data.Damage);
     }
 }

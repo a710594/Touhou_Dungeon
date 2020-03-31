@@ -32,6 +32,7 @@ public class BagUI : MonoBehaviour
 
     public static void Open(ItemManager.Type type)
     {
+        Time.timeScale = 0;
         if (Instance == null)
         {
             Instance = ResourceManager.Instance.Spawn("BagUI", ResourceManager.Type.UI).GetComponent<BagUI>();
@@ -42,6 +43,7 @@ public class BagUI : MonoBehaviour
 
     public static void Open(ItemManager.Type type, TeamMember teamMember, List<Equip> equipList)
     {
+        Time.timeScale = 0;
         if (Instance == null)
         {
             Instance = ResourceManager.Instance.Spawn("BagUI", ResourceManager.Type.UI).GetComponent<BagUI>();
@@ -52,6 +54,7 @@ public class BagUI : MonoBehaviour
 
     public static void Close()
     {
+        Time.timeScale = 1;
         Destroy(Instance.gameObject);
         Instance = null;
     }
@@ -152,7 +155,7 @@ public class BagUI : MonoBehaviour
                 DiscardButton.gameObject.SetActive(false);
             }
 
-            if (item.Type == ItemData.TypeEnum.Food)
+            if (item.Type == ItemData.TypeEnum.Food || item.Type == ItemData.TypeEnum.Medicine)
             {
                 UseButton.gameObject.SetActive(true);
             }
@@ -307,9 +310,9 @@ public class BagUI : MonoBehaviour
 
     private void CharacterOnClick(TeamMember member)
     {
-        if (_selectedItem != null && _selectedItem.Type == ItemData.TypeEnum.Food)
+        if (_selectedItem.Type == ItemData.TypeEnum.Food || _selectedItem.Type == ItemData.TypeEnum.Medicine)
         {
-            FoodData.RootObject foodData = FoodData.GetData(_selectedItem.ID);
+            ItemEffectData.RootObject foodData = ItemEffectData.GetData(_selectedItem.ID);
             if (foodData.AddHP != 0)
             {
                 member.CurrentHP += foodData.AddHP;
@@ -330,7 +333,7 @@ public class BagUI : MonoBehaviour
             }
             ItemManager.Instance.MinusItem(_selectedItem.ID, 1, _type);
         }
-        else if (_selectedEquip != null)
+        else if (_selectedItem.Type == ItemData.TypeEnum.Equip)
         {
             Equip oldEquip;
             member.SetEquip(_selectedEquip, out oldEquip);

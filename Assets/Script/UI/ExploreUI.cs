@@ -35,19 +35,14 @@ public class ExploreUI : MonoBehaviour
         Instance = null;
     }
 
-    public void InitLittleMap(Vector2Int characterPosition, BoundsInt mapBound, List<Vector2Int> mapList, List<Vector2Int> exploredList)
+    public void InitLittleMap(Vector2Int playerPosition, Vector2Int startPosition, Vector2Int goalPosition, BoundsInt mapBound, List<Vector2Int> mapList)
     {
-        LittleMap.Init(characterPosition, mapBound, mapList);
+        LittleMap.Init(playerPosition, startPosition, goalPosition, mapBound, mapList);
     }
 
     public void RefreshLittleMap(Vector2Int characterPosition, List<Vector2Int> exploredList, List<Vector2Int> wallList)
     {
         LittleMap.Refresh(characterPosition, exploredList, wallList);
-    }
-
-    public void ReloadLittleMap(Vector2Int characterPosition, BoundsInt mapBound, List<Vector2Int> mapList, List<Vector2Int> exploredList)
-    {
-        LittleMap.Init(characterPosition, mapBound, mapList);
     }
 
     public void SetInetractiveButtonVisible(List<Vector2Int> positionList)
@@ -79,11 +74,13 @@ public class ExploreUI : MonoBehaviour
     private void OpenMapGroup()
     {
         MapGroup.SetActive(true);
+        Time.timeScale = 0;
     }
 
     private void CloseMapGroup()
     {
         MapGroup.SetActive(false);
+        Time.timeScale = 1;
     }
 
     private void OpenBag()

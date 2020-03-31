@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Newtonsoft.Json;
 
-public class FoodData
+public class ItemEffectData
 {
     public class RootObject
     {
@@ -25,7 +25,7 @@ public class FoodData
 
     public static void Load()
     {
-        TextAsset textAsset = Resources.Load<TextAsset>("Json/Food");
+        TextAsset textAsset = Resources.Load<TextAsset>("Json/ItemEffect");
         string jsonString = textAsset.text;
         var dataList = JsonConvert.DeserializeObject<List<RootObject>>(jsonString);
 

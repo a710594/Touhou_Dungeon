@@ -30,13 +30,6 @@ public class BattleCharacter : MonoBehaviour
         None,
     }
 
-    public enum HitType
-    {
-        Miss,
-        Hit,
-        Critical
-    }
-
     public Action OnDeathHandler;
 
     public int Lv;
@@ -52,6 +45,7 @@ public class BattleCharacter : MonoBehaviour
     public Transform ValueBarAnchor;
     public Skill SelectedSkill;
     public SpriteOutline SpriteOutline;
+    public GrayScale GrayScale;
     public List<Skill> SkillList = new List<Skill>();
     public List<Skill> SpellCardList = new List<Skill>();
     public Dictionary<int, BattleStatus> StatusDic = new Dictionary<int, BattleStatus>();
@@ -61,7 +55,7 @@ public class BattleCharacter : MonoBehaviour
     protected Vector2 _originalPosition = new Vector2();
     protected Vector2Int _lookAt = Vector2Int.right;
     protected Queue<Vector2Int> _path;
-    protected Dictionary<int, BattleStatus> _poisonDic = new Dictionary<int, BattleStatus>();
+    protected Dictionary<int, int> _poisonDic = new Dictionary<int, int>(); //id, damage
     protected List<Vector2Int> _moveRangeList = new List<Vector2Int>();
 
     public int MaxHP;
@@ -337,16 +331,158 @@ public class BattleCharacter : MonoBehaviour
         SelectedSkill.Use(this, callback);
     }
 
-    public virtual void SetDamage(BattleCharacter executor, SkillData.RootObject skillData, Action<BattleCharacter> callback)
+    public virtual void SetDamage(int damage, AttackSkill.HitType hitType, Action<BattleCharacter> callback)
     {
+        CurrentHP -= damage;
+
+        string text = "";
+        FloatingNumber.Type floatingNumberType = FloatingNumber.Type.Other;
+        if (hitType == AttackSkill.HitType.Critical)
+        {
+            floatingNumberType = FloatingNumber.Type.Critical;
+            text = damage.ToString();
+        }
+        else if (hitType == AttackSkill.HitType.Hit)
+        {
+            floatingNumberType = FloatingNumber.Type.Damage;
+            text = damage.ToString();
+        }
+        else if (hitType == AttackSkill.HitType.Miss)
+        {
+            floatingNumberType = FloatingNumber.Type.Miss;
+            text = "Miss";
+        }
+
+        BattleUI.Instance.SetFloatingNumber(this, text, floatingNumberType, () =>
+        {
+            if (CurrentHP <= 0)
+            {
+                if (Camp == CampEnum.Enemy || LiveState == LiveStateEnum.Dying)
+                {
+                    SetDeath(() =>
+                    {
+                        if (callback != null)
+                        {
+                            callback(this);
+                        }
+                    });
+                }
+                else
+                {
+                    SetDying(() =>
+                    {
+                        if (callback != null)
+                        {
+                            callback(this);
+                        }
+                    });
+                }
+            }
+            else
+            {
+                if (callback != null)
+                {
+                    callback(this);
+                }
+            }
+        });
+
+        if (IsSleeping)
+        {
+            //解除睡眠狀態
+            StatusDic.Remove(_sleepingId);
+            _sleepingId = -1;
+        }
     }
 
     public virtual void SetPoisonDamage(Action callback) //回合結束時計算毒傷害
     {
+        int damage;
+        int callbackCount = 0;
+        foreach (KeyValuePair<int, int> item in _poisonDic)
+        {
+            CurrentHP -= item.Value;
+
+            BattleUI.Instance.SetFloatingNumber(this, item.Value.ToString(), FloatingNumber.Type.Poison, () =>
+            {
+                callbackCount++;
+                if (CurrentHP <= 0)
+                {
+                    if (Camp == CampEnum.Enemy || LiveState == LiveStateEnum.Dying)
+                    {
+                        SetDeath(callback);
+                    }
+                    else
+                    {
+                        SetDying(callback);
+                    }
+                }
+                else
+                {
+                    if (callbackCount == _poisonDic.Count && callback != null)
+                    {
+                        callback();
+                    }
+                }
+            });
+        }
     }
 
     public virtual void SetRecover(int recover, Action<BattleCharacter> callback)
     {
+        CurrentHP += recover;
+        BattleUI.Instance.SetFloatingNumber(this, recover.ToString(), FloatingNumber.Type.Recover, () =>
+        {
+            if (callback != null)
+            {
+                callback(this);
+            }
+        });
+
+        if (LiveState == LiveStateEnum.Dying)
+        {
+            LiveState = LiveStateEnum.Alive;
+            GrayScale.SetScale(1);
+        }
+    }
+
+    public void ClearAbnormal(Action<BattleCharacter> callback)
+    {
+        List<int> keyList = new List<int>(StatusDic.Keys);
+        List<BattleStatus> statusList = new List<BattleStatus>(StatusDic.Values);
+
+        for (int i = 0; i < keyList.Count; i++)
+        {
+            if (statusList[i].RemainTurn != -1)
+            {
+                if (statusList[i] is Poison || statusList[i] is Paralysis || statusList[i] is Sleeping)
+                {
+                    if (statusList[i] is Poison)
+                    {
+                        _poisonDic.Remove(statusList[i].Data.ID);
+                    }
+                    else if (statusList[i] is Paralysis)
+                    {
+                        _paralysisProbability = 0;
+                    }
+                    else if (statusList[i] is Sleeping)
+                    {
+                        _sleepingId = -1;
+                    }
+
+                    statusList[i].RemainTurn = 0;
+                    StatusDic.Remove(keyList[i]);
+                }
+            }
+        }
+
+        BattleUI.Instance.SetStatus(this, "解除異常狀態", FloatingNumber.Type.Other, () =>
+        {
+            if (callback != null)
+            {
+                callback(this);
+            }
+        });
     }
 
     public void SetBuff(int id, Action<BattleCharacter> callback)
@@ -370,7 +506,7 @@ public class BattleCharacter : MonoBehaviour
         });
     }
 
-    public void SetPoison(int id, Action<BattleCharacter> callback)
+    public void SetPoison(int id, int damage, Action<BattleCharacter> callback)
     {
         Poison poison;
 
@@ -378,7 +514,7 @@ public class BattleCharacter : MonoBehaviour
         {
             poison = new Poison(id);
             StatusDic.Add(id, poison);
-            _poisonDic.Add(id, poison);
+            _poisonDic.Add(id, damage);
         }
         else
         {
@@ -400,60 +536,6 @@ public class BattleCharacter : MonoBehaviour
         SpriteOutline.SetOutline(show);
     }
 
-    protected HitType CheckHit(BattleCharacter executor)
-    {
-        float misssRate;
-        misssRate = (float)(AGI - executor.SEN) / (float)AGI; //迴避率
-
-        if (misssRate >= 0) //迴避率為正,骰迴避
-        {
-            if (misssRate < UnityEngine.Random.Range(0f, 1f))
-            {
-                return HitType.Hit;
-            }
-            else
-            {
-                return HitType.Miss;
-            }
-        }
-        else //迴避率為負,骰爆擊
-        {
-            if (misssRate < UnityEngine.Random.Range(0f, 1f) * -1f)
-            {
-                return HitType.Critical;
-            }
-            else
-            {
-                return HitType.Hit;
-            }
-        }
-    }
-
-    protected int CalculateDamage(BattleCharacter executor, SkillData.RootObject skill, bool isCritical)
-    {
-        int damage;
-        if (skill.IsMagic)
-        {
-            damage = Mathf.RoundToInt(((float)executor.MTK / (float)MEF) * skill.Damage);
-        }
-        else
-        {
-            damage = Mathf.RoundToInt(((float)executor.ATK / (float)DEF) * skill.Damage);
-        }
-        if (isCritical)
-        {
-            damage = (int)(damage * 1.5f);
-            Debug.Log("爆擊");
-        }
-        if (IsSleeping)
-        {
-            damage = (int)(damage * 2f);
-        }
-        damage = (int)(damage * (UnityEngine.Random.Range(100f, 110f) / 100f)); //加上10%的隨機傷害
-
-        return damage;
-    }
-
     protected virtual void SetDeath(Action callback)
     {
         LiveState = LiveStateEnum.Dead;
@@ -466,6 +548,16 @@ public class BattleCharacter : MonoBehaviour
                 callback();
             }
         });
+    }
+
+    private void SetDying(Action callback)
+    {
+        LiveState = LiveStateEnum.Dying;
+        GrayScale.SetScale(0);
+        if (callback != null)
+        {
+            callback();
+        }
     }
 
     private float GetBuffATK()

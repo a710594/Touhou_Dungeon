@@ -18,6 +18,7 @@ public class FieldEnemy : MonoBehaviour
     public void Stop()
     {
         _timer.Stop();
+        transform.DOKill();
     }
 
     protected virtual void Init() { }

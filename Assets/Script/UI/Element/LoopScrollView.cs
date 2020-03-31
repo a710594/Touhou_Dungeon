@@ -93,6 +93,7 @@ public class LoopScrollView : MonoBehaviour
         if (Direction == Type.Horizontal)
         {
             isShort = _itemLength * _dataList.Count + Spacing.x * (_dataList.Count - 1) < Mask.rectTransform.rect.width;
+            ScrollView.enabled = !isShort;
             if (isShort)
             {
                 Content.rectTransform.sizeDelta = new Vector2(_itemLength * (_gridAmount - PreparationAmount) + Spacing.x * ((_gridAmount - PreparationAmount) - 1), _itemSubLength * _gridElementAmount + Spacing.y * (_gridElementAmount - 1));
@@ -130,6 +131,7 @@ public class LoopScrollView : MonoBehaviour
         else
         {
             isShort = _itemLength * _dataList.Count + Spacing.y * (_dataList.Count - 1) < Mask.rectTransform.rect.height;
+            ScrollView.enabled = !isShort;
             if (isShort)
             {
                 Content.rectTransform.sizeDelta = new Vector2(_itemSubLength * _gridElementAmount + Spacing.x * (_gridElementAmount - 1), _itemLength * (_gridAmount - PreparationAmount) + Spacing.y * (_gridAmount - PreparationAmount - 1));

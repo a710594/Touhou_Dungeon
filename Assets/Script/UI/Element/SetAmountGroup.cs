@@ -22,7 +22,8 @@ public class SetAmountGroup : MonoBehaviour
         gameObject.SetActive(true);
         _maxAmount = maxAmoount;
         _onConfirmHandler = onConfirmHandler;
-        InputField.text = "1";
+        _amount = 1;
+        InputField.text = _amount.ToString();
         CommentLabel.text = comment;
 
         MinusButton.interactable = false;

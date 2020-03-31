@@ -1,10 +1,11 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PoisonSkill : Skill
+public class ClearAbnormalSkill : Skill
 {
-    public PoisonSkill(SkillData.RootObject data)
+    public ClearAbnormalSkill(SkillData.RootObject data)
     {
         Data = data;
         if (data.SubID != 0)
@@ -14,7 +15,7 @@ public class PoisonSkill : Skill
         }
     }
 
-    protected override void UseCallback()
+    public override void Use(BattleCharacter executor, Action callback)
     {
         base.UseCallback();
 
@@ -33,12 +34,6 @@ public class PoisonSkill : Skill
     {
         base.SetEffect(target);
 
-        target.SetPoison(Data.StatusID, CalculateDamage(target), CheckSkillCallback);
-    }
-
-    private int CalculateDamage(BattleCharacter target)
-    {
-        float poisonDamage = BattleStatusData.GetData(Data.StatusID).Damage;
-        return (int)(poisonDamage / 100f * (float)target.MaxHP);
+        target.ClearAbnormal(CheckSkillCallback);
     }
 }

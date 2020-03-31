@@ -26,7 +26,7 @@ public class LanguageSystem
         }
     }
 
-    private Language _currentLanguage = Language.English;
+    private Language _currentLanguage = Language.Chinese;
     public Language CurrentLanguage
     {
         get

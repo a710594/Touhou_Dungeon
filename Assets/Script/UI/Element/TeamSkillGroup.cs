@@ -40,7 +40,6 @@ public class TeamSkillGroup : MonoBehaviour
         SkillData.RootObject data = (SkillData.RootObject)obj;
         NameLabel.text = data.GetName();
         DamageLabel.text = "傷害：" + data.Damage;
-        HitsLabel.text = "次數：" + data.Hits;
         DistanceLabel.text = "射程：" + data.Distance;
         RangeLabel.text = "範圍：" + data.Range_1;
         if (data.RangeType == SkillData.RangeTypeEnum.Point)

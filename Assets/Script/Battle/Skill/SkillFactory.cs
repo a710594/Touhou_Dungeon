@@ -29,6 +29,10 @@ public class SkillFactory
         {
             skill = new PoisonSkill(skillData);
         }
+        else if (skillData.Type == SkillData.TypeEnum.ClearAbnormal)
+        {
+            skill = new ClearAbnormalSkill(skillData);
+        }
         else if (skillData.Type == SkillData.TypeEnum.Field)
         {
             skill = new FieldSkill(skillData);

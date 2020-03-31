@@ -60,9 +60,8 @@ public class AI : MonoBehaviour
         _character.EndAI();
     }
 
-    protected void SelectSkill()
+    protected virtual void SelectSkill()
     {
-        _character.SelectedSkill = SkillFactory.GetNewSkill(16); //temp
     }
 
     protected BattleCharacter GetTarget(BattleCharacter.CampEnum targetCamp, List<Vector2Int> detectRangeList)

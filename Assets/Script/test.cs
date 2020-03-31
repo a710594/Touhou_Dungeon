@@ -11,9 +11,11 @@ public class test : MonoBehaviour
         List<Vector2Int> circleList = new List<Vector2Int>();
         List<Vector2Int> lineList = new List<Vector2Int>();
 
-        circleList = Utility.GetCirclePositionList(Vector2Int.zero, 6, false);
+        circleList = Utility.GetCirclePositionList(Vector2Int.zero, 5, true);
         for (int i = 0; i < circleList.Count; i++)
         {
+            TilePainter.Instance.Painting("YellowGrid", 2, circleList[i]);
+
             circlePoint = circleList[i];
             lineList = Utility.GetLinePositionList(Vector2Int.zero, circlePoint);
 
@@ -28,7 +30,7 @@ public class test : MonoBehaviour
                 {
                     i--;
                 }
-                TilePainter.Instance.Painting("Ground", 2, lineList[j]);
+                TilePainter.Instance.Painting("YellowGrid", 2, lineList[j]);
             }
         }
     }

@@ -19,7 +19,7 @@ public class BagSelectCharacterButton : MonoBehaviour
     public void SetData(TeamMember member)
     {
         _member = member;
-        Icon.overrideSprite = Resources.Load<Sprite>("Image/Character/Small" + member.Data.SmallImage);
+        Icon.overrideSprite = Resources.Load<Sprite>("Image/Character/Small/" + member.Data.SmallImage);
         NameLabel.text = member.Data.GetName();
         HPBar.SetValue(member.CurrentHP, member.MaxHP);
         MPBar.SetValue(member.CurrentMP, member.MaxMP);

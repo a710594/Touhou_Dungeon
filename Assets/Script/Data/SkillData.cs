@@ -41,7 +41,6 @@ public class SkillData
         public string Icon { get; set; }
         public TypeEnum Type { get; set; }
         public int Damage { get; set; }
-        public int Hits { get; set; }
         public int Distance { get; set; }
         public int Range_1 { get; set; }
         public int Range_2 { get; set; }

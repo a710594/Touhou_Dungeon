@@ -52,7 +52,7 @@ public class BattleCharacterAI : BattleCharacter
         }
     }
 
-    public override void SetDamage(BattleCharacter executor, SkillData.RootObject skillData, Action<BattleCharacter> callback)
+    /*public override void SetDamage(BattleCharacter executor, SkillData.RootObject skillData, Action<BattleCharacter> callback)
     {
         HitType hitType;
         int damage = -1;
@@ -157,7 +157,7 @@ public class BattleCharacterAI : BattleCharacter
                 callback(this);
             }
         });
-    }
+    }*/
 
     public List<Vector2Int> GetDetectRange() //偵查範圍:移動後可用技能擊中目標的範圍
     {

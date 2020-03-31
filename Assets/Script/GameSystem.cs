@@ -21,7 +21,7 @@ public class GameSystem : MonoBehaviour
         BattleStatusData.Load();
         ItemData.Load();
         EquipData.Load();
-        FoodData.Load();
+        ItemEffectData.Load();
         LanguageData.Load();
         DungeonData.Load();
         RoomData.Load();

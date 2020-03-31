@@ -49,9 +49,27 @@ public class DungeonData
 
         for (int i = 0; i < dataList.Count; i++)
         {
-            dataList[i].RoomList.Add(dataList[i].Room_1);
-            dataList[i].RoomList.Add(dataList[i].Room_2);
-            dataList[i].RoomList.Add(dataList[i].Room_3);
+            if (dataList[i].Room_1 != 0)
+            {
+                for (int j = 0; j < dataList[i].Probability_1; j++)
+                {
+                    dataList[i].RoomList.Add(dataList[i].Room_1);
+                }
+            }
+            if (dataList[i].Room_2 != 0)
+            {
+                for (int j = 0; j < dataList[i].Probability_2; j++)
+                {
+                    dataList[i].RoomList.Add(dataList[i].Room_2);
+                }
+            }
+            if (dataList[i].Room_3 != 0)
+            {
+                for (int j = 0; j < dataList[i].Probability_3; j++)
+                {
+                    dataList[i].RoomList.Add(dataList[i].Room_3);
+                }
+            }
 
             dataList[i].EventList.Add(dataList[i].Event_1);
             dataList[i].EventList.Add(dataList[i].Event_2);

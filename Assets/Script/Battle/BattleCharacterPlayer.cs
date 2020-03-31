@@ -6,8 +6,6 @@ using DG.Tweening;
 
 public class BattleCharacterPlayer : BattleCharacter
 {
-    public GrayScale GrayScale;
-
     public int MaxMP;
     protected int _currentMP;
     public int CurrentMP
@@ -129,7 +127,7 @@ public class BattleCharacterPlayer : BattleCharacter
         BattleController.Instance.MinusPower(SelectedSkill.Data.NeedPower);
     }
 
-    public override void SetDamage(BattleCharacter executor, SkillData.RootObject skillData, Action<BattleCharacter> callback)
+    /*public override void SetDamage(BattleCharacter executor, SkillData.RootObject skillData, Action<BattleCharacter> callback)
     {
         HitType hitType;
         int damage = -1;
@@ -260,7 +258,7 @@ public class BattleCharacterPlayer : BattleCharacter
             LiveState = LiveStateEnum.Alive;
             GrayScale.SetScale(1);
         }
-    }
+    }*/
 
     private void SetDying(Action callback)
     {
