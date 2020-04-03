@@ -2,11 +2,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class IconConfirmUI : MonoBehaviour
 {
-    public IconCard[] Icon;
-    public ButtonPlus ConfirmButton;
+    public Button ConfirmButton;
+    public LoopScrollView ScrollView;
 
     private Action _onFinishHandler; 
 
@@ -18,8 +19,19 @@ public class IconConfirmUI : MonoBehaviour
         {
             _instance = ResourceManager.Instance.Spawn("IconConfirmUI", ResourceManager.Type.UI).GetComponent<IconConfirmUI>();
         }
+        Time.timeScale = 0;
         _instance._onFinishHandler = callback;
         _instance.Init(idList);
+    }
+
+    private void Init(List<int> idList)
+    {
+        List<KeyValuePair<object, int>> itemPair = new List<KeyValuePair<object, int>>();
+        for (int i = 0; i < idList.Count; i++)
+        {
+            itemPair.Add(new KeyValuePair<object, int>(idList[i], 0)); //數量設為0是為了不讓 scrollview 顯示數量.實際數量都是1,沒有顯示的必要
+        }
+        ScrollView.SetData(new ArrayList(itemPair));
     }
 
     private void Close()
@@ -28,23 +40,9 @@ public class IconConfirmUI : MonoBehaviour
         _instance = null;
     }
 
-    private void Init(List<int> idList)
+    private void ConfirmOnClick()
     {
-        for (int i=0; i<Icon.Length; i++)
-        {
-            if (i < idList.Count)
-            {
-                Icon[i].Init(idList[i]);
-            }
-            else
-            {
-                Icon[i].Clear();
-            }
-        }
-    }
-
-    private void ConfirmOnClick(object data)
-    {
+        Time.timeScale = 1;
         _instance.Close();
         if (_onFinishHandler != null)
         {
@@ -55,6 +53,6 @@ public class IconConfirmUI : MonoBehaviour
 
     void Awake()
     {
-        ConfirmButton.ClickHandler = ConfirmOnClick;
+        ConfirmButton.onClick.AddListener(ConfirmOnClick);
     }
 }
