@@ -4,12 +4,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ButtonText : MonoBehaviour
+public class TeamMemberButton : MonoBehaviour
 {
     public Action<string, object> OnClickHandler;
 
     public Text Label;
-    public ButtonPlus Button;
+    public Image Image;
+    public Button Button;
 
     private string _text;
     private object _data;
@@ -21,7 +22,12 @@ public class ButtonText : MonoBehaviour
         Label.text = text;
     }
 
-    private void OnClick(object data)
+    public void SetColor(Color color)
+    {
+        Image.color = color;
+    }
+
+    private void OnClick()
     {
         if (OnClickHandler != null)
         {
@@ -31,6 +37,6 @@ public class ButtonText : MonoBehaviour
 
     private void Awake()
     {
-        Button.ClickHandler = OnClick;
+        Button.onClick.AddListener(OnClick);
     }
 }

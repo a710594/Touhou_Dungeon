@@ -38,22 +38,28 @@ public class JobData
         public string Name_Chinese { get; set; }
         public string Name_English { get; set; }
 
-        public List<int> SkillList = new List<int>();
-        public List<int> UnlockList = new List<int>();
+        public Dictionary<int, int> SkillUnlockDic = new Dictionary<int, int>(); //skill ID, unlock lv
         public Dictionary<LanguageSystem.Language, string> NameDic = new Dictionary<LanguageSystem.Language, string>();
 
         public List<int> GetUnlockSkill(int lv)
         {
             List<int>  unlockList = new List<int>();
-            for (int i = 0; i < SkillList.Count; i++)
+
+            foreach (KeyValuePair<int, int> item in SkillUnlockDic)
             {
-                if (SkillList[i] != 0 && lv >= UnlockList[i])
+                if (lv >= item.Value)
                 {
-                    unlockList.Add(SkillList[i]);
+                    unlockList.Add(item.Key);
                 }
             }
 
             return unlockList;
+        }
+
+        public bool IsUnlockSkill(int skillId, int lv)
+        {
+            int unlockLv = SkillUnlockDic[skillId];
+            return lv >= unlockLv;
         }
 
         public string GetName()
@@ -74,38 +80,32 @@ public class JobData
         {
             if (dataList[i].Skill_1 != 0)
             {
-                dataList[i].SkillList.Add(dataList[i].Skill_1);
-                dataList[i].UnlockList.Add(dataList[i].UnlockLv_1);
+                dataList[i].SkillUnlockDic.Add(dataList[i].Skill_1, dataList[i].UnlockLv_1);
             }
 
             if (dataList[i].Skill_2 != 0)
             {
-                dataList[i].SkillList.Add(dataList[i].Skill_2);
-                dataList[i].UnlockList.Add(dataList[i].UnlockLv_2);
+                dataList[i].SkillUnlockDic.Add(dataList[i].Skill_2, dataList[i].UnlockLv_2);
             }
 
             if (dataList[i].Skill_3 != 0)
             {
-                dataList[i].SkillList.Add(dataList[i].Skill_3);
-                dataList[i].UnlockList.Add(dataList[i].UnlockLv_3);
+                dataList[i].SkillUnlockDic.Add(dataList[i].Skill_3, dataList[i].UnlockLv_3);
             }
 
             if (dataList[i].Skill_4 != 0)
             {
-                dataList[i].SkillList.Add(dataList[i].Skill_4);
-                dataList[i].UnlockList.Add(dataList[i].UnlockLv_4);
+                dataList[i].SkillUnlockDic.Add(dataList[i].Skill_4, dataList[i].UnlockLv_4);
             }
 
             if (dataList[i].Skill_5 != 0)
             {
-                dataList[i].SkillList.Add(dataList[i].Skill_5);
-                dataList[i].UnlockList.Add(dataList[i].UnlockLv_5);
+                dataList[i].SkillUnlockDic.Add(dataList[i].Skill_5, dataList[i].UnlockLv_5);
             }
 
             if (dataList[i].Skill_6 != 0)
             {
-                dataList[i].SkillList.Add(dataList[i].Skill_6);
-                dataList[i].UnlockList.Add(dataList[i].UnlockLv_6);
+                dataList[i].SkillUnlockDic.Add(dataList[i].Skill_6, dataList[i].UnlockLv_6);
             }
 
             dataList[i].NameDic.Add(LanguageSystem.Language.Chinese, dataList[i].Name_Chinese);

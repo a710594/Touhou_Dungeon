@@ -217,4 +217,9 @@ public class TeamMember
         FoodBuff.Clear();
         HasFoodBuff = false;
     }
+
+    public bool IsUnlockSkill(int skillId)
+    {
+        return SkillList.Contains(skillId);
+    }
 }

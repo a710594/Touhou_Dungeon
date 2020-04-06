@@ -150,7 +150,7 @@ public class ExploreUI : MonoBehaviour
         }
         else 
         {
-            ExploreController.Instance.PlayerStop();
+            ExploreController.Instance.PlayerPause();
         }
     }
 }

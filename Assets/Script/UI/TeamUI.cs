@@ -24,11 +24,11 @@ public class TeamUI : MonoBehaviour
     public TeamSkillGroup SkillGroup;
     public TeamEquipGroup EquipGroup;
     public TeamPositionGroup PositionGroup;
-    public ButtonText[] TeamMemaberButton;
+    public TeamMemberButton[] TeamMemaberButton;
 
     private TeamMember _selectedMember;
     private State _currentState = State.Character;
-    private Dictionary<TeamMember, ButtonText> _teamMemaberButtonDic = new Dictionary<TeamMember, ButtonText>();
+    private Dictionary<TeamMember, TeamMemberButton> _teamMemaberButtonDic = new Dictionary<TeamMember, TeamMemberButton>();
 
     public static void Open()
     {
@@ -50,7 +50,7 @@ public class TeamUI : MonoBehaviour
     public void Init()
     {
         _selectedMember = TeamManager.Instance.MemberList[0];
-        _teamMemaberButtonDic[_selectedMember].Button.Image.color = Color.white;
+        _teamMemaberButtonDic[_selectedMember].SetColor(Color.white);
         SetCharacterData();
     }
 
@@ -76,9 +76,9 @@ public class TeamUI : MonoBehaviour
 
     private void TeamMemberOnClick(string text, object data) //左邊的角色欄
     {
-        _teamMemaberButtonDic[_selectedMember].Button.Image.color = Color.gray;
+        _teamMemaberButtonDic[_selectedMember].SetColor(Color.gray);
         _selectedMember = (TeamMember)data;
-        _teamMemaberButtonDic[_selectedMember].Button.Image.color = Color.white;
+        _teamMemaberButtonDic[_selectedMember].SetColor(Color.white);
 
         if (_currentState == State.Character)
         {
@@ -176,7 +176,7 @@ public class TeamUI : MonoBehaviour
             {
                 TeamMemaberButton[i].OnClickHandler = TeamMemberOnClick;
                 TeamMemaberButton[i].SetData(TeamManager.Instance.MemberList[i].Data.GetName(), TeamManager.Instance.MemberList[i]);
-                TeamMemaberButton[i].Button.Image.color = Color.gray;
+                TeamMemaberButton[i].SetColor(Color.gray);
                 TeamMemaberButton[i].gameObject.SetActive(true);
                 _teamMemaberButtonDic.Add(TeamManager.Instance.MemberList[i], TeamMemaberButton[i]);
             }

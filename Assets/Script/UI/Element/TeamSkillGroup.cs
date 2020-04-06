@@ -9,14 +9,14 @@ public class TeamSkillGroup : MonoBehaviour
     public Text DamageLabel;
     public Text HitsLabel;
     public Text DistanceLabel;
-    public Text RangeLabel;
-    public Text RangeTypeLabel;
+    //public Text RangeLabel;
+    //public Text RangeTypeLabel;
     public Text TargetLabel;
-    public Text PriorityLabel;
+    //public Text PriorityLabel;
     public Text MPLabel;
     public Text CDLabel;
-    public Text AddEPLabel;
-    public Text NeedEPLabel;
+    public Text AddPowerLabel;
+    public Text NeedPowerLabel;
     public Text CommentLabel;
     public LoopScrollView SkillScrollView;
 
@@ -24,14 +24,13 @@ public class TeamSkillGroup : MonoBehaviour
     {
         Clear();
 
-        List<KeyValuePair<int, int>> pairList = new List<KeyValuePair<int, int>>(); //skillId, characterLv
-        List<int> skillList = member.Data.SkillList;
-        for (int i = 0; i < skillList.Count; i++)
+        List<TeamSkillScrollItem.Data> dataList = new List<TeamSkillScrollItem.Data>();
+        foreach (KeyValuePair<int, int> item in member.Data.SkillUnlockDic)
         {
-            pairList.Add(new KeyValuePair<int, int>(skillList[i], member.Lv));
+            dataList.Add(new TeamSkillScrollItem.Data(member.Data, SkillData.GetData(item.Key), member.Lv));
         }
 
-        SkillScrollView.SetData(new ArrayList(pairList));
+        SkillScrollView.SetData(new ArrayList(dataList));
         SkillScrollView.AddClickHandler(SkillOnClick);
     }
 
@@ -41,19 +40,19 @@ public class TeamSkillGroup : MonoBehaviour
         NameLabel.text = data.GetName();
         DamageLabel.text = "傷害：" + data.Damage;
         DistanceLabel.text = "射程：" + data.Distance;
-        RangeLabel.text = "範圍：" + data.Range_1;
-        if (data.RangeType == SkillData.RangeTypeEnum.Point)
-        {
-            RangeTypeLabel.text = "範圍類型：點狀";
-        }
-        else if (data.RangeType == SkillData.RangeTypeEnum.Circle)
-        {
-            RangeTypeLabel.text = "範圍類型：擴散";
-        }
-        else if (data.RangeType == SkillData.RangeTypeEnum.Rectangle)
-        {
-            RangeTypeLabel.text = "範圍類型：貫通";
-        }
+        //RangeLabel.text = "範圍：" + data.Range_1;
+        //if (data.RangeType == SkillData.RangeTypeEnum.Point)
+        //{
+        //    RangeTypeLabel.text = "範圍類型：點狀";
+        //}
+        //else if (data.RangeType == SkillData.RangeTypeEnum.Circle)
+        //{
+        //    RangeTypeLabel.text = "範圍類型：擴散";
+        //}
+        //else if (data.RangeType == SkillData.RangeTypeEnum.Rectangle)
+        //{
+        //    RangeTypeLabel.text = "範圍類型：貫通";
+        //}
         if (data.Target == SkillData.TargetEnum.Us)
         {
             TargetLabel.text = "目標：我方";
@@ -77,14 +76,14 @@ public class TeamSkillGroup : MonoBehaviour
         DamageLabel.text = string.Empty;
         HitsLabel.text = string.Empty;
         DistanceLabel.text = string.Empty;
-        RangeLabel.text = string.Empty;
-        RangeTypeLabel.text = string.Empty;
+        //RangeLabel.text = string.Empty;
+        //RangeTypeLabel.text = string.Empty;
         TargetLabel.text = string.Empty;
-        PriorityLabel.text = string.Empty;
+        //PriorityLabel.text = string.Empty;
         MPLabel.text = string.Empty;
         CDLabel.text = string.Empty;
-        AddEPLabel.text = string.Empty;
-        NeedEPLabel.text = string.Empty;
+        AddPowerLabel.text = string.Empty;
+        NeedPowerLabel.text = string.Empty;
         CommentLabel.text = string.Empty;
     }
 

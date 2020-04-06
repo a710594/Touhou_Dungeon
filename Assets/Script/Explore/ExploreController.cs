@@ -33,10 +33,9 @@ public class ExploreController
         _mapInfo = info;
         _player = GameObject.Find("ExploreCharacter").GetComponent<ExploreCharacter>();
         _player.transform.position = (Vector2)info.Start;
-        SetVisibleRange(true);
         ExploreUI.Open();
         ExploreUI.Instance.InitLittleMap(Vector2Int.RoundToInt(_player.transform.position), _mapInfo.Start, _mapInfo.Goal, _mapInfo.MapBound, _mapInfo.MapList);
-        ExploreUI.Instance.RefreshLittleMap(Vector2Int.RoundToInt(_player.transform.position), _exploredList, _wallList);
+        SetVisibleRange(true);
 
         SetInteractive(Vector2Int.RoundToInt(_player.transform.position));
 
@@ -49,12 +48,10 @@ public class ExploreController
 
         _player = GameObject.Find("ExploreCharacter").GetComponent<ExploreCharacter>();
         _player.transform.position = _playerPosition;
-        SetVisibleRange(true);
-
         ExploreUI.Open();
-        SetInteractive(Vector2Int.RoundToInt(_player.transform.position));
+        SetVisibleRange(true);
         ExploreUI.Instance.InitLittleMap(Vector2Int.RoundToInt(_player.transform.position), _mapInfo.Start, _mapInfo.Goal, _mapInfo.MapBound, _mapInfo.MapList);
-        ExploreUI.Instance.RefreshLittleMap(Vector2Int.RoundToInt(_player.transform.position), _exploredList, _wallList);
+        SetInteractive(Vector2Int.RoundToInt(_player.transform.position));
         GenerateEnemy();
     }
 
@@ -86,14 +83,13 @@ public class ExploreController
                 }*/
 
                 SetVisibleRange(false);
-                ExploreUI.Instance.RefreshLittleMap(newPosition, _exploredList, _wallList);
             });
         }
     }
 
-    public void PlayerStop() 
+    public void PlayerPause() 
     {
-        _player.Stop();
+        _player.Pause();
     }
 
     public void Interactive(Vector2Int position)
@@ -176,8 +172,42 @@ public class ExploreController
         }
     }
 
-    private Vector2Int GetLegalPosition(List<Vector2Int> positionList) //取得合法位置(空地)
+    public void TeleportPlayer()
     {
+        Vector2Int position = GetLegalPosition();
+        _player.transform.position = (Vector2)position;
+        SetVisibleRange(true);
+        SetInteractive(Vector2Int.RoundToInt(_player.transform.position));
+    }
+
+    public void EnterBattle(int battleGroupId)
+    {
+        List<KeyValuePair<int, int>> enemyList = BattleGroupData.GetEnemy(battleGroupId);
+        //AudioSystem.Instance.Stop(true);
+        ChangeSceneUI.Instance.StartClock(() =>
+        {
+            MySceneManager.Instance.ChangeScene(MySceneManager.SceneType.Battle, () =>
+            {
+                BattleController.Instance.Init(1, enemyList);
+            });
+        });
+
+        for (int i = 0; i < _fieldEnemyList.Count; i++)
+        {
+            _fieldEnemyList[i].Stop();
+        }
+
+        _playerPosition = _player.transform.position;
+        _player.Stop();
+    }
+
+    private Vector2Int GetLegalPosition(List<Vector2Int> positionList = null) //取得合法位置(空地)
+    {
+        if (positionList == null)
+        {
+            positionList = _mapInfo.MapList;
+        }
+
         Vector2Int position;
         List<Vector2Int> tempList = new List<Vector2Int>(positionList);
         while (tempList.Count > 0)
@@ -225,6 +255,9 @@ public class ExploreController
             //ConversationUI.Open(explorePointData.ConversationID);
             //TilePainter.Instance.Clear(1, position);
             //_mapInfo.ExploreEventDIc.Remove(position);
+            EventUI.Open(_mapInfo.ExploreEventDIc[position]);
+            TilePainter.Instance.Clear(1, position);
+            _mapInfo.ExploreEventDIc.Remove(position);
         }
     }
 
@@ -277,6 +310,8 @@ public class ExploreController
                     _mapInfo.MistList.Remove(lineList[j]);
                 //}
             }
+
+            ExploreUI.Instance.RefreshLittleMap(playerPosition, _exploredList, _wallList);
         }
 
         for (int i = 0; i < _exploredList.Count; i++)
@@ -296,23 +331,8 @@ public class ExploreController
 
     private void EnterBattle()
     {
-        _playerPosition = _player.transform.position;
-
         int battleGroupId = DungeonBattleGroupData.GetRandomBattleGroup(_mapInfo.DungeonId);
-        List<KeyValuePair<int, int>> enemyList = BattleGroupData.GetEnemy(battleGroupId);
-        //AudioSystem.Instance.Stop(true);
-        ChangeSceneUI.Instance.StartClock(()=> 
-        {
-            MySceneManager.Instance.ChangeScene(MySceneManager.SceneType.Battle, () =>
-            {
-                BattleController.Instance.Init(1, enemyList);
-            });
-        });
-
-        for (int i=0; i<_fieldEnemyList.Count; i++)
-        {
-            _fieldEnemyList[i].Stop();
-        }
+        EnterBattle(battleGroupId);
     }
 
     private void GenerateEnemy()

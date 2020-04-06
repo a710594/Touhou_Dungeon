@@ -145,7 +145,7 @@ public class ItemManager
                 }
                 //MissionManager.Instance.CheckMission(MissionData.TypeEnum.GetItem, id, BagDic[id]);
             }
-            CurrentBagVolume += data.Volume;
+            CurrentBagVolume += data.Volume * amount;
             //SortBag();
         }
         else

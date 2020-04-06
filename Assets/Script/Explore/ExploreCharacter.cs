@@ -44,9 +44,14 @@ public class ExploreCharacter : MonoBehaviour
         });
     }
 
-    public void Stop()
+    public void Pause()
     {
         Animator.SetBool("IsMoving", false);
+    }
+
+    public void Stop()
+    {
+        transform.DOKill();
     }
 
     private bool CheckCollider(Vector2 direction)

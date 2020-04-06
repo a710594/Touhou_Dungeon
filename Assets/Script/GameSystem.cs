@@ -27,6 +27,8 @@ public class GameSystem : MonoBehaviour
         RoomData.Load();
         TreasureData.Load();
         DungeonBattleGroupData.Load();
+        EventData.Load();
+        EventOptionData.Load();
 
         TeamManager.Instance.Init();
         ItemManager.Instance.Init();

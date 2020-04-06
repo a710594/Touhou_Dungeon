@@ -26,7 +26,8 @@ public class ClearAbnormalSkill : Skill
 
         if (_targetList.Count == 0)
         {
-            OnSkillEnd();
+            BattleUI.Instance.SetSkillLabel(false);
+            _skillCallback();
         }
     }
 
