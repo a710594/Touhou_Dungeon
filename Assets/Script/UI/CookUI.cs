@@ -7,13 +7,17 @@ public class CookUI : MonoBehaviour
 {
     public static CookUI Instance;
 
-    public Button ProduceButton;
+    public ButtonPlus ProduceButton;
     public Button CloseButton;
     public Text CommentLabel;
     public Text AmountLabel;
     public LoopScrollView MenuScrollView;
-    public IconCard[] MaterialIcons;
+    public TipLabel TipLabel;
+    public Text[] MaterialNameLabel;
+    public Text[] MaterialAmountLabel;
 
+    private bool _canProduce = false;
+    private string _tipText;
     private ItemManager.Type _itemManagerType;
     private CookData.RootObject _selectedData = null;
 
@@ -49,28 +53,34 @@ public class CookUI : MonoBehaviour
         int need;
         ItemData.RootObject itemData;
 
-        ProduceButton.interactable = true;
+        ProduceButton.SetColor(Color.white);
+        _canProduce = true;
         if (cookData != null)
         {
             _selectedData = cookData;
 
-            for (int i = 0; i < MaterialIcons.Length; i++)
+            for (int i = 0; i < MaterialNameLabel.Length; i++)
             {
                 if (i < cookData.MaterialList.Count)
                 {
                     have = ItemManager.Instance.GetItemAmount(cookData.MaterialList[i], _itemManagerType);
                     need = cookData.AmountList[i];
-                    MaterialIcons[i].gameObject.SetActive(true);
-                    MaterialIcons[i].Init(cookData.MaterialList[i], have, need);
+                    MaterialNameLabel[i].gameObject.SetActive(true);
+                    MaterialNameLabel[i].text = ItemData.GetData(cookData.MaterialList[i]).Name;
+                    MaterialAmountLabel[i].gameObject.SetActive(true);
+                    MaterialAmountLabel[i].text = have.ToString() + "/" + need.ToString();
 
                     if (have < need)
                     {
-                        ProduceButton.interactable = false;
+                        ProduceButton.SetColor(Color.grey);
+                        _canProduce = false;
+                        _tipText = "材料不足";
                     }
                 }
                 else
                 {
-                    MaterialIcons[i].gameObject.SetActive(false);
+                    MaterialNameLabel[i].gameObject.SetActive(false);
+                    MaterialAmountLabel[i].gameObject.SetActive(false);
                 }
             }
 
@@ -78,21 +88,25 @@ public class CookUI : MonoBehaviour
 
             if (ItemManager.Instance.CurrentBagVolume + itemData.Volume > ItemManager.Instance.MaxBagVolume)
             {
-                ProduceButton.interactable = false;
+                ProduceButton.SetColor(Color.grey);
+                _canProduce = false;
+                _tipText = "背包已滿";
             }
 
+            ProduceButton.gameObject.SetActive(true);
             CommentLabel.text = itemData.Comment;
             AmountLabel.text = "數量：" + ItemManager.Instance.GetItemAmount(itemData.ID, _itemManagerType).ToString();
         }
         else
         {
+            ProduceButton.gameObject.SetActive(false);
             CommentLabel.text = string.Empty;
             AmountLabel.text = string.Empty;
 
-            for (int i = 0; i < MaterialIcons.Length; i++)
+            for (int i = 0; i < MaterialNameLabel.Length; i++)
             {
-                ProduceButton.interactable = false;
-                MaterialIcons[i].gameObject.SetActive(false);
+                MaterialNameLabel[i].gameObject.SetActive(false);
+                MaterialAmountLabel[i].gameObject.SetActive(false);
             }
         }
     }
@@ -103,14 +117,21 @@ public class CookUI : MonoBehaviour
         SetData(data);
     }
 
-    private void ProduceOnClick()
+    private void ProduceOnClick(object obj)
     {
-        ItemData.RootObject data = ItemData.GetData(_selectedData.ResultID);
+        if (_canProduce)
+        {
+            ItemData.RootObject data = ItemData.GetData(_selectedData.ResultID);
 
-        ConsumeItem(_selectedData.MaterialList, _selectedData.AmountList);
-        ItemManager.Instance.AddItem(_selectedData.ResultID, 1, _itemManagerType);
+            ConsumeItem(_selectedData.MaterialList, _selectedData.AmountList);
+            ItemManager.Instance.AddItem(_selectedData.ResultID, 1, _itemManagerType);
 
-        SetData(_selectedData);
+            SetData(_selectedData);
+        }
+        else
+        {
+            TipLabel.SetLabel(_tipText);
+        }
     }
 
     private void ConsumeItem(List<int> materialList, List<int> amountList)
@@ -125,14 +146,15 @@ public class CookUI : MonoBehaviour
     {
         CommentLabel.text = string.Empty;
         AmountLabel.text = string.Empty;
-        ProduceButton.interactable = false;
+        ProduceButton.gameObject.SetActive(false);
 
-        for (int i=0; i<MaterialIcons.Length; i++)
+        for (int i=0; i< MaterialNameLabel.Length; i++)
         {
-            MaterialIcons[i].gameObject.SetActive(false);
+            MaterialNameLabel[i].gameObject.SetActive(false);
+            MaterialAmountLabel[i].gameObject.SetActive(false);
         }
 
-        ProduceButton.onClick.AddListener(ProduceOnClick);
+        ProduceButton.ClickHandler = ProduceOnClick;
         CloseButton.onClick.AddListener(Close);
     }
 }

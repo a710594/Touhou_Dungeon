@@ -22,7 +22,7 @@ public class CookData
 
     public static void Load()
     {
-        TextAsset textAsset = Resources.Load<TextAsset>("Json/Rppm");
+        TextAsset textAsset = Resources.Load<TextAsset>("Json/Cook");
         string jsonString = textAsset.text;
         var dataList = JsonConvert.DeserializeObject<List<RootObject>>(jsonString);
 

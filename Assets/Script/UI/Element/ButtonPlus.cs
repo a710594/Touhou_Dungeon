@@ -28,6 +28,11 @@ public class ButtonPlus : UIBehaviour, IPointerDownHandler, IPointerUpHandler, I
         Data = data;
     }
 
+    public void SetColor(Color color)
+    {
+        Image.color = color;
+    }
+
     private void Update()
     {
         if (_isPointerDown)

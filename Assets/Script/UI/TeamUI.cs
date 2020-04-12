@@ -18,12 +18,10 @@ public class TeamUI : MonoBehaviour
     public ButtonPlus CharacterButton;
     public ButtonPlus SkillButton;
     public ButtonPlus EquipButton;
-    public ButtonPlus PositionButton;
     public Button CloseButton;
     public TeamCharacterGroup CharacterGroup;
     public TeamSkillGroup SkillGroup;
     public TeamEquipGroup EquipGroup;
-    public TeamPositionGroup PositionGroup;
     public TeamMemberButton[] TeamMemaberButton;
 
     private TeamMember _selectedMember;
@@ -69,11 +67,6 @@ public class TeamUI : MonoBehaviour
         EquipGroup.Init(_selectedMember);
     }
 
-    public void SetPositionData()
-    {
-        PositionGroup.SetData();
-    }
-
     private void TeamMemberOnClick(string text, object data) //左邊的角色欄
     {
         _teamMemaberButtonDic[_selectedMember].SetColor(Color.gray);
@@ -92,10 +85,6 @@ public class TeamUI : MonoBehaviour
         {
             SetEquipData();
         }
-        else
-        {
-            SetPositionData();
-        }
     }
 
     private void CharacterGroupOnClick(object obj)
@@ -103,11 +92,9 @@ public class TeamUI : MonoBehaviour
         CharacterGroup.gameObject.SetActive(true);
         SkillGroup.gameObject.SetActive(false);
         EquipGroup.gameObject.SetActive(false);
-        PositionGroup.gameObject.SetActive(false);
         CharacterButton.Image.color = Color.white;
         SkillButton.Image.color = Color.gray;
         EquipButton.Image.color = Color.gray;
-        PositionButton.Image.color = Color.gray;
         SetCharacterData();
         _currentState = State.Character;
     }
@@ -117,11 +104,9 @@ public class TeamUI : MonoBehaviour
         CharacterGroup.gameObject.SetActive(false);
         SkillGroup.gameObject.SetActive(true);
         EquipGroup.gameObject.SetActive(false);
-        PositionGroup.gameObject.SetActive(false);
         CharacterButton.Image.color = Color.gray;
         SkillButton.Image.color = Color.white;
         EquipButton.Image.color = Color.gray;
-        PositionButton.Image.color = Color.gray;
         SetSkillData();
         _currentState = State.Skill;
     }
@@ -131,27 +116,11 @@ public class TeamUI : MonoBehaviour
         CharacterGroup.gameObject.SetActive(false);
         SkillGroup.gameObject.SetActive(false);
         EquipGroup.gameObject.SetActive(true);
-        PositionGroup.gameObject.SetActive(false);
         CharacterButton.Image.color = Color.gray;
         SkillButton.Image.color = Color.gray;
         EquipButton.Image.color = Color.white;
-        PositionButton.Image.color = Color.gray;
         SetEquipData();
         _currentState = State.Equip;
-    }
-
-    private void PositionGroupOnClick(object obj)
-    {
-        CharacterGroup.gameObject.SetActive(false);
-        SkillGroup.gameObject.SetActive(false);
-        EquipGroup.gameObject.SetActive(false);
-        PositionGroup.gameObject.SetActive(true);
-        CharacterButton.Image.color = Color.gray;
-        SkillButton.Image.color = Color.gray;
-        EquipButton.Image.color = Color.gray;
-        PositionButton.Image.color = Color.white;
-        SetPositionData();
-        _currentState = State.Position;
     }
 
     private void CloseOnClick()
@@ -167,7 +136,6 @@ public class TeamUI : MonoBehaviour
         CharacterButton.ClickHandler = CharacterGroupOnClick;
         SkillButton.ClickHandler = SkillGroupOnClick;
         EquipButton.ClickHandler = EquipGroupOnClick;
-        PositionButton.ClickHandler = PositionGroupOnClick;
         CloseButton.onClick.AddListener(CloseOnClick);
 
         for (int i=0; i<TeamMemaberButton.Length; i++)

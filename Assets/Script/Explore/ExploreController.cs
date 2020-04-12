@@ -102,7 +102,7 @@ public class ExploreController
             }
             ItemManager.Instance.AddItem(_mapInfo.TreasureDic[position].ItemList, ItemManager.Type.Bag);
             TilePainter.Instance.Clear(1, position);
-            IconConfirmUI.Open(_mapInfo.TreasureDic[position].ItemList);
+            ItemConfirmUI.Open(_mapInfo.TreasureDic[position].ItemList);
             _mapInfo.TreasureDic.Remove(position);
 
             if (ItemManager.Instance.BagIsFull())

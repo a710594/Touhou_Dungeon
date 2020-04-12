@@ -29,6 +29,7 @@ public class GameSystem : MonoBehaviour
         DungeonBattleGroupData.Load();
         EventData.Load();
         EventOptionData.Load();
+        CookData.Load();
 
         TeamManager.Instance.Init();
         ItemManager.Instance.Init();

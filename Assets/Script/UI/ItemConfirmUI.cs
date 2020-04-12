@@ -4,20 +4,20 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class IconConfirmUI : MonoBehaviour
+public class ItemConfirmUI : MonoBehaviour
 {
     public Button ConfirmButton;
     public LoopScrollView ScrollView;
 
     private Action _onFinishHandler; 
 
-    private static IconConfirmUI _instance;
+    private static ItemConfirmUI _instance;
 
     public static void Open(List<int> idList, Action callback = null)
     {
         if (_instance == null)
         {
-            _instance = ResourceManager.Instance.Spawn("IconConfirmUI", ResourceManager.Type.UI).GetComponent<IconConfirmUI>();
+            _instance = ResourceManager.Instance.Spawn("ItemConfirmUI", ResourceManager.Type.UI).GetComponent<ItemConfirmUI>();
         }
         Time.timeScale = 0;
         _instance._onFinishHandler = callback;

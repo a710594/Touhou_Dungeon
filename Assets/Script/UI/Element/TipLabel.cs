@@ -13,7 +13,8 @@ public class TipLabel : MonoBehaviour
         Label.text = text;
         CanvasGroup.alpha = 1;
         CanvasGroup.DORestart();
-        CanvasGroup.DOFade(0, 2f).SetEase(Ease.InExpo);
+        Tweener tweener = CanvasGroup.DOFade(0, 2f).SetEase(Ease.InExpo);
+        tweener.SetUpdate(true);
     }
 
     public void SetVisible(bool isVisible)

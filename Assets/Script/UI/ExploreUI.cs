@@ -11,6 +11,7 @@ public class ExploreUI : MonoBehaviour
     public Button CloseMapButton;
     public Button BagButton;
     public Button TeamButton;
+    public Button FormationButton;
     public Button CookButton;
     public ButtonPlus[] InteractiveButtons;
     public LittleMap LittleMap;
@@ -93,6 +94,11 @@ public class ExploreUI : MonoBehaviour
         TeamUI.Open();
     }
 
+    private void OpenFormation() 
+    {
+        FormationUI.Open();
+    }
+
     private void OpenCook()
     {
         CookUI.Open(ItemManager.Type.Bag);
@@ -112,6 +118,7 @@ public class ExploreUI : MonoBehaviour
         CloseMapButton.onClick.AddListener(CloseMapGroup);
         BagButton.onClick.AddListener(OpenBag);
         TeamButton.onClick.AddListener(OpenTeam);
+        FormationButton.onClick.AddListener(OpenFormation);
         CookButton.onClick.AddListener(OpenCook);
 
         for (int i=0; i<InteractiveButtons.Length; i++)
