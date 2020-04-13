@@ -6,8 +6,9 @@ using DG.Tweening;
 
 public class FieldEnemy : MonoBehaviour
 {
-    public Action OnPlayerEnterHandler;
+    public Action<int> OnPlayerEnterHandler;
 
+    protected int _battleGroupId;
     protected float _cycleTime = 0.5f; //移動的週期
     protected Vector2Int _currentDirection;
     protected List<Vector2Int> _directionList = new List<Vector2Int>() { Vector2Int.left, Vector2Int.right, Vector2Int.up, Vector2Int.down };
@@ -21,7 +22,11 @@ public class FieldEnemy : MonoBehaviour
         transform.DOKill();
     }
 
-    protected virtual void Init() { }
+    public virtual void Init(int battleGroupId, Vector2 position)
+    {
+        _battleGroupId = battleGroupId;
+        transform.position = position;
+    }
 
     protected Vector2Int GetRandomDirection()
     {
@@ -50,7 +55,7 @@ public class FieldEnemy : MonoBehaviour
         {
             if (OnPlayerEnterHandler != null)
             {
-                OnPlayerEnterHandler();
+                OnPlayerEnterHandler(_battleGroupId);
             }
         }
     }
@@ -62,7 +67,6 @@ public class FieldEnemy : MonoBehaviour
 
     private void Awake()
     {
-        Init();
         _timer.Start(_cycleTime, Move, true);
     }
 }

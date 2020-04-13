@@ -29,8 +29,9 @@ public class FieldEnemyRandom : FieldEnemy
         }
     }
 
-    protected override void Init()
+    public override void Init(int battleGroupId, Vector2 position)
     {
+        base.Init(battleGroupId, position);
         _currentDirection = GetRandomDirection();
         _currentDistance = Random.Range(1, MaxDistance + 1);
     }

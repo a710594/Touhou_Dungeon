@@ -1,0 +1,46 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cfc98e07036f01d439d7e448a369bd9a, type: 3}
+  m_Name: Mist
+  m_EditorClassIdentifier: 
+  m_Sprite: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Transform:
+    e00: 1
+    e01: 0
+    e02: 0
+    e03: 0
+    e10: 0
+    e11: 1
+    e12: 0
+    e13: 0
+    e20: 0
+    e21: 0
+    e22: 1
+    e23: 0
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 1
+  m_InstancedGameObject: {fileID: 0}
+  m_Flags: 1
+  m_ColliderType: 1
+  Center: {fileID: 21300000, guid: 8a4894d566ae51949835e04edb265b86, type: 3}
+  Up: {fileID: 21300000, guid: b7b2b12b533e2b54a86b56729b9a4dc9, type: 3}
+  Down: {fileID: 21300000, guid: a2cdeab57fa0e6548b72fd6338824374, type: 3}
+  Left: {fileID: 21300000, guid: 3b016a9d76705f54d9eba646f8b103d5, type: 3}
+  Right: {fileID: 21300000, guid: c2e3306893e21704a914a8abff7fe53e, type: 3}
+  UpLeft: {fileID: 21300000, guid: 1d6d07cdef1a37340a9827496580c0b0, type: 3}
+  UpRight: {fileID: 21300000, guid: bd10a5cf8051dec42b474b3330a3bfce, type: 3}
+  DownLeft: {fileID: 21300000, guid: 47f76d1a6975d0840a2e814a361bdd17, type: 3}
+  DownRight: {fileID: 21300000, guid: 91666f8499bd4544ab027667eebe7c61, type: 3}
+  Other: {fileID: 0}

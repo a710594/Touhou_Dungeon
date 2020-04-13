@@ -106,7 +106,7 @@ public class Skill
         }
         else if (Data.RangeType == SkillData.RangeTypeEnum.Rectangle)
         {
-            positionList = Utility.GetLinePositionList(Data.Range_1, Data.Range_2, orign, target - orign);
+            positionList = Utility.GetRectanglePositionList(Data.Range_1, Data.Range_2, orign, target - orign);
             positionList = RemovePosition(executor, characterList, positionList);
             positionList = BattleFieldManager.Instance.RemoveBound(positionList);
             for (int i = 0; i < positionList.Count; i++)

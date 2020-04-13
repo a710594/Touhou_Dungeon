@@ -15,7 +15,7 @@ public class Timer
     public Timer(float time, Action callback, bool isLoop = false)
     {
         _time = time;
-        _endTime = Time.time + time;
+        _endTime = Time.realtimeSinceStartup + time;
         _isLoop = isLoop;
         _onTimeOutHandler = callback;
 
@@ -25,7 +25,7 @@ public class Timer
     public void Start(float time, Action callback, bool isLoop = false)
     {
         _time = time;
-        _endTime = Time.time + time;
+        _endTime = Time.realtimeSinceStartup + time;
         _isLoop = isLoop;
         _onTimeOutHandler = callback;
 
@@ -46,7 +46,7 @@ public class Timer
 
     private void OnUpdate()
     {
-        if (_endTime != -1 && Time.time > _endTime)
+        if (_endTime != -1 && Time.realtimeSinceStartup > _endTime)
         {
             if (_onTimeOutHandler != null)
             {
@@ -54,7 +54,7 @@ public class Timer
 
                 if (_isLoop)
                 {
-                    _endTime = Time.time + _time;
+                    _endTime = Time.realtimeSinceStartup + _time;
                 }
                 else
                 {

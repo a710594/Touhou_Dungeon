@@ -42,6 +42,7 @@ public class BagScrollItem : ScrollItem
             Equip equip = (Equip)obj;
             base.SetData(equip);
             Card.Init(equip);
+            NameLabel.text = equip.Name;
         }
     }
 }

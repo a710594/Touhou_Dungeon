@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class TeamMemberButton : MonoBehaviour
+public class TextButton : MonoBehaviour
 {
-    public Action<string, object> OnClickHandler;
+    public Action<object> OnClickHandler;
 
     public Text Label;
     public Image Image;
@@ -31,7 +31,7 @@ public class TeamMemberButton : MonoBehaviour
     {
         if (OnClickHandler != null)
         {
-            OnClickHandler(_text, _data);
+            OnClickHandler(_data);
         }
     }
 

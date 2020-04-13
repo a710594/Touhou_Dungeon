@@ -23,6 +23,7 @@ public class ExploreController
     private Vector2 _playerPosition;
     private List<Vector2Int> _exploredList = new List<Vector2Int>(); //走過的地圖範圍
     private List<Vector2Int> _wallList = new List<Vector2Int>(); //已被發現的牆壁的範圍
+    private List<Vector2> _guardList = new List<Vector2>(); //守衛型敵人的位置,遇到該敵人後會 remove
     private List<FieldEnemy> _fieldEnemyList = new List<FieldEnemy>();
     private Vector2Int[] _directions = new Vector2Int[4] { Vector2Int.left, Vector2Int.right, Vector2Int.up, Vector2Int.down };
 
@@ -36,9 +37,11 @@ public class ExploreController
         ExploreUI.Open();
         ExploreUI.Instance.InitLittleMap(Vector2Int.RoundToInt(_player.transform.position), _mapInfo.Start, _mapInfo.Goal, _mapInfo.MapBound, _mapInfo.MapList);
         SetVisibleRange(true);
+        ExploreUI.Instance.RefreshLittleMap(Vector2Int.RoundToInt(_player.transform.position), _exploredList, _wallList);
 
         SetInteractive(Vector2Int.RoundToInt(_player.transform.position));
 
+        _guardList.Add(_mapInfo.Goal);
         GenerateEnemy();
     }
 
@@ -49,8 +52,9 @@ public class ExploreController
         _player = GameObject.Find("ExploreCharacter").GetComponent<ExploreCharacter>();
         _player.transform.position = _playerPosition;
         ExploreUI.Open();
-        SetVisibleRange(true);
         ExploreUI.Instance.InitLittleMap(Vector2Int.RoundToInt(_player.transform.position), _mapInfo.Start, _mapInfo.Goal, _mapInfo.MapBound, _mapInfo.MapList);
+        SetVisibleRange(true);
+        ExploreUI.Instance.RefreshLittleMap(Vector2Int.RoundToInt(_player.transform.position), _exploredList, _wallList);
         SetInteractive(Vector2Int.RoundToInt(_player.transform.position));
         GenerateEnemy();
     }
@@ -83,6 +87,7 @@ public class ExploreController
                 }*/
 
                 SetVisibleRange(false);
+                ExploreUI.Instance.RefreshLittleMap(Vector2Int.RoundToInt(_player.transform.position), _exploredList, _wallList);
             });
         }
     }
@@ -120,6 +125,7 @@ public class ExploreController
                 TilePainter.Instance.Clear(1, position);
                 _mapInfo.DoorDic.Remove(position);
                 SetVisibleRange(false);
+                ExploreUI.Instance.RefreshLittleMap(Vector2Int.RoundToInt(_player.transform.position), _exploredList, _wallList);
             }
             else
             {
@@ -132,7 +138,7 @@ public class ExploreController
     public void ForceEnterBattle() //作弊用,強迫進入戰鬥
     {
         Vector2Int newPosition = Vector2Int.RoundToInt(_player.transform.position);
-        EnterBattle();
+        EnterBattle(DungeonBattleGroupData.GetRandomBattleGroup(_mapInfo.DungeonId));
     }
 
     public void BackToVilliage()
@@ -177,6 +183,7 @@ public class ExploreController
         Vector2Int position = GetLegalPosition();
         _player.transform.position = (Vector2)position;
         SetVisibleRange(true);
+        ExploreUI.Instance.RefreshLittleMap(Vector2Int.RoundToInt(_player.transform.position), _exploredList, _wallList);
         SetInteractive(Vector2Int.RoundToInt(_player.transform.position));
     }
 
@@ -251,10 +258,6 @@ public class ExploreController
         }
         else if (_mapInfo.ExploreEventDIc.ContainsKey(position))
         {
-            //ExploreEventData explorePointData = ExploreEventData.GetData(_mapInfo.ExploreEventDIc[position]);
-            //ConversationUI.Open(explorePointData.ConversationID);
-            //TilePainter.Instance.Clear(1, position);
-            //_mapInfo.ExploreEventDIc.Remove(position);
             EventUI.Open(_mapInfo.ExploreEventDIc[position]);
             TilePainter.Instance.Clear(1, position);
             _mapInfo.ExploreEventDIc.Remove(position);
@@ -275,6 +278,7 @@ public class ExploreController
         List<Vector2Int> lineList = new List<Vector2Int>();
 
         _exploredList.Add(playerPosition);
+        TilePainter.Instance.Clear(2, playerPosition);
         _mapInfo.MistList.Remove(playerPosition);
         circleList = Utility.GetCirclePositionList(playerPosition, 6, !isInit);
         for (int i=0; i<circleList.Count; i++)
@@ -290,68 +294,58 @@ public class ExploreController
 
             for (int j = 0; j < lineList.Count; j++)
             {
-                //if (!_exploredList.Contains(lineList[j]))
-                //{
-                    if (!_mapInfo.MapList.Contains(lineList[j]) || _mapInfo.DoorDic.ContainsKey(lineList[j]))
-                    {
-                        if(!_wallList.Contains(lineList[j]))
-                            _wallList.Add(lineList[j]);
+                if (!_mapInfo.MapList.Contains(lineList[j]) || _mapInfo.DoorDic.ContainsKey(lineList[j]))
+                {
+                    if(!_wallList.Contains(lineList[j]))
+                        _wallList.Add(lineList[j]);
                         
-                        if(!_exploredList.Contains(lineList[j]))
-                            _exploredList.Add(lineList[j]);
-                        //TilePainter.Instance.Clear(2, lineList[j]);
-                        _mapInfo.MistList.Remove(lineList[j]);
-                        break;
-                    }
-
-                    if (!_exploredList.Contains(lineList[j]))
-                        _exploredList.Add(lineList[j]);
+                    //if(!_exploredList.Contains(lineList[j]))
+                    //    _exploredList.Add(lineList[j]);
                     //TilePainter.Instance.Clear(2, lineList[j]);
-                    _mapInfo.MistList.Remove(lineList[j]);
-                //}
+                    //_mapInfo.MistList.Remove(lineList[j]);
+                    break;
+                }
+
+                if (!_exploredList.Contains(lineList[j]))
+                    _exploredList.Add(lineList[j]);
+                TilePainter.Instance.Clear(2, lineList[j]);
+                _mapInfo.MistList.Remove(lineList[j]);
             }
-
-            ExploreUI.Instance.RefreshLittleMap(playerPosition, _exploredList, _wallList);
         }
-
-        for (int i = 0; i < _exploredList.Count; i++)
-        {
-            TilePainter.Instance.Painting("Mask", 2, _exploredList[i]);
-            if (_exploredList.Contains(_exploredList[i] + Vector2Int.up) && _exploredList.Contains(_exploredList[i] + Vector2Int.down) && _exploredList.Contains(_exploredList[i] + Vector2Int.left) && _exploredList.Contains(_exploredList[i] + Vector2Int.right))
-            {
-                TilePainter.Instance.Clear(2, _exploredList[i]);
-            }
-
-            //if (_wallList.Contains(_exploredList[i] + Vector2Int.up) || _wallList.Contains(_exploredList[i] + Vector2Int.down) || _wallList.Contains(_exploredList[i] + Vector2Int.left) || _wallList.Contains(_exploredList[i] + Vector2Int.right))
-            //{
-            //    TilePainter.Instance.Clear(2, _exploredList[i]);
-            //}
-        }
-    }
-
-    private void EnterBattle()
-    {
-        int battleGroupId = DungeonBattleGroupData.GetRandomBattleGroup(_mapInfo.DungeonId);
-        EnterBattle(battleGroupId);
     }
 
     private void GenerateEnemy()
     {
         _fieldEnemyList.Clear();
-        Vector2Int position;
-        for (int i = 0; i < _mapInfo.RoomList.Count; i++)
+        //Vector2Int position;
+        FieldEnemy enemy;
+        //for (int i = 0; i < _mapInfo.RoomList.Count; i++)
+        //{
+        //    for (int j = 0; j < 2; j++) //每個房間生兩隻怪
+        //    {
+        //        position = GetLegalPosition(_mapInfo.RoomList[i].PositionList);
+        //        if (Vector2.Distance(position, _player.transform.position) > 10) //如果位置不會離玩家太近
+        //        {
+        //            enemy = ResourceManager.Instance.Spawn("FieldEnemy/FieldEnemyRandom", ResourceManager.Type.Other).GetComponent<FieldEnemy>();
+        //            enemy.OnPlayerEnterHandler += EnterBattle;
+        //            enemy.Init(DungeonBattleGroupData.GetRandomBattleGroup(_mapInfo.DungeonId), position);
+        //            _fieldEnemyList.Add(enemy);
+        //        }
+        //    }
+        //}
+
+        if (_guardList.Contains(_mapInfo.Goal))
         {
-            for (int j=0; j<2; j++) //每個房間生兩隻怪
-            {
-                position = GetLegalPosition(_mapInfo.RoomList[i].PositionList);
-                if (Vector2.Distance(position, _player.transform.position) > 10) //如果位置不會離玩家太近
-                {
-                    FieldEnemy enemy = ResourceManager.Instance.Spawn("FieldEnemy/FieldEnemyRandom", ResourceManager.Type.Other).GetComponent<FieldEnemy>();
-                    enemy.OnPlayerEnterHandler += EnterBattle;
-                    _fieldEnemyList.Add(enemy);
-                    enemy.transform.position = (Vector2)position;
-                }
-            }
+            enemy = ResourceManager.Instance.Spawn("FieldEnemy/FieldEnemyGuard", ResourceManager.Type.Other).GetComponent<FieldEnemy>();
+            enemy.OnPlayerEnterHandler += EnterBattle;
+            ((FieldEnemyGuard)enemy).CheckPositionHandler += EncounterGuard;
+            enemy.Init(DungeonBattleGroupData.GetRandomBattleGroup(_mapInfo.DungeonId), _mapInfo.Goal);
+            _fieldEnemyList.Add(enemy);
         }
+    }
+
+    private void EncounterGuard(Vector2 position)
+    {
+        _guardList.Remove(position);
     }
 }

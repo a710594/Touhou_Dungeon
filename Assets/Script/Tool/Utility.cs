@@ -45,11 +45,13 @@ public class Utility //各種和 TileMap 有關的計算方法
     }
 
     /*
-     * 取得貫通型範圍座標的方法,示意圖如下
+     * 取得矩形範圍座標的方法,示意圖如下
+     *    XXXX
      *   OXXXX
+     *    XXXX
      *   O:使用技能的人 X:技能範圍
     */
-    public static List<Vector2Int> GetLinePositionList(int length, int width, Vector2Int origin, Vector2Int direction)
+    public static List<Vector2Int> GetRectanglePositionList(int length, int width, Vector2Int origin, Vector2Int direction)
     {
         Vector2Int widthDirection = Vector2Int.RoundToInt(Quaternion.AngleAxis(90, Vector3.forward) * (Vector3Int)direction);
         List<Vector2Int> positionList = new List<Vector2Int>();

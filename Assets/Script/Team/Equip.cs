@@ -22,6 +22,7 @@ public class Equip
     public Equip(EquipData.TypeEnum type)
     {
         Type = type;
+        Name = "無";
     }
 
     public Equip(int id)

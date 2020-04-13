@@ -22,11 +22,11 @@ public class TeamUI : MonoBehaviour
     public TeamCharacterGroup CharacterGroup;
     public TeamSkillGroup SkillGroup;
     public TeamEquipGroup EquipGroup;
-    public TeamMemberButton[] TeamMemaberButton;
+    public TextButton[] TeamMemaberButton;
 
     private TeamMember _selectedMember;
     private State _currentState = State.Character;
-    private Dictionary<TeamMember, TeamMemberButton> _teamMemaberButtonDic = new Dictionary<TeamMember, TeamMemberButton>();
+    private Dictionary<TeamMember, TextButton> _teamMemaberButtonDic = new Dictionary<TeamMember, TextButton>();
 
     public static void Open()
     {
@@ -67,7 +67,7 @@ public class TeamUI : MonoBehaviour
         EquipGroup.Init(_selectedMember);
     }
 
-    private void TeamMemberOnClick(string text, object data) //左邊的角色欄
+    private void TeamMemberOnClick(object data) //左邊的角色欄
     {
         _teamMemaberButtonDic[_selectedMember].SetColor(Color.gray);
         _selectedMember = (TeamMember)data;
@@ -132,6 +132,7 @@ public class TeamUI : MonoBehaviour
     {
         CharacterGroup.gameObject.SetActive(true);
         SkillGroup.gameObject.SetActive(false);
+        EquipGroup.gameObject.SetActive(false);
 
         CharacterButton.ClickHandler = CharacterGroupOnClick;
         SkillButton.ClickHandler = SkillGroupOnClick;

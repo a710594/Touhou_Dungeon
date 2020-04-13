@@ -10,7 +10,7 @@ public class TeamEquipGroup : MonoBehaviour
     public Text DEFLabel;
     public Text MTKLabel;
     public Text MEFLabel;
-    public EquipIcon[] Icons;
+    public TextButton[] EquipNameLabel;
     public Button ChangeButton;
     public Button TakeOffButton;
 
@@ -21,15 +21,14 @@ public class TeamEquipGroup : MonoBehaviour
     {
         _selectedMember = member;
 
-        Icons[0].SetData(member.Weapon);
-        Icons[1].SetData(member.Helmet);
-        Icons[2].SetData(member.Armor);
-        Icons[3].SetData(member.Jewelry);
+        EquipNameLabel[0].SetData(member.Weapon.Name, member.Weapon);
+        EquipNameLabel[1].SetData(member.Helmet.Name, member.Helmet);
+        EquipNameLabel[2].SetData(member.Armor.Name, member.Armor);
+        EquipNameLabel[3].SetData(member.Jewelry.Name, member.Jewelry);
 
-        for (int i=0; i<Icons.Length; i++)
+        for (int i=0; i< EquipNameLabel.Length; i++)
         {
-            Icons[i].OnClickHandler = IconOnClick;
-            Icons[i].SetSelect(false);
+            EquipNameLabel[i].OnClickHandler = IconOnClick;
         }
 
         ClearInfo();
@@ -62,13 +61,13 @@ public class TeamEquipGroup : MonoBehaviour
         TakeOffButton.gameObject.SetActive(false);
     }
 
-    private void IconOnClick(Equip equip)
+    private void IconOnClick(object obj)
     {
-        _selectedEquip = equip;
-        SetData(equip);
+        _selectedEquip = (Equip)obj;
+        SetData(_selectedEquip);
         ChangeButton.gameObject.SetActive(true);
 
-        if (equip.ID != 0)
+        if (_selectedEquip.ID != 0)
         {
             TakeOffButton.gameObject.SetActive(true);
         }

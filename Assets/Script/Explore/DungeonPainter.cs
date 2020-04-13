@@ -80,7 +80,7 @@ public class DungeonPainter
         //Mist
         for (int i = 0; i < info.MistList.Count; i++)
         {
-            TilePainter.Instance.Painting("Black", 2, info.MistList[i]);
+            TilePainter.Instance.Painting("Mist", 2, info.MistList[i]);
         }
 
         //Vector2Int position;

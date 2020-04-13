@@ -139,12 +139,13 @@ public class BagUI : MonoBehaviour
     {
         if (obj is int)
         {
-            ItemData.RootObject item = ItemData.GetData((int)obj);
-            NameLabel.text = item.Name;
-            CommentLabel.text = item.Comment;
-            VolumeLabel.text = "體積：" + item.Volume;
+            _selectedItem = ItemData.GetData((int)obj);
+            _selectedEquip = null;
+            NameLabel.text = _selectedItem.Name;
+            CommentLabel.text = _selectedItem.Comment;
+            VolumeLabel.text = "體積：" + _selectedItem.Volume;
             ItemImage.gameObject.SetActive(true);
-            ItemImage.overrideSprite = Resources.Load<Sprite>("Image/" + item.Icon);
+            ItemImage.overrideSprite = Resources.Load<Sprite>("Image/" + _selectedItem.Icon);
 
             if (_type == ItemManager.Type.Bag)
             {
@@ -155,7 +156,7 @@ public class BagUI : MonoBehaviour
                 DiscardButton.gameObject.SetActive(false);
             }
 
-            if (item.Type == ItemData.TypeEnum.Food || item.Type == ItemData.TypeEnum.Medicine)
+            if (_selectedItem.Type == ItemData.TypeEnum.Food || _selectedItem.Type == ItemData.TypeEnum.Medicine)
             {
                 UseButton.gameObject.SetActive(true);
             }
@@ -163,18 +164,16 @@ public class BagUI : MonoBehaviour
             {
                 UseButton.gameObject.SetActive(false);
             }
-
-            _selectedItem = item;
-            _selectedEquip = null;
         }
         else if (obj is Equip)
         {
-            Equip equip = (Equip)obj;
-            NameLabel.text = equip.Name;
-            CommentLabel.text = equip.Comment;
-            VolumeLabel.text = "體積：" + equip.Volume;
+            _selectedEquip = (Equip)obj;
+            _selectedItem = ItemData.GetData(_selectedEquip.ID); ;
+            NameLabel.text = _selectedEquip.Name;
+            CommentLabel.text = _selectedEquip.Comment;
+            VolumeLabel.text = "體積：" + _selectedEquip.Volume;
             ItemImage.gameObject.SetActive(true);
-            ItemImage.overrideSprite = Resources.Load<Sprite>("Image/" + equip.Icon);
+            ItemImage.overrideSprite = Resources.Load<Sprite>("Image/" + _selectedEquip.Icon);
 
             if (_type == ItemManager.Type.Bag && _selectedMember == null)
             {
@@ -185,9 +184,14 @@ public class BagUI : MonoBehaviour
                 DiscardButton.gameObject.SetActive(false);
             }
 
-            UseButton.gameObject.SetActive(true);
-            _selectedItem = null;
-            _selectedEquip = equip;
+            if (_selectedMember != null)
+            {
+                UseButton.gameObject.SetActive(true);
+            }
+            else
+            {
+                UseButton.gameObject.SetActive(false);
+            }
         }
     }
 
@@ -296,13 +300,13 @@ public class BagUI : MonoBehaviour
         }
         SetAmountGroup.Open(maxAmount, "要丟棄幾個？", (amount)=> 
         {
-            if (_selectedItem != null)
-            {
-                ItemManager.Instance.MinusItem(_selectedItem.ID, amount, _type);
-            }
-            else if (_selectedEquip != null)
+            if (_selectedEquip != null)
             {
                 ItemManager.Instance.MinusItem(_selectedEquip, 1, _type);
+            }
+            else
+            {
+                ItemManager.Instance.MinusItem(_selectedItem.ID, amount, _type);
             }
             SetData();
         });
