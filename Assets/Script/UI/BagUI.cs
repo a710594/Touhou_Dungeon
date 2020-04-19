@@ -219,42 +219,6 @@ public class BagUI : MonoBehaviour
 
     private void UseOnClick()
     {
-        //TeamMemberUI.Open((teamMember) =>
-        //{
-        //    teamMember.CurrentHP += _selectedItem.RecoverHP;
-        //    if (teamMember.CurrentHP > teamMember.MaxHP)
-        //    {
-        //        teamMember.CurrentHP = teamMember.MaxHP;
-        //    }
-
-        //    teamMember.CurrentMP += _selectedItem.RecoverMP;
-        //    if (teamMember.CurrentMP > teamMember.MaxMP)
-        //    {
-        //        teamMember.CurrentMP = teamMember.MaxMP;
-        //    }
-
-        //    if (_selectedItem.RecoverHP > _selectedItem.RecoverMP)
-        //    {
-        //        TeamMemberUI.Instance.SetInfoHpTween(teamMember, () =>
-        //        {
-        //            TeamMemberUI.Close();
-        //            ItemManager.Instance.MinusItem(_selectedItem.ID, 1, _type);
-        //            SetData();
-        //        });
-        //        TeamMemberUI.Instance.SetInfoMpTween(teamMember, null);
-        //    }
-        //    else
-        //    {
-        //        TeamMemberUI.Instance.SetInfoHpTween(teamMember, null);
-        //        TeamMemberUI.Instance.SetInfoMpTween(teamMember, () =>
-        //        {
-        //            TeamMemberUI.Close();
-        //            ItemManager.Instance.MinusItem(_selectedItem.ID, 1, _type);
-        //            SetData();
-        //        });
-        //    }
-        //});
-
         if (_selectedMember != null)
         {
             Equip oldEquip;
@@ -276,19 +240,6 @@ public class BagUI : MonoBehaviour
 
     private void DiscardOnClick()
     {
-        //ConfirmUI.Open("確定要丟棄嗎？", "確定", "取消", () =>
-        //{
-        //    if (_selectedItem != null)
-        //    {
-        //        ItemManager.Instance.MinusBagItem(_selectedItem.ID, 1);
-        //    }
-        //    else if (_selectedEquip != null)
-        //    {
-        //        ItemManager.Instance.MinusBagEquip(_selectedEquip);
-        //    }
-        //    SetData();
-        //}, null);
-
         int maxAmount = 0; //最大的可丟棄數量,也就是該種物品的目前數量
         if (_selectedItem != null)
         {
@@ -319,12 +270,12 @@ public class BagUI : MonoBehaviour
             ItemEffectData.RootObject foodData = ItemEffectData.GetData(_selectedItem.ID);
             if (foodData.AddHP != 0)
             {
-                member.CurrentHP += foodData.AddHP;
+                member.AddHP(foodData.AddHP);
                 SelectCharacterGroup.HPBarTween(member);
             }
             if (foodData.AddMP != 0)
             {
-                member.CurrentMP += foodData.AddMP;
+                member.AddMP(foodData.AddMP);
                 SelectCharacterGroup.MPBarTween(member);
             }
             if (foodData.HasBuff)

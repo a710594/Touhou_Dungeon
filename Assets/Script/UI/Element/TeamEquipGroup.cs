@@ -75,7 +75,16 @@ public class TeamEquipGroup : MonoBehaviour
 
     private void ChangeOnClick()
     {
-        BagUI.Open(ItemManager.Type.Bag, _selectedMember, ItemManager.Instance.GetEquipListByType(ItemManager.Type.Bag, _selectedEquip.Type));
+        ItemManager.Type type;
+        if (MySceneManager.Instance.CurrentScene == MySceneManager.SceneType.Villiage)
+        {
+            type = ItemManager.Type.Warehouse;
+        }
+        else
+        {
+            type = ItemManager.Type.Warehouse;
+        }
+        BagUI.Open(type, _selectedMember, ItemManager.Instance.GetEquipListByType(type, _selectedEquip.Type));
     }
 
     private void TakeOffOnClick()

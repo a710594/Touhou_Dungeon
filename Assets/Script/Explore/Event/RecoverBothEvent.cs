@@ -13,8 +13,8 @@ public class RecoverBothEvent : EventResult
     {
         for (int i = 0; i < TeamManager.Instance.MemberList.Count; i++)
         {
-            TeamManager.Instance.MemberList[i].CurrentHP += (int)(TeamManager.Instance.MemberList[i].MaxHP * ((float)_result.Value / 100.0f));
-            TeamManager.Instance.MemberList[i].CurrentMP += (int)(TeamManager.Instance.MemberList[i].MaxMP * ((float)_result.Value / 100.0f));
+            TeamManager.Instance.MemberList[i].AddHP((int)(TeamManager.Instance.MemberList[i].MaxHP * ((float)_result.Value / 100.0f)));
+            TeamManager.Instance.MemberList[i].AddMP((int)(TeamManager.Instance.MemberList[i].MaxMP * ((float)_result.Value / 100.0f)));
         }
     }
 }

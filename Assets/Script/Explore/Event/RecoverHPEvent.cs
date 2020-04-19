@@ -13,7 +13,7 @@ public class RecoverHPEvent : EventResult
     {
         for (int i=0; i<TeamManager.Instance.MemberList.Count; i++)
         {
-            TeamManager.Instance.MemberList[i].CurrentHP += (int)(TeamManager.Instance.MemberList[i].MaxHP * ((float)_result.Value / 100.0f));
+            TeamManager.Instance.MemberList[i].AddHP((int)(TeamManager.Instance.MemberList[i].MaxHP * ((float)_result.Value / 100.0f)));
         }
     }
 }

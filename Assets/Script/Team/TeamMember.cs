@@ -145,10 +145,15 @@ public class TeamMember
 
     public void LvUp(int lv, int exp)
     {
+        int originalMaxHP = MaxHP;
+        int originalMaxMP = MaxMP;
+
         Lv = lv;
         Exp = exp;
         MaxHP = Mathf.RoundToInt(Data.HP * (1 + ((Lv - 1) * 0.1f)));
+        CurrentHP += (MaxHP - originalMaxHP);
         MaxMP = Mathf.RoundToInt(Data.MP * (1 + ((Lv - 1) * 0.1f)));
+        CurrentMP += (MaxMP - originalMaxMP);
         _atk = Mathf.RoundToInt(Data.ATK * (1 + ((Lv - 1) * 0.1f)));
         _def = Mathf.RoundToInt(Data.DEF * (1 + ((Lv - 1) * 0.1f)));
         _mtk = Mathf.RoundToInt(Data.MTK * (1 + ((Lv - 1) * 0.1f)));
@@ -221,5 +226,25 @@ public class TeamMember
     public bool IsUnlockSkill(int skillId)
     {
         return SkillList.Contains(skillId);
+    }
+
+    public void AddHP(int addHP) 
+    {
+        CurrentHP += addHP;
+    }
+
+    public void AddMP(int addMP)
+    {
+        CurrentMP += addMP;
+    }
+
+    public void RecoverCompletelyHP() 
+    {
+        CurrentHP = MaxHP;
+    }
+
+    public void RecoverCompletelyMP()
+    {
+        CurrentMP = MaxMP;
     }
 }

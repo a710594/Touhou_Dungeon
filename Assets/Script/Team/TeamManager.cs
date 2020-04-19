@@ -70,4 +70,13 @@ public class TeamManager
         }
         return expList;
     }
+
+    public void RecoverAllMember() 
+    {
+        for (int i = 0; i < MemberList.Count; i++)
+        {
+            MemberList[i].RecoverCompletelyHP();
+            MemberList[i].RecoverCompletelyMP();
+        }
+    }
 }

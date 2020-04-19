@@ -145,6 +145,8 @@ public class ExploreController
     {
         MySceneManager.Instance.ChangeScene(MySceneManager.SceneType.Villiage, () =>
         {
+            ItemManager.Instance.PutBagItemIntoWarehouse();
+            TeamManager.Instance.RecoverAllMember();
             //FarmManager.Instance.ChangeState();
             //VilliageController.Instance.SetData();
         });

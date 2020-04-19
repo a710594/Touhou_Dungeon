@@ -13,7 +13,7 @@ public class RecoverMPEvent : EventResult
     {
         for (int i = 0; i < TeamManager.Instance.MemberList.Count; i++)
         {
-            TeamManager.Instance.MemberList[i].CurrentMP += (int)(TeamManager.Instance.MemberList[i].MaxMP * ((float)_result.Value / 100.0f));
+            TeamManager.Instance.MemberList[i].AddMP((int)(TeamManager.Instance.MemberList[i].MaxMP * ((float)_result.Value / 100.0f)));
             Debug.Log(TeamManager.Instance.MemberList[i].Data.GetName() + " " + (int)(TeamManager.Instance.MemberList[i].MaxMP * ((float)_result.Value / 100.0f)));
         }
     }

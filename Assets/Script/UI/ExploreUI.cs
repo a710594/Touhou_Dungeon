@@ -136,9 +136,13 @@ public class ExploreUI : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Return))
+        if (Input.GetKeyDown(KeyCode.F1))
         {
             ExploreController.Instance.ForceEnterBattle();
+        }
+        if (Input.GetKeyDown(KeyCode.F2))
+        {
+            ExploreController.Instance.BackToVilliage();
         }
 
         Vector2Int direction = new Vector2Int(Mathf.RoundToInt(Joystick.Horizontal), Mathf.RoundToInt(Joystick.Vertical));

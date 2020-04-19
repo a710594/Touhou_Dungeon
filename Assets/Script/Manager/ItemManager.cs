@@ -31,8 +31,8 @@ public class ItemManager
     public int CurrentBagVolume = 0;
     public int KeyAmount = 0;
 
-    private Dictionary<ItemData.TypeEnum, Dictionary<object, int>> _typeBagDic = new Dictionary<ItemData.TypeEnum, Dictionary<object, int>>(); //type, object, amount 其中 object 可以是 id 也可以是 equip
-    private Dictionary<ItemData.TypeEnum, Dictionary<object, int>> _typeWarehouseDic = new Dictionary<ItemData.TypeEnum, Dictionary<object, int>>(); //type, object, amount 其中 object 可以是 id 也可以是 equip
+    private Dictionary<ItemData.TypeEnum, Dictionary<object, int>> _bagTypeDic = new Dictionary<ItemData.TypeEnum, Dictionary<object, int>>(); //type, object, amount 其中 object 可以是 id 也可以是 equip
+    private Dictionary<ItemData.TypeEnum, Dictionary<object, int>> _warehouseTypeDic = new Dictionary<ItemData.TypeEnum, Dictionary<object, int>>(); //type, object, amount 其中 object 可以是 id 也可以是 equip
 
     private Dictionary<EquipData.TypeEnum, List<Equip>> _bagEquipDic = new Dictionary<EquipData.TypeEnum, List<Equip>>();
     private Dictionary<EquipData.TypeEnum, List<Equip>> _warehouseEquipDic = new Dictionary<EquipData.TypeEnum, List<Equip>>();
@@ -41,8 +41,8 @@ public class ItemManager
     {
         foreach (ItemData.TypeEnum type in (ItemData.TypeEnum[])Enum.GetValues(typeof(ItemData.TypeEnum)))
         {
-            _typeBagDic.Add(type, new Dictionary<object, int>());
-            _typeWarehouseDic.Add(type, new Dictionary<object, int>());
+            _bagTypeDic.Add(type, new Dictionary<object, int>());
+            _warehouseTypeDic.Add(type, new Dictionary<object, int>());
         }
 
         foreach (EquipData.TypeEnum type in Enum.GetValues(typeof(EquipData.TypeEnum)))
@@ -138,15 +138,15 @@ public class ItemManager
             }
             else
             {
-                if (_typeBagDic[ItemData.TypeEnum.All].ContainsKey(id))
+                if (_bagTypeDic[ItemData.TypeEnum.All].ContainsKey(id))
                 {
-                    _typeBagDic[ItemData.TypeEnum.All][id] += amount;
-                    _typeBagDic[data.Type][id] += amount;
+                    _bagTypeDic[ItemData.TypeEnum.All][id] += amount;
+                    _bagTypeDic[data.Type][id] += amount;
                 }
                 else
                 {
-                    _typeBagDic[ItemData.TypeEnum.All].Add(id, amount);
-                    _typeBagDic[data.Type].Add(id, amount);
+                    _bagTypeDic[ItemData.TypeEnum.All].Add(id, amount);
+                    _bagTypeDic[data.Type].Add(id, amount);
                 }
                 //MissionManager.Instance.CheckMission(MissionData.TypeEnum.GetItem, id, BagDic[id]);
             }
@@ -165,8 +165,8 @@ public class ItemManager
     private void AddBagEquip(Equip equip)
     {
         _bagEquipDic[equip.Type].Add(equip);
-        _typeBagDic[ItemData.TypeEnum.All].Add(equip, 1);
-        _typeBagDic[ItemData.TypeEnum.Equip].Add(equip, 1);
+        _bagTypeDic[ItemData.TypeEnum.All].Add(equip, 1);
+        _bagTypeDic[ItemData.TypeEnum.Equip].Add(equip, 1);
     }
 
     private void AddWarehouseItem(object obj, int amount)
@@ -183,15 +183,15 @@ public class ItemManager
             }
             else
             {
-                if (_typeWarehouseDic[ItemData.TypeEnum.All].ContainsKey(id))
+                if (_warehouseTypeDic[ItemData.TypeEnum.All].ContainsKey(id))
                 {
-                    _typeWarehouseDic[ItemData.TypeEnum.All][id] += amount;
-                    _typeWarehouseDic[data.Type][id] += amount;
+                    _warehouseTypeDic[ItemData.TypeEnum.All][id] += amount;
+                    _warehouseTypeDic[data.Type][id] += amount;
                 }
                 else
                 {
-                    _typeWarehouseDic[ItemData.TypeEnum.All].Add(id, amount);
-                    _typeWarehouseDic[data.Type].Add(id, amount);
+                    _warehouseTypeDic[ItemData.TypeEnum.All].Add(id, amount);
+                    _warehouseTypeDic[data.Type].Add(id, amount);
                 }
                 //MissionManager.Instance.CheckMission(MissionData.TypeEnum.GetItem, id, WarehouseDic[id]);
             }
@@ -206,8 +206,8 @@ public class ItemManager
     private void AddWarehouseEquip(Equip equip)
     {
         _warehouseEquipDic[equip.Type].Add(equip);
-        _typeWarehouseDic[ItemData.TypeEnum.All].Add(equip, 1);
-        _typeWarehouseDic[ItemData.TypeEnum.Equip].Add(equip, 1);
+        _warehouseTypeDic[ItemData.TypeEnum.All].Add(equip, 1);
+        _warehouseTypeDic[ItemData.TypeEnum.Equip].Add(equip, 1);
     }
 
     public void MinusItem(object obj, int amount, Type type) //obj 有可能為 id 或 equip
@@ -229,20 +229,20 @@ public class ItemManager
             int id = (int)obj;
             ItemData.RootObject data = ItemData.GetData(id);
 
-            if (_typeBagDic[ItemData.TypeEnum.All].ContainsKey(id))
+            if (_bagTypeDic[ItemData.TypeEnum.All].ContainsKey(id))
             {
-                _typeBagDic[ItemData.TypeEnum.All][id] -= amount;
-                _typeBagDic[data.Type][id] -= amount;
-                if (_typeBagDic[ItemData.TypeEnum.All][id] < 0)
+                _bagTypeDic[ItemData.TypeEnum.All][id] -= amount;
+                _bagTypeDic[data.Type][id] -= amount;
+                if (_bagTypeDic[ItemData.TypeEnum.All][id] < 0)
                 {
-                    Debug.Log("道具不足,差 " + _typeBagDic[ItemData.TypeEnum.All][id] * -1 + " 個");
-                    _typeBagDic[ItemData.TypeEnum.All][id] += amount;
-                    _typeBagDic[data.Type][id] += amount;
+                    Debug.Log("道具不足,差 " + _bagTypeDic[ItemData.TypeEnum.All][id] * -1 + " 個");
+                    _bagTypeDic[ItemData.TypeEnum.All][id] += amount;
+                    _bagTypeDic[data.Type][id] += amount;
                 }
-                else if (_typeBagDic[ItemData.TypeEnum.All][id] == 0)
+                else if (_bagTypeDic[ItemData.TypeEnum.All][id] == 0)
                 {
-                    _typeBagDic[ItemData.TypeEnum.All].Remove(id);
-                    _typeBagDic[data.Type].Remove(id);
+                    _bagTypeDic[ItemData.TypeEnum.All].Remove(id);
+                    _bagTypeDic[data.Type].Remove(id);
                 }
                 CurrentBagVolume -= data.Volume * amount;
                 //SortBag();
@@ -265,20 +265,20 @@ public class ItemManager
             int id = (int)obj;
             ItemData.RootObject data = ItemData.GetData(id);
 
-            if (_typeWarehouseDic[ItemData.TypeEnum.All].ContainsKey(id))
+            if (_warehouseTypeDic[ItemData.TypeEnum.All].ContainsKey(id))
             {
-                _typeWarehouseDic[ItemData.TypeEnum.All][id] -= amount;
-                _typeWarehouseDic[data.Type][id] -= amount;
-                if (_typeWarehouseDic[ItemData.TypeEnum.All][id] < 0)
+                _warehouseTypeDic[ItemData.TypeEnum.All][id] -= amount;
+                _warehouseTypeDic[data.Type][id] -= amount;
+                if (_warehouseTypeDic[ItemData.TypeEnum.All][id] < 0)
                 {
-                    Debug.Log("道具不足,差 " + _typeWarehouseDic[ItemData.TypeEnum.All][id] * -1 + " 個");
-                    _typeWarehouseDic[ItemData.TypeEnum.All][id] += amount;
-                    _typeWarehouseDic[data.Type][id] += amount;
+                    Debug.Log("道具不足,差 " + _warehouseTypeDic[ItemData.TypeEnum.All][id] * -1 + " 個");
+                    _warehouseTypeDic[ItemData.TypeEnum.All][id] += amount;
+                    _warehouseTypeDic[data.Type][id] += amount;
                 }
-                else if (_typeWarehouseDic[ItemData.TypeEnum.All][id] == 0)
+                else if (_warehouseTypeDic[ItemData.TypeEnum.All][id] == 0)
                 {
-                    _typeWarehouseDic[ItemData.TypeEnum.All].Remove(id);
-                    _typeWarehouseDic[data.Type].Remove(id);
+                    _warehouseTypeDic[ItemData.TypeEnum.All].Remove(id);
+                    _warehouseTypeDic[data.Type].Remove(id);
                 }
                 //SortWarehouse();
             }
@@ -296,16 +296,16 @@ public class ItemManager
     private void MinusBagEquip(Equip equip)
     {
         _bagEquipDic[equip.Type].Remove(equip);
-        _typeBagDic[ItemData.TypeEnum.All].Remove(equip);
-        _typeBagDic[ItemData.TypeEnum.Equip].Remove(equip);
+        _bagTypeDic[ItemData.TypeEnum.All].Remove(equip);
+        _bagTypeDic[ItemData.TypeEnum.Equip].Remove(equip);
         CurrentBagVolume -= equip.Volume;
     }
 
     private void MinusWarehouseEquip(Equip equip)
     {
         _warehouseEquipDic[equip.Type].Remove(equip);
-        _typeWarehouseDic[ItemData.TypeEnum.All].Remove(equip);
-        _typeWarehouseDic[ItemData.TypeEnum.Equip].Remove(equip);
+        _warehouseTypeDic[ItemData.TypeEnum.All].Remove(equip);
+        _warehouseTypeDic[ItemData.TypeEnum.Equip].Remove(equip);
     }
 
     public void AddKey()
@@ -356,9 +356,9 @@ public class ItemManager
     {
         if (type == Type.Warehouse)
         {
-            if (_typeWarehouseDic[ItemData.TypeEnum.All].ContainsKey(id))
+            if (_warehouseTypeDic[ItemData.TypeEnum.All].ContainsKey(id))
             {
-                return _typeWarehouseDic[ItemData.TypeEnum.All][id];
+                return _warehouseTypeDic[ItemData.TypeEnum.All][id];
             }
             else
             {
@@ -367,9 +367,9 @@ public class ItemManager
         }
         else
         {
-            if (_typeBagDic[ItemData.TypeEnum.All].ContainsKey(id))
+            if (_bagTypeDic[ItemData.TypeEnum.All].ContainsKey(id))
             {
-                return _typeBagDic[ItemData.TypeEnum.All][id];
+                return _bagTypeDic[ItemData.TypeEnum.All][id];
             }
             else
             {
@@ -388,11 +388,11 @@ public class ItemManager
         Dictionary<object, int> itemDic;
         if (type == Type.Bag)
         {
-            _typeBagDic.TryGetValue(itemType, out itemDic);
+            _bagTypeDic.TryGetValue(itemType, out itemDic);
         }
         else
         {
-            _typeWarehouseDic.TryGetValue(itemType, out itemDic);
+            _warehouseTypeDic.TryGetValue(itemType, out itemDic);
         }
         return itemDic;
     }
@@ -409,6 +409,17 @@ public class ItemManager
             _warehouseEquipDic.TryGetValue(equipType, out equipList);
         }
         return equipList;
+    }
+
+    public void PutBagItemIntoWarehouse() //回村莊的時候,把背包的東西都放進倉庫裡
+    {
+        foreach (KeyValuePair<object, int> item in _bagTypeDic[ItemData.TypeEnum.All])
+        {
+            AddWarehouseItem(item.Key, item.Value);
+        }
+
+        _bagTypeDic.Clear();
+        _bagEquipDic.Clear();
     }
 
     /*private void SortBag()
