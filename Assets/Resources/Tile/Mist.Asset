@@ -39,8 +39,12 @@ MonoBehaviour:
   Down: {fileID: 21300000, guid: a2cdeab57fa0e6548b72fd6338824374, type: 3}
   Left: {fileID: 21300000, guid: 3b016a9d76705f54d9eba646f8b103d5, type: 3}
   Right: {fileID: 21300000, guid: c2e3306893e21704a914a8abff7fe53e, type: 3}
-  UpLeft: {fileID: 21300000, guid: 1d6d07cdef1a37340a9827496580c0b0, type: 3}
-  UpRight: {fileID: 21300000, guid: bd10a5cf8051dec42b474b3330a3bfce, type: 3}
-  DownLeft: {fileID: 21300000, guid: 47f76d1a6975d0840a2e814a361bdd17, type: 3}
-  DownRight: {fileID: 21300000, guid: 91666f8499bd4544ab027667eebe7c61, type: 3}
+  UpLeftConvex: {fileID: 21300000, guid: 1d6d07cdef1a37340a9827496580c0b0, type: 3}
+  UpRightConvex: {fileID: 21300000, guid: bd10a5cf8051dec42b474b3330a3bfce, type: 3}
+  DownLeftConvex: {fileID: 21300000, guid: 47f76d1a6975d0840a2e814a361bdd17, type: 3}
+  DownRightConvex: {fileID: 21300000, guid: 91666f8499bd4544ab027667eebe7c61, type: 3}
+  UpLeftConcave: {fileID: 21300000, guid: b11518443df1a2b42ad47289744ca0fc, type: 3}
+  UpRightConcave: {fileID: 21300000, guid: a14e1abb27211c64594e005441a2e235, type: 3}
+  DownLeftConcave: {fileID: 21300000, guid: ebc6bedcfa7c09a44bb2fb0353c7e1ca, type: 3}
+  DownRightConcave: {fileID: 21300000, guid: e87269281543d984fb17fb04aa658d85, type: 3}
   Other: {fileID: 0}

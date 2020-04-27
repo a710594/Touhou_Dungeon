@@ -47,19 +47,8 @@ public class ConversationUI : MonoBehaviour
     private void Init(int id, Action callback = null)
     {
         ConversationData.RootObject data = ConversationData.GetData(id);
-        NameLabel.text = data.Name;
         Typewriter.ClearText();
-        Typewriter.Show(data.Comment);
-        ShowImage(data);
-        if (data.BGM != "x")
-        {
-            _isPlayingBGM = true;
-            AudioSystem.Instance.Play(data.BGM, true);
-        }
-        else
-        {
-            _isPlayingBGM = false;
-        }
+        SetData(data);
 
         _data = data;
         _onFinishHandler = callback;
@@ -84,9 +73,7 @@ public class ConversationUI : MonoBehaviour
 
         //if (data.Effect == ConversationData.EffectEnum.None)
         //{
-        NameLabel.text = data.Name;
-        Typewriter.Show(data.Comment);
-        ShowImage(data);
+        SetData(data);
         //}
         //else if (data.Effect == ConversationData.EffectEnum.FadeInFadeOut)
         //{
@@ -102,16 +89,29 @@ public class ConversationUI : MonoBehaviour
         _data = data;
     }
 
-    private void ShowImage(ConversationData.RootObject data)
+    private void SetData(ConversationData.RootObject data)
     {
+        NameLabel.text = data.Name;
+        Typewriter.Show(data.GetComment());
+
         if (data.Background == "x")
         {
             Background.gameObject.SetActive(false);
         }
-        else if (data.Background != "_")
+        else if (data.Background != "-")
         {
             Background.gameObject.SetActive(true);
             Background.sprite = Resources.Load<Sprite>("Image/Background/" + data.Background);
+        }
+
+        if (data.BGM == "x")
+        {
+            _isPlayingBGM = false;
+        }
+        else if(data.BGM != "-")
+        {
+            _isPlayingBGM = true;
+            AudioSystem.Instance.Play(data.BGM, true);
         }
 
         for (int i=0; i<data.Images.Length; i++)
@@ -120,17 +120,19 @@ public class ConversationUI : MonoBehaviour
             {
                 CharacterImage[i].gameObject.SetActive(false);
             }
-            else if (data.Images[i] != "_")
+            else if (data.Images[i] == "-")
             {
-                CharacterImage[i].gameObject.SetActive(true);
-                CharacterImage[i].color = Color.white;
-                CharacterImage[i].sprite = Resources.Load<Sprite>("Image/Character/Large/" + data.Images[i]);
-                CharacterImage[i].SetNativeSize();
-                //CharacterImage[i].rectTransform.pivot = new Vector2(CharacterImage[i].sprite.pivot.x / CharacterImage[i].rectTransform.sizeDelta.x, CharacterImage[i].sprite.pivot.y / CharacterImage[i].rectTransform.sizeDelta.y);
+                CharacterImage[i].color = Color.gray;
             }
             else
             {
-                CharacterImage[i].color = Color.gray;
+                CharacterImage[i].gameObject.SetActive(true);
+                CharacterImage[i].color = Color.white;
+                if (data.Images[i] != "o")
+                {
+                    CharacterImage[i].sprite = Resources.Load<Sprite>("Image/Character/Large/" + data.Images[i]);
+                    CharacterImage[i].SetNativeSize();
+                }
             }
         }
 

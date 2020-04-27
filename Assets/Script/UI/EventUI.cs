@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,14 +12,15 @@ public class EventUI : MonoBehaviour
     public Button CloseButton;
     public ButtonPlus[] OptionButtons;
 
-    public static void Open(int id)
+    private Action FinishCallback;
+
+    public static void Open(int id, Action callback)
     {
         if (Instance == null)
         {
             Instance = ResourceManager.Instance.Spawn("EventUI", ResourceManager.Type.UI).GetComponent<EventUI>();
         }
-        //Instance.SetData(id);
-        Instance.SetData(3);
+        Instance.SetData(id, callback);
         Time.timeScale = 0;
     }
 
@@ -27,12 +29,18 @@ public class EventUI : MonoBehaviour
         Destroy(Instance.gameObject);
         Instance = null;
         Time.timeScale = 1;
+
+        if (FinishCallback != null)
+        {
+            FinishCallback();
+        }
     }
 
-    public void SetData(int id)
+    public void SetData(int id, Action callback)
     {
         EventData.RootObject data = EventData.GetData(id);
         CommentLabel.text = data.GetComment();
+        FinishCallback = callback;
 
         for (int i=0; i<OptionButtons.Length; i++)
         {

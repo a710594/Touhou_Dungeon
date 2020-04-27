@@ -57,7 +57,7 @@ public class Skill
     }
 
     //有可能出現沒有任何格子可選的情況,有空要修
-    public void GetSkillDistance(BattleCharacter executor, List<BattleCharacter> characterList)
+    public void GetDistance(BattleCharacter executor, List<BattleCharacter> characterList)
     {
         TilePainter.Instance.Clear(2);
         _skillDistanceList.Clear();
@@ -74,7 +74,7 @@ public class Skill
         }
     }
 
-    public void GetSkillRange(Vector2Int target, Vector2Int orign, BattleCharacter executor, List<BattleCharacter> characterList)
+    public void GetRange(Vector2Int target, Vector2Int orign, BattleCharacter executor, List<BattleCharacter> characterList)
     {
         List<Vector2Int> positionList = new List<Vector2Int>();
         TilePainter.Instance.Clear(2);
@@ -120,12 +120,12 @@ public class Skill
         }
     }
 
-    public bool IsInSkillDistance(Vector2Int position)
+    public bool IsInDistance(Vector2Int position)
     {
         return _skillDistanceList.Contains(position);
     }
 
-    public List<BattleCharacter> GetSkillTargetList()
+    public List<BattleCharacter> GetTargetList()
     {
         BattleCharacter target;
         _targetList.Clear();
@@ -150,7 +150,7 @@ public class Skill
         }
         _skillCallBackCount = 0;
         _skillCallback = callback;
-        GetSkillTargetList();
+        GetTargetList();
 
         if (_targetList.Count > 0 && executor.Camp == BattleCharacter.CampEnum.Partner && !IsSpellCard)
         {
@@ -213,7 +213,7 @@ public class Skill
     //移除非技能目標
     private List<Vector2Int> RemovePosition(BattleCharacter executor, List<BattleCharacter> characterList, List<Vector2Int> positionList)
     {
-        if (Data.Target == SkillData.TargetEnum.None)
+        if (Data.Target == SkillData.TargetType.None)
         {
             for (int i = 0; i < characterList.Count; i++)
             {
@@ -222,7 +222,7 @@ public class Skill
         }
         else if (executor.Camp == BattleCharacter.CampEnum.Partner)
         {
-            if (Data.Target == SkillData.TargetEnum.Us)
+            if (Data.Target == SkillData.TargetType.Us)
             {
                 for (int i = 0; i < characterList.Count; i++)
                 {
@@ -232,7 +232,7 @@ public class Skill
                     }
                 }
             }
-            else if (Data.Target == SkillData.TargetEnum.Them)
+            else if (Data.Target == SkillData.TargetType.Them)
             {
                 for (int i = 0; i < characterList.Count; i++)
                 {
@@ -245,7 +245,7 @@ public class Skill
         }
         else if (executor.Camp == BattleCharacter.CampEnum.Enemy)
         {
-            if (Data.Target == SkillData.TargetEnum.Us)
+            if (Data.Target == SkillData.TargetType.Us)
             {
                 for (int i = 0; i < characterList.Count; i++)
                 {
@@ -255,7 +255,7 @@ public class Skill
                     }
                 }
             }
-            else if (Data.Target == SkillData.TargetEnum.Them)
+            else if (Data.Target == SkillData.TargetType.Them)
             {
                 for (int i = 0; i < characterList.Count; i++)
                 {

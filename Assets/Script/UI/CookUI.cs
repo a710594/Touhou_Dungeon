@@ -66,7 +66,7 @@ public class CookUI : MonoBehaviour
                     have = ItemManager.Instance.GetItemAmount(cookData.MaterialList[i], _itemManagerType);
                     need = cookData.AmountList[i];
                     MaterialNameLabel[i].gameObject.SetActive(true);
-                    MaterialNameLabel[i].text = ItemData.GetData(cookData.MaterialList[i]).Name;
+                    MaterialNameLabel[i].text = ItemData.GetData(cookData.MaterialList[i]).GetName();
                     MaterialAmountLabel[i].gameObject.SetActive(true);
                     MaterialAmountLabel[i].text = have.ToString() + "/" + need.ToString();
 
@@ -94,7 +94,7 @@ public class CookUI : MonoBehaviour
             }
 
             ProduceButton.gameObject.SetActive(true);
-            CommentLabel.text = itemData.Comment;
+            CommentLabel.text = itemData.GetComment();
             AmountLabel.text = "數量：" + ItemManager.Instance.GetItemAmount(itemData.ID, _itemManagerType).ToString();
         }
         else

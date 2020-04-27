@@ -127,7 +127,7 @@ public class BattleController : MachineBehaviour
         TilePainter.Instance.Clear(3);
         SelectedCharacter.ActionDone();
         SelectedCharacter.InitOrignalPosition();
-        if (SelectedCharacter.ActionCount > 0)
+        if (SelectedCharacter.Info.ActionCount > 0)
         {
             ChangeState<SelectActionState>();
         }
@@ -174,7 +174,7 @@ public class BattleController : MachineBehaviour
     {
         list.Sort((x, y) =>
         {
-            if (x.AGI  == y.AGI)
+            if (x.Info.AGI  == y.Info.AGI)
             {
                 if (x.Camp == BattleCharacter.CampEnum.Enemy && y.Camp == BattleCharacter.CampEnum.Partner)
                 {
@@ -187,7 +187,7 @@ public class BattleController : MachineBehaviour
             }
             else
             {
-                return (y.AGI).CompareTo(x.AGI);
+                return (y.Info.AGI).CompareTo(x.Info.AGI);
             }
         });
     }
@@ -589,7 +589,7 @@ public class BattleController : MachineBehaviour
                     if (result == ResultType.None)
                     {
                         parent.SelectedCharacter.ActionDone();
-                        if (parent.SelectedCharacter.ActionCount > 0)
+                        if (parent.SelectedCharacter.Info.ActionCount > 0)
                         {
                             if (parent.SelectedCharacter is BattleCharacterPlayer)
                             {
@@ -628,7 +628,7 @@ public class BattleController : MachineBehaviour
 
             for (int i = 0; i < parent.CharacterList.Count; i++)
             {
-                if (parent.CharacterList[i].LiveState == BattleCharacter.LiveStateEnum.Alive && parent.CharacterList[i].IsPoisoning)
+                if (parent.CharacterList[i].LiveState == BattleCharacter.LiveStateEnum.Alive && parent.CharacterList[i].Info.IsPoisoning)
                 {
                     _poisonQueue.Enqueue(parent.CharacterList[i]);
                 }

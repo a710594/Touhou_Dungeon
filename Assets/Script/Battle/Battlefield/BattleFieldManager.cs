@@ -129,14 +129,23 @@ public class BattleFieldManager
 
     public Buff GetFieldBuff(Vector2 position)
     {
-        Buff buff = MapDic[Vector2Int.RoundToInt(position)].Buff;
-        if (buff != null)
+        BattleField battleField;
+        MapDic.TryGetValue(Vector2Int.RoundToInt(position), out battleField);
+        if (battleField != null)
         {
-            return buff;
+            Buff buff = battleField.Buff;
+            if (buff != null)
+            {
+                return buff;
+            }
+            else
+            {
+                return new Buff(); //如果該地形上沒有 buff,就回傳一個空的 buff
+            }
         }
         else
         {
-            return new Buff(); //如果該地形上沒有 buff,就回傳一個空的 buff
+            return new Buff(); //如果沒有該座標的地形,就回傳一個空的 buff
         }
     }
 }

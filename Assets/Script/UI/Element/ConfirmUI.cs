@@ -6,9 +6,11 @@ using UnityEngine.UI;
 
 public class ConfirmUI : MonoBehaviour
 {
+    public Text ConfirmLabel;
+    public Text CancelLabel;
     public Text CommentLabel;
-    public ButtonPlus ConfirmButton;
-    public ButtonPlus CancelButton;
+    public Button ConfirmButton;
+    public Button CancelButton;
 
     private Action _onConfirmHandler;
     private Action _onCancelHandler;
@@ -42,7 +44,7 @@ public class ConfirmUI : MonoBehaviour
     private void Init(string commentText, string confirmText, Action confirmCallback)
     {
         CommentLabel.text = commentText;
-        ConfirmButton.Label.text = confirmText;
+        ConfirmLabel.text = confirmText;
         CancelButton.gameObject.SetActive(false);
         _onConfirmHandler = confirmCallback;
     }
@@ -50,13 +52,13 @@ public class ConfirmUI : MonoBehaviour
     private void Init(string commentText, string confirmText, string cancelText, Action confirmCallback, Action cancelCallback)
     {
         CommentLabel.text = commentText;
-        ConfirmButton.Label.text = confirmText;
-        CancelButton.Label.text = cancelText;
+        ConfirmLabel.text = confirmText;
+        CancelLabel.text = cancelText;
         _onConfirmHandler = confirmCallback;
         _onCancelHandler = cancelCallback;
     }
 
-    private void ConfirmOnClick(object data)
+    private void ConfirmOnClick()
     {
         _instance.Close();
         if (_onConfirmHandler != null)
@@ -66,14 +68,14 @@ public class ConfirmUI : MonoBehaviour
         }
     }
 
-    private void CancelOnClick(object data)
+    private void CancelOnClick()
     {
         _instance.Close();
     }
 
     void Awake()
     {
-        ConfirmButton.ClickHandler = ConfirmOnClick;
-        CancelButton.ClickHandler = CancelOnClick;
+        ConfirmButton.onClick.AddListener(ConfirmOnClick);
+        CancelButton.onClick.AddListener(CancelOnClick);
     }
 }

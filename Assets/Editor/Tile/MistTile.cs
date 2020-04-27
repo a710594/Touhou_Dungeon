@@ -11,10 +11,14 @@ public class MistTile : Tile
     public Sprite Down;
     public Sprite Left;
     public Sprite Right;
-    public Sprite UpLeft;
-    public Sprite UpRight;
-    public Sprite DownLeft;
-    public Sprite DownRight;
+    public Sprite UpLeftConvex;
+    public Sprite UpRightConvex;
+    public Sprite DownLeftConvex;
+    public Sprite DownRightConvex;
+    public Sprite UpLeftConcave;
+    public Sprite UpRightConcave;
+    public Sprite DownLeftConcave;
+    public Sprite DownRightConcave;
     public Sprite Other;
 
     public override void RefreshTile(Vector3Int location, ITilemap tilemap)
@@ -32,7 +36,26 @@ public class MistTile : Tile
     {
         if (HasMistTile(tilemap, location + Vector3Int.up) && HasMistTile(tilemap, location + Vector3Int.down) && HasMistTile(tilemap, location + Vector3Int.left) && HasMistTile(tilemap, location + Vector3Int.right))
         {
-            tileData.sprite = Center;
+            if (!HasMistTile(tilemap, location + Vector3Int.down + Vector3Int.left))
+            {
+                tileData.sprite = DownLeftConcave;
+            }
+            else if (!HasMistTile(tilemap, location + Vector3Int.down + Vector3Int.right))
+            {
+                tileData.sprite = DownRightConcave;
+            }
+            else if (!HasMistTile(tilemap, location + Vector3Int.up + Vector3Int.left))
+            {
+                tileData.sprite = UpLeftConcave;
+            }
+            else if (!HasMistTile(tilemap, location + Vector3Int.up + Vector3Int.right))
+            {
+                tileData.sprite = UpRightConcave;
+            }
+            else
+            {
+                tileData.sprite = Center;
+            }
         }
         else if (!HasMistTile(tilemap, location + Vector3Int.up) && HasMistTile(tilemap, location + Vector3Int.down) && HasMistTile(tilemap, location + Vector3Int.left) && HasMistTile(tilemap, location + Vector3Int.right))
         {
@@ -52,19 +75,19 @@ public class MistTile : Tile
         }
         else if (!HasMistTile(tilemap, location + Vector3Int.up) && HasMistTile(tilemap, location + Vector3Int.down) && !HasMistTile(tilemap, location + Vector3Int.left) && HasMistTile(tilemap, location + Vector3Int.right))
         {
-            tileData.sprite = UpLeft;
+            tileData.sprite = UpLeftConvex;
         }
         else if (!HasMistTile(tilemap, location + Vector3Int.up) && HasMistTile(tilemap, location + Vector3Int.down) && HasMistTile(tilemap, location + Vector3Int.left) && !HasMistTile(tilemap, location + Vector3Int.right))
         {
-            tileData.sprite = UpRight;
+            tileData.sprite = UpRightConvex;
         }
         else if (HasMistTile(tilemap, location + Vector3Int.up) && !HasMistTile(tilemap, location + Vector3Int.down) && !HasMistTile(tilemap, location + Vector3Int.left) && HasMistTile(tilemap, location + Vector3Int.right))
         {
-            tileData.sprite = DownLeft;
+            tileData.sprite = DownLeftConvex;
         }
         else if (HasMistTile(tilemap, location + Vector3Int.up) && !HasMistTile(tilemap, location + Vector3Int.down) && HasMistTile(tilemap, location + Vector3Int.left) && !HasMistTile(tilemap, location + Vector3Int.right))
         {
-            tileData.sprite = DownRight;
+            tileData.sprite = DownRightConvex;
         }
         else
         {

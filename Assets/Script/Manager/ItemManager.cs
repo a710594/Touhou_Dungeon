@@ -52,6 +52,7 @@ public class ItemManager
         }
 
         //temp
+        AddBagItem(0, 1);
         AddBagItem(21, 5);
         AddBagItem(12, 3);
         Money = 10000;
@@ -92,6 +93,18 @@ public class ItemManager
         }
     }
 
+    public void AddItem(object obj, int amount, Type type)
+    {
+        if (type == Type.Bag)
+        {
+            AddBagItem(obj, amount);
+        }
+        else
+        {
+            AddWarehouseItem(obj, amount);
+        }
+    }
+
     private void AddBagItem(List<int> idList)
     {
         for (int i = 0; i < idList.Count; i++)
@@ -105,18 +118,6 @@ public class ItemManager
         for (int i = 0; i < idList.Count; i++)
         {
             AddWarehouseItem(idList[i], 1);
-        }
-    }
-
-    public void AddItem(object obj, int amount, Type type)
-    {
-        if (type == Type.Bag)
-        {
-            AddBagItem(obj, amount);
-        }
-        else
-        {
-            AddWarehouseItem(obj, amount);
         }
     }
 
@@ -249,7 +250,7 @@ public class ItemManager
             }
             else
             {
-                Debug.Log("沒有這個道具: " + data.Name);
+                Debug.Log("沒有這個道具: " + data.GetName());
             }
         }
         else
@@ -284,7 +285,7 @@ public class ItemManager
             }
             else
             {
-                Debug.Log("沒有這個道具: " + data.Name);
+                Debug.Log("沒有這個道具: " + data.GetName());
             }
         }
         else
@@ -420,6 +421,16 @@ public class ItemManager
 
         _bagTypeDic.Clear();
         _bagEquipDic.Clear();
+
+        foreach (ItemData.TypeEnum type in (ItemData.TypeEnum[])Enum.GetValues(typeof(ItemData.TypeEnum)))
+        {
+            _bagTypeDic.Add(type, new Dictionary<object, int>());
+        }
+
+        foreach (EquipData.TypeEnum type in Enum.GetValues(typeof(EquipData.TypeEnum)))
+        {
+            _bagEquipDic.Add(type, new List<Equip>());
+        }
     }
 
     /*private void SortBag()

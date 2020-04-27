@@ -34,10 +34,10 @@ public class PoisonSkill : Skill
     {
         base.SetEffect(target);
 
-        target.SetPoison(Data.StatusID, CalculateDamage(target), CheckSkillCallback);
+        target.SetPoison(Data.StatusID, CalculateDamage(target.Info), CheckSkillCallback);
     }
 
-    private int CalculateDamage(BattleCharacter target)
+    private int CalculateDamage(BattleCharacterInfo target)
     {
         float poisonDamage = BattleStatusData.GetData(Data.StatusID).Damage;
         return (int)(poisonDamage / 100f * (float)target.MaxHP);

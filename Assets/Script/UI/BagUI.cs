@@ -141,8 +141,8 @@ public class BagUI : MonoBehaviour
         {
             _selectedItem = ItemData.GetData((int)obj);
             _selectedEquip = null;
-            NameLabel.text = _selectedItem.Name;
-            CommentLabel.text = _selectedItem.Comment;
+            NameLabel.text = _selectedItem.GetName();
+            CommentLabel.text = _selectedItem.GetComment();
             VolumeLabel.text = "體積：" + _selectedItem.Volume;
             ItemImage.gameObject.SetActive(true);
             ItemImage.overrideSprite = Resources.Load<Sprite>("Image/" + _selectedItem.Icon);
@@ -156,7 +156,7 @@ public class BagUI : MonoBehaviour
                 DiscardButton.gameObject.SetActive(false);
             }
 
-            if (_selectedItem.Type == ItemData.TypeEnum.Food || _selectedItem.Type == ItemData.TypeEnum.Medicine)
+            if (_selectedItem.Type == ItemData.TypeEnum.Food || _selectedItem.Type == ItemData.TypeEnum.Medicine || _selectedItem.Type == ItemData.TypeEnum.GoHome)
             {
                 UseButton.gameObject.SetActive(true);
             }
@@ -219,7 +219,7 @@ public class BagUI : MonoBehaviour
 
     private void UseOnClick()
     {
-        if (_selectedMember != null)
+        if (_selectedMember != null) //從成員UI來的,換裝備
         {
             Equip oldEquip;
             _selectedMember.SetEquip(_selectedEquip, out oldEquip);
@@ -232,9 +232,17 @@ public class BagUI : MonoBehaviour
             Close();
             TeamUI.Instance.SetEquipData();
         }
-        else if (_selectedItem != null || _selectedEquip != null)
+        else if (_selectedItem != null) //使用道具
         {
-            SelectCharacterGroup.gameObject.SetActive(true);
+            if (_selectedItem.Type == ItemData.TypeEnum.GoHome)
+            {
+                ExploreController.Instance.BackToVilliage();
+                Time.timeScale = 1;
+            }
+            else
+            {
+                SelectCharacterGroup.gameObject.SetActive(true);
+            }
         }
     }
 

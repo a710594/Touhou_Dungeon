@@ -40,17 +40,4 @@ public class Buff : BattleStatus
         Comment = Data.Comment;
         Icon = Data.Icon;
     }
-
-    public void Clear()
-    {
-        ATK = 1;
-        DEF = 1;
-        MTK = 1;
-        MEF = 1;
-        AGI = 1;
-        SEN = 1;
-        MoveDistance = 1;
-        RemainTurn = 0;
-        Data = null;
-    }
 }

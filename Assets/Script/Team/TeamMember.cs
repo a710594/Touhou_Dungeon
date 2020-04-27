@@ -119,10 +119,10 @@ public class TeamMember
     private Equip _defaultArmor = new Equip(EquipData.TypeEnum.Armor);
     private Equip _defaultJewelry = new Equip(EquipData.TypeEnum.Jewelry);
 
-    public void Init(int jobId)
+    public void Init(int jobId, int lv = 1)
     {
         Data = JobData.GetData(jobId);
-        Lv = 1;
+        Lv = lv;
         MaxHP = Mathf.RoundToInt(Data.HP * (1 + ((Lv - 1) * 0.1f)));
         CurrentHP = MaxHP;
         MaxMP = Mathf.RoundToInt(Data.MP * (1 + ((Lv - 1) * 0.1f)));
@@ -137,10 +137,10 @@ public class TeamMember
         SkillList = Data.GetUnlockSkill(Lv);
     }
 
-    public void SetData(BattleCharacterPlayer character)
+    public void Refresh(BattleCharacterPlayer character)
     {
-        CurrentHP = character.CurrentHP;
-        CurrentMP = character.CurrentMP;
+        CurrentHP = character.Info.CurrentHP;
+        CurrentMP = character.Info.CurrentMP;
     }
 
     public void LvUp(int lv, int exp)

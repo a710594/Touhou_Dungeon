@@ -82,7 +82,7 @@ public class TeamEquipGroup : MonoBehaviour
         }
         else
         {
-            type = ItemManager.Type.Warehouse;
+            type = ItemManager.Type.Bag;
         }
         BagUI.Open(type, _selectedMember, ItemManager.Instance.GetEquipListByType(type, _selectedEquip.Type));
     }

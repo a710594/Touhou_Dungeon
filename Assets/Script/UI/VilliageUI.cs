@@ -5,11 +5,18 @@ using UnityEngine.UI;
 
 public class VilliageUI : MonoBehaviour
 {
+    public Button AdventureButton;
     public Button ShopButton;
     public Button CookButton;
     public Button TeamButton;
     public Button FormationButton;
     public Button WarehouseButton;
+    public SelectDestinationUI SelectDestinationUI;
+
+    private void AdventureOnClick()
+    {
+        SelectDestinationUI.Open();
+    }
 
     private void CookOnClick() 
     {
@@ -33,6 +40,9 @@ public class VilliageUI : MonoBehaviour
 
     private void Awake()
     {
+        SelectDestinationUI.gameObject.SetActive(false);
+
+        AdventureButton.onClick.AddListener(AdventureOnClick);
         CookButton.onClick.AddListener(CookOnClick);
         TeamButton.onClick.AddListener(TeamOnClick);
         FormationButton.onClick.AddListener(FormationOnClick);

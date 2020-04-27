@@ -31,8 +31,8 @@ public class Equip
         EquipData.RootObject equipData = EquipData.GetData(id);
 
         ID = id;
-        Name = itemData.Name;
-        Comment = itemData.Comment;
+        Name = itemData.GetName();
+        Comment = itemData.GetComment();
         Icon = itemData.Icon;
         Volume = itemData.Volume;
         Type = equipData.Type;

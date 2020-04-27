@@ -53,15 +53,15 @@ public class TeamSkillGroup : MonoBehaviour
         //{
         //    RangeTypeLabel.text = "範圍類型：貫通";
         //}
-        if (data.Target == SkillData.TargetEnum.Us)
+        if (data.Target == SkillData.TargetType.Us)
         {
             TargetLabel.text = "目標：我方";
         }
-        else if (data.Target == SkillData.TargetEnum.Them)
+        else if (data.Target == SkillData.TargetType.Them)
         {
             TargetLabel.text = "目標：敵方";
         }
-        else if (data.Target == SkillData.TargetEnum.All)
+        else if (data.Target == SkillData.TargetType.All)
         {
             TargetLabel.text = "目標：全體";
         }

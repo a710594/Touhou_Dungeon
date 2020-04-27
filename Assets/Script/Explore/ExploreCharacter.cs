@@ -10,11 +10,12 @@ public class ExploreCharacter : MonoBehaviour
     public Animator Animator;
 
     private bool _isMoving = false;
+    private bool _isStop = false;
     private Vector2Int _lookAt = Vector2Int.left;
 
     public void Move(Vector2Int direction, Action callback = null)
     {
-        if (_isMoving /*|| CheckCollider(direction)*/)
+        if (_isMoving  || _isStop)
         {
            return;
         }
@@ -52,6 +53,12 @@ public class ExploreCharacter : MonoBehaviour
     public void Stop()
     {
         transform.DOKill();
+        _isStop = true;
+    }
+
+    public void UnlockStop()
+    {
+        _isStop = false;
     }
 
     private bool CheckCollider(Vector2 direction)

@@ -38,7 +38,7 @@ public class TeamManager
     {
         for (int i = 0; i < list.Count; i++)
         {
-            MemberList[i].SetData(list[i]);
+            MemberList[i].Refresh(list[i]);
             MemberList[i].ClearFoodBuff();
         }
     }

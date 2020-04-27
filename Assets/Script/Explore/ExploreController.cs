@@ -103,7 +103,7 @@ public class ExploreController
         {
             for (int i=0; i< _mapInfo.TreasureDic[position].ItemList.Count; i++)
             {
-                Debug.Log(ItemData.GetData(_mapInfo.TreasureDic[position].ItemList[i]).Name);
+                Debug.Log(ItemData.GetData(_mapInfo.TreasureDic[position].ItemList[i]).GetName());
             }
             ItemManager.Instance.AddItem(_mapInfo.TreasureDic[position].ItemList, ItemManager.Type.Bag);
             TilePainter.Instance.Clear(1, position);
@@ -143,6 +143,11 @@ public class ExploreController
 
     public void BackToVilliage()
     {
+        for (int i = 0; i < _fieldEnemyList.Count; i++)
+        {
+            _fieldEnemyList[i].Stop();
+        }
+
         MySceneManager.Instance.ChangeScene(MySceneManager.SceneType.Villiage, () =>
         {
             ItemManager.Instance.PutBagItemIntoWarehouse();
@@ -260,7 +265,8 @@ public class ExploreController
         }
         else if (_mapInfo.ExploreEventDIc.ContainsKey(position))
         {
-            EventUI.Open(_mapInfo.ExploreEventDIc[position]);
+            _player.Stop();
+            EventUI.Open(_mapInfo.ExploreEventDIc[position], _player.UnlockStop);
             TilePainter.Instance.Clear(1, position);
             _mapInfo.ExploreEventDIc.Remove(position);
         }
@@ -268,11 +274,11 @@ public class ExploreController
 
     private void SetVisibleRange(bool isInit)
     {
-        if (isInit)
-        {
-            _exploredList.Clear();
-            _wallList.Clear();
-        }
+        //if (isInit)
+        //{
+        //    _exploredList.Clear();
+        //    _wallList.Clear();
+        //}
 
         Vector2Int playerPosition = Vector2Int.RoundToInt(_player.transform.position);
         Vector2Int circlePoint = new Vector2Int();
@@ -282,7 +288,7 @@ public class ExploreController
         _exploredList.Add(playerPosition);
         TilePainter.Instance.Clear(2, playerPosition);
         _mapInfo.MistList.Remove(playerPosition);
-        circleList = Utility.GetCirclePositionList(playerPosition, 6, !isInit);
+        circleList = Utility.GetCirclePositionList(playerPosition, 5, !isInit);
         for (int i=0; i<circleList.Count; i++)
         {
             circlePoint = circleList[i];
@@ -319,22 +325,23 @@ public class ExploreController
     private void GenerateEnemy()
     {
         _fieldEnemyList.Clear();
-        //Vector2Int position;
         FieldEnemy enemy;
-        //for (int i = 0; i < _mapInfo.RoomList.Count; i++)
-        //{
-        //    for (int j = 0; j < 2; j++) //每個房間生兩隻怪
-        //    {
-        //        position = GetLegalPosition(_mapInfo.RoomList[i].PositionList);
-        //        if (Vector2.Distance(position, _player.transform.position) > 10) //如果位置不會離玩家太近
-        //        {
-        //            enemy = ResourceManager.Instance.Spawn("FieldEnemy/FieldEnemyRandom", ResourceManager.Type.Other).GetComponent<FieldEnemy>();
-        //            enemy.OnPlayerEnterHandler += EnterBattle;
-        //            enemy.Init(DungeonBattleGroupData.GetRandomBattleGroup(_mapInfo.DungeonId), position);
-        //            _fieldEnemyList.Add(enemy);
-        //        }
-        //    }
-        //}
+
+        Vector2Int position;
+        for (int i = 0; i < _mapInfo.RoomList.Count; i++)
+        {
+            for (int j = 0; j < 2; j++) //每個房間生兩隻怪
+            {
+                position = GetLegalPosition(_mapInfo.RoomList[i].PositionList);
+                if (Vector2.Distance(position, _player.transform.position) > 10) //如果位置不會離玩家太近
+                {
+                    enemy = ResourceManager.Instance.Spawn("FieldEnemy/FieldEnemyRandom", ResourceManager.Type.Other).GetComponent<FieldEnemy>();
+                    enemy.OnPlayerEnterHandler += EnterBattle;
+                    enemy.Init(DungeonBattleGroupData.GetRandomBattleGroup(_mapInfo.DungeonId), position);
+                    _fieldEnemyList.Add(enemy);
+                }
+            }
+        }
 
         if (_guardList.Contains(_mapInfo.Goal))
         {

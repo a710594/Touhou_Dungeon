@@ -29,7 +29,7 @@ public class BagScrollItem : ScrollItem
                     Card.Init(id);
                 }
 
-                NameLabel.text = ItemData.GetData(id).Name;
+                NameLabel.text = ItemData.GetData(id).GetName();
             }
             else if (pair.Key is Equip)
             {

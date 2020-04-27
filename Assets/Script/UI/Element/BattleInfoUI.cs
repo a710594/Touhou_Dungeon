@@ -21,11 +21,11 @@ public class BattleInfoUI : MonoBehaviour
 
     public void SetData(BattleCharacter character)
     {
-        NameLabel.text = character.Name;
-        LvLabel.text = "Lv." + character.Lv.ToString();
-        HpBar.SetValue(character.CurrentHP, character.MaxHP);
+        NameLabel.text = character.Info.Name;
+        LvLabel.text = "Lv." + character.Info.Lv.ToString();
+        HpBar.SetValue(character.Info.CurrentHP, character.Info.MaxHP);
 
-        _statusList = new List<BattleStatus>(character.StatusDic.Values);
+        _statusList = new List<BattleStatus>(character.Info.StatusDic.Values);
 
         for (int i=0; i<BuffIcon.Length; i++)
         {
@@ -54,7 +54,7 @@ public class BattleInfoUI : MonoBehaviour
                 Image.overrideSprite = Resources.Load<Sprite>("Image/Character/Medium/NoImage_M");
             }
             MpBar.gameObject.SetActive(true);
-            MpBar.SetValue(player.CurrentMP, player.MaxMP);
+            MpBar.SetValue(player.Info.CurrentMP, player.Info.MaxMP);
         }
         else
         {

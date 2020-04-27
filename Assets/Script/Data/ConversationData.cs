@@ -14,7 +14,7 @@ public class ConversationData
     {
         public int ID { get; set; }
         public string Name { get; set; }
-        public string Comment { get; set; }
+        public string Comment_Chinese { get; set; }
         public string Background { get; set; }
         public string BGM { get; set; }
         public string Image_1 { get; set; }
@@ -25,6 +25,13 @@ public class ConversationData
 
         public string[] Images = new string[2];
         public MotionEnum[] Motions = new MotionEnum[2];
+
+        public Dictionary<LanguageSystem.Language, string> CommentDic = new Dictionary<LanguageSystem.Language, string>();
+
+        public string GetComment()
+        {
+            return CommentDic[LanguageSystem.Instance.CurrentLanguage];
+        }
     }
 
     private static Dictionary<int, RootObject> _dataDic = new Dictionary<int, RootObject>();
@@ -42,6 +49,8 @@ public class ConversationData
 
             dataList[i].Motions[0] = dataList[i].Motion_1;
             dataList[i].Motions[1] = dataList[i].Motion_2;
+
+            dataList[i].CommentDic.Add(LanguageSystem.Language.Chinese, dataList[i].Comment_Chinese);
 
             _dataDic.Add(dataList[i].ID, dataList[i]);
         }

@@ -43,20 +43,20 @@ public class AttackSkill : Skill
         base.SetEffect(target);
 
         int damage = 0;
-        HitType hitType = CheckHit(_executor, target);
+        HitType hitType = CheckHit(_executor.Info, target.Info);
         if (hitType == HitType.Critical)
         {
-            damage = CalculateDamage(_executor, target, true);
+            damage = CalculateDamage(_executor.Info, target.Info, true);
         }
         else if (hitType == HitType.Hit)
         {
-            damage = CalculateDamage(_executor, target, false);
+            damage = CalculateDamage(_executor.Info, target.Info, false);
         }
 
         target.SetDamage(damage, hitType, CheckSkillCallback);
     }
 
-    private int CalculateDamage(BattleCharacter executor, BattleCharacter target, bool isCritical)
+    public int CalculateDamage(BattleCharacterInfo executor, BattleCharacterInfo target, bool isCritical)
     {
         int damage;
         if (Data.IsMagic)
@@ -81,7 +81,7 @@ public class AttackSkill : Skill
         return damage;
     }
 
-    protected HitType CheckHit(BattleCharacter executor, BattleCharacter target)
+    protected HitType CheckHit(BattleCharacterInfo executor, BattleCharacterInfo target)
     {
         float misssRate;
         misssRate = (float)(target.AGI - executor.SEN) / (float)target.AGI; //迴避率

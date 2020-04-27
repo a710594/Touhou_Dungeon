@@ -16,19 +16,9 @@ public class BattleCharacterAI : BattleCharacter
     {
         EnemyData.RootObject data = EnemyData.GetData(id);
 
-        Lv = lv;
-        MaxHP = Mathf.RoundToInt(data.HP * (1 + ((lv - 1) * 0.1f)));
-        CurrentHP = MaxHP;
-        _atk = Mathf.RoundToInt(data.ATK * (1 + ((lv - 1) * 0.1f)));
-        _def = Mathf.RoundToInt(data.DEF * (1 + ((lv - 1) * 0.1f)));
-        _mtk = Mathf.RoundToInt(data.MTK * (1 + ((lv - 1) * 0.1f)));
-        _mef = Mathf.RoundToInt(data.MEF * (1 + ((lv - 1) * 0.1f)));
-        _agi = Mathf.RoundToInt(data.AGI * (1 + ((lv - 1) * 0.1f)));
-        _sen = Mathf.RoundToInt(data.SEN * (1 + ((lv - 1) * 0.1f)));
-        _moveDistance = data.MoveDistance;
-        Name = data.Name;
-        SmallImage = data.Image;
-        Sprite.sprite = Resources.Load<Sprite>("Image/Character/Small/" + SmallImage);
+        Info.Init(id, lv);
+        Info.SetPosition(transform.position);
+        Sprite.sprite = Resources.Load<Sprite>("Image/Character/Small/" + data.Image);
         gameObject.AddComponent(Type.GetType(data.AI));
         AI = GetComponent(Type.GetType(data.AI)) as AI;
         AI.Init(data.SkillList);
@@ -51,113 +41,6 @@ public class BattleCharacterAI : BattleCharacter
             _endAICallback();
         }
     }
-
-    /*public override void SetDamage(BattleCharacter executor, SkillData.RootObject skillData, Action<BattleCharacter> callback)
-    {
-        HitType hitType;
-        int damage = -1;
-        int callbackCount = 0;
-        string text;
-        FloatingNumber.Type type = FloatingNumber.Type.Other;
-        for (int i=0; i<skillData.Hits; i++)
-        {
-            hitType = (CheckHit(executor));
-            if (hitType == HitType.Critical)
-            {
-                damage = CalculateDamage(executor, skillData, true);
-                CurrentHP -= damage;
-                type = FloatingNumber.Type.Critical;
-            }
-            else if (hitType == HitType.Hit)
-            {
-                damage = CalculateDamage(executor, skillData, false);
-                CurrentHP -= damage;
-                type = FloatingNumber.Type.Damage;
-            }
-            else if(hitType == HitType.Miss)
-            {
-                type = FloatingNumber.Type.Miss;
-            }
-
-            if (damage == -1)
-            {
-                text = "Miss";
-            }
-            else
-            {
-                text = damage.ToString();
-            }
-
-            BattleUI.Instance.SetFloatingNumber(this, text, type, () =>
-            {
-                callbackCount++;
-                if (CurrentHP <= 0)
-                {
-                    SetDeath(()=> 
-                    {
-                        if (callback != null)
-                        {
-                            callback(this);
-                        }
-                    });
-                }
-                else
-                {
-                    if (callbackCount == skillData.Hits && callback != null)
-                    {
-                        callback(this);
-                    }
-                }
-            });
-        }
-
-        if (IsSleeping)
-        {
-            //解除睡眠狀態
-            StatusDic.Remove(_sleepingId);
-            _sleepingId = -1;
-        }
-    }
-
-    public override void SetPoisonDamage(Action callback) //回合結束時計算毒傷害
-    {
-        int damage;
-        int callbackCount = 0;
-        foreach (KeyValuePair<int, BattleStatus> item in _poisonDic)
-        {
-            damage = ((Poison)item.Value).Damage;
-
-            CurrentHP -= damage;
-
-            BattleUI.Instance.SetFloatingNumber(this, damage.ToString(), FloatingNumber.Type.Poison, () =>
-            {
-                callbackCount++;
-                if (CurrentHP <= 0)
-                {
-                    SetDeath(callback);
-                }
-                else
-                {
-                    if (callbackCount == _poisonDic.Count && callback != null)
-                    {
-                        callback();
-                    }
-                }
-            });
-        }
-    }
-
-    public override void SetRecover(int recover, Action<BattleCharacter> callback)
-    {
-        CurrentHP += recover;
-        BattleUI.Instance.SetFloatingNumber(this, recover.ToString(), FloatingNumber.Type.Recover, () =>
-        {
-            if (callback != null)
-            {
-                callback(this);
-            }
-        });
-    }*/
 
     public List<Vector2Int> GetDetectRange() //偵查範圍:移動後可用技能擊中目標的範圍
     {

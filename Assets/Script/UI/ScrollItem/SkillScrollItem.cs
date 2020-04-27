@@ -19,7 +19,7 @@ public class SkillScrollItem : ScrollItem
         //Icon.overrideSprite = Resources.Load<Sprite>("Image/" + skill.Data.Icon);
         Label.text = Skill.Data.GetName();
 
-        CanUse = Skill.CanUse(((BattleCharacterPlayer)BattleController.Instance.SelectedCharacter).CurrentMP, out NotUseReason);
+        CanUse = Skill.CanUse(BattleController.Instance.SelectedCharacter.Info.CurrentMP, out NotUseReason);
         if (CanUse)
         {
             Background.color = Color.white;

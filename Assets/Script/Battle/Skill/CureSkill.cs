@@ -40,6 +40,6 @@ public class CureSkill : Skill
 
     private int CalculateRecover()
     {
-        return (int)((float)_executor.MEF / 10f * (float)-Data.Damage);
+        return (int)((float)_executor.Info.MEF / 10f * (float)-Data.Damage);
     }
 }

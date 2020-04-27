@@ -12,6 +12,6 @@ public class CookScrollItem : ScrollItem
         base.SetData(obj);
         CookData.RootObject cookData = (CookData.RootObject)obj;
         ItemData.RootObject itemData = ItemData.GetData(cookData.ResultID);
-        NameLabel.text = itemData.Name;
+        NameLabel.text = itemData.GetName();
     }
 }

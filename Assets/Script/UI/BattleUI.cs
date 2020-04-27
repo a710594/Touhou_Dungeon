@@ -65,7 +65,7 @@ public class BattleUI : MonoBehaviour
         FloatingNumberPool floatingNumberPool;
 
         anchorValueBar = ResourceManager.Instance.Spawn(LittleHPBar.gameObject).GetComponent<AnchorValueBar>();
-        anchorValueBar.SetValue(character.CurrentHP, character.MaxHP);
+        anchorValueBar.SetValue(character.Info.CurrentHP, character.Info.MaxHP);
         anchorValueBar.SetAnchor(character.ValueBarAnchor);
         _littleHPBarDic.Add(character, anchorValueBar);
 
@@ -79,7 +79,7 @@ public class BattleUI : MonoBehaviour
 
         if (isVisible)
         {
-            ActionCountLabel.text = LanguageData.GetText(10, LanguageSystem.Instance.CurrentLanguage) +  ":" + BattleController.Instance.SelectedCharacter.ActionCount; //行動次數
+            ActionCountLabel.text = LanguageData.GetText(10, LanguageSystem.Instance.CurrentLanguage) +  ":" + BattleController.Instance.SelectedCharacter.Info.ActionCount; //行動次數
         }
     }
 
@@ -185,7 +185,7 @@ public class BattleUI : MonoBehaviour
     public void SetLittleHPBar(BattleCharacter character, bool isVisible)
     {
         _littleHPBarDic[character].gameObject.SetActive(isVisible);
-        _littleHPBarDic[character].SetValueTween(character.CurrentHP, character.MaxHP, null);
+        _littleHPBarDic[character].SetValueTween(character.Info.CurrentHP, character.Info.MaxHP, null);
     }
 
     public void SetTurnLabel(int turn)
@@ -320,7 +320,7 @@ public class BattleUI : MonoBehaviour
         {
             Skill skill = scrollItem.Skill;
 
-            skill.GetSkillDistance(BattleController.Instance.SelectedCharacter, BattleController.Instance.CharacterList);
+            skill.GetDistance(BattleController.Instance.SelectedCharacter, BattleController.Instance.CharacterList);
             _tempSkill = skill;
             TipLabel.SetVisible(false);
             BattleController.Instance.SelectSkill(_tempSkill);
@@ -333,12 +333,6 @@ public class BattleUI : MonoBehaviour
 
         SkillInfoUI.gameObject.SetActive(true);
         SkillInfoUI.SetData(scrollItem.Skill.Data);
-    }
-
-    private void SkillConfirmOnClick()
-    {
-        BattleController.Instance.SelectSkill(_tempSkill);
-        _tempSkill = null;
     }
 
     private void Awake()

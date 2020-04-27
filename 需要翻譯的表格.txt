@@ -3,3 +3,5 @@ Skill
 Job
 Event
 EventOption
+Conversation
+Item

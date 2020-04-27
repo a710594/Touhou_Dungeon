@@ -27,7 +27,7 @@ public class SkillData
         Rectangle
     }
 
-    public enum TargetEnum
+    public enum TargetType
     {
         Us = 1,
         Them,
@@ -45,7 +45,7 @@ public class SkillData
         public int Range_1 { get; set; }
         public int Range_2 { get; set; }
         public RangeTypeEnum RangeType { get; set; }
-        public TargetEnum Target { get; set; }
+        public TargetType Target { get; set; }
         public bool IsMagic { get; set; }
         public int MP { get; set; }
         public int CD { get; set; }
