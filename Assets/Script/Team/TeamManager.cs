@@ -32,6 +32,14 @@ public class TeamManager
             MemberList.Add(member);
             MemberPositionDic.Add(member, data.PositionList[i]);
         }
+
+        //temp
+        MemberList[0].SetEquip(420001);
+        MemberList[0].SetEquip(410001);
+        MemberList[1].SetEquip(420001);
+        MemberList[1].SetEquip(410002);
+        MemberList[2].SetEquip(420001);
+        MemberList[2].SetEquip(410002);
     }
 
     public void Refresh(List<BattleCharacterPlayer> list)

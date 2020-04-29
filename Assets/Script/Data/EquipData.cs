@@ -7,9 +7,9 @@ public class EquipData
 {
     public enum TypeEnum
     {
-        Weapon,
-        Helmet,
+        Weapon = 1,
         Armor,
+        Helmet,
         Jewelry,
     }
 

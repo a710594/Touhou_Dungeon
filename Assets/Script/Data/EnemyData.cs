@@ -17,6 +17,10 @@ public class EnemyData
         public int MEF { get; set; }
         public int AGI { get; set; }
         public int SEN { get; set; }
+        public int Equip_ATK { get; set; }
+        public int Equip_DEF { get; set; }
+        public int Equip_MTK { get; set; }
+        public int Equip_MEF { get; set; }
         public int MoveDistance { get; set; }
         public string AI { get; set; }
         public string Comment { get; set; }
@@ -26,6 +30,8 @@ public class EnemyData
         public int Probability_1 { get; set; }
         public int Item_2 { get; set; }
         public int Probability_2 { get; set; }
+        public int Item_3 { get; set; }
+        public int Probability_3 { get; set; }
         public int ItemAmount { get; set; }
         public int Exp { get; set; }
 
@@ -75,6 +81,14 @@ public class EnemyData
                 for (int j = 0; j < dataList[i].Probability_2; j++)
                 {
                     dataList[i].ItemList.Add(dataList[i].Item_2);
+                }
+            }
+
+            if (dataList[i].Item_3 != 0)
+            {
+                for (int j = 0; j < dataList[i].Probability_3; j++)
+                {
+                    dataList[i].ItemList.Add(dataList[i].Item_3);
                 }
             }
 

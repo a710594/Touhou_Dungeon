@@ -164,6 +164,12 @@ public class TeamMember
         SkillList = Data.GetUnlockSkill(Lv);
     }
 
+    public void SetEquip(int id) //for calculater
+    {
+        Equip oldEquip;
+        SetEquip(new Equip(id), out oldEquip);
+    }
+
     public void SetEquip(Equip equip, out Equip oldEquip)
     {
         oldEquip = null;

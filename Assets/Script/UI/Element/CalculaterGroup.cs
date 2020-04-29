@@ -14,6 +14,8 @@ public class CalculaterGroup : MonoBehaviour
     public Dropdown TypeDropDown;
     public InputField IDInputField;
     public InputField LvInputField;
+    public InputField WeaponInputField;
+    public InputField ArmorInputField;
     public BattleCharacterInfo Info = new BattleCharacterInfo();
 
     public Text NameLabel;
@@ -33,6 +35,8 @@ public class CalculaterGroup : MonoBehaviour
         {
             TeamMember teamMember = new TeamMember();
             teamMember.Init(int.Parse(IDInputField.text), int.Parse(LvInputField.text));
+            teamMember.SetEquip(int.Parse(WeaponInputField.text));
+            teamMember.SetEquip(int.Parse(ArmorInputField.text));
             Info.Init(teamMember);
         }
         else if (type == TypeEnum.Enemy)
@@ -49,5 +53,24 @@ public class CalculaterGroup : MonoBehaviour
         MEFLabel.text = "MEF" + Info.MEF.ToString();
         AGILabel.text = "AGI" + Info.AGI.ToString();
         SENLabel.text = "SEN" + Info.SEN.ToString();
+    }
+
+    private void TypeDropDownOnValueChange(int index) 
+    {
+        if (index == 0) //player
+        {
+            WeaponInputField.gameObject.SetActive(true);
+            ArmorInputField.gameObject.SetActive(true);
+        }
+        else if(index == 1) //enemy
+        {
+            WeaponInputField.gameObject.SetActive(false);
+            ArmorInputField.gameObject.SetActive(false);
+        }
+    }
+
+    private void Awake()
+    {
+        TypeDropDown.onValueChanged.AddListener(TypeDropDownOnValueChange);
     }
 }

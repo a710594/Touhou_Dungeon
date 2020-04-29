@@ -296,16 +296,6 @@ public class BagUI : MonoBehaviour
             }
             ItemManager.Instance.MinusItem(_selectedItem.ID, 1, _type);
         }
-        else if (_selectedItem.Type == ItemData.TypeEnum.Equip)
-        {
-            Equip oldEquip;
-            member.SetEquip(_selectedEquip, out oldEquip);
-            if (oldEquip != null && oldEquip.ID != 0)
-            {
-                ItemManager.Instance.AddItem(oldEquip, 1, _type);
-            }
-            ItemManager.Instance.MinusItem(_selectedEquip, 1, _type);
-        }
 
         SetData();
     }

@@ -32,6 +32,8 @@ public class CalculaterUI : MonoBehaviour
         JobData.Load();
         EnemyData.Load();
         SkillData.Load();
+        ItemData.Load();
+        EquipData.Load();
 
         CalculateButton.onClick.AddListener(CalculateOnClick);
     }

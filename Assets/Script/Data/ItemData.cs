@@ -8,10 +8,10 @@ public class ItemData
     public enum TypeEnum
     {
         All,
-        Equip,
-        Medicine,
-        Food,
         Material,
+        Food,
+        Medicine,
+        Equip,
         Seed,
         GoHome,
     }

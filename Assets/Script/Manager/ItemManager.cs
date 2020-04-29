@@ -53,8 +53,6 @@ public class ItemManager
 
         //temp
         AddBagItem(0, 1);
-        AddBagItem(21, 5);
-        AddBagItem(12, 3);
         Money = 10000;
 
         //Money = 0;
@@ -179,8 +177,12 @@ public class ItemManager
 
             if (data.Type == ItemData.TypeEnum.Equip)
             {
-                Equip equip = new Equip(data.ID);
-                AddWarehouseEquip(equip);
+                Equip equip;
+                for (int i = 0; i < amount; i++)
+                {
+                    equip = new Equip(data.ID);
+                    AddBagEquip(equip);
+                }
             }
             else
             {

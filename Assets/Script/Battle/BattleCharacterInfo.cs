@@ -181,14 +181,14 @@ public class BattleCharacterInfo
 
         Lv = lv;
         Name = data.Name;
-        MaxHP = Mathf.RoundToInt(data.HP * (1 + ((lv - 1) * 0.1f)));
+        MaxHP = Mathf.RoundToInt(data.HP * (1 + (lv - 1) * 0.1f));
         CurrentHP = MaxHP;
-        _atk = Mathf.RoundToInt(data.ATK * (1 + ((lv - 1) * 0.1f)));
-        _def = Mathf.RoundToInt(data.DEF * (1 + ((lv - 1) * 0.1f)));
-        _mtk = Mathf.RoundToInt(data.MTK * (1 + ((lv - 1) * 0.1f)));
-        _mef = Mathf.RoundToInt(data.MEF * (1 + ((lv - 1) * 0.1f)));
-        _agi = Mathf.RoundToInt(data.AGI * (1 + ((lv - 1) * 0.1f)));
-        _sen = Mathf.RoundToInt(data.SEN * (1 + ((lv - 1) * 0.1f)));
+        _atk = Mathf.RoundToInt(data.ATK * (1 + (lv - 1) * 0.1f) + data.Equip_ATK);
+        _def = Mathf.RoundToInt(data.DEF * (1 + (lv - 1) * 0.1f) + data.Equip_DEF);
+        _mtk = Mathf.RoundToInt(data.MTK * (1 + (lv - 1) * 0.1f) + data.Equip_MTK);
+        _mef = Mathf.RoundToInt(data.MEF * (1 + (lv - 1) * 0.1f) + data.Equip_MEF);
+        _agi = Mathf.RoundToInt(data.AGI * (1 + (lv - 1) * 0.1f));
+        _sen = Mathf.RoundToInt(data.SEN * (1 + (lv - 1) * 0.1f));
         _moveDistance = data.MoveDistance;
     }
 

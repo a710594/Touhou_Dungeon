@@ -30,15 +30,22 @@ public class Equip
         ItemData.RootObject itemData = ItemData.GetData(id);
         EquipData.RootObject equipData = EquipData.GetData(id);
 
-        ID = id;
-        Name = itemData.GetName();
-        Comment = itemData.GetComment();
-        Icon = itemData.Icon;
-        Volume = itemData.Volume;
-        Type = equipData.Type;
-        ATK = equipData.ATK;
-        DEF = equipData.DEF;
-        MTK = equipData.MTK;
-        MEF = equipData.MEF;
+        if (itemData != null && equipData != null)
+        {
+            ID = id;
+            Name = itemData.GetName();
+            Comment = itemData.GetComment();
+            Icon = itemData.Icon;
+            Volume = itemData.Volume;
+            Type = equipData.Type;
+            ATK = equipData.ATK;
+            DEF = equipData.DEF;
+            MTK = equipData.MTK;
+            MEF = equipData.MEF;
+        }
+        else
+        {
+            Debug.Log("裝備資料不存在!");
+        }
     }
 }

@@ -58,15 +58,23 @@ public class AttackSkill : Skill
 
     public int CalculateDamage(BattleCharacterInfo executor, BattleCharacterInfo target, bool isCritical)
     {
-        int damage;
+        float damage;
         if (Data.IsMagic)
         {
-            damage = Mathf.RoundToInt(((float)executor.MTK / (float)target.MEF) * Data.Damage);
+            damage = (float)executor.MTK / (float)target.MEF;
         }
         else
         {
-            damage = Mathf.RoundToInt(((float)executor.ATK / (float)target.DEF) * Data.Damage);
+            damage = (float)executor.ATK / (float)target.DEF;
         }
+
+        damage = damage * Data.Damage * (1 + (executor.Lv - 1) * 0.1f);
+
+        if (damage < 1)
+        {
+            damage = 1;
+        }
+
         if (isCritical)
         {
             damage = (int)(damage * 1.5f);
@@ -78,7 +86,7 @@ public class AttackSkill : Skill
         }
         damage = (int)(damage * (UnityEngine.Random.Range(100f, 110f) / 100f)); //加上10%的隨機傷害
 
-        return damage;
+        return Mathf.RoundToInt(damage);
     }
 
     protected HitType CheckHit(BattleCharacterInfo executor, BattleCharacterInfo target)
