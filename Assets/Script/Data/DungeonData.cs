@@ -24,6 +24,7 @@ public class DungeonData
         public int MaxExplorePoint { get; set; }
         public int Event_1 { get; set; }
         public int Event_2 { get; set; }
+        public int Event_3 { get; set; }
 
         public List<int> RoomList = new List<int>();
         public List<int> EventList = new List<int>();
@@ -73,6 +74,7 @@ public class DungeonData
 
             dataList[i].EventList.Add(dataList[i].Event_1);
             dataList[i].EventList.Add(dataList[i].Event_2);
+            dataList[i].EventList.Add(dataList[i].Event_3);
 
             _dataDic.Add(dataList[i].ID, dataList[i]);
         }

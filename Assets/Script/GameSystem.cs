@@ -42,7 +42,7 @@ public class GameSystem : MonoBehaviour
         //BattleController.Instance.Init(1, enemyList);
         MapInfo info;
         DungeonBuilder.Instance.Generate(1, out info);
-        ExploreController.Instance.SetData(info);
+        ExploreController.Instance.Init(info);
     }
 
     private void Awake()

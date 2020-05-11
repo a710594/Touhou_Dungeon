@@ -61,6 +61,11 @@ public class CameraController : MonoBehaviour
         ViewDrag.OnDrag(mousePosition);
     }
 
+    public void EndDrag()
+    {
+        ViewDrag.EndDrag();
+    }
+
     void Awake()
     {
         _originalZ = transform.position.z;

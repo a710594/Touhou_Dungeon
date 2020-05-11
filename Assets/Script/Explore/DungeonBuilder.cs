@@ -313,7 +313,7 @@ public class DungeonBuilder
         info.GrassList = grassList;
         info.KeyList = keyList;
         info.MoneyDic = moneyDic;
-        info.ExploreEventDIc = exploreEventDic;
+        info.ExploreEventDic = exploreEventDic;
         info.TreasureDic = treasureDic;
         info.DoorDic = doorDic;
         info.WallList = wallList;

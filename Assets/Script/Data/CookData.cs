@@ -13,6 +13,12 @@ public class CookData
         public int Amount_1 { get; set; }
         public int Material_2 { get; set; }
         public int Amount_2 { get; set; }
+        public int Material_3 { get; set; }
+        public int Amount_3 { get; set; }
+        public int Material_4 { get; set; }
+        public int Amount_4 { get; set; }
+        public int Material_5 { get; set; }
+        public int Amount_5 { get; set; }
 
         public List<int> MaterialList = new List<int>();
         public List<int> AmountList = new List<int>();
@@ -28,11 +34,16 @@ public class CookData
 
         for (int i = 0; i < dataList.Count; i++)
         {
-            dataList[i].MaterialList.Add(dataList[i].Material_1);
-            dataList[i].MaterialList.Add(dataList[i].Material_2);
-
-            dataList[i].AmountList.Add(dataList[i].Amount_1);
-            dataList[i].AmountList.Add(dataList[i].Amount_2);
+            if (dataList[i].Material_1 != 0)
+            {
+                dataList[i].MaterialList.Add(dataList[i].Material_1);
+                dataList[i].AmountList.Add(dataList[i].Amount_1);
+            }
+            if (dataList[i].Material_2 != 0)
+            {
+                dataList[i].MaterialList.Add(dataList[i].Material_2);
+                dataList[i].AmountList.Add(dataList[i].Amount_2);
+            }
 
             _dataDic.Add(dataList[i].ID, dataList[i]);
         }

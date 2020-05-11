@@ -79,7 +79,8 @@ public class BattleUI : MonoBehaviour
 
         if (isVisible)
         {
-            ActionCountLabel.text = LanguageData.GetText(10, LanguageSystem.Instance.CurrentLanguage) +  ":" + BattleController.Instance.SelectedCharacter.Info.ActionCount; //行動次數
+            //ActionCountLabel.text = LanguageData.GetText(10, LanguageSystem.Instance.CurrentLanguage) +  ":" + BattleController.Instance.SelectedCharacter.Info.ActionCount; //行動次數
+            SkillActionButton.interactable = !BattleController.Instance.SelectedCharacter.Info.HasUseSkill;
         }
     }
 
@@ -313,6 +314,11 @@ public class BattleUI : MonoBehaviour
         CameraController.Instance.OnDrag(Input.mousePosition);
     }
 
+    private void EndDragCamera(object data)
+    {
+        CameraController.Instance.EndDrag();
+    }
+
     private void SkillOnClick(object data)
     {
         SkillScrollItem scrollItem = (SkillScrollItem)data;
@@ -353,5 +359,6 @@ public class BattleUI : MonoBehaviour
         Screen.ClickHandler = ScreenOnClick;
         Screen.DownHandler = StartDragCamera;
         Screen.PressHandler = OnDragCamera;
+        Screen.UpHandler = EndDragCamera;
     }
 }

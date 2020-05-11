@@ -14,9 +14,21 @@ public class BattleGroupData
         public int Lv_2 { get; set; }
         public int Enemy_3 { get; set; }
         public int Lv_3 { get; set; }
+        public int Exp;
 
         public List<int> EnemyList = new List<int>();
         public List<int> LvList = new List<int>();
+
+        public List<KeyValuePair<int, int>> GetEnemy(int id) //id, lv
+        {
+            List<KeyValuePair<int, int>> enemyList = new List<KeyValuePair<int, int>>();
+            for (int i = 0; i < EnemyList.Count; i++)
+            {
+                enemyList.Add(new KeyValuePair<int, int>(EnemyList[i], LvList[i]));
+            }
+
+            return enemyList;
+        }
     }
 
     private static Dictionary<int, RootObject> _dataDic = new Dictionary<int, RootObject>();
@@ -56,17 +68,5 @@ public class BattleGroupData
         RootObject data = null;
         _dataDic.TryGetValue(id, out data);
         return data;
-    }
-
-    public static List<KeyValuePair<int, int>> GetEnemy(int id) //id, lv
-    {
-        BattleGroupData.RootObject data = GetData(id);
-        List<KeyValuePair<int, int>> enemyList = new List<KeyValuePair<int, int>>();
-        for (int i = 0; i < data.EnemyList.Count; i++)
-        {
-            enemyList.Add(new KeyValuePair<int, int>(data.EnemyList[i], data.LvList[i]));
-        }
-
-        return enemyList;
     }
 }

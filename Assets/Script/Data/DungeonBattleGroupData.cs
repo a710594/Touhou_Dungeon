@@ -12,8 +12,16 @@ public class DungeonBattleGroupData
         public int Probability_1 { get; set; }
         public int BattleGroup_2 { get; set; }
         public int Probability_2 { get; set; }
+        public int BattleGroup_3 { get; set; }
+        public int Probability_3 { get; set; }
+        public int GoalBattleGroup { get; set; }
 
         public List<int> BattleGroupList = new List<int>();
+
+        public int GetRandomBattleGroup()
+        {
+            return BattleGroupList[Random.Range(0, BattleGroupList.Count)];
+        }
     }
 
     private static Dictionary<int, RootObject> _dataDic = new Dictionary<int, RootObject>();
@@ -26,13 +34,26 @@ public class DungeonBattleGroupData
 
         for (int i = 0; i < dataList.Count; i++)
         {
-            for (int j = 0; j < dataList[i].Probability_1; j++)
+            if (dataList[i].BattleGroup_1 != 0)
             {
-                dataList[i].BattleGroupList.Add(dataList[i].BattleGroup_1);
+                for (int j = 0; j < dataList[i].Probability_1; j++)
+                {
+                    dataList[i].BattleGroupList.Add(dataList[i].BattleGroup_1);
+                }
             }
-            for (int j = 0; j < dataList[i].Probability_2; j++)
+            if (dataList[i].BattleGroup_2 != 0)
             {
-                dataList[i].BattleGroupList.Add(dataList[i].BattleGroup_2);
+                for (int j = 0; j < dataList[i].Probability_2; j++)
+                {
+                    dataList[i].BattleGroupList.Add(dataList[i].BattleGroup_2);
+                }
+            }
+            if (dataList[i].BattleGroup_3 != 0)
+            {
+                for (int j = 0; j < dataList[i].Probability_3; j++)
+                {
+                    dataList[i].BattleGroupList.Add(dataList[i].BattleGroup_3);
+                }
             }
 
             _dataDic.Add(dataList[i].ID, dataList[i]);
@@ -44,11 +65,5 @@ public class DungeonBattleGroupData
         RootObject data = null;
         _dataDic.TryGetValue(id, out data);
         return data;
-    }
-
-    public static int GetRandomBattleGroup(int id)
-    {
-        RootObject data = GetData(id);
-        return data.BattleGroupList[UnityEngine.Random.Range(0, data.BattleGroupList.Count)];
     }
 }

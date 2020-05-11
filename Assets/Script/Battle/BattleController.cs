@@ -30,16 +30,19 @@ public class BattleController : MachineBehaviour
 
     private int _turn = 1;
     private int _power = 0;
+    private int _exp;
     private List<int> _enemyList = new List<int>();
     private List<BattleCharacter> _actionQueue = new List<BattleCharacter>();
     private List<BattleCharacterPlayer> _playerList = new List<BattleCharacterPlayer>(); //戰鬥結束時需要的友方資料
 
-    public void Init(int battlefieldId, List<KeyValuePair<int, int>> enemyList)
+    public void Init(int battlefieldId, int battleGroupId)
     {
         BattlefieldGenerator.Instance.Generate(battlefieldId);
+        BattleGroupData.RootObject battleGroupData = BattleGroupData.GetData(battleGroupId);
 
         _turn = 1;
         _power = 0;
+        _exp = battleGroupData.Exp;
         CharacterList.Clear();
 
         TeamMember member;
@@ -56,6 +59,7 @@ public class BattleController : MachineBehaviour
 
         _enemyList.Clear();
         BattleCharacterAI characterAI;
+        List<KeyValuePair<int, int>> enemyList = battleGroupData.GetEnemy(battleGroupId);
         for (int i = 0; i < enemyList.Count; i++)
         {
             _enemyList.Add(enemyList[i].Key);
@@ -125,7 +129,7 @@ public class BattleController : MachineBehaviour
     {
         TilePainter.Instance.Clear(2);
         TilePainter.Instance.Clear(3);
-        SelectedCharacter.ActionDone();
+        SelectedCharacter.MoveDone();
         SelectedCharacter.InitOrignalPosition();
         if (SelectedCharacter.Info.ActionCount > 0)
         {
@@ -588,7 +592,7 @@ public class BattleController : MachineBehaviour
                     ResultType result = parent.CheckResult();
                     if (result == ResultType.None)
                     {
-                        parent.SelectedCharacter.ActionDone();
+                        parent.SelectedCharacter.SkillDone();
                         if (parent.SelectedCharacter.Info.ActionCount > 0)
                         {
                             if (parent.SelectedCharacter is BattleCharacterPlayer)
@@ -683,7 +687,6 @@ public class BattleController : MachineBehaviour
         {
             base.Enter();
 
-            int getExp = 0;
             EnemyData.RootObject data;
             List<int> itemList = new List<int>(); //單隻怪的掉落物
             List<int> dropItemList = new List<int>(); //全部的掉落物
@@ -695,7 +698,6 @@ public class BattleController : MachineBehaviour
                 {
                     dropItemList.Add(itemList[j]);
                 }
-                getExp += data.Exp;
             }
 
 
@@ -703,7 +705,7 @@ public class BattleController : MachineBehaviour
             TeamManager.Instance.Refresh(parent._playerList);
             List<int> orignalLvList = TeamManager.Instance.GetLvList();
             List<int> orignalExpList = TeamManager.Instance.GetExpList();
-            TeamManager.Instance.AddExp(getExp);
+            TeamManager.Instance.AddExp(parent._exp);
             BattleUI.Instance.SetResult(true, orignalLvList, orignalExpList, dropItemList);
         }
 

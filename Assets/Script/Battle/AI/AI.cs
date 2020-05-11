@@ -33,28 +33,60 @@ public class AI : MonoBehaviour
 
     protected IEnumerator Run()
     {
-        SelectSkill();
-
-        List<Vector2Int> detectRangeList = _character.GetDetectRange();
-        _character.Target = GetTarget(BattleCharacter.CampEnum.Partner, detectRangeList);
-
-        if (_character.Target != null)
+        if (!_character.Info.HasUseSkill) //還沒用過技能
         {
-            _character.SetTarget(Vector2Int.RoundToInt(_character.Target.transform.position));
+            SelectSkill();
 
-            if (!_character.InSkillDistance())//目標不再射程內就需要移動
+            Vector2Int position = new Vector2Int();
+            List<Vector2Int> detectRangeList = _character.GetDetectRange();
+            _character.Target = GetTarget(BattleCharacter.CampEnum.Partner/*, detectRangeList*/);
+
+            if (_character.Target != null)
             {
+                _character.SetTarget(Vector2Int.RoundToInt(_character.Target.transform.position));
 
-                Queue<Vector2Int> path = _character.GetPath(_character.TargetPosition);
-
-                while (path.Count > 0 && !_character.InSkillDistance())
+                if (detectRangeList.Contains(Vector2Int.RoundToInt(_character.Target.transform.position))) //可以打到目標
                 {
-                    _character.Move(path.Dequeue());
-                    yield return new WaitForSeconds(0.2f);
+                    if (!_character.InSkillDistance())//目標不再在程內就需要移動
+                    {
+                        Queue<Vector2Int> path = _character.GetPath(_character.TargetPosition);
+
+                        while (path.Count > 0 && !_character.InSkillDistance())
+                        {
+                            position = path.Dequeue();
+                            if (!_character.InMoveRange(position))
+                            {
+                                break;
+                            }
+                            _character.Move(position);
+                            yield return new WaitForSeconds(0.2f);
+                        }
+                        _character.MoveDone();
+                    }
+                    _character.GetSkillRange();
                 }
-                _character.ActionDone();
+                else
+                {
+                    Queue<Vector2Int> path = _character.GetPath(_character.TargetPosition);
+
+                    while (path.Count > 0)
+                    {
+                        position = path.Dequeue();
+                        if (!_character.InMoveRange(position))
+                        {
+                            break;
+                        }
+                        _character.Move(position);
+                        yield return new WaitForSeconds(0.2f);
+                    }
+                    _character.ActionDoneCompletely();
+                    _character.Target = null;
+                }
             }
-            _character.GetSkillRange();
+        }
+        else
+        {
+            _character.Target = null;
         }
 
         _character.EndAI();
@@ -64,7 +96,7 @@ public class AI : MonoBehaviour
     {
     }
 
-    protected BattleCharacter GetTarget(BattleCharacter.CampEnum targetCamp, List<Vector2Int> detectRangeList)
+    protected BattleCharacter GetTarget(BattleCharacter.CampEnum targetCamp/*, List<Vector2Int> detectRangeList*/)
     {
         BattleCharacter character;
         List<BattleCharacter> candidateList = new List<BattleCharacter>();
@@ -76,10 +108,10 @@ public class AI : MonoBehaviour
             {
                 if (character.Camp == targetCamp)
                 {
-                    if (detectRangeList.Contains(Vector2Int.RoundToInt(character.transform.position)))
-                    {
+                    //if (detectRangeList.Contains(Vector2Int.RoundToInt(character.transform.position)))
+                    //{
                         candidateList.Add(character);
-                    }
+                    //}
                 }
             }
         }

@@ -15,7 +15,7 @@ public class MapInfo
     public List<Vector2Int> MistList = new List<Vector2Int>();
     public List<Room> RoomList = new List<Room>();
     public Dictionary<Vector2Int, int> MoneyDic;
-    public Dictionary<Vector2Int, int> ExploreEventDIc;
+    public Dictionary<Vector2Int, int> ExploreEventDic;
     public Dictionary<Vector2Int, Treasure> TreasureDic;
     public Dictionary<Vector2Int, Room> DoorDic;
 }

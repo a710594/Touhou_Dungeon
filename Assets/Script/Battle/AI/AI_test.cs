@@ -6,6 +6,6 @@ public class AI_test : AI
 {
     protected override void SelectSkill()
     {
-        _character.SelectedSkill = SkillFactory.GetNewSkill(1); //temp
+        _character.SelectedSkill = _skillList[0]; //temp
     }
 }

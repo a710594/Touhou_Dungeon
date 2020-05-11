@@ -29,6 +29,16 @@ public class StairsGroup : MonoBehaviour
         gameObject.SetActive(true);
     }
 
+    private void Close()
+    {
+        if (_closeCallback != null)
+        {
+            _closeCallback();
+        }
+
+        gameObject.SetActive(false);
+    }
+
     private void NextOnClick()
     {
         if (_floor == 0)
@@ -39,7 +49,7 @@ public class StairsGroup : MonoBehaviour
         {
             ExploreController.Instance.ChangeFloor(_floor);
         }
-        gameObject.SetActive(false);
+        Close();
     }
 
     private void CloseOnClick()
@@ -54,8 +64,6 @@ public class StairsGroup : MonoBehaviour
 
     private void Awake()
     {
-        gameObject.SetActive(false);
-
         NextButton.onClick.AddListener(NextOnClick);
         CloseButton.onClick.AddListener(CloseOnClick);
     }

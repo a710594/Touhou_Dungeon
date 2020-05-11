@@ -33,7 +33,6 @@ public class EnemyData
         public int Item_3 { get; set; }
         public int Probability_3 { get; set; }
         public int ItemAmount { get; set; }
-        public int Exp { get; set; }
 
         public List<int> SkillList = new List<int>();
         public List<int> ItemList = new List<int>();

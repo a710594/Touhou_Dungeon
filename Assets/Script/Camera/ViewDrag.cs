@@ -3,6 +3,10 @@ using System.Collections;
 
 public class ViewDrag : MonoBehaviour
 {
+    public Rigidbody2D Rigidbody2D;
+
+    private bool _isDrag = false;
+
     Vector3 hit_position = Vector3.zero;
     Vector3 current_position = Vector3.zero;
     Vector3 camera_position = Vector3.zero;
@@ -12,6 +16,7 @@ public class ViewDrag : MonoBehaviour
     {
         hit_position = mousePosition;
         camera_position = transform.position;
+        _isDrag = true;
     }
 
     public void OnDrag(Vector3 mousePosition)
@@ -20,25 +25,9 @@ public class ViewDrag : MonoBehaviour
         LeftMouseDrag();
     }
 
-    // Use this for initialization
-    void Start()
+    public void EndDrag()
     {
-
-    }
-
-    void Update()
-    {
-        //if (Input.GetMouseButtonDown(0))
-        //{
-        //    hit_position = Input.mousePosition;
-        //    camera_position = transform.position;
-
-        //}
-        //if (Input.GetMouseButton(0))
-        //{
-        //    current_position = Input.mousePosition;
-        //    LeftMouseDrag();
-        //}
+        _isDrag = false;
     }
 
     void LeftMouseDrag()
@@ -52,10 +41,21 @@ public class ViewDrag : MonoBehaviour
         Vector3 direction = Camera.main.ScreenToWorldPoint(current_position) - Camera.main.ScreenToWorldPoint(hit_position);
 
         // Invert direction to that terrain appears to move with the mouse.
-        direction = direction * -1;
+        direction = Vector2.ClampMagnitude(direction * -10, 20);
+        if (direction.magnitude < 1)
+        {
+            direction = Vector2.zero;
+        }
+        Rigidbody2D.velocity = direction;
+        //Vector3 position = camera_position + direction;
+        //transform.position = position;
+    }
 
-        Vector3 position = camera_position + direction;
-
-        transform.position = position;
+    private void Update()
+    {
+        if (!_isDrag)
+        {
+            Rigidbody2D.velocity = Rigidbody2D.velocity * 0.95f;
+        }
     }
 }

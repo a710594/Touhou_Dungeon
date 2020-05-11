@@ -70,6 +70,11 @@ public class ButtonPlus : UIBehaviour, IPointerDownHandler, IPointerUpHandler, I
     public void OnPointerUp(PointerEventData eventData)
     {
         _isPointerDown = false;
+
+        if (UpHandler != null)
+        {
+            UpHandler(this);
+        }
     }
 
     public void OnPointerExit(PointerEventData eventData)
@@ -79,7 +84,7 @@ public class ButtonPlus : UIBehaviour, IPointerDownHandler, IPointerUpHandler, I
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        if (!_longPressTriggered)
+        if (!_longPressTriggered || DownThreshold == 0)
         {
             if (ClickHandler != null)
             {

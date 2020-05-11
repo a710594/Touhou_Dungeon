@@ -60,7 +60,7 @@ public class DungeonPainter
         }
 
         //explore point
-        foreach (KeyValuePair<Vector2Int, int> item in info.ExploreEventDIc)
+        foreach (KeyValuePair<Vector2Int, int> item in info.ExploreEventDic)
         {
             TilePainter.Instance.Painting("ExplorePoint", 1, item.Key);
         }

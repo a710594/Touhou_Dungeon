@@ -8,13 +8,15 @@ public class TipLabel : MonoBehaviour
     public CanvasGroup CanvasGroup;
     public Text Label;
 
+    private Tweener _tweener;
+
     public void SetLabel(string text)
     {
         Label.text = text;
         CanvasGroup.alpha = 1;
         CanvasGroup.DORestart();
-        Tweener tweener = CanvasGroup.DOFade(0, 2f).SetEase(Ease.InExpo);
-        tweener.SetUpdate(true);
+        _tweener = CanvasGroup.DOFade(0, 2f).SetEase(Ease.InExpo);
+        _tweener.SetUpdate(true);
     }
 
     public void SetVisible(bool isVisible)
@@ -28,6 +30,11 @@ public class TipLabel : MonoBehaviour
         {
             CanvasGroup.alpha = 0;
         }
+    }
+
+    public void Stop()
+    {
+        CanvasGroup.DOKill();
     }
 
     void Awake()

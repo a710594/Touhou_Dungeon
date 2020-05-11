@@ -148,7 +148,11 @@ public class Skill
         {
             _currentCD = Data.CD + 1; //要加一是因為本回合不減CD
         }
-        _skillCallBackCount = 0;
+        InitSkillCallbackCount();
+        if (_subSkill != null)
+        {
+            _subSkill.InitSkillCallbackCount();
+        }
         _skillCallback = callback;
         GetTargetList();
 
@@ -167,6 +171,11 @@ public class Skill
             BattleUI.Instance.SetSkillLabel(true, Data.GetName());
             UseCallback();
         }
+    }
+
+    public void InitSkillCallbackCount()
+    {
+        _skillCallBackCount = 0;
     }
 
     public virtual void SetEffect(BattleCharacter target)
@@ -220,7 +229,53 @@ public class Skill
                 positionList.Remove(Vector2Int.RoundToInt(characterList[i].transform.position));
             }
         }
-        else if (executor.Camp == BattleCharacter.CampEnum.Partner)
+        else if (Data.Target == SkillData.TargetType.Us)
+        {
+            if (executor.Camp == BattleCharacter.CampEnum.Enemy)
+            {
+                for (int i = 0; i < characterList.Count; i++)
+                {
+                    if (characterList[i].Camp == BattleCharacter.CampEnum.Partner && characterList[i].LiveState == BattleCharacter.LiveStateEnum.Alive)
+                    {
+                        positionList.Remove(Vector2Int.RoundToInt(characterList[i].transform.position));
+                    }
+                }
+            }
+            else if (executor.Camp == BattleCharacter.CampEnum.Partner)
+            {
+                for (int i = 0; i < characterList.Count; i++)
+                {
+                    if (characterList[i].Camp == BattleCharacter.CampEnum.Enemy && characterList[i].LiveState == BattleCharacter.LiveStateEnum.Alive)
+                    {
+                        positionList.Remove(Vector2Int.RoundToInt(characterList[i].transform.position));
+                    }
+                }
+            }
+        }
+        else if (Data.Target == SkillData.TargetType.Them)
+        {
+            if (executor.Camp == BattleCharacter.CampEnum.Enemy)
+            {
+                for (int i = 0; i < characterList.Count; i++)
+                {
+                    if (characterList[i].Camp == BattleCharacter.CampEnum.Enemy && characterList[i].LiveState == BattleCharacter.LiveStateEnum.Alive)
+                    {
+                        positionList.Remove(Vector2Int.RoundToInt(characterList[i].transform.position));
+                    }
+                }
+            }
+            else if (executor.Camp == BattleCharacter.CampEnum.Partner)
+            {
+                for (int i = 0; i < characterList.Count; i++)
+                {
+                    if (characterList[i].Camp == BattleCharacter.CampEnum.Partner && characterList[i].LiveState == BattleCharacter.LiveStateEnum.Alive)
+                    {
+                        positionList.Remove(Vector2Int.RoundToInt(characterList[i].transform.position));
+                    }
+                }
+            }
+        }
+        /*else if (executor.Camp == BattleCharacter.CampEnum.Partner)
         {
             if (Data.Target == SkillData.TargetType.Us)
             {
@@ -265,7 +320,7 @@ public class Skill
                     }
                 }
             }
-        }
+        }*/
 
         return positionList;
     }

@@ -31,8 +31,9 @@ public class CookUI : MonoBehaviour
         Instance.Init(type);
     }
 
-    public static void Close()
+    public void Close()
     {
+        TipLabel.Stop();
         Time.timeScale = 1;
         Destroy(Instance.gameObject);
         Instance = null;

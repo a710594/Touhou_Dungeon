@@ -1,2 +1,7 @@
-[{"ID":1,"Enemy_1":1,"Lv_1":1,"Enemy_2":1,"Lv_2":1,"Enemy_3":1,"Lv_3":1},
-{"ID":2,"Enemy_1":1,"Lv_1":1,"Enemy_2":2,"Lv_2":1,"Enemy_3":0,"Lv_3":0}]
+[{"ID":1,"Enemy_1":1,"Lv_1":1,"Enemy_2":1,"Lv_2":1,"Enemy_3":1,"Lv_3":1,"Exp":3},
+{"ID":2,"Enemy_1":1,"Lv_1":2,"Enemy_2":1,"Lv_2":2,"Enemy_3":2,"Lv_3":2,"Exp":4},
+{"ID":3,"Enemy_1":1,"Lv_1":2,"Enemy_2":1,"Lv_2":2,"Enemy_3":4,"Lv_3":2,"Exp":4},
+{"ID":4,"Enemy_1":1,"Lv_1":2,"Enemy_2":1,"Lv_2":2,"Enemy_3":5,"Lv_3":2,"Exp":4},
+{"ID":5,"Enemy_1":2,"Lv_1":3,"Enemy_2":2,"Lv_2":3,"Enemy_3":3,"Lv_3":3,"Exp":5},
+{"ID":6,"Enemy_1":2,"Lv_1":3,"Enemy_2":2,"Lv_2":3,"Enemy_3":4,"Lv_3":3,"Exp":5},
+{"ID":7,"Enemy_1":2,"Lv_1":3,"Enemy_2":2,"Lv_2":3,"Enemy_3":5,"Lv_3":3,"Exp":5}]

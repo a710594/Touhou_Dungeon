@@ -46,7 +46,7 @@ public class BattleCharacter : MonoBehaviour
     public List<Skill> SpellCardList = new List<Skill>();
 
     protected Vector2 _originalPosition = new Vector2();
-    protected Vector2Int _lookAt = Vector2Int.right;
+    protected Vector2Int _lookAt = Vector2Int.left;
     protected Queue<Vector2Int> _path;
     protected List<Vector2Int> _moveRangeList = new List<Vector2Int>();
 
@@ -132,9 +132,14 @@ public class BattleCharacter : MonoBehaviour
         Info.InitActionCount();
     }
 
-    public void ActionDone()
+    public void MoveDone()
     {
-        Info.ActionDone();
+        Info.MoveDone();
+    }
+
+    public void SkillDone()
+    {
+        Info.SkillDone();
     }
 
     public void ActionDoneCompletely()

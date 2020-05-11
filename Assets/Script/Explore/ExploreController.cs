@@ -27,8 +27,12 @@ public class ExploreController
     private List<FieldEnemy> _fieldEnemyList = new List<FieldEnemy>();
     private Vector2Int[] _directions = new Vector2Int[4] { Vector2Int.left, Vector2Int.right, Vector2Int.up, Vector2Int.down };
 
-    public void SetData(MapInfo info)
+    public void Init(MapInfo info)
     {
+        _exploredList.Clear();
+        _wallList.Clear();
+        _guardList.Clear();
+
         DungeonPainter.Instance.Paint(info);
 
         _mapInfo = info;
@@ -63,7 +67,7 @@ public class ExploreController
     {
         MapInfo info;
         DungeonBuilder.Instance.Generate(floor, out info);
-        SetData(info);
+        Init(info);
     }
 
     public void PlayerMove(Vector2Int direction)
@@ -77,14 +81,14 @@ public class ExploreController
                 SetInteractive(newPosition);
 
                 //不要刪
-                /*if (newPosition == _mapInfo.Start)
+                if (newPosition == _mapInfo.Start)
                 {
                     ExploreUI.Instance.OpenStairsGroup(_floor - 1);
                 }
                 else if (newPosition == _mapInfo.Goal)
                 {
                     ExploreUI.Instance.OpenStairsGroup(_floor + 1);
-                }*/
+                }
 
                 SetVisibleRange(false);
                 ExploreUI.Instance.RefreshLittleMap(Vector2Int.RoundToInt(_player.transform.position), _exploredList, _wallList);
@@ -138,7 +142,8 @@ public class ExploreController
     public void ForceEnterBattle() //作弊用,強迫進入戰鬥
     {
         Vector2Int newPosition = Vector2Int.RoundToInt(_player.transform.position);
-        EnterBattle(DungeonBattleGroupData.GetRandomBattleGroup(_mapInfo.DungeonId));
+        DungeonBattleGroupData.RootObject data = DungeonBattleGroupData.GetData(_mapInfo.DungeonId);
+        EnterBattle(4);
     }
 
     public void BackToVilliage()
@@ -196,13 +201,12 @@ public class ExploreController
 
     public void EnterBattle(int battleGroupId)
     {
-        List<KeyValuePair<int, int>> enemyList = BattleGroupData.GetEnemy(battleGroupId);
         //AudioSystem.Instance.Stop(true);
         ChangeSceneUI.Instance.StartClock(() =>
         {
             MySceneManager.Instance.ChangeScene(MySceneManager.SceneType.Battle, () =>
             {
-                BattleController.Instance.Init(1, enemyList);
+                BattleController.Instance.Init(1, battleGroupId);
             });
         });
 
@@ -263,12 +267,12 @@ public class ExploreController
             ExploreUI.Instance.TipLabel.SetLabel("得到 " + _mapInfo.MoneyDic[position] + " $");
             _mapInfo.MoneyDic.Remove(position);
         }
-        else if (_mapInfo.ExploreEventDIc.ContainsKey(position))
+        else if (_mapInfo.ExploreEventDic.ContainsKey(position))
         {
             _player.Stop();
-            EventUI.Open(_mapInfo.ExploreEventDIc[position], _player.UnlockStop);
+            EventUI.Open(_mapInfo.ExploreEventDic[position], _player.UnlockStop);
             TilePainter.Instance.Clear(1, position);
-            _mapInfo.ExploreEventDIc.Remove(position);
+            _mapInfo.ExploreEventDic.Remove(position);
         }
     }
 
@@ -324,6 +328,15 @@ public class ExploreController
 
     private void GenerateEnemy()
     {
+        for (int i=0; i< _fieldEnemyList.Count; i++)
+        {
+            if (_fieldEnemyList[i] != null)
+            {
+                _fieldEnemyList[i].Stop();
+                GameObject.Destroy(_fieldEnemyList[i].gameObject);
+            }
+        }
+
         _fieldEnemyList.Clear();
         FieldEnemy enemy;
 
@@ -337,7 +350,8 @@ public class ExploreController
                 {
                     enemy = ResourceManager.Instance.Spawn("FieldEnemy/FieldEnemyRandom", ResourceManager.Type.Other).GetComponent<FieldEnemy>();
                     enemy.OnPlayerEnterHandler += EnterBattle;
-                    enemy.Init(DungeonBattleGroupData.GetRandomBattleGroup(_mapInfo.DungeonId), position);
+                    DungeonBattleGroupData.RootObject data = DungeonBattleGroupData.GetData(_mapInfo.DungeonId);
+                    enemy.Init(data.GetRandomBattleGroup(), position);
                     _fieldEnemyList.Add(enemy);
                 }
             }
@@ -348,7 +362,8 @@ public class ExploreController
             enemy = ResourceManager.Instance.Spawn("FieldEnemy/FieldEnemyGuard", ResourceManager.Type.Other).GetComponent<FieldEnemy>();
             enemy.OnPlayerEnterHandler += EnterBattle;
             ((FieldEnemyGuard)enemy).CheckPositionHandler += EncounterGuard;
-            enemy.Init(DungeonBattleGroupData.GetRandomBattleGroup(_mapInfo.DungeonId), _mapInfo.Goal);
+            DungeonBattleGroupData.RootObject data = DungeonBattleGroupData.GetData(_mapInfo.DungeonId);
+            enemy.Init(data.GoalBattleGroup, _mapInfo.Goal);
             _fieldEnemyList.Add(enemy);
         }
     }

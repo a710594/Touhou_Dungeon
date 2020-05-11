@@ -95,12 +95,12 @@ public class BattleCharacterAI : BattleCharacter
     {
         if (transform.position.x - destination.x > 0 && _lookAt == Vector2Int.right)
         {
-            Sprite.flipX = true;
+            Sprite.flipX = false;
             _lookAt = Vector2Int.left;
         }
         else if (transform.position.x - destination.x < 0 && _lookAt == Vector2Int.left)
         {
-            Sprite.flipX = false;
+            Sprite.flipX = true;
             _lookAt = Vector2Int.right;
         }
 

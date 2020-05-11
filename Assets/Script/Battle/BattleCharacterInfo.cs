@@ -139,7 +139,7 @@ public class BattleCharacterInfo
         }
     }
 
-    protected int _actionCount;
+    private int _actionCount;
     public int ActionCount
     {
         get
@@ -148,6 +148,7 @@ public class BattleCharacterInfo
         }
     }
 
+    public bool HasUseSkill = false;
     public int Lv;
     public string Name;
 
@@ -231,16 +232,24 @@ public class BattleCharacterInfo
 
     public void InitActionCount()
     {
+        HasUseSkill = false;
         _actionCount = _maxActionCount;
     }
 
-    public void ActionDone()
+    public void MoveDone()
     {
+        _actionCount--;
+    }
+
+    public void SkillDone()
+    {
+        HasUseSkill = true;
         _actionCount--;
     }
 
     public void ActionDoneCompletely()
     {
+        HasUseSkill = true;
         _actionCount = 0;
     }
 

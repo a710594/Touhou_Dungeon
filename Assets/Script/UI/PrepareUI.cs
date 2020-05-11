@@ -74,7 +74,7 @@ public class PrepareUI : MonoBehaviour
         {
             MapInfo info;
             DungeonBuilder.Instance.Generate(_targetFloor, out info);
-            ExploreController.Instance.SetData(info);
+            ExploreController.Instance.Init(info);
         });
     }
 

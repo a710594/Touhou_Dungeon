@@ -2737,7 +2737,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0984a42a2ba0a9e4abe3cc0ffb96f391, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DownThreshold: 0.2
+  DownThreshold: 0
   PressDuration: 0
   Label: {fileID: 0}
   Image: {fileID: 0}
