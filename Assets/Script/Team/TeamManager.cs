@@ -28,18 +28,18 @@ public class TeamManager
         for (int i = 0; i < data.MemberList.Count; i++)
         {
             member = new TeamMember();
-            member.Init(data.MemberList[i]);
+            member.Init(data.MemberList[i], 1);
             MemberList.Add(member);
             MemberPositionDic.Add(member, data.PositionList[i]);
         }
 
         //temp
-        MemberList[0].SetEquip(420001);
-        MemberList[0].SetEquip(410001);
-        MemberList[1].SetEquip(420001);
-        MemberList[1].SetEquip(410002);
-        MemberList[2].SetEquip(420001);
-        MemberList[2].SetEquip(410002);
+        MemberList[0].SetEquip(42001);
+        MemberList[0].SetEquip(41001);
+        MemberList[1].SetEquip(42001);
+        MemberList[1].SetEquip(41002);
+        MemberList[2].SetEquip(42001);
+        MemberList[2].SetEquip(41002);
     }
 
     public void Refresh(List<BattleCharacterPlayer> list)

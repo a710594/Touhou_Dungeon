@@ -72,6 +72,11 @@ public class ExploreUI : MonoBehaviour
         });
     }
 
+    public void StopTipLabel()
+    {
+        TipLabel.Stop();
+    }
+
     private void OpenMapGroup()
     {
         MapGroup.SetActive(true);
@@ -143,6 +148,23 @@ public class ExploreUI : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.F2))
         {
             ExploreController.Instance.BackToVilliage();
+        }
+
+        if (Input.GetKey(KeyCode.LeftArrow))
+        {
+            ExploreController.Instance.PlayerMove(Vector2Int.left);
+        }
+        else if (Input.GetKey(KeyCode.RightArrow))
+        {
+            ExploreController.Instance.PlayerMove(Vector2Int.right);
+        }
+        else if (Input.GetKey(KeyCode.UpArrow))
+        {
+            ExploreController.Instance.PlayerMove(Vector2Int.up);
+        }
+        else if (Input.GetKey(KeyCode.DownArrow))
+        {
+            ExploreController.Instance.PlayerMove(Vector2Int.down);
         }
 
         Vector2Int direction = new Vector2Int(Mathf.RoundToInt(Joystick.Horizontal), Mathf.RoundToInt(Joystick.Vertical));

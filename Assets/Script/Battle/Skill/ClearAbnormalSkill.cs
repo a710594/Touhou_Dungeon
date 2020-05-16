@@ -15,7 +15,7 @@ public class ClearAbnormalSkill : Skill
         }
     }
 
-    public override void Use(BattleCharacter executor, Action callback)
+    protected override void UseCallback()
     {
         base.UseCallback();
 

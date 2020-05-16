@@ -10,7 +10,7 @@ public class TeamEquipGroup : MonoBehaviour
     public Text DEFLabel;
     public Text MTKLabel;
     public Text MEFLabel;
-    public TextButton[] EquipNameLabel;
+    public TextButton[] EquipButton;
     public Button ChangeButton;
     public Button TakeOffButton;
 
@@ -21,14 +21,12 @@ public class TeamEquipGroup : MonoBehaviour
     {
         _selectedMember = member;
 
-        EquipNameLabel[0].SetData(member.Weapon.Name, member.Weapon);
-        EquipNameLabel[1].SetData(member.Helmet.Name, member.Helmet);
-        EquipNameLabel[2].SetData(member.Armor.Name, member.Armor);
-        EquipNameLabel[3].SetData(member.Jewelry.Name, member.Jewelry);
+        EquipButton[0].SetData(member.Weapon.Name, member.Weapon);
+        EquipButton[1].SetData(member.Armor.Name, member.Armor);
 
-        for (int i=0; i< EquipNameLabel.Length; i++)
+        for (int i=0; i< EquipButton.Length; i++)
         {
-            EquipNameLabel[i].OnClickHandler = IconOnClick;
+            EquipButton[i].OnClickHandler = IconOnClick;
         }
 
         ClearInfo();

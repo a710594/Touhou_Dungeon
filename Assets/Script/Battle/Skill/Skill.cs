@@ -152,6 +152,7 @@ public class Skill
         if (_subSkill != null)
         {
             _subSkill.InitSkillCallbackCount();
+            _subSkill.SetExecutor(_executor);
         }
         _skillCallback = callback;
         GetTargetList();
@@ -275,54 +276,13 @@ public class Skill
                 }
             }
         }
-        /*else if (executor.Camp == BattleCharacter.CampEnum.Partner)
-        {
-            if (Data.Target == SkillData.TargetType.Us)
-            {
-                for (int i = 0; i < characterList.Count; i++)
-                {
-                    if (characterList[i].Camp == BattleCharacter.CampEnum.Enemy)
-                    {
-                        positionList.Remove(Vector2Int.RoundToInt(characterList[i].transform.position));
-                    }
-                }
-            }
-            else if (Data.Target == SkillData.TargetType.Them)
-            {
-                for (int i = 0; i < characterList.Count; i++)
-                {
-                    if (characterList[i].Camp == BattleCharacter.CampEnum.Partner)
-                    {
-                        positionList.Remove(Vector2Int.RoundToInt(characterList[i].transform.position));
-                    }
-                }
-            }
-        }
-        else if (executor.Camp == BattleCharacter.CampEnum.Enemy)
-        {
-            if (Data.Target == SkillData.TargetType.Us)
-            {
-                for (int i = 0; i < characterList.Count; i++)
-                {
-                    if (characterList[i].Camp == BattleCharacter.CampEnum.Partner)
-                    {
-                        positionList.Remove(Vector2Int.RoundToInt(characterList[i].transform.position));
-                    }
-                }
-            }
-            else if (Data.Target == SkillData.TargetType.Them)
-            {
-                for (int i = 0; i < characterList.Count; i++)
-                {
-                    if (characterList[i].Camp == BattleCharacter.CampEnum.Enemy)
-                    {
-                        positionList.Remove(Vector2Int.RoundToInt(characterList[i].transform.position));
-                    }
-                }
-            }
-        }*/
 
         return positionList;
+    }
+
+    private void SetExecutor(BattleCharacter executor) //給 subSkill 用的
+    {
+        _executor = executor;
     }
 
     private void SetCallback(int targetCount, Action callback) //給 subSkill 用的

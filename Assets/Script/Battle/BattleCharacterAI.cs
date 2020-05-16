@@ -21,9 +21,9 @@ public class BattleCharacterAI : BattleCharacter
         Sprite.sprite = Resources.Load<Sprite>("Image/Character/Small/" + data.Image);
         gameObject.AddComponent(Type.GetType(data.AI));
         AI = GetComponent(Type.GetType(data.AI)) as AI;
-        AI.Init(data.SkillList);
+        AI.Init(this, data.SkillList);
 
-        SelectedSkill = SkillFactory.GetNewSkill(1); //temp
+        //SelectedSkill = SkillFactory.GetNewSkill(1); //temp
 
         BattleController.Instance.TurnEndHandler += CheckBattleStatus;
     }
@@ -31,7 +31,7 @@ public class BattleCharacterAI : BattleCharacter
     public void StartAI(Action callback)
     {
         _endAICallback = callback;
-        AI.StartAI(this);
+        AI.StartAI();
     }
 
     public void EndAI()

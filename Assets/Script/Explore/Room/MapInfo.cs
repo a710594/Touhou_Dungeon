@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class MapInfo
 {
-    public int DungeonId;
     public BoundsInt MapBound;
     public Vector2Int Start;
     public Vector2Int Goal;
+    public DungeonData.RootObject DungeonData;
     public List<Vector2Int> MapList;
     public List<Vector2Int> GrassList;
     public List<Vector2Int> KeyList;

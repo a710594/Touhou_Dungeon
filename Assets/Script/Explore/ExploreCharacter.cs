@@ -73,24 +73,4 @@ public class ExploreCharacter : MonoBehaviour
             return false;
         }
     }
-
-    private void Update()
-    {
-        if (Input.GetKey(KeyCode.LeftArrow))
-        {
-            Move(Vector2Int.left);
-        }
-        else if (Input.GetKey(KeyCode.RightArrow))
-        {
-            Move(Vector2Int.right);
-        }
-        else if (Input.GetKey(KeyCode.UpArrow))
-        {
-            Move(Vector2Int.up);
-        }
-        else if (Input.GetKey(KeyCode.DownArrow))
-        {
-            Move(Vector2Int.down);
-        }
-    }
 }

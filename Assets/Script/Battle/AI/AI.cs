@@ -9,25 +9,27 @@ public class AI : MonoBehaviour
     protected BattleCharacterAI _character;
     protected List<Skill> _skillList = new List<Skill>();
 
-    public void Init()
-    {
-        for (int i = 0; i < SkillID.Length; i++)
-        {
-            _skillList.Add(SkillFactory.GetNewSkill(SkillID[i]));
-        }
-    }
+    //public void Init()
+    //{
+    //    for (int i = 0; i < SkillID.Length; i++)
+    //    {
+    //        _skillList.Add(SkillFactory.GetNewSkill(SkillID[i]));
+    //    }
+    //}
 
-    public void Init(List<int> list)
+    public void Init(BattleCharacterAI character, List<int> list)
     {
+        _character = character;
+
         for (int i = 0; i < list.Count; i++)
         {
             _skillList.Add(SkillFactory.GetNewSkill(list[i]));
         }
+        _character.SelectedSkill = _skillList[0];
     }
 
-    public virtual void StartAI(BattleCharacterAI character)
+    public virtual void StartAI()
     {
-        _character = character;
         StartCoroutine(Run());
     }
 
@@ -68,7 +70,6 @@ public class AI : MonoBehaviour
                 else
                 {
                     Queue<Vector2Int> path = _character.GetPath(_character.TargetPosition);
-
                     while (path.Count > 0)
                     {
                         position = path.Dequeue();

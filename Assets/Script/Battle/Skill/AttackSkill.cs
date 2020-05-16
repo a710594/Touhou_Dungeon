@@ -62,13 +62,14 @@ public class AttackSkill : Skill
         if (Data.IsMagic)
         {
             damage = (float)executor.MTK / (float)target.MEF;
+            damage = damage * Data.Damage * (1 + (executor.Lv - 1) * 0.1f) + executor.EquipMTK - target.EquipMEF;
         }
         else
         {
             damage = (float)executor.ATK / (float)target.DEF;
+            damage = damage * Data.Damage * (1 + (executor.Lv - 1) * 0.1f) + executor.EquipATK - target.EquipDEF;
         }
 
-        damage = damage * Data.Damage * (1 + (executor.Lv - 1) * 0.1f);
 
         if (damage < 1)
         {

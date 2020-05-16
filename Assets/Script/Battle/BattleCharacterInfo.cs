@@ -61,6 +61,8 @@ public class BattleCharacterInfo
         }
     }
 
+    public int EquipATK; //裝備的攻擊力
+
     protected int _def; //不含buff的總和防禦力
     public int DEF
     {
@@ -69,6 +71,8 @@ public class BattleCharacterInfo
             return Mathf.RoundToInt((float)_def * GetBuffDEF() * BattleFieldManager.Instance.GetFieldBuff(_position).DEF);
         }
     }
+
+    public int EquipDEF; //裝備的防禦力
 
     protected int _mtk; //不含buff的總和魔法攻擊力
     public int MTK
@@ -79,6 +83,8 @@ public class BattleCharacterInfo
         }
     }
 
+    public int EquipMTK; //裝備的魔法攻擊力
+
     protected int _mef; //不含buff的總和魔法防禦力
     public int MEF
     {
@@ -87,6 +93,8 @@ public class BattleCharacterInfo
             return Mathf.RoundToInt((float)_mef * GetBuffMEF() * BattleFieldManager.Instance.GetFieldBuff(_position).MEF);
         }
     }
+
+    public int EquipMEF; //裝備的魔法防禦力
 
     protected int _agi; //不含buff的敏捷(影響迴避)
     public int AGI
@@ -106,12 +114,12 @@ public class BattleCharacterInfo
         }
     }
 
-    protected int _moveDistance; //不含buff的移動距離
+    protected int _mov; //不含buff的移動距離
     public int MoveDistance
     {
         get
         {
-            return _moveDistance;
+            return _mov;
         }
     }
 
@@ -173,7 +181,11 @@ public class BattleCharacterInfo
         _mef = member.MEF;
         _agi = member.AGI;
         _sen = member.SEN;
-        _moveDistance = member.MoveDistance;
+        _mov = member.MOV;
+        EquipATK = member.Weapon.ATK;
+        EquipDEF = member.Armor.DEF;
+        EquipMTK = member.Weapon.MTK;
+        EquipMEF = member.Armor.MEF;
     }
 
     public virtual void Init(int id, int lv) //for enemy
@@ -184,13 +196,17 @@ public class BattleCharacterInfo
         Name = data.Name;
         MaxHP = Mathf.RoundToInt(data.HP * (1 + (lv - 1) * 0.1f));
         CurrentHP = MaxHP;
-        _atk = Mathf.RoundToInt(data.ATK * (1 + (lv - 1) * 0.1f) + data.Equip_ATK);
-        _def = Mathf.RoundToInt(data.DEF * (1 + (lv - 1) * 0.1f) + data.Equip_DEF);
-        _mtk = Mathf.RoundToInt(data.MTK * (1 + (lv - 1) * 0.1f) + data.Equip_MTK);
-        _mef = Mathf.RoundToInt(data.MEF * (1 + (lv - 1) * 0.1f) + data.Equip_MEF);
+        _atk = Mathf.RoundToInt(data.ATK * (1 + (lv - 1) * 0.1f));
+        _def = Mathf.RoundToInt(data.DEF * (1 + (lv - 1) * 0.1f));
+        _mtk = Mathf.RoundToInt(data.MTK * (1 + (lv - 1) * 0.1f));
+        _mef = Mathf.RoundToInt(data.MEF * (1 + (lv - 1) * 0.1f));
         _agi = Mathf.RoundToInt(data.AGI * (1 + (lv - 1) * 0.1f));
         _sen = Mathf.RoundToInt(data.SEN * (1 + (lv - 1) * 0.1f));
-        _moveDistance = data.MoveDistance;
+        _mov = data.MOV;
+        EquipATK = data.Equip_ATK;
+        EquipDEF = data.Equip_DEF;
+        EquipMTK = data.Equip_MTK;
+        EquipMEF = data.Equip_MEF;
     }
 
     public void SetPosition(Vector2 position)

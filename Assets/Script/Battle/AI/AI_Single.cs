@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AI_test1 : AI
+public class AI_Single : AI
 {
     protected override void SelectSkill()
     {
-        _character.SelectedSkill = SkillFactory.GetNewSkill(16); //temp
+        _character.SelectedSkill = _skillList[0];
     }
 }

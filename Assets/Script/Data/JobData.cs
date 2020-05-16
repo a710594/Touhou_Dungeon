@@ -22,7 +22,7 @@ public class JobData
         public int MEF { get; set; }
         public int AGI { get; set; }
         public int SEN { get; set; }
-        public int MoveDistance { get; set; }
+        public int MOV { get; set; }
         public int Skill_1 { get; set; }
         public int UnlockLv_1 { get; set; }
         public int Skill_2 { get; set; }

@@ -275,20 +275,20 @@ public class BagUI : MonoBehaviour
     {
         if (_selectedItem.Type == ItemData.TypeEnum.Food || _selectedItem.Type == ItemData.TypeEnum.Medicine)
         {
-            ItemEffectData.RootObject foodData = ItemEffectData.GetData(_selectedItem.ID);
-            if (foodData.AddHP != 0)
+            ItemEffectData.RootObject itemEffectData = ItemEffectData.GetData(_selectedItem.ID);
+            if (itemEffectData.AddHP != 0)
             {
-                member.AddHP(foodData.AddHP);
+                member.AddHP(itemEffectData.AddHP);
                 SelectCharacterGroup.HPBarTween(member);
             }
-            if (foodData.AddMP != 0)
+            if (itemEffectData.AddMP != 0)
             {
-                member.AddMP(foodData.AddMP);
+                member.AddMP(itemEffectData.AddMP);
                 SelectCharacterGroup.MPBarTween(member);
             }
-            if (foodData.HasBuff)
+            if (itemEffectData.HasBuff)
             {
-                member.SetFoodBuff(foodData.ID);
+                member.SetFoodBuff(itemEffectData.ID);
             }
             else
             {

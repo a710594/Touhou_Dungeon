@@ -36,13 +36,13 @@ public class GameSystem : MonoBehaviour
         ItemManager.Instance.Init();
         MySceneManager.Instance.Init();
 
-        yield return new WaitForEndOfFrame();
+        yield return null;
 
-        //List<KeyValuePair<int, int>> enemyList = BattleGroupData.GetEnemy(1);
-        //BattleController.Instance.Init(1, enemyList);
-        MapInfo info;
-        DungeonBuilder.Instance.Generate(1, out info);
-        ExploreController.Instance.Init(info);
+        //yield return new WaitForEndOfFrame();
+
+        //MapInfo info;
+        //DungeonBuilder.Instance.Generate(1, out info);
+        //ExploreController.Instance.Init(info);
     }
 
     private void Awake()

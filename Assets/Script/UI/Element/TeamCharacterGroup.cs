@@ -33,7 +33,7 @@ public class TeamCharacterGroup : MonoBehaviour
         MEFLabel.text = "意志：" + member.MEF.ToString();
         AGILabel.text = "敏捷：" + member.AGI.ToString();
         SENLabel.text = "感知：" + member.SEN.ToString();
-        MoveDistanceLabel.text = "移動：" + member.MoveDistance.ToString();
+        MoveDistanceLabel.text = "移動：" + member.MOV.ToString();
         CharacterImage.overrideSprite = Resources.Load<Sprite>("Image/Character/Origin/" + member.Data.Image);
         //CharacterImage.SetNativeSize();
 

@@ -21,7 +21,7 @@ public class EnemyData
         public int Equip_DEF { get; set; }
         public int Equip_MTK { get; set; }
         public int Equip_MEF { get; set; }
-        public int MoveDistance { get; set; }
+        public int MOV { get; set; }
         public string AI { get; set; }
         public string Comment { get; set; }
         public int Skill_1 { get; set; }

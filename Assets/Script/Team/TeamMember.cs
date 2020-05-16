@@ -59,28 +59,28 @@ public class TeamMember
     {
         get
         {
-            return Mathf.RoundToInt((_atk + Weapon.ATK + Helmet.ATK + Armor.ATK + Jewelry.ATK) * FoodBuff.ATK);
+            return Mathf.RoundToInt(_atk * FoodBuff.ATK);
         }
     }
     public int DEF
     {
         get
         {
-            return Mathf.RoundToInt((_def + Weapon.DEF + Helmet.DEF + Armor.DEF + Jewelry.DEF) * FoodBuff.DEF);
+            return Mathf.RoundToInt(_def * FoodBuff.DEF);
         }
     }
     public int MTK
     {
         get
         {
-            return Mathf.RoundToInt((_mtk + Weapon.MTK + Helmet.MTK + Armor.MTK + Jewelry.MTK) * FoodBuff.MTK);
+            return Mathf.RoundToInt(_mtk * FoodBuff.MTK);
         }
     }
     public int MEF
     {
         get
         {
-            return Mathf.RoundToInt((_mef + Weapon.MEF + Helmet.MEF + Armor.MEF + Jewelry.MEF) * FoodBuff.MEF);
+            return Mathf.RoundToInt(_mef * FoodBuff.MEF);
         }
     }
     public int AGI
@@ -97,12 +97,12 @@ public class TeamMember
             return Mathf.RoundToInt(_sen * FoodBuff.SEN);
         }
     }
-    public int MoveDistance;
+    public int MOV;
     public JobData.RootObject Data;
     public Equip Weapon = new Equip(EquipData.TypeEnum.Weapon);
-    public Equip Helmet = new Equip(EquipData.TypeEnum.Helmet);
+    //public Equip Helmet = new Equip(EquipData.TypeEnum.Helmet);
     public Equip Armor = new Equip(EquipData.TypeEnum.Armor);
-    public Equip Jewelry = new Equip(EquipData.TypeEnum.Jewelry);
+    //public Equip Jewelry = new Equip(EquipData.TypeEnum.Jewelry);
     public bool HasFoodBuff = false;
     public FoodBuff FoodBuff = new FoodBuff(); //食物的效果一次只會有一個,戰鬥結束後就會消失
     public List<int> SkillList = new List<int>();
@@ -133,7 +133,7 @@ public class TeamMember
         _mef= Mathf.RoundToInt(Data.MEF * (1 + ((Lv - 1) * 0.1f)));
         _agi = Mathf.RoundToInt(Data.AGI * (1 + ((Lv - 1) * 0.1f)));
         _sen = Mathf.RoundToInt(Data.SEN * (1 + ((Lv - 1) * 0.1f)));
-        MoveDistance = Data.MoveDistance;
+        MOV = Data.MOV;
         SkillList = Data.GetUnlockSkill(Lv);
     }
 
@@ -178,20 +178,10 @@ public class TeamMember
             oldEquip = Weapon;
             Weapon = equip;
         }
-        else if (equip.Type == EquipData.TypeEnum.Helmet)
-        {
-            oldEquip = Helmet;
-            Helmet = equip;
-        }
         else if (equip.Type == EquipData.TypeEnum.Armor)
         {
             oldEquip = Armor;
             Armor = equip;
-        }
-        else if (equip.Type == EquipData.TypeEnum.Jewelry)
-        {
-            oldEquip = Jewelry;
-            Jewelry = equip;
         }
     }
 
@@ -201,17 +191,9 @@ public class TeamMember
         {
             Weapon = _defaultWeapon;
         }
-        else if (equip.Type == EquipData.TypeEnum.Helmet)
-        {
-            Helmet = _defaultHelmet;
-        }
         else if (equip.Type == EquipData.TypeEnum.Armor)
         {
             Armor = _defaultArmor;
-        }
-        else if (equip.Type == EquipData.TypeEnum.Jewelry)
-        {
-            Jewelry = _defaultJewelry;
         }
 
         ItemManager.Instance.AddItem(equip, 1, type);

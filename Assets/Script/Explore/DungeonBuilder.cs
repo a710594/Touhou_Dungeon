@@ -305,7 +305,7 @@ public class DungeonBuilder
         }
 
         info = new MapInfo();
-        info.DungeonId = dungeonId;
+        info.DungeonData = _dungeonData;
         info.MapBound = Utility.GetMapBounds(_mapList);
         info.Start = start;
         info.Goal = goal;

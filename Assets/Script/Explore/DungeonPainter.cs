@@ -20,25 +20,24 @@ public class DungeonPainter
     public void Paint(MapInfo info)
     {
         TilePainter.Instance.ClearAll();
-        DungeonData.RootObject dungeonData = DungeonData.GetData(info.DungeonId);
 
         //ground
         for (int i=0; i<info.MapList.Count; i++)
         {
-            TilePainter.Instance.Painting(dungeonData.GroundTile, 0, info.MapList[i]);
+            TilePainter.Instance.Painting(info.DungeonData.GroundTile, 0, info.MapList[i]);
         }
 
         //door
         List<Vector2Int> doorList = new List<Vector2Int>(info.DoorDic.Keys);
         for(int i=0; i<doorList.Count; i++)
         {
-            TilePainter.Instance.Painting(dungeonData.DoorTile, 1, doorList[i]);
+            TilePainter.Instance.Painting(info.DungeonData.DoorTile, 1, doorList[i]);
         }
 
         //grass
         for (int i = 0; i < info.GrassList.Count; i++)
         {
-            TilePainter.Instance.Painting(dungeonData.GrassTile, 0, info.GrassList[i]);
+            TilePainter.Instance.Painting(info.DungeonData.GrassTile, 0, info.GrassList[i]);
         }
 
         //treasure
@@ -74,7 +73,7 @@ public class DungeonPainter
         //Wall
         for (int i = 0; i < info.WallList.Count; i++)
         {
-            TilePainter.Instance.Painting(dungeonData.WallTile, 0, info.WallList[i]);
+            TilePainter.Instance.Painting(info.DungeonData.WallTile, 0, info.WallList[i]);
         }
 
         //Mist
