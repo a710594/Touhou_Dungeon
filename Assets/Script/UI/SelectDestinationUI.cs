@@ -11,6 +11,18 @@ public class SelectDestinationUI : MonoBehaviour
     public void Open()
     {
         gameObject.SetActive(true);
+        SetData();
+    }
+
+    private void SetData()
+    {
+        List<int> floorList = new List<int>();
+        for (int i=1; i<=ExploreController.Instance.ArriveFloor; i++)
+        {
+            floorList.Add(i);
+        }
+        ScrollView.SetData(new ArrayList (floorList));
+        ScrollView.AddClickHandler(FloorOnClick);
     }
 
     private void FloorOnClick(object floor)
@@ -26,7 +38,5 @@ public class SelectDestinationUI : MonoBehaviour
     private void Awake()
     {
         CloseButton.onClick.AddListener(CloseOnClick);
-        ScrollView.SetData(new ArrayList { 1 });
-        ScrollView.AddClickHandler(FloorOnClick);
     }
 }

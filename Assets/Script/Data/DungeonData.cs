@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System.IO;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Newtonsoft.Json;
@@ -9,6 +10,8 @@ public class DungeonData
     {
         public int ID { get; set; }
         public int Floor { get; set; }
+        public int LastFloor { get; set; }
+        public int NextFloor { get; set; }
         public int RoomAmount { get; set; }
         public int Room_1 { get; set; }
         public int Probability_1 { get; set; }
@@ -44,8 +47,18 @@ public class DungeonData
 
     public static void Load()
     {
-        TextAsset textAsset = Resources.Load<TextAsset>("Json/Dungeon");
-        string jsonString = textAsset.text;
+        string path = Application.streamingAssetsPath + "/Dungeon.json";
+        string jsonString;
+#if UNITY_EDITOR || UNITY_STANDALONE_WIN
+        jsonString = File.ReadAllText(path);
+#elif UNITY_ANDROID
+        UnityEngine.Networking.UnityWebRequest www = UnityEngine.Networking.UnityWebRequest.Get(path);
+        www.SendWebRequest();
+        while (!www.isDone)
+        {
+        }
+        jsonString = www.downloadHandler.text;
+#endif
         var dataList = JsonConvert.DeserializeObject<List<RootObject>>(jsonString);
 
         for (int i = 0; i < dataList.Count; i++)

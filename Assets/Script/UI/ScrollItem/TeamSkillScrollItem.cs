@@ -5,13 +5,13 @@ using UnityEngine.UI;
 
 public class TeamSkillScrollItem : ScrollItem
 {
-    public class Data
+    public class UnlockData
     {
         public JobData.RootObject JobData;
         public SkillData.RootObject SkillData;
         public int CharacterLv;
 
-        public Data(JobData.RootObject jobData, SkillData.RootObject skillData, int characterLv)
+        public UnlockData(JobData.RootObject jobData, SkillData.RootObject skillData, int characterLv)
         {
             JobData = jobData;
             SkillData = skillData;
@@ -26,18 +26,28 @@ public class TeamSkillScrollItem : ScrollItem
 
     public override void SetData(object obj)
     {
-        Data data = (Data)obj; //skillId, IsUnlock
-        base.SetData(data.SkillData);
-        NameLabel.text = data.SkillData.GetName();
-        //Icon.overrideSprite = Resources.Load<Sprite>("Image/" + data.Icon);
-
-        if (!data.JobData.IsUnlockSkill(data.SkillData.ID, data.CharacterLv))
+        if (obj is UnlockData)
         {
-            Mask.SetActive(true);
-            UnlockLvLabel.text = "Lv." + data.JobData.SkillUnlockDic[data.SkillData.ID] + "解鎖";
+            UnlockData data = (UnlockData)obj; //skillId, IsUnlock
+            base.SetData(data.SkillData);
+            NameLabel.text = data.SkillData.GetName();
+            //Icon.overrideSprite = Resources.Load<Sprite>("Image/" + data.Icon);
+
+            if (!data.JobData.IsUnlockSkill(data.SkillData.ID, data.CharacterLv))
+            {
+                Mask.SetActive(true);
+                UnlockLvLabel.text = "Lv." + data.JobData.SkillUnlockDic[data.SkillData.ID] + "解鎖";
+            }
+            else
+            {
+                Mask.SetActive(false);
+            }
         }
         else
         {
+            SkillData.RootObject data = SkillData.GetData((int)obj);
+            base.SetData(data);
+            NameLabel.text = data.GetName();
             Mask.SetActive(false);
         }
     }

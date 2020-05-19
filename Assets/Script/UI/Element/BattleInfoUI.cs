@@ -13,7 +13,7 @@ public class BattleInfoUI : MonoBehaviour
     public ValueBar MpBar;
     public Button BattleStatusButton;
     public BattleStatusUI BattleStatusUI;
-    public Image[] BuffIcon;
+    public Image[] BattleStatusIcon;
 
     private bool _isScrollViewShow = false;
     private bool _isClickable = true;
@@ -27,16 +27,16 @@ public class BattleInfoUI : MonoBehaviour
 
         _statusList = new List<BattleStatus>(character.Info.StatusDic.Values);
 
-        for (int i=0; i<BuffIcon.Length; i++)
+        for (int i=0; i<BattleStatusIcon.Length; i++)
         {
             if (i < _statusList.Count)
             {
-                BuffIcon[i].gameObject.SetActive(true);
-                BuffIcon[i].overrideSprite = Resources.Load<Sprite>("Image/" + _statusList[i].Icon);
+                BattleStatusIcon[i].gameObject.SetActive(true);
+                BattleStatusIcon[i].overrideSprite = Resources.Load<Sprite>("Image/BattleStatus/" + _statusList[i].Icon);
             }
             else
             {
-                BuffIcon[i].gameObject.SetActive(false);
+                BattleStatusIcon[i].gameObject.SetActive(false);
             }
         }
 

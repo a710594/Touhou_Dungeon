@@ -7,6 +7,7 @@ public class LittleMap : MonoBehaviour
 {
     public float Scale = 1;
     public Image Map;
+    public Text FloorLabel;
     public GameObject Player;
     public GameObject Start;
     public GameObject Goal;
@@ -17,8 +18,9 @@ public class LittleMap : MonoBehaviour
     private BoundsInt _mapBound;
     private List<Vector2Int> _mapList;
 
-    public void Init(Vector2Int playerPosition, Vector2Int startPosition, Vector2Int goalPosition, BoundsInt mapBound, List<Vector2Int> mapList)
+    public void Init(int floor, Vector2Int playerPosition, Vector2Int startPosition, Vector2Int goalPosition, BoundsInt mapBound, List<Vector2Int> mapList)
     {
+        FloorLabel.text = "F" + floor.ToString();
         _mapBound = mapBound;
         _mapList = mapList;
         _playerPosition = playerPosition;

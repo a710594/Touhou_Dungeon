@@ -41,7 +41,7 @@ public class ViewDrag : MonoBehaviour
         Vector3 direction = Camera.main.ScreenToWorldPoint(current_position) - Camera.main.ScreenToWorldPoint(hit_position);
 
         // Invert direction to that terrain appears to move with the mouse.
-        direction = Vector2.ClampMagnitude(direction * -10, 20);
+        direction = Vector2.ClampMagnitude(direction * -5, 10);
         if (direction.magnitude < 1)
         {
             direction = Vector2.zero;

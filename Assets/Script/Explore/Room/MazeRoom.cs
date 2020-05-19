@@ -43,7 +43,7 @@ public class MazeRoom : Room
             tempList.Remove(moneyPosition);
             if (!WallList.Contains(moneyPosition))
             {
-                MoneyDic.Add(moneyPosition, Random.Range(Data.MinMoneyAmount, Data.MaxMoneyAmount + 1));
+                MoneyDic.Add(moneyPosition, Random.Range(Data.MinMoney, Data.MaxMoney + 1));
             }
             else
             {

@@ -53,7 +53,7 @@ public class ItemManager
 
         //temp
         //AddBagItem(0, 1);
-        Money = 10000;
+        Money = 0;
 
         //Money = 0;
         //CurrentBagVolume = 0;

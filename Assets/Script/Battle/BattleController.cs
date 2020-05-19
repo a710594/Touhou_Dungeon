@@ -6,6 +6,8 @@ using ByTheTale.StateMachine;
 
 public class BattleController : MachineBehaviour
 {
+    private static readonly int _maxPower = 100;
+
     public enum ResultType
     {
         Win,
@@ -41,7 +43,7 @@ public class BattleController : MachineBehaviour
         BattleGroupData.RootObject battleGroupData = BattleGroupData.GetData(battleGroupId);
 
         _turn = 1;
-        _power = 0;
+        _power =  TeamManager.Instance.Power;
         _exp = battleGroupData.Exp;
         CharacterList.Clear();
 
@@ -74,7 +76,7 @@ public class BattleController : MachineBehaviour
         ChangeSceneUI.Instance.EndClock(() =>
         {
             BattleUI.Open();
-            BattleUI.Instance.Init(CharacterList);
+            BattleUI.Instance.Init(_power, CharacterList);
             //BattleUI.Instance.SetPriorityQueueVisible(true);
             ChangeState<TurnStartState>();
         });
@@ -165,6 +167,10 @@ public class BattleController : MachineBehaviour
     public void AddPower(int value) 
     {
         _power += value;
+        if (_power > _maxPower)
+        {
+            _power = _maxPower;
+        }
         BattleUI.Instance.SetPower(_power);
     }
 
@@ -702,7 +708,7 @@ public class BattleController : MachineBehaviour
 
 
             ItemManager.Instance.AddItem(dropItemList, ItemManager.Type.Bag);
-            TeamManager.Instance.Refresh(parent._playerList);
+            TeamManager.Instance.Refresh(parent._power, parent._playerList);
             List<int> orignalLvList = TeamManager.Instance.GetLvList();
             List<int> orignalExpList = TeamManager.Instance.GetExpList();
             TeamManager.Instance.AddExp(parent._exp);

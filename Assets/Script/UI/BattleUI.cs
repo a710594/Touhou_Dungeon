@@ -51,8 +51,9 @@ public class BattleUI : MonoBehaviour
         Instance = null;
     }
 
-    public void Init(List<BattleCharacter> characterList)
+    public void Init(int power, List<BattleCharacter> characterList)
     {
+        PowerLabel.text = "Power:" + power.ToString();
         for (int i = 0; i < characterList.Count; i++)
         {
             InitCharacter(characterList[i]);
@@ -81,6 +82,8 @@ public class BattleUI : MonoBehaviour
         {
             //ActionCountLabel.text = LanguageData.GetText(10, LanguageSystem.Instance.CurrentLanguage) +  ":" + BattleController.Instance.SelectedCharacter.Info.ActionCount; //行動次數
             SkillActionButton.interactable = !BattleController.Instance.SelectedCharacter.Info.HasUseSkill;
+            SpellCardActionButton.interactable = !BattleController.Instance.SelectedCharacter.Info.HasUseSkill;
+            ItemActionButton.interactable = !BattleController.Instance.SelectedCharacter.Info.HasUseSkill;
         }
     }
 
@@ -186,7 +189,7 @@ public class BattleUI : MonoBehaviour
     public void SetLittleHPBar(BattleCharacter character, bool isVisible)
     {
         _littleHPBarDic[character].gameObject.SetActive(isVisible);
-        _littleHPBarDic[character].SetValueTween(character.Info.CurrentHP, character.Info.MaxHP, null);
+        _littleHPBarDic[character].SetValueTween(character.Info.CurrentHP, character.Info.MaxHP,  null);
     }
 
     public void SetTurnLabel(int turn)

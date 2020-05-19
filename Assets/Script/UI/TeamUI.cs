@@ -9,6 +9,7 @@ public class TeamUI : MonoBehaviour
     {
         Character,
         Skill,
+        SpellCard,
         Equip,
         Position,
     }
@@ -17,6 +18,7 @@ public class TeamUI : MonoBehaviour
 
     public ButtonPlus CharacterButton;
     public ButtonPlus SkillButton;
+    public ButtonPlus SpellCardButton;
     public ButtonPlus EquipButton;
     public Button CloseButton;
     public TeamCharacterGroup CharacterGroup;
@@ -59,7 +61,12 @@ public class TeamUI : MonoBehaviour
 
     private void SetSkillData()
     {
-        SkillGroup.SetData(_selectedMember);
+        SkillGroup.SetData(_selectedMember, false);
+    }
+
+    private void SetSpellCardData()
+    {
+        SkillGroup.SetData(_selectedMember, true);
     }
 
     public void SetEquipData()
@@ -81,6 +88,10 @@ public class TeamUI : MonoBehaviour
         {
             SetSkillData();
         }
+        else if (_currentState == State.SpellCard)
+        {
+            SetSpellCardData();
+        }
         else if (_currentState == State.Equip)
         {
             SetEquipData();
@@ -94,6 +105,7 @@ public class TeamUI : MonoBehaviour
         EquipGroup.gameObject.SetActive(false);
         CharacterButton.Image.color = Color.white;
         SkillButton.Image.color = Color.gray;
+        SpellCardButton.Image.color = Color.gray;
         EquipButton.Image.color = Color.gray;
         SetCharacterData();
         _currentState = State.Character;
@@ -106,9 +118,23 @@ public class TeamUI : MonoBehaviour
         EquipGroup.gameObject.SetActive(false);
         CharacterButton.Image.color = Color.gray;
         SkillButton.Image.color = Color.white;
+        SpellCardButton.Image.color = Color.gray;
         EquipButton.Image.color = Color.gray;
         SetSkillData();
         _currentState = State.Skill;
+    }
+
+    private void SpellCardGroupOnClick(object obj)
+    {
+        CharacterGroup.gameObject.SetActive(false);
+        SkillGroup.gameObject.SetActive(true);
+        EquipGroup.gameObject.SetActive(false);
+        CharacterButton.Image.color = Color.gray;
+        SkillButton.Image.color = Color.gray;
+        SpellCardButton.Image.color = Color.white;
+        EquipButton.Image.color = Color.gray;
+        SetSpellCardData();
+        _currentState = State.SpellCard;
     }
 
     private void EquipGroupOnClick(object obj)
@@ -118,6 +144,7 @@ public class TeamUI : MonoBehaviour
         EquipGroup.gameObject.SetActive(true);
         CharacterButton.Image.color = Color.gray;
         SkillButton.Image.color = Color.gray;
+        SpellCardButton.Image.color = Color.gray;
         EquipButton.Image.color = Color.white;
         SetEquipData();
         _currentState = State.Equip;
@@ -136,6 +163,7 @@ public class TeamUI : MonoBehaviour
 
         CharacterButton.ClickHandler = CharacterGroupOnClick;
         SkillButton.ClickHandler = SkillGroupOnClick;
+        SpellCardButton.ClickHandler = SpellCardGroupOnClick;
         EquipButton.ClickHandler = EquipGroupOnClick;
         CloseButton.onClick.AddListener(CloseOnClick);
 

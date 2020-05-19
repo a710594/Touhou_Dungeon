@@ -159,7 +159,7 @@ public class Skill
 
         if (_targetList.Count > 0 && executor.Camp == BattleCharacter.CampEnum.Partner && !IsSpellCard)
         {
-            BattleController.Instance.AddPower(_targetList.Count);
+            BattleController.Instance.AddPower(_targetList.Count * executor.SelectedSkill.Data.AddPower);
             BattleUI.Instance.DropPowerPoint(_targetList);
         }
 

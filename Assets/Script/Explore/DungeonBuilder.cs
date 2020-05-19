@@ -291,11 +291,11 @@ public class DungeonBuilder
         //Wall
         List<Vector2Int> wallList = new List<Vector2Int>();
         List<Vector2Int> mistList = new List<Vector2Int>();
-        for (int i = 0; i <= mapBound.size.x + 20; i++)
+        for (int i = 0; i <= mapBound.size.x + 30; i++)
         {
-            for (int j = 0; j <= mapBound.size.y + 20; j++)
+            for (int j = 0; j <= mapBound.size.y + 30; j++)
             {
-                position = new Vector2Int(mapBound.xMin + i - 10, mapBound.yMin + j - 10);
+                position = new Vector2Int(mapBound.xMin + i - 15, mapBound.yMin + j - 15);
                 if (!_mapList.Contains(position))
                 {
                     wallList.Add(position);

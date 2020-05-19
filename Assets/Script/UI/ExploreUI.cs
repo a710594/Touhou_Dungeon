@@ -36,9 +36,9 @@ public class ExploreUI : MonoBehaviour
         Instance = null;
     }
 
-    public void InitLittleMap(Vector2Int playerPosition, Vector2Int startPosition, Vector2Int goalPosition, BoundsInt mapBound, List<Vector2Int> mapList)
+    public void InitLittleMap(int floor, Vector2Int playerPosition, Vector2Int startPosition, Vector2Int goalPosition, BoundsInt mapBound, List<Vector2Int> mapList)
     {
-        LittleMap.Init(playerPosition, startPosition, goalPosition, mapBound, mapList);
+        LittleMap.Init(floor, playerPosition, startPosition, goalPosition, mapBound, mapList);
     }
 
     public void RefreshLittleMap(Vector2Int characterPosition, List<Vector2Int> exploredList, List<Vector2Int> wallList)

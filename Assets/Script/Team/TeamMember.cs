@@ -106,8 +106,8 @@ public class TeamMember
     public bool HasFoodBuff = false;
     public FoodBuff FoodBuff = new FoodBuff(); //食物的效果一次只會有一個,戰鬥結束後就會消失
     public List<int> SkillList = new List<int>();
+    public List<int> SpellCardList = new List<int>();
 
-    //這些是不含裝備的角色數值
     private int _atk;
     private int _def;
     private int _mtk;
@@ -135,6 +135,7 @@ public class TeamMember
         _sen = Mathf.RoundToInt(Data.SEN * (1 + ((Lv - 1) * 0.1f)));
         MOV = Data.MOV;
         SkillList = Data.GetUnlockSkill(Lv);
+        SpellCardList = Data.SpellCardList;
     }
 
     public void Refresh(BattleCharacterPlayer character)

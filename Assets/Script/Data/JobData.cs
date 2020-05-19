@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System.IO;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Newtonsoft.Json;
@@ -33,11 +34,11 @@ public class JobData
         public int UnlockLv_4 { get; set; }
         public int Skill_5 { get; set; }
         public int UnlockLv_5 { get; set; }
-        public int Skill_6 { get; set; }
-        public int UnlockLv_6 { get; set; }
+        public int SpellCard_1 { get; set; }
         public string Name_Chinese { get; set; }
         public string Name_English { get; set; }
 
+        public List<int> SpellCardList = new List<int>();
         public Dictionary<int, int> SkillUnlockDic = new Dictionary<int, int>(); //skill ID, unlock lv
         public Dictionary<LanguageSystem.Language, string> NameDic = new Dictionary<LanguageSystem.Language, string>();
 
@@ -72,8 +73,20 @@ public class JobData
 
     public static void Load()
     {
-        TextAsset textAsset = Resources.Load<TextAsset>("Json/Job");
-        string jsonString = textAsset.text;
+        //TextAsset textAsset = Resources.Load<TextAsset>("Json/Job");
+        //string jsonString = textAsset.text;
+        string path = Application.streamingAssetsPath + "/Job.json";
+        string jsonString;
+#if UNITY_EDITOR || UNITY_STANDALONE_WIN
+        jsonString = File.ReadAllText(path);
+#elif UNITY_ANDROID
+        UnityEngine.Networking.UnityWebRequest www = UnityEngine.Networking.UnityWebRequest.Get(path);
+        www.SendWebRequest();
+        while (!www.isDone)
+        {
+        }
+        jsonString = www.downloadHandler.text;
+#endif
         var dataList = JsonConvert.DeserializeObject<List<RootObject>>(jsonString);
 
         for (int i=0; i<dataList.Count; i++)
@@ -103,9 +116,9 @@ public class JobData
                 dataList[i].SkillUnlockDic.Add(dataList[i].Skill_5, dataList[i].UnlockLv_5);
             }
 
-            if (dataList[i].Skill_6 != 0)
+            if (dataList[i].SpellCard_1 != 0)
             {
-                dataList[i].SkillUnlockDic.Add(dataList[i].Skill_6, dataList[i].UnlockLv_6);
+                dataList[i].SpellCardList.Add(dataList[i].SpellCard_1);
             }
 
             dataList[i].NameDic.Add(LanguageSystem.Language.Chinese, dataList[i].Name_Chinese);

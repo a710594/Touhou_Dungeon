@@ -13,7 +13,7 @@ public class BattleStatusScrollItem : ScrollItem
     {
         base.SetData(obj);
         BattleStatus data = (BattleStatus)_data;
-        Icon.overrideSprite = Resources.Load<Sprite>("Image/" + data.Icon);
+        Icon.overrideSprite = Resources.Load<Sprite>("Image/BattleStatus/" + data.Icon);
         CommentLabel.text = data.Comment;
         if (data.RemainTurn != -1)
         {

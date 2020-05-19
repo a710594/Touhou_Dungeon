@@ -115,7 +115,7 @@ public class BattleCharacterInfo
     }
 
     protected int _mov; //不含buff的移動距離
-    public int MoveDistance
+    public int MOV
     {
         get
         {

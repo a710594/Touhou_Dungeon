@@ -84,13 +84,11 @@ public class BattleCharacter : MonoBehaviour
         _moveRangeList.Clear();
 
         Vector2Int orign = Vector2Int.FloorToInt(_originalPosition);
-        List<Vector2Int> positionList = Utility.GetRhombusPositionList(Info.MoveDistance, orign, false);
+        List<Vector2Int> positionList = Utility.GetRhombusPositionList(Info.MOV, orign, false);
         for (int i = 0; i < positionList.Count; i++)
         {
-            //BattleFieldManager.Instance.Refresh(orign, positionList[i], false);
-            //int pathLength = BattleFieldManager.Instance.GetPathLength(orign, positionList[i], false);
             int pathLength = BattleFieldManager.Instance.GetPathLength(orign, positionList[i], Camp);
-            if (pathLength != -1 && pathLength - 1 <= Info.MoveDistance) //pathLength - 1 是因為要扣掉自己那一格
+            if (pathLength != -1 && pathLength - 1 <= Info.MOV) //pathLength - 1 是因為要扣掉自己那一格
             {
                 _moveRangeList.Add(positionList[i]);
             }

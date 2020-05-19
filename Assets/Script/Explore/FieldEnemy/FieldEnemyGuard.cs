@@ -14,15 +14,29 @@ public class FieldEnemyGuard : FieldEnemy
     public override void Init(int battleGroupId, Vector2 position)
     {
         base.Init(battleGroupId, position);
-        TilePainter.Instance.Painting("RedGrid", 1, Vector2Int.RoundToInt(transform.position + Vector3.up + Vector3.left));
-        TilePainter.Instance.Painting("RedGrid", 1, Vector2Int.RoundToInt(transform.position + Vector3.up));
-        TilePainter.Instance.Painting("RedGrid", 1, Vector2Int.RoundToInt(transform.position + Vector3.up + Vector3.right));
-        TilePainter.Instance.Painting("RedGrid", 1, Vector2Int.RoundToInt(transform.position + Vector3.left));
-        TilePainter.Instance.Painting("RedGrid", 1, Vector2Int.RoundToInt(transform.position));
-        TilePainter.Instance.Painting("RedGrid", 1, Vector2Int.RoundToInt(transform.position + Vector3.right));
-        TilePainter.Instance.Painting("RedGrid", 1, Vector2Int.RoundToInt(transform.position + Vector3.down + Vector3.left));
-        TilePainter.Instance.Painting("RedGrid", 1, Vector2Int.RoundToInt(transform.position + Vector3.down));
-        TilePainter.Instance.Painting("RedGrid", 1, Vector2Int.RoundToInt(transform.position + Vector3.down + Vector3.right));
+
+        Vector2Int gridPosition = new Vector2Int();
+        for (int i=-1; i<=1; i++)
+        {
+            for (int j=-1; j<= 1; j++)
+            {
+                gridPosition = Vector2Int.RoundToInt(transform.position + Vector3.up * i + Vector3.left * j);
+                if (!ExploreController.Instance.IsWall(gridPosition))
+                {
+                    TilePainter.Instance.Painting("RedGrid", 1, gridPosition);
+                }
+            }
+        }
+
+        //TilePainter.Instance.Painting("RedGrid", 1, Vector2Int.RoundToInt(transform.position + Vector3.up + Vector3.left));
+        //TilePainter.Instance.Painting("RedGrid", 1, Vector2Int.RoundToInt(transform.position + Vector3.up));
+        //TilePainter.Instance.Painting("RedGrid", 1, Vector2Int.RoundToInt(transform.position + Vector3.up + Vector3.right));
+        //TilePainter.Instance.Painting("RedGrid", 1, Vector2Int.RoundToInt(transform.position + Vector3.left));
+        //TilePainter.Instance.Painting("RedGrid", 1, Vector2Int.RoundToInt(transform.position));
+        //TilePainter.Instance.Painting("RedGrid", 1, Vector2Int.RoundToInt(transform.position + Vector3.right));
+        //TilePainter.Instance.Painting("RedGrid", 1, Vector2Int.RoundToInt(transform.position + Vector3.down + Vector3.left));
+        //TilePainter.Instance.Painting("RedGrid", 1, Vector2Int.RoundToInt(transform.position + Vector3.down));
+        //TilePainter.Instance.Painting("RedGrid", 1, Vector2Int.RoundToInt(transform.position + Vector3.down + Vector3.right));
     }
 
 

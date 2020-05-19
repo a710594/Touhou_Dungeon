@@ -8,9 +8,9 @@ public class MySceneManager
 {
     public enum SceneType
     {
+        Villiage,
         Explore,
         Battle,
-        Villiage,
     }
 
     private static MySceneManager _instance;

@@ -17,6 +17,8 @@ public class ExploreController
         }
     }
 
+    public int ArriveFloor = 1; //temp
+
     private MapInfo _mapInfo;
     private ExploreCharacter _player;
     private Vector2 _playerPosition;
@@ -38,7 +40,7 @@ public class ExploreController
         _player = GameObject.Find("ExploreCharacter").GetComponent<ExploreCharacter>();
         _player.transform.position = (Vector2)info.Start;
         ExploreUI.Open();
-        ExploreUI.Instance.InitLittleMap(Vector2Int.RoundToInt(_player.transform.position), _mapInfo.Start, _mapInfo.Goal, _mapInfo.MapBound, _mapInfo.MapList);
+        ExploreUI.Instance.InitLittleMap(_mapInfo.DungeonData.Floor, Vector2Int.RoundToInt(_player.transform.position), _mapInfo.Start, _mapInfo.Goal, _mapInfo.MapBound, _mapInfo.MapList);
         SetVisibleRange(true);
         ExploreUI.Instance.RefreshLittleMap(Vector2Int.RoundToInt(_player.transform.position), _exploredList, _wallList);
 
@@ -55,7 +57,7 @@ public class ExploreController
         _player = GameObject.Find("ExploreCharacter").GetComponent<ExploreCharacter>();
         _player.transform.position = _playerPosition;
         ExploreUI.Open();
-        ExploreUI.Instance.InitLittleMap(Vector2Int.RoundToInt(_player.transform.position), _mapInfo.Start, _mapInfo.Goal, _mapInfo.MapBound, _mapInfo.MapList);
+        ExploreUI.Instance.InitLittleMap(_mapInfo.DungeonData.Floor, Vector2Int.RoundToInt(_player.transform.position), _mapInfo.Start, _mapInfo.Goal, _mapInfo.MapBound, _mapInfo.MapList);
         SetVisibleRange(true);
         ExploreUI.Instance.RefreshLittleMap(Vector2Int.RoundToInt(_player.transform.position), _exploredList, _wallList);
         SetInteractive(Vector2Int.RoundToInt(_player.transform.position));
@@ -67,6 +69,11 @@ public class ExploreController
         MapInfo info;
         DungeonBuilder.Instance.Generate(floor, out info);
         Init(info);
+
+        if (floor > ArriveFloor)
+        {
+            ArriveFloor = floor;
+        }
     }
 
     public void PlayerMove(Vector2Int direction)
@@ -82,11 +89,11 @@ public class ExploreController
                 //不要刪
                 if (newPosition == _mapInfo.Start)
                 {
-                    ExploreUI.Instance.OpenStairsGroup(_mapInfo.DungeonData.Floor - 1);
+                    ExploreUI.Instance.OpenStairsGroup(_mapInfo.DungeonData.LastFloor);
                 }
                 else if (newPosition == _mapInfo.Goal)
                 {
-                    ExploreUI.Instance.OpenStairsGroup(_mapInfo.DungeonData.Floor + 1);
+                    ExploreUI.Instance.OpenStairsGroup(_mapInfo.DungeonData.NextFloor);
                 }
 
                 SetVisibleRange(false);
@@ -109,7 +116,7 @@ public class ExploreController
                 Debug.Log(ItemData.GetData(_mapInfo.TreasureDic[position].ItemList[i]).GetName());
             }
             ItemManager.Instance.AddItem(_mapInfo.TreasureDic[position].ItemList, ItemManager.Type.Bag);
-            TilePainter.Instance.Clear(1, position);
+            TilePainter.Instance.Clear(2, position);
             ItemConfirmUI.Open(_mapInfo.TreasureDic[position].ItemList);
             _mapInfo.TreasureDic.Remove(position);
 
@@ -125,7 +132,7 @@ public class ExploreController
         {
             if (ItemManager.Instance.UseKey())
             {
-                TilePainter.Instance.Clear(1, position);
+                TilePainter.Instance.Clear(2, position);
                 _mapInfo.DoorDic.Remove(position);
                 SetVisibleRange(false);
                 ExploreUI.Instance.RefreshLittleMap(Vector2Int.RoundToInt(_player.transform.position), _exploredList, _wallList);
@@ -151,6 +158,7 @@ public class ExploreController
         {
             _fieldEnemyList[i].Stop();
         }
+        ExploreUI.Instance.StopTipLabel();
 
         MySceneManager.Instance.ChangeScene(MySceneManager.SceneType.Villiage, () =>
         {
@@ -201,6 +209,10 @@ public class ExploreController
     public void EnterBattle(int battleGroupId)
     {
         //AudioSystem.Instance.Stop(true);
+        for (int i = 0; i < _fieldEnemyList.Count; i++)
+        {
+            _fieldEnemyList[i].Stop();
+        }
         ExploreUI.Instance.StopTipLabel();
 
         ChangeSceneUI.Instance.StartClock(() =>
@@ -211,13 +223,13 @@ public class ExploreController
             });
         });
 
-        for (int i = 0; i < _fieldEnemyList.Count; i++)
-        {
-            _fieldEnemyList[i].Stop();
-        }
-
         _playerPosition = Vector2Int.RoundToInt(_player.transform.position);
         _player.Stop();
+    }
+
+    public bool IsWall(Vector2Int position)
+    {
+        return !_mapInfo.MapList.Contains(position);
     }
 
     private Vector2Int GetLegalPosition(List<Vector2Int> positionList = null) //取得合法位置(空地)
@@ -257,14 +269,14 @@ public class ExploreController
         if (_mapInfo.KeyList.Contains(position))
         {
             ItemManager.Instance.AddKey();
-            TilePainter.Instance.Clear(1, position);
+            TilePainter.Instance.Clear(2, position);
             _mapInfo.KeyList.Remove(position);
             ExploreUI.Instance.TipLabel.SetLabel("得到了一把鑰匙");
         }
         else if (_mapInfo.MoneyDic.ContainsKey(position))
         {
             ItemManager.Instance.AddMoney(_mapInfo.MoneyDic[position]);
-            TilePainter.Instance.Clear(1, position);
+            TilePainter.Instance.Clear(2, position);
             ExploreUI.Instance.TipLabel.SetLabel("得到 " + _mapInfo.MoneyDic[position] + " $");
             _mapInfo.MoneyDic.Remove(position);
         }
@@ -272,7 +284,7 @@ public class ExploreController
         {
             _player.Stop();
             EventUI.Open(_mapInfo.ExploreEventDic[position], _player.UnlockStop);
-            TilePainter.Instance.Clear(1, position);
+            TilePainter.Instance.Clear(2, position);
             _mapInfo.ExploreEventDic.Remove(position);
         }
     }
@@ -291,7 +303,7 @@ public class ExploreController
         List<Vector2Int> lineList = new List<Vector2Int>();
 
         _exploredList.Add(playerPosition);
-        TilePainter.Instance.Clear(2, playerPosition);
+        TilePainter.Instance.Clear(3, playerPosition);
         _mapInfo.MistList.Remove(playerPosition);
         circleList = Utility.GetCirclePositionList(playerPosition, 5, !isInit);
         for (int i=0; i<circleList.Count; i++)
@@ -321,7 +333,7 @@ public class ExploreController
 
                 if (!_exploredList.Contains(lineList[j]))
                     _exploredList.Add(lineList[j]);
-                TilePainter.Instance.Clear(2, lineList[j]);
+                TilePainter.Instance.Clear(3, lineList[j]);
                 _mapInfo.MistList.Remove(lineList[j]);
             }
         }

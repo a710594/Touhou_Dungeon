@@ -31,7 +31,7 @@ public class DungeonPainter
         List<Vector2Int> doorList = new List<Vector2Int>(info.DoorDic.Keys);
         for(int i=0; i<doorList.Count; i++)
         {
-            TilePainter.Instance.Painting(info.DungeonData.DoorTile, 1, doorList[i]);
+            TilePainter.Instance.Painting(info.DungeonData.DoorTile, 2, doorList[i]);
         }
 
         //grass
@@ -43,25 +43,25 @@ public class DungeonPainter
         //treasure
         foreach (KeyValuePair<Vector2Int, Treasure> item in info.TreasureDic)
         {
-            TilePainter.Instance.Painting(item.Value.TileName, 1, item.Key);
+            TilePainter.Instance.Painting(item.Value.TileName, 2, item.Key);
         }
 
         //key
         for (int i=0; i<info.KeyList.Count; i++)
         {
-            TilePainter.Instance.Painting("Key", 1, info.KeyList[i]);
+            TilePainter.Instance.Painting("Key", 2, info.KeyList[i]);
         }
 
         //money
         foreach (KeyValuePair<Vector2Int, int> item in info.MoneyDic)
         {
-            TilePainter.Instance.Painting("Money", 1, item.Key);
+            TilePainter.Instance.Painting("Money", 2, item.Key);
         }
 
         //explore point
         foreach (KeyValuePair<Vector2Int, int> item in info.ExploreEventDic)
         {
-            TilePainter.Instance.Painting("ExplorePoint", 1, item.Key);
+            TilePainter.Instance.Painting("ExplorePoint", 2, item.Key);
         }
 
         //起點
@@ -79,7 +79,7 @@ public class DungeonPainter
         //Mist
         for (int i = 0; i < info.MistList.Count; i++)
         {
-            TilePainter.Instance.Painting("Mist", 2, info.MistList[i]);
+            TilePainter.Instance.Painting("Mist", 3, info.MistList[i]);
         }
 
         //Vector2Int position;

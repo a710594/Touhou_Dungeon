@@ -83,6 +83,30 @@ public class BattlefieldGenerator
             tempPositionList.Remove(pos);
         }
 
+        //Camera Wall
+        GameObject wall;
+
+        //up
+        wall = ResourceManager.Instance.Spawn("CameraWall", ResourceManager.Type.Other);
+        wall.transform.localScale = new Vector3(width + 2, 1, 1);
+        wall.transform.position = new Vector3(width / 2f - 0.5f, height + 1, 0);
+
+        //down
+        wall = ResourceManager.Instance.Spawn("CameraWall", ResourceManager.Type.Other);
+        wall.transform.localScale = new Vector3(width + 2, 1, 1);
+        wall.transform.position = new Vector3(width / 2f - 0.5f, 0, 0);
+
+        //left
+        wall = ResourceManager.Instance.Spawn("CameraWall", ResourceManager.Type.Other);
+        wall.transform.localScale = new Vector3(1, height + 2, 1);
+        wall.transform.position = new Vector3(-1, height / 2f + 0.5f, 0);
+
+        //right
+        wall = ResourceManager.Instance.Spawn("CameraWall", ResourceManager.Type.Other);
+        wall.transform.localScale = new Vector3(1, height + 2, 1);
+        wall.transform.position = new Vector3(width, height / 2f + 0.5f, 0);
+
+
         BattleFieldManager.Instance.Init(center, mapDic);
     }
 }

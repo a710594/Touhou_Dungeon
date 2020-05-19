@@ -1,18 +1,22 @@
 ﻿using System;
+using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameSystem : MonoBehaviour
 {
     public static Action LanguageChangeHandler;
+
+    public Text TestText;
 
     private static bool _exists;
 
     // Start is called before the first frame update
     private IEnumerator Init()
     {
-        JobData.Load();
+        /*JobData.Load();
         SkillData.Load();
         EnemyData.Load();
         BattleTileData.Load();
@@ -34,15 +38,25 @@ public class GameSystem : MonoBehaviour
 
         TeamManager.Instance.Init();
         ItemManager.Instance.Init();
-        MySceneManager.Instance.Init();
+        MySceneManager.Instance.Init();*/
+
+        CookData.Load();
+
+        string path = Application.streamingAssetsPath + "/Job.json";
+        string jsonString;
+#if UNITY_EDITOR || UNITY_STANDALONE_WIN
+        jsonString = File.ReadAllText(path);
+#elif UNITY_ANDROID
+        UnityEngine.Networking.UnityWebRequest www = UnityEngine.Networking.UnityWebRequest.Get(path);
+        www.SendWebRequest();
+        while (!www.isDone)
+        {
+        }
+        jsonString = www.downloadHandler.text;
+#endif
+        TestText.text = jsonString.Length.ToString();
 
         yield return null;
-
-        //yield return new WaitForEndOfFrame();
-
-        //MapInfo info;
-        //DungeonBuilder.Instance.Generate(1, out info);
-        //ExploreController.Instance.Init(info);
     }
 
     private void Awake()
@@ -63,9 +77,9 @@ public class GameSystem : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.A))
-        {
-            LanguageSystem.Instance.ChangeLanguage(LanguageSystem.Language.English);
-        }
+        //if (Input.GetKeyDown(KeyCode.A))
+        //{
+        //    LanguageSystem.Instance.ChangeLanguage(LanguageSystem.Language.English);
+        //}
     }
 }

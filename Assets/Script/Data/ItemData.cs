@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System.IO;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Newtonsoft.Json;
@@ -52,8 +53,20 @@ public class ItemData
 
     public static void Load()
     {
-        TextAsset textAsset = Resources.Load<TextAsset>("Json/Item");
-        string jsonString = textAsset.text;
+        //TextAsset textAsset = Resources.Load<TextAsset>("Json/Item");
+        //string jsonString = textAsset.text;
+        string path = Application.streamingAssetsPath + "/Item.json";
+        string jsonString;
+#if UNITY_EDITOR || UNITY_STANDALONE_WIN
+        jsonString = File.ReadAllText(path);
+#elif UNITY_ANDROID
+        UnityEngine.Networking.UnityWebRequest www = UnityEngine.Networking.UnityWebRequest.Get(path);
+        www.SendWebRequest();
+        while (!www.isDone)
+        {
+        }
+        jsonString = www.downloadHandler.text;
+#endif
         var dataList = JsonConvert.DeserializeObject<List<RootObject>>(jsonString);
 
         for (int i = 0; i < dataList.Count; i++)

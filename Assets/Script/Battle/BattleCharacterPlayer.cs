@@ -27,16 +27,25 @@ public class BattleCharacterPlayer : BattleCharacter
             id = member.SkillList[i];
             skillData = SkillData.GetData(id);
             skill = SkillFactory.GetNewSkill(skillData);
-            BattleController.Instance.TurnEndHandler += skill.SetCD;
+            if (skillData.CD > 0)
+            {
+                BattleController.Instance.TurnEndHandler += skill.SetCD;
+            }
 
-            if (skill.IsSpellCard)
+            SkillList.Add(skill);
+        }
+
+        for (int i = 0; i < member.SpellCardList.Count; i++)
+        {
+            id = member.SpellCardList[i];
+            skillData = SkillData.GetData(id);
+            skill = SkillFactory.GetNewSkill(skillData);
+            if (skillData.CD > 0)
             {
-                SpellCardList.Add(skill);
+                BattleController.Instance.TurnEndHandler += skill.SetCD;
             }
-            else
-            {
-                SkillList.Add(skill);
-            }
+
+            SpellCardList.Add(skill);
         }
 
         BattleController.Instance.TurnEndHandler += CheckBattleStatus;

@@ -20,17 +20,23 @@ public class TeamSkillGroup : MonoBehaviour
     public Text CommentLabel;
     public LoopScrollView SkillScrollView;
 
-    public void SetData(TeamMember member)
+    public void SetData(TeamMember member, bool isSpellCard)
     {
         Clear();
 
-        List<TeamSkillScrollItem.Data> dataList = new List<TeamSkillScrollItem.Data>();
-        foreach (KeyValuePair<int, int> item in member.Data.SkillUnlockDic)
+        if (!isSpellCard)
         {
-            dataList.Add(new TeamSkillScrollItem.Data(member.Data, SkillData.GetData(item.Key), member.Lv));
+            List<TeamSkillScrollItem.UnlockData> dataList = new List<TeamSkillScrollItem.UnlockData>();
+            foreach (KeyValuePair<int, int> item in member.Data.SkillUnlockDic)
+            {
+                dataList.Add(new TeamSkillScrollItem.UnlockData(member.Data, SkillData.GetData(item.Key), member.Lv));
+            }
+            SkillScrollView.SetData(new ArrayList(dataList));
         }
-
-        SkillScrollView.SetData(new ArrayList(dataList));
+        else
+        {
+            SkillScrollView.SetData(new ArrayList(member.Data.SpellCardList));
+        }
         SkillScrollView.AddClickHandler(SkillOnClick);
     }
 

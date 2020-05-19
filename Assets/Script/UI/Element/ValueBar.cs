@@ -14,7 +14,7 @@ public class ValueBar : MonoBehaviour
 
     private bool _isTweening = false;
     private int _maxHP;
-    private Timer _timer = new Timer();
+    private Tweener _tweener;
 
     public void SetValue(int current, int max)
     {
@@ -26,12 +26,14 @@ public class ValueBar : MonoBehaviour
     {
         _isTweening = true;
         _maxHP = max;
-        _bar.DOFillAmount((float)current / (float)max, 0.5f).OnComplete(()=> 
+        _tweener = _bar.DOFillAmount((float)current / (float)max, 0.5f).OnComplete(()=> 
         {
-            _timer.Start(0.5f, callback);
-            //_isTweening = false;
+            if (callback != null)
+            {
+                callback();
+            }
         });
-
+        _tweener.SetUpdate(true);
     }
 
     public void SetValueTween(int from, int to, int max, Action callback)
@@ -39,12 +41,14 @@ public class ValueBar : MonoBehaviour
         _isTweening = true;
         _maxHP = max;
         _bar.fillAmount = (float)from / (float)max;
-        _bar.DOFillAmount((float)to / (float)max, 0.5f).OnComplete(() =>
+        _tweener = _bar.DOFillAmount((float)to / (float)max, 0.5f).OnComplete(() =>
         {
-            _timer.Start(0.5f, callback);
-           //_isTweening = false;
+            if (callback != null)
+            {
+                callback();
+            }
         });
-
+        _tweener.SetUpdate(true);
     }
 
     protected virtual void UpdateData() 
@@ -58,10 +62,5 @@ public class ValueBar : MonoBehaviour
     void Update()
     {
         UpdateData();
-    }
-
-    private void OnDestroy()
-    {
-        _timer.Stop();
     }
 }

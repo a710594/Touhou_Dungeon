@@ -17,6 +17,15 @@ public class TeamManager
         }
     }
 
+    public int Power
+    {
+        get
+        {
+            return _power;
+        }
+    }
+    private int _power;
+
     public List<TeamMember> MemberList = new List<TeamMember>();
     public Dictionary<TeamMember, Vector2Int> MemberPositionDic = new Dictionary<TeamMember, Vector2Int>(); //隊形
 
@@ -42,8 +51,10 @@ public class TeamManager
         MemberList[2].SetEquip(41002);
     }
 
-    public void Refresh(List<BattleCharacterPlayer> list)
+    public void Refresh(int power, List<BattleCharacterPlayer> list)
     {
+        _power = power;
+
         for (int i = 0; i < list.Count; i++)
         {
             MemberList[i].Refresh(list[i]);

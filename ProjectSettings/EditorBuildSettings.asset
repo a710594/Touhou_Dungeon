@@ -6,12 +6,12 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/Scenes/Villiage.unity
+    guid: 15c102788e45e804c89b1298c14fb47b
+  - enabled: 1
     path: Assets/Scenes/Explore.unity
     guid: 2086f9b53a2098e47aa480522c68cf1f
   - enabled: 1
     path: Assets/Scenes/Battle.unity
     guid: 0462b0ec4aa555e4ea9c93809c5d7a42
-  - enabled: 1
-    path: Assets/Scenes/Villiage.unity
-    guid: 15c102788e45e804c89b1298c14fb47b
   m_configObjects: {}
