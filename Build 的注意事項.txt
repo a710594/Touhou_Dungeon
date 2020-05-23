@@ -1,0 +1,9 @@
+json 檔的編碼是 UTF-8 不能有 BOM 檔首
+player setting 的 Api compatibility Level: .NET 4.x
+
+PC:
+勾選 Development Build 後執行檔案可看 log
+
+Android:
+Window > Analysis > Android Logcat
+手機開啟開發人員模式,接上手機後可看 log

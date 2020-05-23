@@ -585,7 +585,7 @@ public class BattleController : MachineBehaviour
             base.Enter();
 
             BattleUI.Instance.SetInfo(false);
-            if (parent.SelectedCharacter is BattleCharacterAI && ((BattleCharacterAI)parent.SelectedCharacter).Target == null)
+            if (parent.SelectedCharacter is BattleCharacterAI && !((BattleCharacterAI)parent.SelectedCharacter).HasTarget)
             {
                 parent.ChangeState<SelectCharacterState>();
             }

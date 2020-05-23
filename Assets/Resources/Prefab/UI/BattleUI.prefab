@@ -331,6 +331,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Image: {fileID: 4626802062316199641}
   LvLabel: {fileID: 6352934846820970757}
+  NameLabel: {fileID: 1591222079666891030}
   ExpBar: {fileID: 4529670479956599714}
 --- !u!222 &9200465653984143364
 CanvasRenderer:
@@ -2842,6 +2843,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Image: {fileID: 424262270258730142}
   LvLabel: {fileID: 4404430647416338352}
+  NameLabel: {fileID: 1195340563430974869}
   ExpBar: {fileID: 807676030608105172}
 --- !u!222 &3407288576547290763
 CanvasRenderer:
@@ -5182,6 +5184,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Image: {fileID: 6884597280380213155}
   LvLabel: {fileID: 3840930127909721216}
+  NameLabel: {fileID: 5168960369474557572}
   ExpBar: {fileID: 2198376488798270343}
 --- !u!222 &6800776351465457478
 CanvasRenderer:
@@ -6698,6 +6701,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Image: {fileID: 3816115366375860480}
   LvLabel: {fileID: 4063701349353466766}
+  NameLabel: {fileID: 2874288549595307292}
   ExpBar: {fileID: 841878907319885541}
 --- !u!222 &7038094539108941457
 CanvasRenderer:
@@ -6791,6 +6795,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Image: {fileID: 7239616957715309917}
   LvLabel: {fileID: 1483187436256507954}
+  NameLabel: {fileID: 222859120977204769}
   ExpBar: {fileID: 5466032124082447362}
 --- !u!222 &3054328364755035887
 CanvasRenderer:
