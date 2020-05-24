@@ -41,54 +41,113 @@ public class AI : MonoBehaviour
 
             Vector2Int position = new Vector2Int();
             List<Vector2Int> detectRangeList = _character.GetDetectRange();
-            _character.Target = GetTarget(BattleCharacter.CampEnum.Partner/*, detectRangeList*/);
+            BattleCharacter target = GetTarget(BattleCharacter.CampEnum.Partner/*, detectRangeList*/);
 
-            if (_character.Target != null)
+            if (target != null)
             {
-                _character.SetTarget(Vector2Int.RoundToInt(_character.Target.transform.position));
+                Debug.Log(target.Info.Name);
 
-                if (detectRangeList.Contains(Vector2Int.RoundToInt(_character.Target.transform.position))) //可以打到目標
+                _character.SetTarget(Vector2Int.RoundToInt(target.transform.position));
+                if (_character.InSkillDistance())
                 {
-                    if (!_character.InSkillDistance())//目標不再在程內就需要移動
-                    {
-                        Queue<Vector2Int> path = _character.GetPath(_character.TargetPosition);
-
-                        while (path.Count > 0 && !_character.InSkillDistance())
-                        {
-                            position = path.Dequeue();
-                            if (!_character.InMoveRange(position))
-                            {
-                                break;
-                            }
-                            _character.Move(position);
-                            yield return new WaitForSeconds(0.2f);
-                        }
-                        _character.MoveDone();
-                    }
+                    _character.HasTarget = true;
                     _character.GetSkillRange();
                 }
                 else
                 {
-                    Queue<Vector2Int> path = _character.GetPath(_character.TargetPosition);
-                    while (path.Count > 0)
+                    List<Vector2Int> positionList = Utility.GetRhombusPositionList(_character.SelectedSkill.Data.Distance, _character.TargetPosition, false); //技能可打中目標的位置
+                    for (int i = 0; i < positionList.Count; i++)
                     {
-                        position = path.Dequeue();
-                        if (!_character.InMoveRange(position))
+                        if (!_character.InMoveRange(positionList[i])) //移除無法走到的位置
                         {
-                            break;
+                            positionList.RemoveAt(i);
+                            i--;
                         }
-                        _character.Move(position);
-                        yield return new WaitForSeconds(0.2f);
+                        else if (BattleController.Instance.GetCharacterByPosition(positionList[i]) != null) //移除有角色的位置
+                        {
+                            positionList.RemoveAt(i);
+                            i--;
+                        }
                     }
-                    _character.MoveDone();
-                    _character.ActionDoneCompletely();
-                    _character.Target = null;
+
+                    if (positionList.Count > 0)
+                    {
+                        _character.HasTarget = true;
+                        //if (!_character.InSkillDistance())//目標不再在程內就需要移動
+                        //{
+                        //尋找最短路徑
+                        Queue<Vector2Int> path = _character.GetPath(positionList[0]);
+                        Queue<Vector2Int> shortestPath = path;
+                        for (int i = 1; i < positionList.Count; i++)
+                        {
+                            path = _character.GetPath(positionList[i]);
+                            if (path.Count < shortestPath.Count)
+                            {
+                                shortestPath = path;
+                            }
+                        }
+
+                        while (shortestPath.Count > 0)
+                        {
+                            position = shortestPath.Dequeue();
+                            //if (!_character.InMoveRange(position))
+                            //{
+                            //    break;
+                            //}
+                            _character.Move(position);
+                            yield return new WaitForSeconds(0.2f);
+                        }
+                        _character.MoveDone();
+                        //}
+                        _character.GetSkillRange();
+                    }
+                    else
+                    {
+                        _character.HasTarget = false;
+                        /*positionList = _character.GetMoveRange(); //可能移動的位置
+                        for (int i = 0; i < positionList.Count; i++) //移除有角色的位置
+                        {
+                            if (BattleController.Instance.GetCharacterByPosition(positionList[i]) != null)
+                            {
+                                positionList.RemoveAt(i);
+                                i--;
+                            }
+                        }
+
+                        //尋找離玩家最近的點
+                        Vector2Int closestPosition = positionList[0];
+                        for (int i = 1; i < positionList.Count; i++)
+                        {
+                            if (Utility.GetDistance(positionList[i], _character.TargetPosition) < Utility.GetDistance(closestPosition, _character.TargetPosition))
+                            {
+                                closestPosition = positionList[i];
+                            }
+                        }
+                        Queue<Vector2Int> path = _character.GetPath(closestPosition);
+
+                        while (path.Count > 0)
+                        {
+                            position = path.Dequeue();
+                            //if (!_character.InMoveRange(position))
+                            //{
+                            //    break;
+                            //}
+                            _character.Move(position);
+                            yield return new WaitForSeconds(0.2f);
+                        }*/
+                        _character.MoveDone();
+                        _character.ActionDoneCompletely();
+                    }
                 }
+            }
+            else
+            {
+                _character.HasTarget = false;
             }
         }
         else
         {
-            _character.Target = null;
+            _character.HasTarget = false;
         }
 
         _character.EndAI();

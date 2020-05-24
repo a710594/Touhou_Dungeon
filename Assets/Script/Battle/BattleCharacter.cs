@@ -81,7 +81,7 @@ public class BattleCharacter : MonoBehaviour
     //    _originalPosition = transform.position;
     //}
 
-    public void GetMoveRange()
+    public List<Vector2Int> GetMoveRange()
     {
         _moveRangeList.Clear();
 
@@ -95,6 +95,7 @@ public class BattleCharacter : MonoBehaviour
                 _moveRangeList.Add(positionList[i]);
             }
         }
+        return _moveRangeList;
     }
 
     public void ShowMoveRange()

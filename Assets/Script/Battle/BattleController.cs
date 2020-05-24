@@ -561,6 +561,7 @@ public class BattleController : MachineBehaviour
             base.Enter();
 
             BattleUI.Instance.SetInfo(true, parent.SelectedCharacter);
+            parent.SelectedCharacter.SetPosition(parent.SelectedCharacter.transform.position); //這一行是為了方便 debug,有時我會在 run time 的時候移動編輯器上的角色
             ((BattleCharacterAI)parent.SelectedCharacter).StartAI(() =>
             {
                 parent.ChangeState<ShowState>();
@@ -590,7 +591,7 @@ public class BattleController : MachineBehaviour
             base.Enter();
 
             BattleUI.Instance.SetInfo(false);
-            if (parent.SelectedCharacter is BattleCharacterAI && ((BattleCharacterAI)parent.SelectedCharacter).Target == null)
+            if (parent.SelectedCharacter is BattleCharacterAI && !((BattleCharacterAI)parent.SelectedCharacter).HasTarget)
             {
                 parent.ChangeState<SelectCharacterState>();
             }

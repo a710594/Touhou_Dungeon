@@ -7,7 +7,7 @@ using DG.Tweening;
 public class BattleCharacterAI : BattleCharacter
 {
     public AI AI;
-    public BattleCharacter Target;
+    public bool HasTarget = false;
 
     private Action _endAICallback;
     private List<Vector2Int> _detectRangeList = new List<Vector2Int>();

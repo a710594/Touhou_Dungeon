@@ -421,6 +421,7 @@ public class ItemManager
             AddWarehouseItem(item.Key, item.Value);
         }
 
+        CurrentBagVolume = 0;
         _bagTypeDic.Clear();
         _bagEquipDic.Clear();
 
