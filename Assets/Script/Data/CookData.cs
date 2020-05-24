@@ -42,9 +42,6 @@ public class CookData
         jsonString = www.downloadHandler.text;
 #endif
         var dataList = JsonConvert.DeserializeObject<List<RootObject>>(jsonString);
-        StreamWriter writer = new StreamWriter("MyPath.txt", true);
-        writer.Write(jsonString);
-        writer.Close();
 
         for (int i = 0; i < dataList.Count; i++)
         {

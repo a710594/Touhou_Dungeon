@@ -52,7 +52,7 @@ public class GameSystem : MonoBehaviour
         }
         jsonString = www.downloadHandler.text;
 #endif
-        TestText.text = jsonString.Length.ToString();
+        TestText.text = jsonString;
 
         yield return null;
     }
