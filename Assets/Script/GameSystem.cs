@@ -16,7 +16,7 @@ public class GameSystem : MonoBehaviour
     // Start is called before the first frame update
     private IEnumerator Init()
     {
-        /*JobData.Load();
+        JobData.Load();
         SkillData.Load();
         EnemyData.Load();
         BattleTileData.Load();
@@ -38,9 +38,7 @@ public class GameSystem : MonoBehaviour
 
         TeamManager.Instance.Init();
         ItemManager.Instance.Init();
-        MySceneManager.Instance.Init();*/
-
-        CookData.Load();
+        MySceneManager.Instance.Init();
 
         string path = Application.streamingAssetsPath + "/Job.json";
         string jsonString;

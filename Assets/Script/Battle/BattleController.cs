@@ -39,8 +39,8 @@ public class BattleController : MachineBehaviour
 
     public void Init(int battlefieldId, int battleGroupId)
     {
-        BattlefieldGenerator.Instance.Generate(battlefieldId);
         BattleGroupData.RootObject battleGroupData = BattleGroupData.GetData(battleGroupId);
+        BattlefieldGenerator.Instance.Generate(battlefieldId, battleGroupData.EnemyList.Count);
 
         _turn = 1;
         _power =  TeamManager.Instance.Power;
@@ -56,7 +56,7 @@ public class BattleController : MachineBehaviour
             characterPlayer.Init(member);
             CharacterList.Add(characterPlayer);
             _playerList.Add(characterPlayer);
-            characterPlayer.transform.position = (Vector2)(TeamManager.Instance.MemberPositionDic[member] + BattleFieldManager.Instance.Center);
+            characterPlayer.SetPosition((Vector2)(TeamManager.Instance.MemberPositionDic[member] + BattleFieldManager.Instance.Center));
         }
 
         _enemyList.Clear();
@@ -68,8 +68,8 @@ public class BattleController : MachineBehaviour
             characterAI = ResourceManager.Instance.Spawn("BattleCharacter/BattleCharacterAI", ResourceManager.Type.Other).GetComponent<BattleCharacterAI>();
             characterAI.Init(enemyList[i].Key, enemyList[i].Value);
             CharacterList.Add(characterAI);
-            //AICharacterList.Add(characterAI);
-            characterAI.transform.position = BattleFieldManager.Instance.GetRandomPosition(false);
+            //characterAI.SetPosition(BattleFieldManager.Instance.GetRandomPosition());
+            characterAI.SetPosition(BattleFieldManager.Instance.EnemyPositionList[i]);
         }
 
         Camera.main.transform.position = new Vector3(BattleFieldManager.Instance.Center.x, BattleFieldManager.Instance.Center.y, Camera.main.transform.position.z);
@@ -132,7 +132,7 @@ public class BattleController : MachineBehaviour
         TilePainter.Instance.Clear(2);
         TilePainter.Instance.Clear(3);
         SelectedCharacter.MoveDone();
-        SelectedCharacter.InitOrignalPosition();
+        //SelectedCharacter.InitOrignalPosition();
         if (SelectedCharacter.Info.ActionCount > 0)
         {
             ChangeState<SelectActionState>();
@@ -162,6 +162,11 @@ public class BattleController : MachineBehaviour
     {
         SelectedCharacter.ActionDoneCompletely();
         ChangeState<SelectCharacterState>();
+    }
+
+    public void MoveUndo() //返回上一步的位置
+    {
+        SelectedCharacter.MoveUndo();
     }
 
     public void AddPower(int value) 
@@ -268,7 +273,7 @@ public class BattleController : MachineBehaviour
                 {
                     parent._actionQueue.Add(parent.CharacterList[i]);
                     parent.CharacterList[i].InitActionCount();
-                    parent.CharacterList[i].InitOrignalPosition();
+                    //parent.CharacterList[i].InitOrignalPosition();
                 }
             }
             parent.ChangeState<SelectCharacterState>();

@@ -288,7 +288,7 @@ public class BagUI : MonoBehaviour
             }
             if (itemEffectData.HasBuff)
             {
-                member.SetFoodBuff(itemEffectData.ID);
+                member.SetFoodBuff(itemEffectData);
             }
             else
             {

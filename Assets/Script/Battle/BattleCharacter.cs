@@ -46,6 +46,7 @@ public class BattleCharacter : MonoBehaviour
     public List<Skill> SpellCardList = new List<Skill>();
 
     protected Vector2 _originalPosition = new Vector2();
+    protected Vector2 _lastPosition = new Vector2(); //上一步的位置
     protected Vector2Int _lookAt = Vector2Int.left;
     protected Queue<Vector2Int> _path;
     protected List<Vector2Int> _moveRangeList = new List<Vector2Int>();
@@ -74,10 +75,11 @@ public class BattleCharacter : MonoBehaviour
         }
     }
 
-    public void InitOrignalPosition()
-    {
-        _originalPosition = transform.position;
-    }
+    //public void InitOrignalPosition()
+    //{
+    //    _lastPosition = _originalPosition;
+    //    _originalPosition = transform.position;
+    //}
 
     public void GetMoveRange()
     {
@@ -130,14 +132,43 @@ public class BattleCharacter : MonoBehaviour
         Info.InitActionCount();
     }
 
+    public void SetPosition(Vector2 position)
+    {
+        transform.position = position;
+        _originalPosition = position;
+        Info.SetPosition(position);
+    }
+
     public void MoveDone()
     {
+        _lastPosition = _originalPosition;
+        _originalPosition = transform.position;
         Info.MoveDone();
+        Info.SetPosition(transform.position);
     }
 
     public void SkillDone()
     {
         Info.SkillDone();
+    }
+
+    public bool CanUndoMove()
+    {
+        if (Info.ActionCount < 2 && !Info.HasUseSkill)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public void MoveUndo()
+    {
+        transform.position = _lastPosition;
+        _originalPosition = _lastPosition;
+        Info.MoveUndo();
     }
 
     public void ActionDoneCompletely()

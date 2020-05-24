@@ -17,7 +17,7 @@ public class BattleCharacterAI : BattleCharacter
         EnemyData.RootObject data = EnemyData.GetData(id);
 
         Info.Init(id, lv);
-        Info.SetPosition(transform.position);
+        _originalPosition = transform.position;
         Sprite.sprite = Resources.Load<Sprite>("Image/Character/Small/" + data.Image);
         gameObject.AddComponent(Type.GetType(data.AI));
         AI = GetComponent(Type.GetType(data.AI)) as AI;
@@ -44,7 +44,7 @@ public class BattleCharacterAI : BattleCharacter
 
     public List<Vector2Int> GetDetectRange() //偵查範圍:移動後可用技能擊中目標的範圍
     {
-        InitOrignalPosition();
+        //InitOrignalPosition();
         GetMoveRange();
         _detectRangeList = new List<Vector2Int>(_moveRangeList);
 

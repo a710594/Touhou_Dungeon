@@ -13,6 +13,7 @@ public class BattleUI : MonoBehaviour
     public Button SkillActionButton;
     public Button SpellCardActionButton;
     public Button ItemActionButton;
+    public Button UndoButton;
     public Button IdleButton;
     public Button MoveConfirmButton;
     public Button ReturnActionButton; //返回選擇行動
@@ -84,6 +85,7 @@ public class BattleUI : MonoBehaviour
             SkillActionButton.interactable = !BattleController.Instance.SelectedCharacter.Info.HasUseSkill;
             SpellCardActionButton.interactable = !BattleController.Instance.SelectedCharacter.Info.HasUseSkill;
             ItemActionButton.interactable = !BattleController.Instance.SelectedCharacter.Info.HasUseSkill;
+            UndoButton.interactable = BattleController.Instance.SelectedCharacter.CanUndoMove();
         }
     }
 
@@ -283,6 +285,11 @@ public class BattleUI : MonoBehaviour
         SetItem();
     }
 
+    private void UndoOnClick()
+    {
+        BattleController.Instance.MoveUndo();
+    }
+
     private void IdleOnClick()
     {
         BattleController.Instance.SetIdle();
@@ -356,6 +363,7 @@ public class BattleUI : MonoBehaviour
         SkillActionButton.onClick.AddListener(SkillActionOnClick);
         SpellCardActionButton.onClick.AddListener(SpellCardActionOnClick);
         ItemActionButton.onClick.AddListener(ItemActionOnClick);
+        UndoButton.onClick.AddListener(UndoOnClick);
         IdleButton.onClick.AddListener(IdleOnClick);
         MoveConfirmButton.onClick.AddListener(MoveConfirmOnClick);
         ReturnActionButton.onClick.AddListener(ReturnActionOnClick);

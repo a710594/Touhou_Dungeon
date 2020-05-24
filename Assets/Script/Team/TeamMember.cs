@@ -103,7 +103,7 @@ public class TeamMember
     //public Equip Helmet = new Equip(EquipData.TypeEnum.Helmet);
     public Equip Armor = new Equip(EquipData.TypeEnum.Armor);
     //public Equip Jewelry = new Equip(EquipData.TypeEnum.Jewelry);
-    public bool HasFoodBuff = false;
+    //public bool HasFoodBuff = false;
     public FoodBuff FoodBuff = new FoodBuff(); //食物的效果一次只會有一個,戰鬥結束後就會消失
     public List<int> SkillList = new List<int>();
     public List<int> SpellCardList = new List<int>();
@@ -200,16 +200,14 @@ public class TeamMember
         ItemManager.Instance.AddItem(equip, 1, type);
     }
 
-    public void SetFoodBuff(int id)
+    public void SetFoodBuff(ItemEffectData.RootObject data)
     {
-        FoodBuff = new FoodBuff(id);
-        HasFoodBuff = true;
+        FoodBuff = new FoodBuff(data);
     }
 
     public void ClearFoodBuff()
     {
         FoodBuff.Clear();
-        HasFoodBuff = false;
     }
 
     public bool IsUnlockSkill(int skillId)

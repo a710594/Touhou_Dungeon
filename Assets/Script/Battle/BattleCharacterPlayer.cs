@@ -9,7 +9,7 @@ public class BattleCharacterPlayer : BattleCharacter
     public void Init(TeamMember member)
     {
         Info.Init(member);
-        Info.SetPosition(transform.position);
+        _originalPosition = transform.position;
         MediumImage = member.Data.MediumImage;
         LargeImage = member.Data.LargeImage;
 
@@ -84,7 +84,6 @@ public class BattleCharacterPlayer : BattleCharacter
             else
             {
                 Animator.SetBool("IsMoving", false);
-                Info.SetPosition(transform.position);
             }
         });
     }

@@ -1,4 +1,5 @@
-[{"ID":2001,"Name":"蘋果","AddHP":5,"AddMP":0,"HasBuff":0,"ATK":0,"DEF":0,"MTK":0,"MEF":0,"AGI":0,"SEN":0,"BuffComment":null},
-{"ID":2002,"Name":"香菇肉","AddHP":10,"AddMP":0,"HasBuff":0,"ATK":0,"DEF":0,"MTK":0,"MEF":0,"AGI":0,"SEN":0,"BuffComment":null},
-{"ID":2003,"Name":"烤香菇串","AddHP":10,"AddMP":10,"HasBuff":0,"ATK":0,"DEF":0,"MTK":0,"MEF":0,"AGI":0,"SEN":0,"BuffComment":null},
-{"ID":3001,"Name":"補血藥","AddHP":10,"AddMP":0,"HasBuff":0,"ATK":0,"DEF":0,"MTK":0,"MEF":0,"AGI":0,"SEN":0,"BuffComment":null}]
+[{"ID":2001,"Name":"蘋果","AddHP":5,"AddMP":0,"HasBuff":0,"ATK":0,"DEF":0,"MTK":0,"MEF":0,"AGI":0,"SEN":0,"BuffComment":""},
+{"ID":2002,"Name":"香菇肉","AddHP":5,"AddMP":0,"HasBuff":0,"ATK":0,"DEF":0,"MTK":0,"MEF":0,"AGI":0,"SEN":0,"BuffComment":""},
+{"ID":2003,"Name":"烤香菇串","AddHP":20,"AddMP":20,"HasBuff":0,"ATK":0,"DEF":0,"MTK":0,"MEF":0,"AGI":0,"SEN":0,"BuffComment":""},
+{"ID":2004,"Name":"考香菇野菜串","AddHP":30,"AddMP":30,"HasBuff":1,"ATK":150,"DEF":100,"MTK":150,"MEF":100,"AGI":100,"SEN":100,"BuffComment":"攻擊力+50%，魔法攻擊力+50%"},
+{"ID":3001,"Name":"補血藥","AddHP":10,"AddMP":0,"HasBuff":0,"ATK":0,"DEF":0,"MTK":0,"MEF":0,"AGI":0,"SEN":0,"BuffComment":""}]

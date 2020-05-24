@@ -35,7 +35,7 @@ public class IconCard : MonoBehaviour {
     private void Init(ItemData.RootObject data)
     {
         Icon.gameObject.SetActive(true);
-        Icon.overrideSprite = Resources.Load<Sprite>("Image/" + data.Icon);
+        Icon.overrideSprite = Resources.Load<Sprite>("Image/Item/" + data.Icon);
         AmountLabel.gameObject.SetActive(false);
         ID = data.ID;
         Amount = 0;
@@ -50,7 +50,7 @@ public class IconCard : MonoBehaviour {
         else
         {
             Icon.gameObject.SetActive(true);
-            Icon.overrideSprite = Resources.Load<Sprite>("Image/" + data.Icon);
+            Icon.overrideSprite = Resources.Load<Sprite>("Image/Item/" + data.Icon);
             AmountLabel.gameObject.SetActive(true);
             AmountLabel.text = amount.ToString();
             ID = data.ID;
@@ -71,7 +71,7 @@ public class IconCard : MonoBehaviour {
     private void Init(ItemData.RootObject data, int have, int need)
     {
         Icon.gameObject.SetActive(true);
-        Icon.overrideSprite = Resources.Load<Sprite>("Image/" + data.Icon);
+        Icon.overrideSprite = Resources.Load<Sprite>("Image/Item/" + data.Icon);
         AmountLabel.gameObject.SetActive(true);
         AmountLabel.text = have.ToString() + "/" + need.ToString();
         ID = data.ID;

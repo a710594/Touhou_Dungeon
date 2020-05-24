@@ -7,6 +7,7 @@ public class CharacterLvCard : MonoBehaviour
 {
     public Image Image;
     public Text LvLabel;
+    public Text NameLabel;
     public ValueBar ExpBar;
 
     private int _currentLv;
@@ -17,6 +18,7 @@ public class CharacterLvCard : MonoBehaviour
         _currentLv = member.Lv;
         _currentExp = member.Exp;
 
+        NameLabel.text = member.Data.GetName();
         Image.overrideSprite = Resources.Load<Sprite>("Image/Character/Small/" + member.Data.SmallImage);
         SetExpBar(originalLv, originalExp);
     }

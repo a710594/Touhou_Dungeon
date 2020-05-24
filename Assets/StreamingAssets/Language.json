@@ -7,4 +7,5 @@
 {"ID":7,"Chinese":"待機","English":"Idle"},
 {"ID":8,"Chinese":"返回","English":"Back"},
 {"ID":9,"Chinese":"移動消耗","English":"Move Cost"},
-{"ID":10,"Chinese":"行動次數","English":"Action Count"}]
+{"ID":10,"Chinese":"行動次數","English":"Action Count"},
+{"ID":11,"Chinese":"上一步","English":"Undo"}]

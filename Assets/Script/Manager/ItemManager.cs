@@ -52,7 +52,7 @@ public class ItemManager
         }
 
         //temp
-        //AddBagItem(0, 1);
+        AddBagItem(2004, 5);
         Money = 0;
 
         //Money = 0;

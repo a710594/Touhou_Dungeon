@@ -80,6 +80,7 @@ public class AI : MonoBehaviour
                         _character.Move(position);
                         yield return new WaitForSeconds(0.2f);
                     }
+                    _character.MoveDone();
                     _character.ActionDoneCompletely();
                     _character.Target = null;
                 }

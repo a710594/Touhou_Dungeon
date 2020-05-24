@@ -19,11 +19,13 @@ public class BattleFieldManager
 
     public Vector2Int Center;
     public BoundsInt MapBound;
+    public List<Vector2Int> EnemyPositionList = new List<Vector2Int>();
     public Dictionary<Vector2Int, BattleField> MapDic = new Dictionary<Vector2Int, BattleField>();
 
-    public void Init(Vector2Int center, Dictionary<Vector2Int, BattleField> mapDic)
+    public void Init(Vector2Int center, List<Vector2Int> enemyPositionList, Dictionary<Vector2Int, BattleField> mapDic)
     {
         Center = center;
+        EnemyPositionList = enemyPositionList;
         MapDic = mapDic;
         MapBound = Utility.GetMapBounds(new List<Vector2Int>(MapDic.Keys));
     }
@@ -93,31 +95,25 @@ public class BattleFieldManager
         return newList;
     }
 
-    public Vector2 GetRandomPosition(bool isPlayer) //隨機取得空格
+    public Vector2 GetRandomPosition() //隨機取得空格
     {
-        Vector3Int position = MapBound.position;
-        Vector3Int size = MapBound.size;
-        Vector2 randomPosition = new Vector2();
+        Vector2Int position = new Vector2Int();
+        List<Vector2Int> positionList = new List<Vector2Int>(MapDic.Keys);
 
-        if (isPlayer)
+        while (positionList.Count > 0)
         {
-            randomPosition.x = Utility.NormalDistributionRandom(position.x, position.x + size.x);
-            randomPosition.y = Utility.NormalDistributionRandom(position.y, position.y + size.y);
-        }
-        else
-        {
-            randomPosition.x = UnityEngine.Random.Range(position.x, position.x + size.x);
-            randomPosition.y = UnityEngine.Random.Range(position.y, position.y + size.y);
-        }
+            position = positionList[Random.Range(0, positionList.Count)];
 
-        if (BattleController.Instance.GetCharacterByPosition(randomPosition) == null && MapDic[Vector2Int.RoundToInt(randomPosition)].MoveCost != -1)
-        {
-            return randomPosition;
+            if (BattleController.Instance.GetCharacterByPosition(position) == null && MapDic[Vector2Int.RoundToInt(position)].MoveCost != -1)
+            {
+                return position;
+            }
+            else
+            {
+                positionList.Remove(position);
+            }
         }
-        else
-        {
-            return GetRandomPosition(isPlayer);
-        }
+        return Vector2.zero;
     }
 
     public BattleField GetField(Vector2 position) 

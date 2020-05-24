@@ -159,6 +159,7 @@ public class BattleCharacterInfo
     public bool HasUseSkill = false;
     public int Lv;
     public string Name;
+    public FoodBuff FoodBuff = null;
 
     public Dictionary<int, BattleStatus> StatusDic = new Dictionary<int, BattleStatus>();
 
@@ -186,6 +187,10 @@ public class BattleCharacterInfo
         EquipDEF = member.Armor.DEF;
         EquipMTK = member.Weapon.MTK;
         EquipMEF = member.Armor.MEF;
+        if (!member.FoodBuff.IsEmpty)
+        {
+            FoodBuff = member.FoodBuff;
+        }
     }
 
     public virtual void Init(int id, int lv) //for enemy
@@ -255,6 +260,11 @@ public class BattleCharacterInfo
     public void MoveDone()
     {
         _actionCount--;
+    }
+
+    public void MoveUndo()
+    {
+        _actionCount++;
     }
 
     public void SkillDone()

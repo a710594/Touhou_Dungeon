@@ -17,7 +17,7 @@ public class BattlefieldGenerator
         }
     }
 
-    public void Generate(int id)
+    public void Generate(int id, int enemyAmount)
     {
         Vector2Int center;
         List<Vector2Int> reservedLits = new List<Vector2Int>(); //地圖中間的九宮格是保留區,不生成特殊地形
@@ -54,14 +54,35 @@ public class BattlefieldGenerator
             }
         }
 
-        //牆壁
-        tileData = BattleTileData.GetData(battlefieldData.BlockID);
+        //敵人的位置
         List<Vector2Int> tempPositionList = new List<Vector2Int>(mapDic.Keys);
-
-        for (int i=0; i<reservedLits.Count; i++)
+        List<Vector2Int> enemyPositionList = new List<Vector2Int>();
+        for (int i = 0; i < reservedLits.Count; i++)
         {
             tempPositionList.Remove(reservedLits[i]);
         }
+
+        pos = tempPositionList[Random.Range(0, tempPositionList.Count)];
+        enemyPositionList.Add(pos); //第一個敵人的位置
+        Debug.Log("1:" + pos);
+        tempPositionList.Remove(pos);
+        for (int i=1; i<enemyAmount; i++) //其他敵人的位置與第一個敵人的位置相近
+        {
+            pos = new Vector2Int(pos.x + Random.Range(-enemyAmount, enemyAmount + 1), pos.y + Random.Range(-enemyAmount, enemyAmount + 1));
+            if (tempPositionList.Contains(pos))
+            {
+                enemyPositionList.Add(pos);
+                Debug.Log(i + ":" + pos);
+            }
+            else
+            {
+                i--;
+            }
+            tempPositionList.Remove(pos);
+        }
+
+        //牆壁
+        tileData = BattleTileData.GetData(battlefieldData.BlockID);
 
         int blockCount = Random.Range(battlefieldData.MinBlockCount, battlefieldData.MaxBlockCount);
         for (int i = 0; i < blockCount; i++)
@@ -107,6 +128,6 @@ public class BattlefieldGenerator
         wall.transform.position = new Vector3(width, height / 2f + 0.5f, 0);
 
 
-        BattleFieldManager.Instance.Init(center, mapDic);
+        BattleFieldManager.Instance.Init(center, enemyPositionList, mapDic);
     }
 }

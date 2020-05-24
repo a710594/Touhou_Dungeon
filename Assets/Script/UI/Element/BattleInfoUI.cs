@@ -11,13 +11,15 @@ public class BattleInfoUI : MonoBehaviour
     public Text LvLabel;
     public ValueBar HpBar;
     public ValueBar MpBar;
+    public Button FoodBuffButton;
     public Button BattleStatusButton;
+    public FoodBuffGroup FoodBuffGroup;
     public BattleStatusUI BattleStatusUI;
+    public Image FoodBuffIcon;
     public Image[] BattleStatusIcon;
 
-    private bool _isScrollViewShow = false;
-    private bool _isClickable = true;
-    List<BattleStatus> _statusList = new List<BattleStatus>();
+    private FoodBuff _foodBuff;
+    private List<BattleStatus> _statusList = new List<BattleStatus>();
 
     public void SetData(BattleCharacter character)
     {
@@ -25,7 +27,17 @@ public class BattleInfoUI : MonoBehaviour
         LvLabel.text = "Lv." + character.Info.Lv.ToString();
         HpBar.SetValue(character.Info.CurrentHP, character.Info.MaxHP);
 
+        _foodBuff = character.Info.FoodBuff;
         _statusList = new List<BattleStatus>(character.Info.StatusDic.Values);
+
+        if (_foodBuff != null)
+        {
+            FoodBuffIcon.gameObject.SetActive(true);
+        }
+        else
+        {
+            FoodBuffIcon.gameObject.SetActive(false);
+        }
 
         for (int i=0; i<BattleStatusIcon.Length; i++)
         {
@@ -81,8 +93,17 @@ public class BattleInfoUI : MonoBehaviour
         }
     }
 
+    private void FoodBuffOnClick()
+    {
+        if (_foodBuff != null)
+        {
+            FoodBuffGroup.Open(_foodBuff);
+        }
+    }
+
     void Awake()
     {
+        FoodBuffButton.onClick.AddListener(FoodBuffOnClick);
         BattleStatusButton.onClick.AddListener(BattleStatusOnClick);
     }
 }
