@@ -9,6 +9,7 @@ public class IconCard : MonoBehaviour {
     public Action<IconCard> CardHandler;
 
     public Image Icon;
+    public Text NameLabel;
     public Text AmountLabel;
     public ButtonPlus CardButton;
     public int ID;
@@ -36,6 +37,7 @@ public class IconCard : MonoBehaviour {
     {
         Icon.gameObject.SetActive(true);
         Icon.overrideSprite = Resources.Load<Sprite>("Image/Item/" + data.Icon);
+        NameLabel.text = data.GetName();
         AmountLabel.gameObject.SetActive(false);
         ID = data.ID;
         Amount = 0;
@@ -51,6 +53,7 @@ public class IconCard : MonoBehaviour {
         {
             Icon.gameObject.SetActive(true);
             Icon.overrideSprite = Resources.Load<Sprite>("Image/Item/" + data.Icon);
+            NameLabel.text = data.GetName();
             AmountLabel.gameObject.SetActive(true);
             AmountLabel.text = amount.ToString();
             ID = data.ID;
@@ -62,6 +65,7 @@ public class IconCard : MonoBehaviour {
     {
         Icon.gameObject.SetActive(true);
         Icon.overrideSprite = Resources.Load<Sprite>("Image/" + equip.Icon);
+        NameLabel.text = equip.Name;
         AmountLabel.gameObject.SetActive(false);
         //AmountLabel.gameObject.SetActive(true);
         //AmountLabel.text = "Lv." + equip.Lv;
@@ -72,6 +76,7 @@ public class IconCard : MonoBehaviour {
     {
         Icon.gameObject.SetActive(true);
         Icon.overrideSprite = Resources.Load<Sprite>("Image/Item/" + data.Icon);
+        NameLabel.text = data.GetName();
         AmountLabel.gameObject.SetActive(true);
         AmountLabel.text = have.ToString() + "/" + need.ToString();
         ID = data.ID;

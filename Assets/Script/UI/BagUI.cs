@@ -64,6 +64,7 @@ public class BagUI : MonoBehaviour
         _type = type;
         _selectedMember = null;
 
+        SetScrollView();
         SetData();
 
         if (type == ItemManager.Type.Bag)
@@ -77,26 +78,36 @@ public class BagUI : MonoBehaviour
         _type = type;
         _selectedMember = member;
 
-        SetData(equipList);
+        SetScrollView(equipList);
+        SetData();
         SelectCharacterGroup.SetData();
+    }
+
+    private void SetScrollView(List<Equip> list = null)
+    {
+        if (list == null)
+        {
+            Dictionary<object, int> itemDic = new Dictionary<object, int>();
+            if (_type == ItemManager.Type.Bag)
+            {
+                itemDic = ItemManager.Instance.GetItemDicByType(ItemManager.Type.Bag, ItemData.TypeEnum.All);
+            }
+            else
+            {
+                itemDic = ItemManager.Instance.GetItemDicByType(ItemManager.Type.Warehouse, ItemData.TypeEnum.All);
+            }
+            ScrollView.SetData(new ArrayList(itemDic));
+        }
+        else
+        {
+            ScrollView.SetData(new ArrayList(list));
+        }
+        ScrollView.AddClickHandler(IconOnClick);
     }
 
     private void SetData()
     {
         ClearInfo();
-
-        Dictionary<object, int> itemDic = new Dictionary<object, int>();
-        if (_type == ItemManager.Type.Bag)
-        {
-            itemDic = ItemManager.Instance.GetItemDicByType(ItemManager.Type.Bag, ItemData.TypeEnum.All);
-        }
-        else
-        {
-            itemDic = ItemManager.Instance.GetItemDicByType(ItemManager.Type.Warehouse, ItemData.TypeEnum.All);
-        }
-        ScrollView.SetData(new ArrayList(itemDic));
-
-        ScrollView.AddClickHandler(IconOnClick);
 
         if (_type == ItemManager.Type.Bag)
         {
@@ -116,13 +127,6 @@ public class BagUI : MonoBehaviour
         }
         MoneyLabel.text = ItemManager.Instance.Money.ToString();
         KeyLabel.text = ItemManager.Instance.KeyAmount.ToString();
-    }
-
-    private void SetData(List<Equip> list)
-    {
-        ClearInfo();
-        ScrollView.SetData(new ArrayList(list));
-        ScrollView.AddClickHandler(IconOnClick);
     }
 
     private void ClearInfo()

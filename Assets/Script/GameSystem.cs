@@ -35,6 +35,7 @@ public class GameSystem : MonoBehaviour
         EventOptionData.Load();
         CookData.Load();
         ConversationData.Load();
+        ShopData.Load();
 
         TeamManager.Instance.Init();
         ItemManager.Instance.Init();

@@ -6,7 +6,6 @@ using UnityEngine.UI;
 public class BagScrollItem : ScrollItem
 {
     public IconCard Card;
-    public Text NameLabel; 
 
     public override void SetData(object obj)
     {
@@ -28,13 +27,10 @@ public class BagScrollItem : ScrollItem
                 {
                     Card.Init(id);
                 }
-
-                NameLabel.text = ItemData.GetData(id).GetName();
             }
             else if (pair.Key is Equip)
             {
                 Card.Init((Equip)pair.Key);
-                NameLabel.text = ((Equip)pair.Key).Name;
             }
         }
         else
@@ -42,7 +38,6 @@ public class BagScrollItem : ScrollItem
             Equip equip = (Equip)obj;
             base.SetData(equip);
             Card.Init(equip);
-            NameLabel.text = equip.Name;
         }
     }
 }

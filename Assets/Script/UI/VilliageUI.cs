@@ -18,6 +18,11 @@ public class VilliageUI : MonoBehaviour
         SelectDestinationUI.Open();
     }
 
+    private void ShopOnClick()
+    {
+        ShopUI.Open();
+    }
+
     private void CookOnClick() 
     {
         CookUI.Open(ItemManager.Type.Warehouse);
@@ -43,6 +48,7 @@ public class VilliageUI : MonoBehaviour
         SelectDestinationUI.gameObject.SetActive(false);
 
         AdventureButton.onClick.AddListener(AdventureOnClick);
+        ShopButton.onClick.AddListener(ShopOnClick);
         CookButton.onClick.AddListener(CookOnClick);
         TeamButton.onClick.AddListener(TeamOnClick);
         FormationButton.onClick.AddListener(FormationOnClick);

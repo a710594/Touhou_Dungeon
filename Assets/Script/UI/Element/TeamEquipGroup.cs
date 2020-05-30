@@ -87,7 +87,14 @@ public class TeamEquipGroup : MonoBehaviour
 
     private void TakeOffOnClick()
     {
-        _selectedMember.TakeOffEquip(_selectedEquip, ItemManager.Type.Bag);
+        if (MySceneManager.Instance.CurrentScene == MySceneManager.SceneType.Villiage)
+        {
+            _selectedMember.TakeOffEquip(_selectedEquip, ItemManager.Type.Warehouse);
+        }
+        else
+        {
+            _selectedMember.TakeOffEquip(_selectedEquip, ItemManager.Type.Bag);
+        }
         Init(_selectedMember);
         TakeOffButton.gameObject.SetActive(false);
     }

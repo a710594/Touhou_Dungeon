@@ -52,8 +52,8 @@ public class ItemManager
         }
 
         //temp
-        AddBagItem(2004, 5);
-        Money = 0;
+        AddWarehouseItem(2004, 5);
+        Money = 30;
 
         //Money = 0;
         //CurrentBagVolume = 0;
