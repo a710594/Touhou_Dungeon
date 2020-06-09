@@ -13,6 +13,23 @@ public class GameSystem : MonoBehaviour
 
     private static bool _exists;
 
+    public void SaveMemo()
+    {
+        MySceneManager.Instance.Save();
+        ExploreController.Instance.Save();
+        ItemManager.Instance.Save();
+    }
+
+    public void ClearMemo()
+    {
+    }
+
+    public void LaodMemo()
+    {
+        MySceneManager.Instance.Load();
+        //ExploreController.Instance.Load();
+    }
+
     // Start is called before the first frame update
     private IEnumerator Init()
     {
@@ -37,25 +54,22 @@ public class GameSystem : MonoBehaviour
         ConversationData.Load();
         ShopData.Load();
 
+        yield return new WaitForEndOfFrame();
+
+        Caretaker.Instance.Init();
         TeamManager.Instance.Init();
         ItemManager.Instance.Init();
         MySceneManager.Instance.Init();
 
-        string path = Application.streamingAssetsPath + "/Job.json";
-        string jsonString;
-#if UNITY_EDITOR || UNITY_STANDALONE_WIN
-        jsonString = File.ReadAllText(path);
-#elif UNITY_ANDROID
-        UnityEngine.Networking.UnityWebRequest www = UnityEngine.Networking.UnityWebRequest.Get(path);
-        www.SendWebRequest();
-        while (!www.isDone)
-        {
-        }
-        jsonString = www.downloadHandler.text;
-#endif
-        TestText.text = jsonString;
+        LaodMemo();
 
-        yield return null;
+        if (MySceneManager.Instance.CurrentScene == MySceneManager.SceneType.Explore)
+        {
+            MySceneManager.Instance.ChangeScene(MySceneManager.SceneType.Explore, () =>
+            {
+                ExploreController.Instance.SetFloorFromMemo();
+            });
+        }
     }
 
     private void Awake()
@@ -80,5 +94,9 @@ public class GameSystem : MonoBehaviour
         //{
         //    LanguageSystem.Instance.ChangeLanguage(LanguageSystem.Language.English);
         //}
+        if (Input.GetKeyDown(KeyCode.F3))
+        {
+            SaveMemo();
+        }
     }
 }

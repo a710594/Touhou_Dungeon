@@ -1,8 +1,0 @@
-[{"ID":1,"Name":"防禦Buff","Comment":"防禦力增加50%","Icon":"DEF_Buff","Field":"Shield","ATK":100,"DEF":150,"MTK":100,"MEF":100,"AGI":100,"SEN":100,"MoveDistance":100,"Damage":0,"Probability":100,"Turn":2},
-{"ID":2,"Name":"攻擊Debuff","Comment":"攻擊力降低25%","Icon":"ATK_Debuff","Field":"x","ATK":75,"DEF":100,"MTK":100,"MEF":100,"AGI":100,"SEN":100,"MoveDistance":100,"Damage":0,"Probability":100,"Turn":3},
-{"ID":3,"Name":"魔攻Buff","Comment":"魔法攻擊增加200%","Icon":"MTK_Buff","Field":"x","ATK":100,"DEF":100,"MTK":300,"MEF":100,"AGI":100,"SEN":100,"MoveDistance":100,"Damage":0,"Probability":100,"Turn":2},
-{"ID":4,"Name":"攻擊Buff","Comment":"攻擊提升50%","Icon":"ATK_Buff","Field":"x","ATK":150,"DEF":100,"MTK":100,"MEF":100,"AGI":100,"SEN":100,"MoveDistance":100,"Damage":0,"Probability":100,"Turn":3},
-{"ID":5,"Name":"魔攻Buff","Comment":"魔攻提升50%","Icon":"MTK_Buff","Field":"x","ATK":100,"DEF":100,"MTK":150,"MEF":100,"AGI":100,"SEN":100,"MoveDistance":100,"Damage":0,"Probability":100,"Turn":3},
-{"ID":6,"Name":"毒","Comment":"回合結束時造成傷害","Icon":"Poison","Field":"x","ATK":100,"DEF":100,"MTK":100,"MEF":100,"AGI":100,"SEN":100,"MoveDistance":100,"Damage":10,"Probability":100,"Turn":3},
-{"ID":7,"Name":"麻痺","Comment":"50%機率無法行動","Icon":"x","Field":"x","ATK":100,"DEF":100,"MTK":100,"MEF":100,"AGI":100,"SEN":100,"MoveDistance":100,"Damage":0,"Probability":50,"Turn":3},
-{"ID":8,"Name":"魔防Buff","Comment":"魔防增加50%","Icon":"MEF_uff","Field":"x","ATK":100,"DEF":100,"MTK":100,"MEF":150,"AGI":100,"SEN":100,"MoveDistance":100,"Damage":0,"Probability":100,"Turn":3}]

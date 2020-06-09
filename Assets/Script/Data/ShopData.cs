@@ -6,13 +6,19 @@ using Newtonsoft.Json;
 
 public class ShopData
 {
+    public enum TypeEnum
+    {
+        Item = 1, 
+        Equip,
+    }
+
     public class RootObject
     {
         public int ID { get; set; }
+        public TypeEnum Type { get; set; }
     }
-
-    private static List<int> _idList = new List<int>();
     private static Dictionary<int, RootObject> _dataDic = new Dictionary<int, RootObject>();
+    private static Dictionary<TypeEnum, List<int>> _typeIdDic = new Dictionary<TypeEnum, List<int>>();
 
     public static void Load()
     {
@@ -29,11 +35,13 @@ public class ShopData
         jsonString = www.downloadHandler.text;
 #endif
         var dataList = JsonConvert.DeserializeObject<List<RootObject>>(jsonString);
+        _typeIdDic.Add(TypeEnum.Item, new List<int>());
+        _typeIdDic.Add(TypeEnum.Equip, new List<int>());
 
         for (int i = 0; i < dataList.Count; i++)
         {
-            _idList.Add(dataList[i].ID);
             _dataDic.Add(dataList[i].ID, dataList[i]);
+            _typeIdDic[dataList[i].Type].Add(dataList[i].ID);
         }
     }
 
@@ -44,8 +52,8 @@ public class ShopData
         return data;
     }
 
-    public static List<int> GetIDList()
+    public static List<int> GetIDList(TypeEnum type)
     {
-        return _idList;
+        return _typeIdDic[type];
     }
 }

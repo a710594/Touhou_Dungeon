@@ -37,11 +37,30 @@ public class MySceneManager
 
     private bool _isLock = false;
     private SceneType _tempType;
+    private SceneMemo _sceneMemo;
 
     public void Init()
     {
-        CurrentScene = SceneType.Battle;
         SceneManager.sceneLoaded += SceneLoaded;
+    }
+
+    public void Load()
+    {
+        _sceneMemo = Caretaker.Instance.Load<SceneMemo>();
+        if (_sceneMemo != null)
+        {
+            CurrentScene = _sceneMemo.CurrentScene;
+        }
+        else
+        {
+            _sceneMemo = new SceneMemo();
+        }
+    }
+
+    public void Save()
+    {
+        _sceneMemo.SetData(CurrentScene);
+        Caretaker.Instance.Save<SceneMemo>(_sceneMemo);
     }
 
     public void ChangeScene(SceneType type, Action callback = null)

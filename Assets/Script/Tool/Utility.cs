@@ -269,15 +269,69 @@ public class Utility //各種和 TileMap 有關的計算方法
         return list;
     }
 
-    //public static BattleCharacter GetCharacterByPosition(Vector2 position, List<BattleCharacter> characterList) //取得該格子上的角色
-    //{
-    //    for (int i = 0; i < characterList.Count; i++)
-    //    {
-    //        if ((Vector2)characterList[i].transform.position == position)
-    //        {
-    //            return characterList[i];
-    //        }
-    //    }
-    //    return null;
-    //}
+    /*public static List<int> Vector2IntToList(Vector2Int vec)
+    {
+        List<int> list = new List<int>();
+        list.Add(vec.x);
+        list.Add(vec.y);
+        return list;
+    }
+
+    public static List<List<int>> Vector2IntToList(List<Vector2Int> vector2IntList)
+    {
+        List<List<int>> intList = new List<List<int>>();
+        for (int i = 0; i < vector2IntList.Count; i++)
+        {
+            intList.Add(Vector2IntToList(vector2IntList[i]));
+        }
+        return intList;
+    }
+
+    public static Vector2Int ListToVector2Int(List<int> list)
+    {
+        return new Vector2Int(list[0], list[1]);
+    }
+
+    public static List<Vector2Int> ListToVector2Int(List<List<int>> intList)
+    {
+        List<Vector2Int> vector2IntList = new List<Vector2Int>();
+        for (int i = 0; i < intList.Count; i++)
+        {
+            vector2IntList.Add(ListToVector2Int(intList[i]));
+        }
+        return vector2IntList;
+    }*/
+
+    public static string Vector2IntToString(Vector2Int vec)
+    {
+        string str = vec.x + "," + vec.y;
+        return str;
+    }
+
+    public static List<string> Vector2IntToString(List<Vector2Int> vector2IntList)
+    {
+        List<string> stringList = new List<string>();
+        for (int i = 0; i < vector2IntList.Count; i++)
+        {
+            stringList.Add(Vector2IntToString(vector2IntList[i]));
+        }
+        return stringList;
+    }
+
+    public static Vector2Int StringToVector2Int(string str)
+    {
+        string[] words = str.Split(',');
+        Vector2Int vec = new Vector2Int(int.Parse(words[0]), int.Parse(words[1]));
+        return vec;
+    }
+
+    public static List<Vector2Int> StringToVector2Int(List<string> stringList)
+    {
+        List<Vector2Int> vector2IntList = new List<Vector2Int>();
+        for (int i = 0; i < stringList.Count; i++)
+        {
+            vector2IntList.Add(StringToVector2Int(stringList[i]));
+        }
+        return vector2IntList;
+    }
 }

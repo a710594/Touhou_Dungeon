@@ -1,4 +1,0 @@
-[{"ID":2001,"Name":"蘋果","AddHP":5,"AddMP":0,"HasBuff":0,"ATK":0,"DEF":0,"MTK":0,"MEF":0,"AGI":0,"SEN":0,"BuffComment":null},
-{"ID":2002,"Name":"香菇肉","AddHP":10,"AddMP":0,"HasBuff":0,"ATK":0,"DEF":0,"MTK":0,"MEF":0,"AGI":0,"SEN":0,"BuffComment":null},
-{"ID":2003,"Name":"烤香菇串","AddHP":10,"AddMP":10,"HasBuff":0,"ATK":0,"DEF":0,"MTK":0,"MEF":0,"AGI":0,"SEN":0,"BuffComment":null},
-{"ID":3001,"Name":"補血藥","AddHP":10,"AddMP":0,"HasBuff":0,"ATK":0,"DEF":0,"MTK":0,"MEF":0,"AGI":0,"SEN":0,"BuffComment":null}]

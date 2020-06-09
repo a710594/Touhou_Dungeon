@@ -146,7 +146,7 @@ public class DungeonBuilder
         }
 
         //Treasure Room path
-        Dictionary<Vector2Int, Room> doorDic = new Dictionary<Vector2Int, Room>();
+        List<Vector2Int> doorList = new List<Vector2Int>();
         for (int i = 0; i < treasureRoomList.Count; i++)
         {
             //GeneratePath(roomList[i - 1], roomList[i]);
@@ -162,7 +162,7 @@ public class DungeonBuilder
             }
             else
             {
-                doorDic.Add(fromDoor, treasureRoomList[i]);
+                doorList.Add(fromDoor);
             }
         }
 
@@ -304,6 +304,7 @@ public class DungeonBuilder
             }
         }
 
+
         info = new MapInfo();
         info.DungeonData = _dungeonData;
         info.MapBound = Utility.GetMapBounds(_mapList);
@@ -315,10 +316,13 @@ public class DungeonBuilder
         info.MoneyDic = moneyDic;
         info.ExploreEventDic = exploreEventDic;
         info.TreasureDic = treasureDic;
-        info.DoorDic = doorDic;
+        info.DoorList = doorList;
         info.WallList = wallList;
         info.MistList = mistList;
-        info.RoomList = roomList;
+        for (int i=0; i<roomList.Count; i++)
+        {
+            info.RoomPositionList.Add(roomList[i].PositionList);
+        }
     }
 
     private void AddWallDirectionList(Room room)

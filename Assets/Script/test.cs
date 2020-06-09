@@ -1,33 +1,49 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class test : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public InputField InputField;
+    public Text Text;
+    public Button LoadButton;
+    public Button SaveButton;
+
+    private TestMemento _testMemento = new TestMemento();
+
+    private void Load()
     {
-        int damage = 0;
-        BattleCharacterInfo battleCharacterInfo_1 = new BattleCharacterInfo();
-        BattleCharacterInfo battleCharacterInfo_2 = new BattleCharacterInfo();
-        TeamMember teamMember_1 = new TeamMember();
-        TeamMember teamMember_2 = new TeamMember();
-        Skill skill;
+        _testMemento = Caretaker.Instance.Load<TestMemento>();
+        Text.text = _testMemento.Text;
 
-        teamMember_1.Init(1, 1);
-        battleCharacterInfo_1.Init(teamMember_1);
+        foreach (KeyValuePair<string, int> item in _testMemento.Dic)
+        {
+            Debug.Log(Utility.StringToVector2Int(item.Key) + " " +  item.Value);
+        }
+    }
 
-        battleCharacterInfo_2.Init(1, 1);
+    private void Save()
+    {
+        _testMemento.Text = InputField.text;
 
-        skill = SkillFactory.GetNewSkill(1);
-        damage = ((AttackSkill)skill).CalculateDamage(battleCharacterInfo_1, battleCharacterInfo_2, false);
+        Dictionary<string, int> dic = new Dictionary<string, int>();
+        dic.Add(Utility.Vector2IntToString(Vector2Int.up), 123);
+        _testMemento.Dic = dic;
 
-        Debug.Log(battleCharacterInfo_1.Name + " 對 " + battleCharacterInfo_2 + " 造成了 " + damage + " 傷害");
+        Caretaker.Instance.Save<TestMemento>(_testMemento);
     }
 
     // Update is called once per frame
     void Update()
     {
         
+    }
+
+    private void Awake()
+    {
+        Caretaker.Instance.Init();
+        LoadButton.onClick.AddListener(Load);
+        SaveButton.onClick.AddListener(Save);
     }
 }

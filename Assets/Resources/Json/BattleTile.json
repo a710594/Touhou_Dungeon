@@ -1,3 +1,0 @@
-[{"ID":1,"TileName":"Ground","MoveCost":1,"Name_Chinese":"平地","Name_English":"Ground","Comment_Chinese":"普通的地形","Comment_English":"empty"},
-{"ID":2,"TileName":"Wall","MoveCost":-1,"Name_Chinese":"牆壁","Name_English":"Wall","Comment_Chinese":"無法通過的地形","Comment_English":"empty"},
-{"ID":3,"TileName":"Grass","MoveCost":2,"Name_Chinese":"草叢","Name_English":"Grass","Comment_Chinese":"較難移動的地形","Comment_English":"empty"}]

@@ -37,7 +37,7 @@ public class ItemManager
     private Dictionary<EquipData.TypeEnum, List<Equip>> _bagEquipDic = new Dictionary<EquipData.TypeEnum, List<Equip>>();
     private Dictionary<EquipData.TypeEnum, List<Equip>> _warehouseEquipDic = new Dictionary<EquipData.TypeEnum, List<Equip>>();
 
-    public void Init(/*ItemInfo info = null*/)
+    public void Init()
     {
         foreach (ItemData.TypeEnum type in (ItemData.TypeEnum[])Enum.GetValues(typeof(ItemData.TypeEnum)))
         {
@@ -53,30 +53,81 @@ public class ItemManager
 
         //temp
         AddWarehouseItem(2004, 5);
-        Money = 30;
+        Money = 50;
 
-        //Money = 0;
-        //CurrentBagVolume = 0;
-        //_bagMoney = 0;
-        //_warehouseDic.Clear();
-        //_bagDic.Clear();
+        ItemMemo memo = Caretaker.Instance.Load<ItemMemo>();
+        if (memo != null)
+        {
+            Money = memo.Money;
+            CurrentBagVolume = memo.CurrentBagVolume;
+            KeyAmount = memo.KeyAmount;
 
-        //if (info != null)
-        //{
-        //    CurrentBagVolume = info.CurrentBagVolume;
-        //    Money = info.Money;
-        //    _bagMoney = info.BagMoney;
+            foreach (KeyValuePair<int, int> item in memo.BagItemDic)
+            {
+                if (item.Key < 0)
+                {
+                    AddBagItem(memo.BagEquipList[item.Key * -1 -1], 1);
+                }
+                else
+                {
+                    AddBagItem(item.Key, item.Value);
+                }
+            }
 
-        //    for (int i = 0; i < info.WarehouseIdList.Count; i++)
-        //    {
-        //        _warehouseDic.Add(info.WarehouseIdList[i], info.WarehouseAmountList[i]);
-        //    }
+            foreach (KeyValuePair<int, int> item in memo.WarehouseItemDic)
+            {
+                if (item.Key == -1)
+                {
+                    AddWarehouseItem(memo.WarehouseEquipList[item.Key * -1 - 1], 1);
+                }
+                else
+                {
+                    AddWarehouseItem(item.Key, item.Value);
+                }
+            }
+        }
+    }
 
-        //    for (int i = 0; i < info.BagIdList.Count; i++)
-        //    {
-        //        _bagDic.Add(info.BagIdList[i], info.BagAmountList[i]);
-        //    }
-        //}
+    public void Save()
+    {
+        int equipIndex;
+
+        ItemMemo memo = new ItemMemo();
+        memo.Money = Money;
+        memo.CurrentBagVolume = CurrentBagVolume;
+        memo.KeyAmount = KeyAmount;
+
+        equipIndex = 1;
+        foreach (KeyValuePair<object, int> item in _bagTypeDic[ItemData.TypeEnum.All])
+        {
+            if (item.Key is int)
+            {
+                memo.BagItemDic.Add((int)item.Key, item.Value);
+            }
+            else if (item.Key is Equip)
+            {
+                memo.BagItemDic.Add(equipIndex * -1, 0);
+                memo.BagEquipList.Add((Equip)item.Key);
+                equipIndex++;
+            }
+        }
+
+        equipIndex = 1;
+        foreach (KeyValuePair<object, int> item in _warehouseTypeDic[ItemData.TypeEnum.All])
+        {
+            if (item.Key is int)
+            {
+                memo.WarehouseItemDic.Add((int)item.Key, item.Value);
+            }
+            else if (item.Key is Equip)
+            {
+                memo.WarehouseItemDic.Add(-1, equipIndex);
+                memo.WarehouseEquipList.Add((Equip)item.Key);
+                equipIndex++;
+            }
+        }
+
+        Caretaker.Instance.Save<ItemMemo>(memo);
     }
 
     public void AddItem(List<int> idList, Type type)
@@ -181,7 +232,7 @@ public class ItemManager
                 for (int i = 0; i < amount; i++)
                 {
                     equip = new Equip(data.ID);
-                    AddBagEquip(equip);
+                    AddWarehouseEquip(equip);
                 }
             }
             else
@@ -340,7 +391,7 @@ public class ItemManager
 
     public void MinusMoney(int minusMoney)
     {
-        if (minusMoney < Money)
+        if (minusMoney <= Money)
         {
             Money -= minusMoney;
         }

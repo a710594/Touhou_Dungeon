@@ -72,9 +72,7 @@ public class PrepareUI : MonoBehaviour
     {
         MySceneManager.Instance.ChangeScene(MySceneManager.SceneType.Explore, () =>
         {
-            MapInfo info;
-            DungeonBuilder.Instance.Generate(_targetFloor, out info);
-            ExploreController.Instance.Init(info);
+            ExploreController.Instance.GenerateFloor(_targetFloor);
         });
     }
 

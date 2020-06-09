@@ -28,10 +28,9 @@ public class DungeonPainter
         }
 
         //door
-        List<Vector2Int> doorList = new List<Vector2Int>(info.DoorDic.Keys);
-        for(int i=0; i<doorList.Count; i++)
+        for(int i=0; i<info.DoorList.Count; i++)
         {
-            TilePainter.Instance.Painting(info.DungeonData.DoorTile, 2, doorList[i]);
+            TilePainter.Instance.Painting(info.DungeonData.DoorTile, 2, info.DoorList[i]);
         }
 
         //grass
@@ -53,9 +52,12 @@ public class DungeonPainter
         }
 
         //money
+        GameObject coin;
         foreach (KeyValuePair<Vector2Int, int> item in info.MoneyDic)
         {
-            TilePainter.Instance.Painting("Money", 2, item.Key);
+            //TilePainter.Instance.Painting("Money", 2, item.Key);
+            coin = ResourceManager.Instance.Spawn("Coin", ResourceManager.Type.Other);
+            coin.transform.position = (Vector2)item.Key;
         }
 
         //explore point

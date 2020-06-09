@@ -1,3 +1,0 @@
-[{"ID":1,"Comment_Chinese":"你在路邊看到了一個賽錢箱，你要做什麼？","OptionID_1":2,"OptionChinese_1":"投入五元","OptionID_2":3,"OptionChinese_2":"投入二十五元","OptionID_3":1,"OptionChinese_3":"不做任何事"},
-{"ID":2,"Comment_Chinese":"你看到了一個境界的縫隙，不知會通往何方。","OptionID_1":4,"OptionChinese_1":"進入縫隙","OptionID_2":1,"OptionChinese_2":"不做任何事","OptionID_3":0,"OptionChinese_3":""},
-{"ID":3,"Comment_Chinese":"你看到了一個洞穴，有$$的氣息！但洞穴裡也可能有敵人埋伏，要進去嗎？","OptionID_1":5,"OptionChinese_1":"進入洞穴","OptionID_2":1,"OptionChinese_2":"不做任何事","OptionID_3":0,"OptionChinese_3":""}]

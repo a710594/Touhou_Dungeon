@@ -6,14 +6,37 @@ using UnityEngine.UI;
 
 public class ButtonSingle : MonoBehaviour
 {
+    public enum TypeEnum
+    {
+        GameObject,
+        Color,
+    }
+
     public Action<ButtonSingle> ClickHandler;
 
+    public TypeEnum Type = TypeEnum.GameObject;
     public GameObject Select;
+    public Color SelectColor;
+    public Color NotSelectColor;
     public Button Button;
 
     public void SetSelected(bool isSelected)
     {
-        Select.SetActive(isSelected);
+        if (Type == TypeEnum.GameObject)
+        {
+            Select.SetActive(isSelected);
+        }
+        else if(Type == TypeEnum.Color)
+        {
+            if (isSelected)
+            {
+                Button.image.color = SelectColor;
+            }
+            else
+            {
+                Button.image.color = NotSelectColor;
+            }
+        }
     }
 
     void OnClick()
@@ -26,7 +49,10 @@ public class ButtonSingle : MonoBehaviour
 
     private void Awake()
     {
-        Select.SetActive(false);
+        if (Select != null)
+        {
+            Select.SetActive(false);
+        }
         Button.onClick.AddListener(OnClick);
     }
 }

@@ -94,7 +94,7 @@ public class BattleResultUI : MonoBehaviour
         {
             MySceneManager.Instance.ChangeScene(MySceneManager.SceneType.Explore, () =>
             {
-                ExploreController.Instance.Reload();
+                ExploreController.Instance.SetFloor();
             });
         }
 
