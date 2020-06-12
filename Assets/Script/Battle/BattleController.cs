@@ -33,6 +33,7 @@ public class BattleController : MachineBehaviour
     private int _turn = 1;
     private int _power = 0;
     private int _exp;
+    private BattleMemo _memo = new BattleMemo();
     private List<int> _enemyList = new List<int>();
     private List<BattleCharacter> _actionQueue = new List<BattleCharacter>();
     private List<BattleCharacterPlayer> _playerList = new List<BattleCharacterPlayer>(); //戰鬥結束時需要的友方資料
@@ -56,7 +57,7 @@ public class BattleController : MachineBehaviour
             characterPlayer.Init(member);
             CharacterList.Add(characterPlayer);
             _playerList.Add(characterPlayer);
-            characterPlayer.SetPosition((Vector2)(TeamManager.Instance.MemberPositionDic[member] + BattleFieldManager.Instance.Center));
+            characterPlayer.SetPosition((Vector2)(member.Formation + BattleFieldManager.Instance.Center));
         }
 
         _enemyList.Clear();
@@ -80,6 +81,96 @@ public class BattleController : MachineBehaviour
             //BattleUI.Instance.SetPriorityQueueVisible(true);
             ChangeState<TurnStartState>();
         });
+    }
+
+    public void InitFromMemo()
+    {
+        BattleMemo memo = Caretaker.Instance.Load<BattleMemo>();
+        BattlefieldGenerator.Instance.Generate(memo.MapDic);
+        BattleFieldManager.Instance.MapBound = memo.MapBound;
+        BattleFieldManager.Instance.MapDic = new Dictionary<Vector2Int, BattleField>();
+        foreach (KeyValuePair<string, BattleField> item in memo.MapDic)
+        {
+            BattleFieldManager.Instance.MapDic.Add(Utility.StringToVector2Int(item.Key), item.Value);
+        }
+
+        _turn = memo.Turn;
+        _power = memo.Power;
+        _exp = memo.Exp;
+        CharacterList.Clear();
+
+        BattleCharacterPlayer characterPlayer;
+        Dictionary<BattlePlayerMemo, BattleCharacter> memoPlayerObjectDic = new Dictionary<BattlePlayerMemo, BattleCharacter>();
+        for (int i = 0; i < memo.PlayerList.Count; i++)
+        {
+            characterPlayer = ResourceManager.Instance.Spawn("BattleCharacter/BattleCharacterPlayer", ResourceManager.Type.Other).GetComponent<BattleCharacterPlayer>();
+            characterPlayer.Init(memo.PlayerList[i]);
+            CharacterList.Add(characterPlayer);
+            _playerList.Add(characterPlayer);
+            characterPlayer.SetPosition(memo.PlayerList[i].Position);
+            memoPlayerObjectDic.Add(memo.PlayerList[i], characterPlayer);
+
+            if (memo.PlayerList[i].IsSelected)
+            {
+                SelectedCharacter = characterPlayer;
+            }
+        }
+
+        _enemyList.Clear();
+        BattleCharacterAI characterAI;
+        Dictionary<BattleEnemyMemo, BattleCharacter> memoEnemyObjectDic = new Dictionary<BattleEnemyMemo, BattleCharacter>();
+        for (int i = 0; i < memo.EnemyList.Count; i++)
+        {
+            _enemyList.Add(memo.EnemyList[i].Lv);
+            characterAI = ResourceManager.Instance.Spawn("BattleCharacter/BattleCharacterAI", ResourceManager.Type.Other).GetComponent<BattleCharacterAI>();
+            characterAI.Init(memo.EnemyList[i].ID, memo.EnemyList[i].Lv);
+            CharacterList.Add(characterAI);
+            characterAI.SetPosition(memo.EnemyList[i].Position);
+            memoEnemyObjectDic.Add(memo.EnemyList[i], characterAI);
+        }
+
+        _actionQueue.Clear();
+        for (int i=0; i<memo.QueueLength; i++) 
+        {
+            for (int j=0; j<memo.PlayerList.Count; j++) 
+            {
+                if (memo.PlayerList[j].QueueIndex == i)
+                {
+                    _actionQueue.Add(memoPlayerObjectDic[memo.PlayerList[j]]);
+                }
+            }
+
+            for (int j = 0; j < memo.EnemyList.Count; j++)
+            {
+                if (memo.EnemyList[j].QueueIndex == i)
+                {
+                    _actionQueue.Add(memoEnemyObjectDic[memo.EnemyList[j]]);
+                }
+            }
+        }
+
+        Camera.main.transform.position = new Vector3(SelectedCharacter.Sprite.transform.position.x, SelectedCharacter.Sprite.transform.position.y, Camera.main.transform.position.z);
+        CameraController.Instance.SetParent(SelectedCharacter.Sprite.transform, true, () =>
+        {
+            SelectedCharacter.SetOutline(true);
+            BattleUI.Open();
+            BattleUI.Instance.Init(_power, CharacterList);
+            //BattleUI.Instance.SetPriorityQueueVisible(true);
+            ChangeState<SelectActionState>();
+        });
+
+        //ChangeSceneUI.Instance.EndClock(() =>
+        //{
+        //    BattleUI.Open();
+        //    BattleUI.Instance.Init(_power, CharacterList);
+        //    //BattleUI.Instance.SetPriorityQueueVisible(true);
+        //    ChangeState<SelectActionState>();
+        //});
+    }
+
+    public void Save() 
+    {
+        Caretaker.Instance.Save<BattleMemo>(_memo);
     }
 
     public override void AddStates()
@@ -241,6 +332,50 @@ public class BattleController : MachineBehaviour
         }
     }
 
+    private void Write()
+    {
+        _memo.MapBound = BattleFieldManager.Instance.MapBound;
+        _memo.MapDic = new Dictionary<string, BattleField>();
+        foreach (KeyValuePair<Vector2Int, BattleField> item in BattleFieldManager.Instance.MapDic)
+        {
+            _memo.MapDic.Add(Utility.Vector2IntToString(item.Key), item.Value);
+        }
+
+        _memo.Turn = _turn;
+        _memo.Power = Power;
+        _memo.Exp = _exp;
+        _memo.QueueLength = _actionQueue.Count;
+
+        _memo.PlayerList.Clear();
+        _memo.EnemyList.Clear();
+        for (int i = 0; i < CharacterList.Count; i++)
+        {
+            if (CharacterList[i] is BattleCharacterPlayer)
+            {
+                _memo.PlayerList.Add(new BattlePlayerMemo((BattleCharacterPlayer)CharacterList[i]));
+                _memo.PlayerList[_memo.PlayerList.Count - 1].IsSelected = GameObject.ReferenceEquals(CharacterList[i], SelectedCharacter);
+                for (int j = 0; j < _actionQueue.Count; j++)
+                {
+                    if (GameObject.ReferenceEquals(CharacterList[i], _actionQueue[j]))
+                    {
+                        _memo.PlayerList[_memo.PlayerList.Count - 1].QueueIndex = j;
+                    }
+                }
+            }
+            else if (CharacterList[i] is BattleCharacterAI)
+            {
+                _memo.EnemyList.Add(new BattleEnemyMemo((BattleCharacterAI)CharacterList[i]));
+                for (int j = 0; j < _actionQueue.Count; j++)
+                {
+                    if (GameObject.ReferenceEquals(CharacterList[i], _actionQueue[j]))
+                    {
+                        _memo.EnemyList[_memo.EnemyList.Count - 1].QueueIndex = j;
+                    }
+                }
+            }
+        }
+    }
+
     //
     //State
     //
@@ -367,6 +502,7 @@ public class BattleController : MachineBehaviour
 
             BattleUI.Instance.SetActionGroupVisible(true);
             BattleUI.Instance.SetInfo(true, parent.SelectedCharacter);
+            parent.Write();
         }
 
         public override void ScreenOnClick(Vector2Int position)

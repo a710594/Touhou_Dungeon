@@ -38,7 +38,7 @@ public class FormationUI : MonoBehaviour
         for (int i = 0; i < TeamManager.Instance.MemberList.Count; i++)
         {
             member = TeamManager.Instance.MemberList[i];
-            position = TeamManager.Instance.MemberPositionDic[member];
+            position = member.Formation;
 
             for (int j = 0; j < MemberPositionButton.Length; j++)
             {
@@ -66,11 +66,11 @@ public class FormationUI : MonoBehaviour
             _selectButton_1.SetData(temp);
             if (_selectButton_1.Member != null)
             {
-                TeamManager.Instance.MemberPositionDic[_selectButton_1.Member] = _selectButton_1.MemberPosition;
+                _selectButton_1.Member.Formation = _selectButton_1.MemberPosition;
             }
             if (_selectButton_2.Member != null)
             {
-                TeamManager.Instance.MemberPositionDic[_selectButton_2.Member] = _selectButton_2.MemberPosition;
+                _selectButton_2.Member.Formation = _selectButton_2.MemberPosition;
             }
             _selectButton_1 = null;
             _selectButton_2 = null;

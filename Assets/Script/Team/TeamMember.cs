@@ -98,22 +98,24 @@ public class TeamMember
         }
     }
     public int MOV;
+    public Vector2Int Formation; //隊伍位置
     public JobData.RootObject Data;
     public Equip Weapon = new Equip(EquipData.TypeEnum.Weapon);
     //public Equip Helmet = new Equip(EquipData.TypeEnum.Helmet);
     public Equip Armor = new Equip(EquipData.TypeEnum.Armor);
     //public Equip Jewelry = new Equip(EquipData.TypeEnum.Jewelry);
-    //public bool HasFoodBuff = false;
     public FoodBuff FoodBuff = new FoodBuff(); //食物的效果一次只會有一個,戰鬥結束後就會消失
     public List<int> SkillList = new List<int>();
     public List<int> SpellCardList = new List<int>();
 
-    private int _atk;
-    private int _def;
-    private int _mtk;
-    private int _mef;
-    private int _agi;
-    private int _sen;
+    //這些屬性被設為 public 是為了讓 TeamMemberMemo 讀,不會被其他 class 使用
+    public int _atk;
+    public int _def;
+    public int _mtk;
+    public int _mef;
+    public int _agi;
+    public int _sen;
+
     private Equip _defaultWeapon = new Equip(EquipData.TypeEnum.Weapon);
     private Equip _defaultHelmet = new Equip(EquipData.TypeEnum.Helmet);
     private Equip _defaultArmor = new Equip(EquipData.TypeEnum.Armor);
@@ -136,6 +138,30 @@ public class TeamMember
         MOV = Data.MOV;
         SkillList = Data.GetUnlockSkill(Lv);
         SpellCardList = Data.SpellCardList;
+    }
+
+    public void Init(TeamMemberMemo memo) 
+    {
+        Data = JobData.GetData(memo.DataId);
+        Lv = memo.Lv;
+        Exp = memo.Exp;
+        MaxHP = memo.MaxHP;
+        CurrentHP = memo.CurrentHP;
+        MaxMP = memo.MaxMP;
+        CurrentMP = memo.CurrentMP;
+        _atk = memo.ATK;
+        _def = memo.DEF;
+        _mtk = memo.MTK;
+        _mef = memo.MEF;
+        _agi = memo.AGI;
+        _sen = memo.SEN;
+        MOV = memo.MOV;
+        SkillList = memo.SkillList;
+        SpellCardList = memo.SpellCardList;
+        Formation = memo.Formation;
+        Weapon = memo.Weapon;
+        Armor = memo.Armor;
+        FoodBuff = memo.FoodBuff;
     }
 
     public void Refresh(BattleCharacterPlayer character)

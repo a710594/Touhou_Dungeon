@@ -44,14 +44,14 @@ public class FieldEnemyGuard : FieldEnemy
     {
         if (col.tag == "Player")
         {
-            if (OnPlayerEnterHandler != null)
-            {
-                OnPlayerEnterHandler(_battleGroupId);
-            }
-
             if (CheckPositionHandler != null)
             {
                 CheckPositionHandler(transform.position);
+            }
+
+            if (OnPlayerEnterHandler != null)
+            {
+                OnPlayerEnterHandler(_battleGroupId);
             }
         }
     }

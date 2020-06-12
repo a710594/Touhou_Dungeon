@@ -55,6 +55,12 @@ public class ExploreController
 
     public void SetFloor()
     {
+        if (_mapInfo == null)
+        {
+            SetFloorFromMemo();
+            return;
+        }
+
         DungeonPainter.Instance.Paint(_mapInfo);
 
         _player = GameObject.Find("ExploreCharacter").GetComponent<ExploreCharacter>();
@@ -246,6 +252,7 @@ public class ExploreController
             _fieldEnemyList[i].Stop();
         }
         ExploreUI.Instance.StopTipLabel();
+        Save();
 
         ChangeSceneUI.Instance.StartClock(() =>
         {

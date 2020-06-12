@@ -7,14 +7,19 @@ public class BattleField
     public Vector2Int Position;
     public int MoveCost;
     public string Name;
+    public string TileName; //畫地圖用的
+    public string BuffTileName; //畫地圖用的
     public string Comment;
     public Buff Buff = null;
+
+    public BattleField() { }
 
     public BattleField(Vector2Int position, BattleTileData.RootObject data)
     {
         Position = position;
         MoveCost = data.MoveCost;
         Name = data.GetName();
+        TileName = data.TileName;
         Comment = data.GetComment();
     }
 
@@ -22,6 +27,7 @@ public class BattleField
     {
         MoveCost = data.MoveCost;
         Name = data.GetName();
+        TileName = data.TileName;
         Comment = data.GetComment();
     }
 
@@ -29,15 +35,16 @@ public class BattleField
     {
         if (Buff == null)
         {
-            BattleController.Instance.TurnEndHandler += CheckBuffCD;
+            BattleController.Instance.TurnEndHandler += CheckRemainTurn;
         }
 
         BattleStatusData.RootObject data = BattleStatusData.GetData(id);
         Buff = new Buff(id);
+        BuffTileName = data.Field;
         TilePainter.Instance.Painting(data.Field, 1, Position);
     }
 
-    public void CheckBuffCD()
+    public void CheckRemainTurn()
     {
         if (Buff.RemainTurn != -1) //-1代表永久
         {
@@ -45,7 +52,7 @@ public class BattleField
             if (Buff.RemainTurn == 0)
             {
                 Buff = null;
-                BattleController.Instance.TurnEndHandler -= CheckBuffCD;
+                BattleController.Instance.TurnEndHandler -= CheckRemainTurn;
                 TilePainter.Instance.Clear(1, Position);
             }
         }

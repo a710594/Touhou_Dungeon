@@ -95,7 +95,7 @@ public class BattleFieldManager
         return newList;
     }
 
-    public Vector2 GetRandomPosition() //隨機取得空格
+    /*public Vector2 GetRandomPosition() //隨機取得空格
     {
         Vector2Int position = new Vector2Int();
         List<Vector2Int> positionList = new List<Vector2Int>(MapDic.Keys);
@@ -114,7 +114,7 @@ public class BattleFieldManager
             }
         }
         return Vector2.zero;
-    }
+    }*/
 
     public BattleField GetField(Vector2 position) 
     {

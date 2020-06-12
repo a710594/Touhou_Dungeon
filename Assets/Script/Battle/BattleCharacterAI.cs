@@ -12,7 +12,7 @@ public class BattleCharacterAI : BattleCharacter
     private Action _endAICallback;
     private List<Vector2Int> _detectRangeList = new List<Vector2Int>();
 
-    public virtual void Init(int id, int lv)
+    public void Init(int id, int lv)
     {
         EnemyData.RootObject data = EnemyData.GetData(id);
 
@@ -23,7 +23,19 @@ public class BattleCharacterAI : BattleCharacter
         AI = GetComponent(Type.GetType(data.AI)) as AI;
         AI.Init(this, data.SkillList);
 
-        //SelectedSkill = SkillFactory.GetNewSkill(1); //temp
+        BattleController.Instance.TurnEndHandler += CheckBattleStatus;
+    }
+
+    public void Init(BattleEnemyMemo memo)
+    {
+        EnemyData.RootObject data = EnemyData.GetData(memo.ID);
+
+        Info.Init(memo);
+        _originalPosition = transform.position;
+        Sprite.sprite = Resources.Load<Sprite>("Image/Character/Small/" + data.Image);
+        gameObject.AddComponent(Type.GetType(data.AI));
+        AI = GetComponent(Type.GetType(data.AI)) as AI;
+        AI.Init(this, data.SkillList);
 
         BattleController.Instance.TurnEndHandler += CheckBattleStatus;
     }

@@ -16,8 +16,16 @@ public class GameSystem : MonoBehaviour
     public void SaveMemo()
     {
         MySceneManager.Instance.Save();
-        ExploreController.Instance.Save();
         ItemManager.Instance.Save();
+        TeamManager.Instance.Save();
+        if (MySceneManager.Instance.CurrentScene == MySceneManager.SceneType.Explore)
+        {
+            ExploreController.Instance.Save();
+        }
+        else if (MySceneManager.Instance.CurrentScene == MySceneManager.SceneType.Battle)
+        {
+            BattleController.Instance.Save();
+        }
     }
 
     public void ClearMemo()
@@ -68,6 +76,13 @@ public class GameSystem : MonoBehaviour
             MySceneManager.Instance.ChangeScene(MySceneManager.SceneType.Explore, () =>
             {
                 ExploreController.Instance.SetFloorFromMemo();
+            });
+        }
+        else if (MySceneManager.Instance.CurrentScene == MySceneManager.SceneType.Battle)
+        {
+            MySceneManager.Instance.ChangeScene(MySceneManager.SceneType.Battle, () =>
+            {
+                BattleController.Instance.InitFromMemo();
             });
         }
     }

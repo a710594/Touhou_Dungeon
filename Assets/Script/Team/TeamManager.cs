@@ -27,28 +27,55 @@ public class TeamManager
     private int _power;
 
     public List<TeamMember> MemberList = new List<TeamMember>();
-    public Dictionary<TeamMember, Vector2Int> MemberPositionDic = new Dictionary<TeamMember, Vector2Int>(); //隊形
 
     public void Init()
     {
-        TeamScriptableObject data = Resources.Load<TeamScriptableObject>("ScriptableObject/TeamScriptableObject");
+        TeamMemo memo = Caretaker.Instance.Load<TeamMemo>();
 
-        TeamMember member;
-        for (int i = 0; i < data.MemberList.Count; i++)
+        if (memo == null)
         {
-            member = new TeamMember();
-            member.Init(data.MemberList[i], 1);
-            MemberList.Add(member);
-            MemberPositionDic.Add(member, data.PositionList[i]);
-        }
+            TeamScriptableObject data = Resources.Load<TeamScriptableObject>("ScriptableObject/TeamScriptableObject");
 
-        //temp
-        MemberList[0].SetEquip(42001);
-        MemberList[0].SetEquip(41001);
-        MemberList[1].SetEquip(42001);
-        MemberList[1].SetEquip(41002);
-        MemberList[2].SetEquip(42001);
-        MemberList[2].SetEquip(41002);
+            TeamMember member;
+            for (int i = 0; i < data.MemberList.Count; i++)
+            {
+                member = new TeamMember();
+                member.Init(data.MemberList[i], 1);
+                member.Formation = data.PositionList[i];
+                MemberList.Add(member);
+            }
+
+            //temp
+            MemberList[0].SetEquip(42001);
+            MemberList[0].SetEquip(41001);
+            MemberList[1].SetEquip(42001);
+            MemberList[1].SetEquip(41002);
+            MemberList[2].SetEquip(42001);
+            MemberList[2].SetEquip(41002);
+        }
+        else
+        {
+            _power = memo.Power;
+            TeamMember member;
+            for (int i = 0; i < memo.MemberList.Count; i++)
+            {
+                member = new TeamMember();
+                member.Init(memo.MemberList[i]);
+                MemberList.Add(member);
+            }
+        }
+    }
+
+    public void Save() 
+    {
+        TeamMemo memo = new TeamMemo();
+        memo.Power = _power;
+        memo.MemberList = new List<TeamMemberMemo>();
+        for (int i=0; i<MemberList.Count; i++) 
+        {
+            memo.MemberList.Add(new TeamMemberMemo(MemberList[i]));
+        }
+        Caretaker.Instance.Save<TeamMemo>(memo);
     }
 
     public void Refresh(int power, List<BattleCharacterPlayer> list)

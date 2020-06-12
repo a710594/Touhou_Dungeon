@@ -6,8 +6,8 @@ using UnityEngine;
 public class Skill
 {
     public SkillData.RootObject Data;
+    public int CurrentCD = 0;
 
-    protected int _currentCD = 0;
     protected int _skillCallBackCount = 0;
     private int _targetCount = 0;
     protected Action _skillCallback;
@@ -24,12 +24,11 @@ public class Skill
             return Data.NeedPower > 0;
         }
     }
-
     public void SetCD()
     {
-        if (_currentCD > 0)
+        if (CurrentCD > 0)
         {
-            _currentCD--;
+            CurrentCD--;
         }
     }
 
@@ -42,9 +41,9 @@ public class Skill
             notUseReason = "MP 不足";
             return false;
         }
-        else if (_currentCD > 0)
+        else if (CurrentCD > 0)
         {
-            notUseReason = "還要 " + _currentCD + " 回合才能使用";
+            notUseReason = "還要 " + CurrentCD + " 回合才能使用";
             return false;
         }
         else if (Data.NeedPower > BattleController.Instance.Power)
@@ -146,7 +145,7 @@ public class Skill
         _executor = executor;
         if (Data.CD > 0)
         {
-            _currentCD = Data.CD + 1; //要加一是因為本回合不減CD
+            CurrentCD = Data.CD + 1; //要加一是因為本回合不減CD
         }
         InitSkillCallbackCount();
         if (_subSkill != null)

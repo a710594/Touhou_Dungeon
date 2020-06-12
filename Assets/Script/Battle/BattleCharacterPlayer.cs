@@ -50,6 +50,50 @@ public class BattleCharacterPlayer : BattleCharacter
 
         BattleController.Instance.TurnEndHandler += CheckBattleStatus;
     }
+    public void Init(BattlePlayerMemo memo)
+    {
+        JobData.RootObject data = JobData.GetData(memo.ID);
+
+        Info.Init(memo);
+        _originalPosition = transform.position;
+        MediumImage = data.MediumImage;
+        LargeImage = data.LargeImage;
+
+        Sprite.sprite = Resources.Load<Sprite>("Image/Character/Small/" + data.SmallImage);
+        if (data.Animator != string.Empty)
+        {
+            Animator.runtimeAnimatorController = Resources.Load<RuntimeAnimatorController>("Animator/" + data.Animator);
+        }
+
+        SkillData.RootObject skillData;
+        Skill skill;
+        for (int i = 0; i < memo.SkillList.Count; i++)
+        {
+            skillData = SkillData.GetData(memo.SkillList[i]);
+            skill = SkillFactory.GetNewSkill(skillData);
+            skill.CurrentCD = memo.SkillCdList[i];
+            if (skillData.CD > 0)
+            {
+                BattleController.Instance.TurnEndHandler += skill.SetCD;
+            }
+
+            SkillList.Add(skill);
+        }
+
+        for (int i = 0; i < memo.SpellCardList.Count; i++)
+        {
+            skillData = SkillData.GetData(memo.SpellCardList[i]);
+            skill = SkillFactory.GetNewSkill(skillData);
+            if (skillData.CD > 0)
+            {
+                BattleController.Instance.TurnEndHandler += skill.SetCD;
+            }
+
+            SpellCardList.Add(skill);
+        }
+
+        BattleController.Instance.TurnEndHandler += CheckBattleStatus;
+    }
 
     public void ReturnToOriginalPosition()
     {
