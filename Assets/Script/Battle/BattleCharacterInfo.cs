@@ -197,6 +197,7 @@ public class BattleCharacterInfo
 
     public void Init(BattlePlayerMemo memo)
     {
+        ID = memo.ID;
         Lv = memo.Lv;
         Name = JobData.GetData(memo.ID).GetName();
         MaxHP = memo.MaxHP;
