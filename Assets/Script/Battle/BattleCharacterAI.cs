@@ -19,6 +19,10 @@ public class BattleCharacterAI : BattleCharacter
         Info.Init(id, lv);
         _originalPosition = transform.position;
         Sprite.sprite = Resources.Load<Sprite>("Image/Character/Small/" + data.Image);
+        if (data.Animator != string.Empty)
+        {
+            Animator.runtimeAnimatorController = Resources.Load<RuntimeAnimatorController>("Animator/" + data.Animator);
+        }
         gameObject.AddComponent(Type.GetType(data.AI));
         AI = GetComponent(Type.GetType(data.AI)) as AI;
         AI.Init(this, data.SkillList);
@@ -28,16 +32,8 @@ public class BattleCharacterAI : BattleCharacter
 
     public void Init(BattleEnemyMemo memo)
     {
-        EnemyData.RootObject data = EnemyData.GetData(memo.ID);
-
+        Init(memo.ID, memo.Lv);
         Info.Init(memo);
-        _originalPosition = transform.position;
-        Sprite.sprite = Resources.Load<Sprite>("Image/Character/Small/" + data.Image);
-        gameObject.AddComponent(Type.GetType(data.AI));
-        AI = GetComponent(Type.GetType(data.AI)) as AI;
-        AI.Init(this, data.SkillList);
-
-        BattleController.Instance.TurnEndHandler += CheckBattleStatus;
     }
 
     public void StartAI(Action callback)
@@ -117,6 +113,16 @@ public class BattleCharacterAI : BattleCharacter
         }
 
         transform.DOMove((Vector2)destination, 0.2f).SetEase(Ease.Linear);
+    }
+
+    public void StartMoveAnimation()
+    {
+        Animator.SetBool("IsMoving", true);
+    }
+
+    public void StopMoveAnimation()
+    {
+        Animator.SetBool("IsMoving", false);
     }
 
     public bool InSkillDistance()

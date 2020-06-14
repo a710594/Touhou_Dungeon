@@ -6,6 +6,13 @@ public class BattleCharacterInfo
 {
     private static readonly int _maxActionCount = 2;
 
+    public enum LiveStateEnum
+    {
+        Alive,
+        Dying,
+        Dead,
+    }
+
     public int MaxHP;
     protected int _currentHP;
     public int CurrentHP
@@ -160,6 +167,7 @@ public class BattleCharacterInfo
     public int ID;
     public int Lv;
     public string Name;
+    public LiveStateEnum LiveState;
     public FoodBuff FoodBuff = null;
 
     public Dictionary<int, BattleStatus> StatusDic = new Dictionary<int, BattleStatus>();

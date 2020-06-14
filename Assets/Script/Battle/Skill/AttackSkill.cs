@@ -103,7 +103,14 @@ public class AttackSkill : Skill
             }
             else
             {
-                return HitType.Miss;
+                if (target.LiveState == BattleCharacterInfo.LiveStateEnum.Dying)
+                {
+                    return HitType.Hit;
+                }
+                else
+                {
+                    return HitType.Miss;
+                }
             }
         }
         else //迴避率為負,骰爆擊

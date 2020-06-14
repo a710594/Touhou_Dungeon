@@ -143,14 +143,4 @@ public class BattleCharacterPlayer : BattleCharacter
         Info.CurrentMP -= SelectedSkill.Data.MP;
         BattleController.Instance.MinusPower(SelectedSkill.Data.NeedPower);
     }
-
-    private void SetDying(Action callback)
-    {
-        LiveState = LiveStateEnum.Dying;
-        GrayScale.SetScale(0);
-        if (callback != null)
-        {
-            callback();
-        }
-    }
 }

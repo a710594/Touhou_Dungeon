@@ -87,6 +87,7 @@ public class AI : MonoBehaviour
                             }
                         }
 
+                        _character.StartMoveAnimation();
                         while (shortestPath.Count > 0)
                         {
                             position = shortestPath.Dequeue();
@@ -97,6 +98,7 @@ public class AI : MonoBehaviour
                             _character.Move(position);
                             yield return new WaitForSeconds(0.2f);
                         }
+                        _character.StopMoveAnimation();
                         _character.MoveDone();
                         //}
                         _character.GetSkillRange();
@@ -104,7 +106,7 @@ public class AI : MonoBehaviour
                     else
                     {
                         _character.HasTarget = false;
-                        /*positionList = _character.GetMoveRange(); //可能移動的位置
+                        positionList = _character.GetMoveRange(); //可能移動的位置
                         for (int i = 0; i < positionList.Count; i++) //移除有角色的位置
                         {
                             if (BattleController.Instance.GetCharacterByPosition(positionList[i]) != null)
@@ -134,7 +136,7 @@ public class AI : MonoBehaviour
                             //}
                             _character.Move(position);
                             yield return new WaitForSeconds(0.2f);
-                        }*/
+                        }
                         _character.MoveDone();
                         _character.ActionDoneCompletely();
                     }
@@ -165,7 +167,7 @@ public class AI : MonoBehaviour
         for (int i=0; i<BattleController.Instance.CharacterList.Count; i++)
         {
             character = BattleController.Instance.CharacterList[i];
-            if (character.LiveState != BattleCharacter.LiveStateEnum.Dead)
+            if (character.Info.LiveState != BattleCharacterInfo.LiveStateEnum.Dead)
             {
                 if (character.Camp == targetCamp)
                 {

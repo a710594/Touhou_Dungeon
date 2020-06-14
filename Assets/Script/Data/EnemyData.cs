@@ -11,6 +11,7 @@ public class EnemyData
         public int ID { get; set; }
         public string Name { get; set; }
         public string Image { get; set; }
+        public string Animator { get; set; }
         public int HP { get; set; }
         public int ATK { get; set; }
         public int DEF { get; set; }

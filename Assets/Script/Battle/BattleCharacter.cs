@@ -14,13 +14,6 @@ public class BattleCharacter : MonoBehaviour
         None,
     }
 
-    public enum LiveStateEnum
-    {
-        Alive,
-        Dying,
-        Dead,
-    }
-
     public enum NotActReason
     {
         Sleeping,
@@ -34,7 +27,6 @@ public class BattleCharacter : MonoBehaviour
     public string LargeImage;
     public Vector2Int TargetPosition = new Vector2Int();
     public CampEnum Camp;
-    public LiveStateEnum LiveState;
     public SpriteRenderer Sprite;
     public Animator Animator;
     public Transform ValueBarAnchor;
@@ -241,7 +233,7 @@ public class BattleCharacter : MonoBehaviour
         {
             if (Info.CurrentHP <= 0)
             {
-                if (Camp == CampEnum.Enemy || LiveState == LiveStateEnum.Dying)
+                if (Camp == CampEnum.Enemy || Info.LiveState == BattleCharacterInfo.LiveStateEnum.Dying)
                 {
                     SetDeath(() =>
                     {
@@ -304,7 +296,7 @@ public class BattleCharacter : MonoBehaviour
                 callbackCount++;
                 if (Info.CurrentHP <= 0)
                 {
-                    if (Camp == CampEnum.Enemy || LiveState == LiveStateEnum.Dying)
+                    if (Camp == CampEnum.Enemy || Info.LiveState == BattleCharacterInfo.LiveStateEnum.Dying)
                     {
                         SetDeath(callback);
                     }
@@ -335,9 +327,9 @@ public class BattleCharacter : MonoBehaviour
             }
         });
 
-        if (LiveState == LiveStateEnum.Dying)
+        if (Info.LiveState == BattleCharacterInfo.LiveStateEnum.Dying)
         {
-            LiveState = LiveStateEnum.Alive;
+            Info.LiveState = BattleCharacterInfo.LiveStateEnum.Alive;
             GrayScale.SetScale(1);
         }
     }
@@ -372,7 +364,7 @@ public class BattleCharacter : MonoBehaviour
 
     protected virtual void SetDeath(Action callback)
     {
-        LiveState = LiveStateEnum.Dead;
+        Info.LiveState = BattleCharacterInfo.LiveStateEnum.Dead;
         Sprite.DOFade(0, 0.5f).OnComplete(() =>
         {
             BattleUI.Instance.SetLittleHPBar(this, false);
@@ -386,7 +378,7 @@ public class BattleCharacter : MonoBehaviour
 
     private void SetDying(Action callback)
     {
-        LiveState = LiveStateEnum.Dying;
+        Info.LiveState = BattleCharacterInfo.LiveStateEnum.Dying;
         GrayScale.SetScale(0);
         if (callback != null)
         {

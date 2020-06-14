@@ -195,7 +195,7 @@ public class BattleController : MachineBehaviour
     {
         for (int i = 0; i < CharacterList.Count; i++)
         {
-            if (CharacterList[i].LiveState != BattleCharacter.LiveStateEnum.Dead && (Vector2)CharacterList[i].transform.position == position)
+            if (CharacterList[i].Info.LiveState != BattleCharacterInfo.LiveStateEnum.Dead && (Vector2)CharacterList[i].transform.position == position)
             {
                 return CharacterList[i];
             }
@@ -305,7 +305,7 @@ public class BattleController : MachineBehaviour
 
         for (int i=0; i<CharacterList.Count; i++)
         {
-            if (CharacterList[i].LiveState == BattleCharacter.LiveStateEnum.Alive)
+            if (CharacterList[i].Info.LiveState == BattleCharacterInfo.LiveStateEnum.Alive)
             {
                 if (CharacterList[i].Camp == BattleCharacter.CampEnum.Partner)
                 {
@@ -404,7 +404,7 @@ public class BattleController : MachineBehaviour
             parent._actionQueue.Clear();
             for (int i = 0; i < parent.CharacterList.Count; i++)
             {
-                if (parent.CharacterList[i].LiveState == BattleCharacter.LiveStateEnum.Alive)
+                if (parent.CharacterList[i].Info.LiveState == BattleCharacterInfo.LiveStateEnum.Alive)
                 {
                     parent._actionQueue.Add(parent.CharacterList[i]);
                     parent.CharacterList[i].InitActionCount();
@@ -434,14 +434,14 @@ public class BattleController : MachineBehaviour
 
                 BattleCharacter character = parent._actionQueue[0];
                 parent._actionQueue.RemoveAt(0);
-                if (character.LiveState == BattleCharacter.LiveStateEnum.Alive)
+                if (character.Info.LiveState == BattleCharacterInfo.LiveStateEnum.Alive)
                 {
                     CameraController.Instance.SetParent(character.Sprite.transform, true, () =>
                      {
                          BattleCharacter.NotActReason reason;
                          if (character.CanAct(out reason))
                          {
-                             if (parent.SelectedCharacter != null && parent.SelectedCharacter.LiveState == BattleCharacter.LiveStateEnum.Alive)
+                             if (parent.SelectedCharacter != null)
                              {
                                  parent.SelectedCharacter.SetOutline(false);
                              }
@@ -780,7 +780,7 @@ public class BattleController : MachineBehaviour
 
             for (int i = 0; i < parent.CharacterList.Count; i++)
             {
-                if (parent.CharacterList[i].LiveState == BattleCharacter.LiveStateEnum.Alive && parent.CharacterList[i].Info.IsPoisoning)
+                if (parent.CharacterList[i].Info.LiveState == BattleCharacterInfo.LiveStateEnum.Alive && parent.CharacterList[i].Info.IsPoisoning)
                 {
                     _poisonQueue.Enqueue(parent.CharacterList[i]);
                 }

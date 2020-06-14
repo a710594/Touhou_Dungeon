@@ -46,7 +46,7 @@ public class BattleFieldManager
         Vector2Int position = new Vector2Int();
         for (int i=0; i<BattleController.Instance.CharacterList.Count; i++)
         {
-            if (BattleController.Instance.CharacterList[i].LiveState != BattleCharacter.LiveStateEnum.Dead)
+            if (BattleController.Instance.CharacterList[i].Info.LiveState != BattleCharacterInfo.LiveStateEnum.Dead)
             {
                 if ((camp == BattleCharacter.CampEnum.Partner && BattleController.Instance.CharacterList[i].Camp == BattleCharacter.CampEnum.Enemy) ||
                     (camp == BattleCharacter.CampEnum.Enemy && BattleController.Instance.CharacterList[i].Camp == BattleCharacter.CampEnum.Partner)) //與自己不同陣營的角色會被視為障礙物
