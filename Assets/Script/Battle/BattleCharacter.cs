@@ -21,6 +21,13 @@ public class BattleCharacter : MonoBehaviour
         None,
     }
 
+    public enum LiveStateEnum
+    {
+        Alive,
+        Dying,
+        Dead,
+    }
+
     public Action OnDeathHandler;
 
     public string MediumImage;
@@ -36,6 +43,25 @@ public class BattleCharacter : MonoBehaviour
     public BattleCharacterInfo Info = new BattleCharacterInfo();
     public List<Skill> SkillList = new List<Skill>();
     public List<Skill> SpellCardList = new List<Skill>();
+
+    public LiveStateEnum LiveState
+    {
+        get
+        {
+            if (Info.CurrentHP > 0)
+            {
+                return LiveStateEnum.Alive;
+            }
+            else if (Info.CurrentHP == 0 && Camp == CampEnum.Partner)
+            {
+                return LiveStateEnum.Dying;
+            }
+            else
+            {
+                return LiveStateEnum.Dead;
+            }
+        }
+    }
 
     protected Vector2 _originalPosition = new Vector2();
     protected Vector2 _lastPosition = new Vector2(); //上一步的位置
@@ -233,9 +259,9 @@ public class BattleCharacter : MonoBehaviour
         {
             if (Info.CurrentHP <= 0)
             {
-                if (Camp == CampEnum.Enemy || Info.LiveState == BattleCharacterInfo.LiveStateEnum.Dying)
+                if (LiveState == BattleCharacter.LiveStateEnum.Dying)
                 {
-                    SetDeath(() =>
+                    SetDying(() =>
                     {
                         if (callback != null)
                         {
@@ -245,7 +271,7 @@ public class BattleCharacter : MonoBehaviour
                 }
                 else
                 {
-                    SetDying(() =>
+                    SetDeath(() =>
                     {
                         if (callback != null)
                         {
@@ -296,13 +322,13 @@ public class BattleCharacter : MonoBehaviour
                 callbackCount++;
                 if (Info.CurrentHP <= 0)
                 {
-                    if (Camp == CampEnum.Enemy || Info.LiveState == BattleCharacterInfo.LiveStateEnum.Dying)
+                    if (LiveState == BattleCharacter.LiveStateEnum.Dying)
                     {
-                        SetDeath(callback);
+                        SetDying(callback);
                     }
                     else
                     {
-                        SetDying(callback);
+                        SetDeath(callback);
                     }
                 }
                 else
@@ -318,6 +344,12 @@ public class BattleCharacter : MonoBehaviour
 
     public virtual void SetRecover(int recover, Action<BattleCharacter> callback)
     {
+        if (LiveState == BattleCharacter.LiveStateEnum.Dying)
+        {
+            GrayScale.SetScale(1);
+            Animator.SetBool("IsDying", false);
+        }
+
         Info.CurrentHP += recover;
         BattleUI.Instance.SetFloatingNumber(this, recover.ToString(), FloatingNumber.Type.Recover, () =>
         {
@@ -326,12 +358,6 @@ public class BattleCharacter : MonoBehaviour
                 callback(this);
             }
         });
-
-        if (Info.LiveState == BattleCharacterInfo.LiveStateEnum.Dying)
-        {
-            Info.LiveState = BattleCharacterInfo.LiveStateEnum.Alive;
-            GrayScale.SetScale(1);
-        }
     }
 
     public void ClearAbnormal(Action<BattleCharacter> callback)
@@ -364,7 +390,6 @@ public class BattleCharacter : MonoBehaviour
 
     protected virtual void SetDeath(Action callback)
     {
-        Info.LiveState = BattleCharacterInfo.LiveStateEnum.Dead;
         Sprite.DOFade(0, 0.5f).OnComplete(() =>
         {
             BattleUI.Instance.SetLittleHPBar(this, false);
@@ -378,8 +403,8 @@ public class BattleCharacter : MonoBehaviour
 
     private void SetDying(Action callback)
     {
-        Info.LiveState = BattleCharacterInfo.LiveStateEnum.Dying;
         GrayScale.SetScale(0);
+        Animator.SetBool("IsDying", true);
         if (callback != null)
         {
             callback();

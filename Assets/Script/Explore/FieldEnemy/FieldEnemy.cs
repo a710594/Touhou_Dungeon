@@ -6,8 +6,11 @@ using DG.Tweening;
 
 public class FieldEnemy : MonoBehaviour
 {
+    public SpriteRenderer Sprite;
+    public Animator Animator;
     public Action<int> OnPlayerEnterHandler;
 
+    protected Vector2Int _lookAt = Vector2Int.left;
     protected int _battleGroupId;
     protected float _cycleTime = 0.5f; //移動的週期
     protected Vector2Int _currentDirection;

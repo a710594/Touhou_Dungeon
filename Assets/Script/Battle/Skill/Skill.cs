@@ -235,7 +235,7 @@ public class Skill
             {
                 for (int i = 0; i < characterList.Count; i++)
                 {
-                    if (characterList[i].Camp == BattleCharacter.CampEnum.Partner && characterList[i].Info.LiveState == BattleCharacterInfo.LiveStateEnum.Alive)
+                    if (characterList[i].Camp == BattleCharacter.CampEnum.Partner && characterList[i].LiveState == BattleCharacter.LiveStateEnum.Alive)
                     {
                         positionList.Remove(Vector2Int.RoundToInt(characterList[i].transform.position));
                     }
@@ -245,7 +245,7 @@ public class Skill
             {
                 for (int i = 0; i < characterList.Count; i++)
                 {
-                    if (characterList[i].Camp == BattleCharacter.CampEnum.Enemy && characterList[i].Info.LiveState == BattleCharacterInfo.LiveStateEnum.Alive)
+                    if (characterList[i].Camp == BattleCharacter.CampEnum.Enemy && characterList[i].LiveState == BattleCharacter.LiveStateEnum.Alive)
                     {
                         positionList.Remove(Vector2Int.RoundToInt(characterList[i].transform.position));
                     }
@@ -258,7 +258,7 @@ public class Skill
             {
                 for (int i = 0; i < characterList.Count; i++)
                 {
-                    if (characterList[i].Camp == BattleCharacter.CampEnum.Enemy && characterList[i].Info.LiveState == BattleCharacterInfo.LiveStateEnum.Alive)
+                    if (characterList[i].Camp == BattleCharacter.CampEnum.Enemy && characterList[i].LiveState == BattleCharacter.LiveStateEnum.Alive)
                     {
                         positionList.Remove(Vector2Int.RoundToInt(characterList[i].transform.position));
                     }
@@ -268,7 +268,7 @@ public class Skill
             {
                 for (int i = 0; i < characterList.Count; i++)
                 {
-                    if (characterList[i].Camp == BattleCharacter.CampEnum.Partner && characterList[i].Info.LiveState == BattleCharacterInfo.LiveStateEnum.Alive)
+                    if (characterList[i].Camp == BattleCharacter.CampEnum.Partner && characterList[i].LiveState == BattleCharacter.LiveStateEnum.Alive)
                     {
                         positionList.Remove(Vector2Int.RoundToInt(characterList[i].transform.position));
                     }

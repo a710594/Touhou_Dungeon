@@ -52,12 +52,17 @@ public class BattleController : MachineBehaviour
         BattleCharacterPlayer characterPlayer;
         for (int i = 0; i < TeamManager.Instance.MemberList.Count; i++)
         {
-            characterPlayer = ResourceManager.Instance.Spawn("BattleCharacter/BattleCharacterPlayer", ResourceManager.Type.Other).GetComponent<BattleCharacterPlayer>();
             member = TeamManager.Instance.MemberList[i];
+            characterPlayer = ResourceManager.Instance.Spawn("BattleCharacter/BattleCharacterPlayer", ResourceManager.Type.Other).GetComponent<BattleCharacterPlayer>();
             characterPlayer.Init(member);
             CharacterList.Add(characterPlayer);
             _playerList.Add(characterPlayer);
             characterPlayer.SetPosition((Vector2)(member.Formation + BattleFieldManager.Instance.Center));
+
+            if (characterPlayer.LiveState == BattleCharacter.LiveStateEnum.Dead)
+            {
+                characterPlayer.Sprite.color = Color.clear;
+            }
         }
 
         _enemyList.Clear();
@@ -114,6 +119,11 @@ public class BattleController : MachineBehaviour
             {
                 SelectedCharacter = characterPlayer;
             }
+
+            if (characterPlayer.LiveState == BattleCharacter.LiveStateEnum.Dead)
+            {
+                characterPlayer.Sprite.color = Color.clear;
+            }
         }
 
         _enemyList.Clear();
@@ -121,12 +131,17 @@ public class BattleController : MachineBehaviour
         Dictionary<BattleEnemyMemo, BattleCharacter> memoEnemyObjectDic = new Dictionary<BattleEnemyMemo, BattleCharacter>();
         for (int i = 0; i < memo.EnemyList.Count; i++)
         {
-            _enemyList.Add(memo.EnemyList[i].Lv);
+            _enemyList.Add(memo.EnemyList[i].ID);
             characterAI = ResourceManager.Instance.Spawn("BattleCharacter/BattleCharacterAI", ResourceManager.Type.Other).GetComponent<BattleCharacterAI>();
-            characterAI.Init(memo.EnemyList[i].ID, memo.EnemyList[i].Lv);
+            characterAI.Init(memo.EnemyList[i]);
             CharacterList.Add(characterAI);
             characterAI.SetPosition(memo.EnemyList[i].Position);
             memoEnemyObjectDic.Add(memo.EnemyList[i], characterAI);
+
+            if (characterAI.LiveState == BattleCharacter.LiveStateEnum.Dead)
+            {
+                characterAI.Sprite.color = Color.clear;
+            }
         }
 
         _actionQueue.Clear();
@@ -195,7 +210,7 @@ public class BattleController : MachineBehaviour
     {
         for (int i = 0; i < CharacterList.Count; i++)
         {
-            if (CharacterList[i].Info.LiveState != BattleCharacterInfo.LiveStateEnum.Dead && (Vector2)CharacterList[i].transform.position == position)
+            if (CharacterList[i].LiveState != BattleCharacter.LiveStateEnum.Dead && (Vector2)CharacterList[i].transform.position == position)
             {
                 return CharacterList[i];
             }
@@ -305,7 +320,7 @@ public class BattleController : MachineBehaviour
 
         for (int i=0; i<CharacterList.Count; i++)
         {
-            if (CharacterList[i].Info.LiveState == BattleCharacterInfo.LiveStateEnum.Alive)
+            if (CharacterList[i].LiveState == BattleCharacter.LiveStateEnum.Alive)
             {
                 if (CharacterList[i].Camp == BattleCharacter.CampEnum.Partner)
                 {
@@ -404,7 +419,7 @@ public class BattleController : MachineBehaviour
             parent._actionQueue.Clear();
             for (int i = 0; i < parent.CharacterList.Count; i++)
             {
-                if (parent.CharacterList[i].Info.LiveState == BattleCharacterInfo.LiveStateEnum.Alive)
+                if (parent.CharacterList[i].LiveState == BattleCharacter.LiveStateEnum.Alive)
                 {
                     parent._actionQueue.Add(parent.CharacterList[i]);
                     parent.CharacterList[i].InitActionCount();
@@ -434,7 +449,7 @@ public class BattleController : MachineBehaviour
 
                 BattleCharacter character = parent._actionQueue[0];
                 parent._actionQueue.RemoveAt(0);
-                if (character.Info.LiveState == BattleCharacterInfo.LiveStateEnum.Alive)
+                if (character.LiveState == BattleCharacter.LiveStateEnum.Alive)
                 {
                     CameraController.Instance.SetParent(character.Sprite.transform, true, () =>
                      {
@@ -780,7 +795,7 @@ public class BattleController : MachineBehaviour
 
             for (int i = 0; i < parent.CharacterList.Count; i++)
             {
-                if (parent.CharacterList[i].Info.LiveState == BattleCharacterInfo.LiveStateEnum.Alive && parent.CharacterList[i].Info.IsPoisoning)
+                if (parent.CharacterList[i].LiveState == BattleCharacter.LiveStateEnum.Alive && parent.CharacterList[i].Info.IsPoisoning)
                 {
                     _poisonQueue.Enqueue(parent.CharacterList[i]);
                 }
@@ -886,9 +901,13 @@ public class BattleController : MachineBehaviour
     {
         base.Update();
 
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.F1))
         {
             ChangeState<WinState>();
+        }
+        if (Input.GetKeyDown(KeyCode.F2))
+        {
+            ChangeState<LoseState>();
         }
     }
 }

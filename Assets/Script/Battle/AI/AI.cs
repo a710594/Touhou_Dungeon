@@ -167,7 +167,7 @@ public class AI : MonoBehaviour
         for (int i=0; i<BattleController.Instance.CharacterList.Count; i++)
         {
             character = BattleController.Instance.CharacterList[i];
-            if (character.Info.LiveState != BattleCharacterInfo.LiveStateEnum.Dead)
+            if (character.LiveState != BattleCharacter.LiveStateEnum.Dead)
             {
                 if (character.Camp == targetCamp)
                 {

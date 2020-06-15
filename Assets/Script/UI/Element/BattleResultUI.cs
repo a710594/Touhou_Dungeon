@@ -15,10 +15,12 @@ public class BattleResultUI : MonoBehaviour
     public GameObject ItemGroup;
     public CharacterLvCard[] CharacterLvCards;
 
+    private bool _isWin;
     private Timer _timer = new Timer();
 
     public void Open(bool isWin, List<int> orignalLvList = null, List<int> orignalExpList = null, List<int> itemList = null)
     {
+        _isWin = isWin;
         gameObject.SetActive(true);
         WinLabel.SetActive(isWin);
         LoseLabel.SetActive(!isWin);
@@ -92,22 +94,22 @@ public class BattleResultUI : MonoBehaviour
         }
         else
         {
-            MySceneManager.Instance.ChangeScene(MySceneManager.SceneType.Explore, () =>
+            if (_isWin)
             {
-                ExploreController.Instance.SetFloor();
-            });
+                MySceneManager.Instance.ChangeScene(MySceneManager.SceneType.Explore, () =>
+                {
+                    ExploreController.Instance.SetFloor();
+                });
+            }
+            else
+            {
+                MySceneManager.Instance.ChangeScene(MySceneManager.SceneType.Villiage, () =>
+                {
+                    ItemManager.Instance.PutBagItemIntoWarehouse();
+                    TeamManager.Instance.RecoverAllMember();
+                });
+            }
         }
-
-        //MySceneManager.Instance.ChangeScene(MySceneManager.SceneType.Battle,()=> 
-        //{
-        //    //wait for init
-        //    Timer timer = new Timer();
-        //    timer.Start(0.5f, () =>
-        //    {
-        //        List<KeyValuePair<int, int>> enemyList = BattleGroupData.GetEnemy(1);
-        //        BattleController.Instance.Init(1, enemyList);
-        //    });
-        //});
     }
 
     void Awake()

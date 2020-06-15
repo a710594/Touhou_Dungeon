@@ -9,7 +9,7 @@ public class ShopUI : MonoBehaviour
 
     public Text MoneyLabel;
     public Text NameLabel;
-    public Text VolumeLabel;
+    public Text AmountLabel;
     public Text CommentLabel;
     public Button ItemButton;
     public Button EquipButton;
@@ -50,7 +50,7 @@ public class ShopUI : MonoBehaviour
     {
         MoneyLabel.text = ItemManager.Instance.Money.ToString();
         NameLabel.text = _selectedData.GetName();
-        VolumeLabel.text = "庫存：" + ItemManager.Instance.GetItemAmount(_selectedData.ID, ItemManager.Type.Warehouse);
+        AmountLabel.text = "庫存：" + ItemManager.Instance.GetItemAmount(_selectedData.ID, ItemManager.Type.Warehouse);
         CommentLabel.text = _selectedData.GetComment();
         if (_selectedData.Type == ItemData.TypeEnum.Equip)
         {
@@ -93,7 +93,7 @@ public class ShopUI : MonoBehaviour
     {
         NameLabel.text = "";
         CommentLabel.text = "";
-        VolumeLabel.text = "";
+        AmountLabel.text = "";
         EquipComment.gameObject.SetActive(false);
         BuyButton.gameObject.SetActive(false);
     }
@@ -116,7 +116,7 @@ public class ShopUI : MonoBehaviour
                 ItemManager.Instance.AddItem(_selectedData.ID, amount, ItemManager.Type.Warehouse);
 
                 SetData();
-            });
+            }, _selectedData.Price);
         }
         else
         {
@@ -139,7 +139,7 @@ public class ShopUI : MonoBehaviour
     void Awake()
     {
         NameLabel.text = string.Empty;
-        VolumeLabel.text = string.Empty;
+        AmountLabel.text = string.Empty;
         CommentLabel.text = string.Empty;
 
         EquipComment.gameObject.SetActive(false);

@@ -27,16 +27,6 @@ public class FieldEnemyGuard : FieldEnemy
                 }
             }
         }
-
-        //TilePainter.Instance.Painting("RedGrid", 1, Vector2Int.RoundToInt(transform.position + Vector3.up + Vector3.left));
-        //TilePainter.Instance.Painting("RedGrid", 1, Vector2Int.RoundToInt(transform.position + Vector3.up));
-        //TilePainter.Instance.Painting("RedGrid", 1, Vector2Int.RoundToInt(transform.position + Vector3.up + Vector3.right));
-        //TilePainter.Instance.Painting("RedGrid", 1, Vector2Int.RoundToInt(transform.position + Vector3.left));
-        //TilePainter.Instance.Painting("RedGrid", 1, Vector2Int.RoundToInt(transform.position));
-        //TilePainter.Instance.Painting("RedGrid", 1, Vector2Int.RoundToInt(transform.position + Vector3.right));
-        //TilePainter.Instance.Painting("RedGrid", 1, Vector2Int.RoundToInt(transform.position + Vector3.down + Vector3.left));
-        //TilePainter.Instance.Painting("RedGrid", 1, Vector2Int.RoundToInt(transform.position + Vector3.down));
-        //TilePainter.Instance.Painting("RedGrid", 1, Vector2Int.RoundToInt(transform.position + Vector3.down + Vector3.right));
     }
 
 

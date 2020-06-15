@@ -43,7 +43,7 @@ public class AttackSkill : Skill
         base.SetEffect(target);
 
         int damage = 0;
-        HitType hitType = CheckHit(_executor.Info, target.Info);
+        HitType hitType = CheckHit(_executor.Info, target.Info, target.LiveState);
         if (hitType == HitType.Critical)
         {
             damage = CalculateDamage(_executor.Info, target.Info, true);
@@ -90,7 +90,7 @@ public class AttackSkill : Skill
         return Mathf.RoundToInt(damage);
     }
 
-    protected HitType CheckHit(BattleCharacterInfo executor, BattleCharacterInfo target)
+    protected HitType CheckHit(BattleCharacterInfo executor, BattleCharacterInfo target, BattleCharacter.LiveStateEnum targetLiveState)
     {
         float misssRate;
         misssRate = (float)(target.AGI - executor.SEN) / (float)target.AGI; //迴避率
@@ -103,7 +103,7 @@ public class AttackSkill : Skill
             }
             else
             {
-                if (target.LiveState == BattleCharacterInfo.LiveStateEnum.Dying)
+                if (targetLiveState == BattleCharacter.LiveStateEnum.Dying)
                 {
                     return HitType.Hit;
                 }

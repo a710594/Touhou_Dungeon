@@ -65,6 +65,12 @@ public class BattleCharacterPlayer : BattleCharacter
             Animator.runtimeAnimatorController = Resources.Load<RuntimeAnimatorController>("Animator/" + data.Animator);
         }
 
+        if (LiveState == LiveStateEnum.Dying)
+        {
+            GrayScale.SetScale(0);
+            Animator.SetBool("IsDying", true);
+        }
+
         SkillData.RootObject skillData;
         Skill skill;
         for (int i = 0; i < memo.SkillList.Count; i++)

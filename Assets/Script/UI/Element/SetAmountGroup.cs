@@ -12,17 +12,20 @@ public class SetAmountGroup : MonoBehaviour
     public Button ConfirmButton;
     public Button CancelButton;
     public Text CommentLabel;
+    public Text PriceLabel;
 
     private int _amount;
     private int _maxAmount;
+    private int _price;
     private Action<int> _onConfirmHandler;
 
-    public void Open(int maxAmoount, string comment, Action<int> onConfirmHandler)
+    public void Open(int maxAmoount, string comment, Action<int> onConfirmHandler, int price = 0)
     {
         gameObject.SetActive(true);
-        _maxAmount = maxAmoount;
-        _onConfirmHandler = onConfirmHandler;
         _amount = 1;
+        _maxAmount = maxAmoount;
+        _price = price;
+        _onConfirmHandler = onConfirmHandler;
         InputField.text = _amount.ToString();
         CommentLabel.text = comment;
 
@@ -35,21 +38,26 @@ public class SetAmountGroup : MonoBehaviour
         {
             AddButton.interactable = true;
         }
+
+        if (PriceLabel != null)
+        {
+            PriceLabel.text = (_price * _amount).ToString();
+        }
     }
 
-    private void CheckValueRange(int amount)
+    private void CheckValueRange()
     {
-        if (amount > _maxAmount)
+        if (_amount > _maxAmount)
         {
-            amount = _maxAmount;
+            _amount = _maxAmount;
         }
-        else if (amount < 1)
+        else if (_amount < 1)
         {
-            amount = 1;
+            _amount = 1;
         }
-        InputField.text = amount.ToString();
+        InputField.text = _amount.ToString();
 
-        if (amount == _maxAmount)
+        if (_amount == _maxAmount)
         {
             AddButton.interactable = false;
         }
@@ -58,7 +66,7 @@ public class SetAmountGroup : MonoBehaviour
             AddButton.interactable = true;
         }
 
-        if (amount == 1)
+        if (_amount == 1)
         {
             MinusButton.interactable = false;
         }
@@ -66,26 +74,31 @@ public class SetAmountGroup : MonoBehaviour
         {
             MinusButton.interactable = true;
         }
+
+        if (PriceLabel != null)
+        {
+            PriceLabel.text = (_price * _amount).ToString();
+        }
     }
 
     private void OnValueChange(string text)
     {
         _amount = int.Parse(text);
-        CheckValueRange(_amount);
+        CheckValueRange();
     }
 
     private void AddOnClick()
     {
         _amount = int.Parse(InputField.text);
         _amount++;
-        CheckValueRange(_amount);
+        CheckValueRange();
     }
 
     private void MinusOnClick()
     {
         _amount = int.Parse(InputField.text);
         _amount--;
-        CheckValueRange(_amount);
+        CheckValueRange();
     }
 
     private void ConfirmOnClick()

@@ -11,6 +11,11 @@ public class VilliageUI : MonoBehaviour
     public Button TeamButton;
     public Button FormationButton;
     public Button WarehouseButton;
+    public Button BuyButton;
+    public Button SellButton;
+    public Button CloseShopGroupButton;
+    public GameObject MainGroup;
+    public GameObject ShopGroup;
     public SelectDestinationUI SelectDestinationUI;
 
     private void AdventureOnClick()
@@ -20,7 +25,8 @@ public class VilliageUI : MonoBehaviour
 
     private void ShopOnClick()
     {
-        ShopUI.Open();
+        ShopGroup.SetActive(true);
+        MainGroup.SetActive(false);
     }
 
     private void CookOnClick() 
@@ -43,6 +49,22 @@ public class VilliageUI : MonoBehaviour
         BagUI.Open(ItemManager.Type.Warehouse);
     }
 
+    private void BuyOnClick()
+    {
+        ShopUI.Open();
+    }
+
+    private void SellOnClick()
+    {
+        SellUI.Open();
+    }
+
+    private void CloseShopGroupOnClick()
+    {
+        ShopGroup.SetActive(false);
+        MainGroup.SetActive(true);
+    }
+
     private void Awake()
     {
         SelectDestinationUI.gameObject.SetActive(false);
@@ -53,5 +75,8 @@ public class VilliageUI : MonoBehaviour
         TeamButton.onClick.AddListener(TeamOnClick);
         FormationButton.onClick.AddListener(FormationOnClick);
         WarehouseButton.onClick.AddListener(WarehouseOnClick);
+        BuyButton.onClick.AddListener(BuyOnClick);
+        SellButton.onClick.AddListener(SellOnClick);
+        CloseShopGroupButton.onClick.AddListener(CloseShopGroupOnClick);
     }
 }

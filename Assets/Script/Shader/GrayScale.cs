@@ -20,7 +20,7 @@ public class GrayScale : MonoBehaviour
 
     private void Start()
     {
-        SetScale(GrayscaleAmount);
+        //(GrayscaleAmount);
     }
 
     // Update is called once per frame

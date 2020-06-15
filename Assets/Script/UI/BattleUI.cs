@@ -70,6 +70,10 @@ public class BattleUI : MonoBehaviour
         anchorValueBar.SetValue(character.Info.CurrentHP, character.Info.MaxHP);
         anchorValueBar.SetAnchor(character.ValueBarAnchor);
         _littleHPBarDic.Add(character, anchorValueBar);
+        if (character.LiveState == BattleCharacter.LiveStateEnum.Dead)
+        {
+            anchorValueBar.gameObject.SetActive(false);
+        }
 
         floatingNumberPool = ResourceManager.Instance.Spawn(FloatingNumberPool.gameObject).GetComponent<FloatingNumberPool>();
         _floatingNumberPoolDic.Add(character, floatingNumberPool);

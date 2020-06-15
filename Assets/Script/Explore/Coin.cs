@@ -16,11 +16,10 @@ public class Coin : MonoBehaviour
         if (!_isTrigger && collision.tag == "Player")
         {
             _isTrigger = true;
-            Sprite.transform.DOLocalJump(Sprite.transform.localPosition, 1, 1, 1).SetEase(Ease.OutCubic).OnComplete(() =>
+            Sprite.transform.DOLocalJump(Sprite.transform.localPosition, 1, 1, 0.5f).SetEase(Ease.Linear).OnComplete(() =>
             {
                 Destroy(gameObject);
             });
-            Sprite.transform.DOScale(Vector3.zero, 1).SetEase(Ease.OutCubic);
         }
     }
 }
