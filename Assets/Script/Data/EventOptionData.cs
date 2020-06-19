@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Newtonsoft.Json;
 
-public class EventOptionData
+/*public class EventOptionData
 {
     public enum TypeEnum
     {
@@ -96,4 +96,4 @@ public class EventOptionData
         _dataDic.TryGetValue(id, out data);
         return data;
     }
-}
+}*/

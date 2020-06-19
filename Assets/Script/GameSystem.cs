@@ -18,6 +18,7 @@ public class GameSystem : MonoBehaviour
         MySceneManager.Instance.Save();
         ItemManager.Instance.Save();
         TeamManager.Instance.Save();
+        ProgressManager.Instance.Save();
         if (MySceneManager.Instance.CurrentScene == MySceneManager.SceneType.Explore)
         {
             ExploreController.Instance.Save();
@@ -30,12 +31,12 @@ public class GameSystem : MonoBehaviour
 
     public void ClearMemo()
     {
-    }
-
-    public void LaodMemo()
-    {
-        MySceneManager.Instance.Load();
-        //ExploreController.Instance.Load();
+        Caretaker.Instance.ClearData<SceneMemo>();
+        Caretaker.Instance.ClearData<ItemMemo>();
+        Caretaker.Instance.ClearData<TeamMemo>();
+        Caretaker.Instance.ClearData<ProgressMemo>();
+        Caretaker.Instance.ClearData<MapMemo>();
+        Caretaker.Instance.ClearData<BattleMemo>();
     }
 
     // Start is called before the first frame update
@@ -57,7 +58,7 @@ public class GameSystem : MonoBehaviour
         TreasureData.Load();
         DungeonBattleGroupData.Load();
         EventData.Load();
-        EventOptionData.Load();
+        //EventOptionData.Load();
         CookData.Load();
         ConversationData.Load();
         ShopData.Load();
@@ -68,23 +69,9 @@ public class GameSystem : MonoBehaviour
         TeamManager.Instance.Init();
         ItemManager.Instance.Init();
         MySceneManager.Instance.Init();
+        ProgressManager.Instance.Init();
 
-        LaodMemo();
-
-        if (MySceneManager.Instance.CurrentScene == MySceneManager.SceneType.Explore)
-        {
-            MySceneManager.Instance.ChangeScene(MySceneManager.SceneType.Explore, () =>
-            {
-                ExploreController.Instance.SetFloorFromMemo();
-            });
-        }
-        else if (MySceneManager.Instance.CurrentScene == MySceneManager.SceneType.Battle)
-        {
-            MySceneManager.Instance.ChangeScene(MySceneManager.SceneType.Battle, () =>
-            {
-                BattleController.Instance.InitFromMemo();
-            });
-        }
+        MySceneManager.Instance.Load();
     }
 
     private void Awake()
@@ -112,6 +99,10 @@ public class GameSystem : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.F3))
         {
             SaveMemo();
+        }
+        if (Input.GetKeyDown(KeyCode.F4))
+        {
+            ClearMemo();
         }
     }
 }

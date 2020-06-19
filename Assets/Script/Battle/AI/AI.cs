@@ -73,8 +73,6 @@ public class AI : MonoBehaviour
                     if (positionList.Count > 0)
                     {
                         _character.HasTarget = true;
-                        //if (!_character.InSkillDistance())//目標不再在程內就需要移動
-                        //{
                         //尋找最短路徑
                         Queue<Vector2Int> path = _character.GetPath(positionList[0]);
                         Queue<Vector2Int> shortestPath = path;
@@ -91,16 +89,11 @@ public class AI : MonoBehaviour
                         while (shortestPath.Count > 0)
                         {
                             position = shortestPath.Dequeue();
-                            //if (!_character.InMoveRange(position))
-                            //{
-                            //    break;
-                            //}
                             _character.Move(position);
                             yield return new WaitForSeconds(0.2f);
                         }
                         _character.StopMoveAnimation();
                         _character.MoveDone();
-                        //}
                         _character.GetSkillRange();
                     }
                     else
@@ -127,16 +120,14 @@ public class AI : MonoBehaviour
                         }
                         Queue<Vector2Int> path = _character.GetPath(closestPosition);
 
+                        _character.StartMoveAnimation();
                         while (path.Count > 0)
                         {
                             position = path.Dequeue();
-                            //if (!_character.InMoveRange(position))
-                            //{
-                            //    break;
-                            //}
                             _character.Move(position);
                             yield return new WaitForSeconds(0.2f);
                         }
+                        _character.StopMoveAnimation();
                         _character.MoveDone();
                         _character.ActionDoneCompletely();
                     }

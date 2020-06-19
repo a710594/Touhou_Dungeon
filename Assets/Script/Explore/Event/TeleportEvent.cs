@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class TeleportEvent : EventResult
 {
-    public TeleportEvent(EventOptionData.Result result)
+    public TeleportEvent(EventData.Result result)
     {
         _result = result;
     }

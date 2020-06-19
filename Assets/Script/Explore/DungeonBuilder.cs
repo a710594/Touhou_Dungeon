@@ -240,7 +240,7 @@ public class DungeonBuilder
 
         //explore point
         Dictionary<Vector2Int, int> exploreEventDic = new Dictionary<Vector2Int, int>();
-        int explorePointAmount = Random.Range(_dungeonData.MinExplorePoint, _dungeonData.MaxExplorePoint + 1);
+        int explorePointAmount = Random.Range(_dungeonData.MinEventPoint, _dungeonData.MaxEventPoint + 1);
         for (int i = 0; i < explorePointAmount; i++)
         {
             position = spaceList[Random.Range(0, spaceList.Count)];

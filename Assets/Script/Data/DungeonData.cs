@@ -23,8 +23,8 @@ public class DungeonData
         public string WallTile { get; set; }
         public string DoorTile { get; set; }
         public string GrassTile { get; set; }
-        public int MinExplorePoint { get; set; }
-        public int MaxExplorePoint { get; set; }
+        public int MinEventPoint { get; set; }
+        public int MaxEventPoint { get; set; }
         public int Event_1 { get; set; }
         public int Event_2 { get; set; }
         public int Event_3 { get; set; }

@@ -101,7 +101,7 @@ public class ExploreController
     public void Save()
     {
         _playerPosition = Vector2Int.RoundToInt(_player.transform.position);
-        Caretaker.Instance.Save<MapMemo>(new MapMemo(_mapInfo, _playerPosition, _exploredList, _exploredWallList, _guardList));
+        Caretaker.Instance.Save<MapMemo>(new MapMemo(ArriveFloor, _mapInfo, _playerPosition, _exploredList, _exploredWallList, _guardList));
     }
 
     public void ChangeFloor(int floor)
@@ -166,7 +166,7 @@ public class ExploreController
                 });
             }
         }
-        if (_mapInfo.DoorList.Contains(position))
+        else if (_mapInfo.DoorList.Contains(position))
         {
             if (ItemManager.Instance.UseKey())
             {
@@ -180,12 +180,24 @@ public class ExploreController
                 ConfirmUI.Open("需要一把鑰匙將鎖打開。", "確定", null);
             }
         }
+        else if (_mapInfo.ExploreEventDic.ContainsKey(position))
+        {
+            _player.Stop();
+            EventUI.Open(_mapInfo.ExploreEventDic[position], (isDonothing) =>
+            {
+                _player.UnlockStop();
+                if (!isDonothing)
+                {
+                    TilePainter.Instance.Clear(2, position);
+                    _mapInfo.ExploreEventDic.Remove(position);
+                }
+            });
+        }
         SetInteractive(Vector2Int.RoundToInt(_player.transform.position));
     }
 
     public void ForceEnterBattle() //作弊用,強迫進入戰鬥
     {
-        Vector2Int newPosition = Vector2Int.RoundToInt(_player.transform.position);
         DungeonBattleGroupData.RootObject data = DungeonBattleGroupData.GetData(_mapInfo.DungeonData.ID);
         EnterBattle(data.GetRandomBattleGroup());
     }
@@ -225,7 +237,7 @@ public class ExploreController
             }
         }
 
-        if (_mapInfo.MapList.Contains(position) && !_mapInfo.TreasureDic.ContainsKey(position) && !_mapInfo.DoorList.Contains(position))
+        if (_mapInfo.MapList.Contains(position) && !_mapInfo.TreasureDic.ContainsKey(position) && !_mapInfo.DoorList.Contains(position) && !_mapInfo.ExploreEventDic.ContainsKey(position))
         {
             return true;
         }
@@ -298,7 +310,7 @@ public class ExploreController
 
         for (int i = 0; i < _directions.Length; i++)
         {
-            if (_mapInfo.TreasureDic.ContainsKey(position + _directions[i]) || _mapInfo.DoorList.Contains(position + _directions[i]))
+            if (_mapInfo.TreasureDic.ContainsKey(position + _directions[i]) || _mapInfo.DoorList.Contains(position + _directions[i]) || _mapInfo.ExploreEventDic.ContainsKey(position + _directions[i]))
             {
                 interactiveList.Add(position + _directions[i]);
             }
@@ -319,13 +331,19 @@ public class ExploreController
             ExploreUI.Instance.TipLabel.SetLabel("得到 " + _mapInfo.MoneyDic[position] + " $");
             _mapInfo.MoneyDic.Remove(position);
         }
-        else if (_mapInfo.ExploreEventDic.ContainsKey(position))
+        /*else if (_mapInfo.ExploreEventDic.ContainsKey(position))
         {
             _player.Stop();
-            EventUI.Open(_mapInfo.ExploreEventDic[position], _player.UnlockStop);
-            TilePainter.Instance.Clear(2, position);
-            _mapInfo.ExploreEventDic.Remove(position);
-        }
+            EventUI.Open(_mapInfo.ExploreEventDic[position],(isDonothing)=> 
+            {
+                _player.UnlockStop();
+                if (!isDonothing)
+                {
+                    TilePainter.Instance.Clear(2, position);
+                    _mapInfo.ExploreEventDic.Remove(position);
+                }
+            });
+        }*/
     }
 
     private void SetVisibleRange(bool isInit)

@@ -4,14 +4,19 @@ using UnityEngine;
 
 public class BattleEvent : EventResult
 {
-    public BattleEvent(EventOptionData.Result result)
+    private Timer _timer = new Timer();
+
+    public BattleEvent(EventData.Result result)
     {
         _result = result;
     }
 
     public override void Execute()
     {
-        ExploreController.Instance.EnterBattle(_result.Value);
-        Time.timeScale = 1;
+        _timer.Start(0.5f, ()=> 
+        {
+            ExploreController.Instance.ForceEnterBattle();
+            Time.timeScale = 1;
+        });
     }
 }

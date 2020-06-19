@@ -8,6 +8,7 @@ public class MySceneManager
 {
     public enum SceneType
     {
+        Logo,
         Villiage,
         Explore,
         Battle,

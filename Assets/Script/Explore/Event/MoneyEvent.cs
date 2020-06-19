@@ -4,13 +4,13 @@ using UnityEngine;
 
 public class MoneyEvent : EventResult
 {
-    public MoneyEvent(EventOptionData.Result result)
+    public MoneyEvent(EventData.Result result)
     {
         _result = result;
     }
 
     public override void Execute()
     {
-        ItemManager.Instance.AddMoney(_result.Value);
+        ItemManager.Instance.AddMoney(ExploreController.Instance.ArriveFloor * 100);
     }
 }

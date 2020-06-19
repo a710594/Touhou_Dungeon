@@ -1,3 +1,3 @@
-[{"ID":1,"Comment_Chinese":"你在路邊看到了一個賽錢箱，你要做什麼？","OptionID_1":2,"OptionChinese_1":"投入五元","OptionID_2":3,"OptionChinese_2":"投入二十五元","OptionID_3":1,"OptionChinese_3":"不做任何事"},
-{"ID":2,"Comment_Chinese":"你看到了一個境界的縫隙，不知會通往何方。","OptionID_1":4,"OptionChinese_1":"進入縫隙","OptionID_2":1,"OptionChinese_2":"不做任何事","OptionID_3":0,"OptionChinese_3":""},
-{"ID":3,"Comment_Chinese":"你看到了一個洞穴，有$$的氣息！但洞穴裡也可能有敵人埋伏，要進去嗎？","OptionID_1":5,"OptionChinese_1":"進入洞穴","OptionID_2":1,"OptionChinese_2":"不做任何事","OptionID_3":0,"OptionChinese_3":""}]
+[{"ID":1,"Comment_Chinese":"你在路邊看到了一個賽錢箱，你要做什麼？","OptionChinese_1":"投入{10%}元","Result_1_1":1,"RessutChinese_1_1":"你回復了全部的 HP 和 MP ！","Result_1_2":-1,"RessutChinese_1_2":"","OptionChinese_2":"不做任何事","Result_2_1":0,"RessutChinese_2_1":"你離開了。"},
+{"ID":2,"Comment_Chinese":"你看到了一個境界的縫隙，不知會通往何方。","OptionChinese_1":"進入縫隙","Result_1_1":2,"RessutChinese_1_1":"你踏進了境界的縫隙，被傳送到了另一個地方！","Result_1_2":-1,"RessutChinese_1_2":"","OptionChinese_2":"不做任何事","Result_2_1":0,"RessutChinese_2_1":"你離開了。"},
+{"ID":3,"Comment_Chinese":"你看到了一個錢袋，裡面感覺有很多錢，但也有可能是陷阱。要檢起來嗎？","OptionChinese_1":"進入洞穴","Result_1_1":3,"RessutChinese_1_1":"你得到了{}元！","Result_1_2":4,"RessutChinese_1_2":"哎呀！","OptionChinese_2":"不做任何事","Result_2_1":0,"RessutChinese_2_1":"你離開了。"}]

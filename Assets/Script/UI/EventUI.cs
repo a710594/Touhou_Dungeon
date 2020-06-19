@@ -9,12 +9,13 @@ public class EventUI : MonoBehaviour
     public static EventUI Instance;
 
     public Text CommentLabel;
-    public Button CloseButton;
+    public Button ConfirmButton;
     public ButtonPlus[] OptionButtons;
 
-    private Action FinishCallback;
+    private bool _isDoNothing = false;
+    private Action<bool> FinishCallback;
 
-    public static void Open(int id, Action callback)
+    public static void Open(int id, Action<bool> callback)
     {
         if (Instance == null)
         {
@@ -32,11 +33,11 @@ public class EventUI : MonoBehaviour
 
         if (FinishCallback != null)
         {
-            FinishCallback();
+            FinishCallback(_isDoNothing);
         }
     }
 
-    public void SetData(int id, Action callback)
+    public void SetData(int id, Action<bool> callback)
     {
         EventData.RootObject data = EventData.GetData(id);
         CommentLabel.text = data.GetComment();
@@ -44,11 +45,16 @@ public class EventUI : MonoBehaviour
 
         for (int i=0; i<OptionButtons.Length; i++)
         {
-            if (i < data.OptionIdList.Count)
+            if (i < data.OptionCommentList.Count)
             {
                 OptionButtons[i].gameObject.SetActive(true);
-                OptionButtons[i].SetData(data.OptionIdList[i]);
-                OptionButtons[i].Label.text = data.GetOptionComment(i);
+                OptionButtons[i].SetData(data.ResultList[i]);
+                string text = data.GetOptionComment(i);
+                if (text.Contains("{10%}"))
+                {
+                    text = text.Replace("{10%}", ((int)(ItemManager.Instance.Money * 0.1f)).ToString());
+                }
+                OptionButtons[i].Label.text = text;
             }
             else
             {
@@ -59,26 +65,41 @@ public class EventUI : MonoBehaviour
 
     private void OptionOnCLick(ButtonPlus buttonPlus)
     {
-        EventOptionData.RootObject data = EventOptionData.GetData((int)buttonPlus.Data);
-        EventOptionData.Result result = data.GetRandomResult();
+        List<EventData.Result> resultList = (List<EventData.Result>)buttonPlus.Data;
+        EventData.Result result = resultList[UnityEngine.Random.Range(0, resultList.Count)];
         EventResult eventResult = EventResultFactory.GetNewEventResult(result);
         eventResult.Execute();
-        CommentLabel.text = result.GetComment();
+        string comment = result.GetComment();
+        if (comment.Contains("{}"))
+        {
+            comment = comment.Replace("{}", (ExploreController.Instance.ArriveFloor * 100).ToString());
+        }
+        CommentLabel.text = comment;
+
+        if (result.Type == EventData.TypeEnum.Nothing)
+        {
+            _isDoNothing = true;
+        }
+        else
+        {
+            _isDoNothing = false;
+        }
 
         for (int i=0; i<OptionButtons.Length; i++)
         {
             OptionButtons[i].gameObject.SetActive(false);
         }
+        ConfirmButton.gameObject.SetActive(true);
     }
 
-    private void CloseOnClick()
+    private void ConfirmOnClick()
     {
         Close();
     }
 
     private void Awake()
     {
-        CloseButton.onClick.AddListener(CloseOnClick);
+        ConfirmButton.onClick.AddListener(ConfirmOnClick);
 
         for (int i=0; i<OptionButtons.Length; i++)
         {

@@ -4,31 +4,24 @@ using UnityEngine;
 
 public class EventResultFactory : MonoBehaviour
 {
-    public static EventResult GetNewEventResult(EventOptionData.Result result)
+    public static EventResult GetNewEventResult(EventData.Result result)
     {
         EventResult eventResult = new EventResult();
-        if (result.Type == EventOptionData.TypeEnum.RecoverHP)
+
+        if (result.Type == EventData.TypeEnum.Recover)
         {
-            eventResult = new RecoverHPEvent(result);
+            eventResult = new RecoverEvent(result);
         }
-        else if (result.Type == EventOptionData.TypeEnum.RecoverMP)
-        {
-            eventResult = new RecoverMPEvent(result);
-        }
-        else if (result.Type == EventOptionData.TypeEnum.RecoverBoth)
-        {
-            eventResult = new RecoverBothEvent(result);
-        }
-        else if (result.Type == EventOptionData.TypeEnum.Teleport)
+        else if (result.Type == EventData.TypeEnum.Teleport)
         {
             eventResult = new TeleportEvent(result);
         }
 
-        else if (result.Type == EventOptionData.TypeEnum.Money)
+        else if (result.Type == EventData.TypeEnum.Money)
         {
             eventResult = new MoneyEvent(result);
         }
-        else if (result.Type == EventOptionData.TypeEnum.Battle)
+        else if (result.Type == EventData.TypeEnum.Battle)
         {
             eventResult = new BattleEvent(result);
         }

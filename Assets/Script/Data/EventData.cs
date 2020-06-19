@@ -6,19 +6,31 @@ using Newtonsoft.Json;
 
 public class EventData
 {
+    public enum TypeEnum
+    {
+        None = -1,
+        Nothing,
+        Recover, //回復 HP 和 MP
+        Teleport, //傳送
+        Money,
+        Battle,
+    }
+
     public class RootObject
     {
         public int ID { get; set; }
         public string Comment_Chinese { get; set; }
-        public int OptionID_1 { get; set; }
         public string OptionChinese_1 { get; set; }
-        public int OptionID_2 { get; set; }
+        public TypeEnum Result_1_1;
+        public string RessutChinese_1_1;
+        public TypeEnum Result_1_2;
+        public string RessutChinese_1_2;
         public string OptionChinese_2 { get; set; }
-        public int OptionID_3 { get; set; }
-        public string OptionChinese_3 { get; set; }
+        public TypeEnum Result_2_1;
+        public string RessutChinese_2_1;
 
+        public List<List<Result>> ResultList = new List<List<Result>>();
         public Dictionary<LanguageSystem.Language, string> CommentDic = new Dictionary<LanguageSystem.Language, string>();
-        public List<int> OptionIdList = new List<int>();
         public List<Dictionary<LanguageSystem.Language, string>> OptionCommentList = new List<Dictionary<LanguageSystem.Language, string>>();
 
         public string GetComment()
@@ -29,6 +41,28 @@ public class EventData
         public string GetOptionComment(int index)
         {
             return OptionCommentList[index][LanguageSystem.Instance.CurrentLanguage];
+        }
+
+        public Result GetRandomResult(int index)
+        {
+            return ResultList[index][UnityEngine.Random.Range(0, ResultList.Count)];
+        }
+    }
+
+    public class Result
+    {
+        public Result(TypeEnum type, string text) 
+        {
+            Type = type;
+            TextDic.Add(LanguageSystem.Language.Chinese, text);
+        }
+
+        public TypeEnum Type;
+        public Dictionary<LanguageSystem.Language, string> TextDic = new Dictionary<LanguageSystem.Language, string>();
+
+        public string GetComment()
+        {
+            return TextDic[LanguageSystem.Instance.CurrentLanguage];
         }
     }
 
@@ -54,25 +88,26 @@ public class EventData
         {
             dataList[i].CommentDic.Add(LanguageSystem.Language.Chinese, dataList[i].Comment_Chinese);
 
-            if (dataList[i].OptionID_1 != 0)
+            //Option_1
+            dataList[i].OptionCommentList.Add(new Dictionary<LanguageSystem.Language, string>());
+            dataList[i].OptionCommentList[0].Add(LanguageSystem.Language.Chinese, dataList[i].OptionChinese_1);
+            dataList[i].ResultList.Add(new List<Result>());
+            if (dataList[i].Result_1_1 != TypeEnum.None)
             {
-                dataList[i].OptionIdList.Add(dataList[i].OptionID_1);
-                dataList[i].OptionCommentList.Add(new Dictionary<LanguageSystem.Language, string>());
-                dataList[i].OptionCommentList[0].Add(LanguageSystem.Language.Chinese, dataList[i].OptionChinese_1);
+                dataList[i].ResultList[0].Add(new Result(dataList[i].Result_1_1, dataList[i].RessutChinese_1_1));
+            }
+            if (dataList[i].Result_1_2 != TypeEnum.None)
+            {
+                dataList[i].ResultList[0].Add(new Result(dataList[i].Result_1_2, dataList[i].RessutChinese_1_2));
             }
 
-            if (dataList[i].OptionID_2 != 0)
+            //Option_2
+            dataList[i].OptionCommentList.Add(new Dictionary<LanguageSystem.Language, string>());
+            dataList[i].OptionCommentList[1].Add(LanguageSystem.Language.Chinese, dataList[i].OptionChinese_2);
+            dataList[i].ResultList.Add(new List<Result>());
+            if (dataList[i].Result_2_1 != TypeEnum.None)
             {
-                dataList[i].OptionIdList.Add(dataList[i].OptionID_2);
-                dataList[i].OptionCommentList.Add(new Dictionary<LanguageSystem.Language, string>());
-                dataList[i].OptionCommentList[1].Add(LanguageSystem.Language.Chinese, dataList[i].OptionChinese_2);
-            }
-
-            if (dataList[i].OptionID_3 != 0)
-            {
-                dataList[i].OptionIdList.Add(dataList[i].OptionID_3);
-                dataList[i].OptionCommentList.Add(new Dictionary<LanguageSystem.Language, string>());
-                dataList[i].OptionCommentList[2].Add(LanguageSystem.Language.Chinese, dataList[i].OptionChinese_3);
+                dataList[i].ResultList[1].Add(new Result(dataList[i].Result_2_1, dataList[i].RessutChinese_2_1));
             }
 
             _dataDic.Add(dataList[i].ID, dataList[i]);

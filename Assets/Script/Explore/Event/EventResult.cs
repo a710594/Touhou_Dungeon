@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class EventResult
 {
-    protected EventOptionData.Result _result;
+    protected EventData.Result _result;
 
     public virtual void Execute() { }
 }

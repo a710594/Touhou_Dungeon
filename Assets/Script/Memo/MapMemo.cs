@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class MapMemo
 {
+    public int ArriveFloor;
     public BoundsInt MapBound;
     public Vector2Int Start;
     public Vector2Int Goal;
@@ -25,8 +26,9 @@ public class MapMemo
 
     public MapMemo() { }
 
-    public MapMemo(MapInfo info, Vector2 playerPosition, List<Vector2Int> exploredList, List<Vector2Int> exploredWallList, List<Vector2Int> guardList)
+    public MapMemo(int arriveFloor, MapInfo info, Vector2 playerPosition, List<Vector2Int> exploredList, List<Vector2Int> exploredWallList, List<Vector2Int> guardList)
     {
+        ArriveFloor = arriveFloor;
         MapBound = info.MapBound;
         Start = info.Start;
         Goal = info.Goal;
