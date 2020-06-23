@@ -9,6 +9,8 @@ public class BattleGroupData
     public class RootObject
     {
         public int ID { get; set; }
+        public string Animator { get; set; }
+        public int MoveCycleTime { get; set; }
         public int Enemy_1 { get; set; }
         public int Lv_1 { get; set; }
         public int Enemy_2 { get; set; }
@@ -20,7 +22,7 @@ public class BattleGroupData
         public List<int> EnemyList = new List<int>();
         public List<int> LvList = new List<int>();
 
-        public List<KeyValuePair<int, int>> GetEnemy(int id) //id, lv
+        public List<KeyValuePair<int, int>> GetEnemy() //id, lv
         {
             List<KeyValuePair<int, int>> enemyList = new List<KeyValuePair<int, int>>();
             for (int i = 0; i < EnemyList.Count; i++)

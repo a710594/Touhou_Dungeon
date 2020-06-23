@@ -38,7 +38,6 @@ public class ConversationUI : MonoBehaviour
     {
         if (Instance != null)
         {
-            Instance.DeInit();
             Destroy(Instance.gameObject);
             Instance = null;
         }
@@ -54,10 +53,6 @@ public class ConversationUI : MonoBehaviour
         _onFinishHandler = callback;
         //_isFinal = data.IsFinal;
         //_onFinishHandler += Close;
-    }
-
-    private void DeInit()
-    {
     }
 
     private void NextConversationID(int nextId)
@@ -151,37 +146,22 @@ public class ConversationUI : MonoBehaviour
 
     private void Finish()
     {
-        //if (_isFinal)
-        //{
-            //FadeImage.DOFade(1, 1).OnComplete(() =>
-            //{
-            //    FadeImage.DOFade(0, 1);
-            //    StaffUI.Open(() =>
-            //    {
-            //        if (_onFinishHandler != null)
-            //        {
-            //            _onFinishHandler();
-            //        }
-            //    });
-            //});
-        //}
-        //else
-        //{
-            if (_isPlayingBGM)
-            {
-                AudioSystem.Instance.Stop(true);
-            }
+        if (_isPlayingBGM)
+        {
+            AudioSystem.Instance.Stop(true);
+        }
 
+        NameLabel.text = string.Empty;
+        Typewriter.ClearText();
+
+        FadeImage.DOFade(1, 1).OnComplete(() =>
+        {
             if (_onFinishHandler != null)
             {
                 _onFinishHandler();
             }
-
             Close();
-        //}
-        _data = null;
-        NameLabel.text = string.Empty;
-        Typewriter.ClearText();
+        });
     }
 
     private void NextOnClick()

@@ -25,7 +25,7 @@ public class ProgressManager //管理劇情進度
         if (memo == null)
         {
             Memo = new ProgressMemo();
-            Memo.FirstConversation = new KeyValuePair<bool, int>(false, 1);
+            Memo.FlagList.Add(new KeyValuePair<bool, int>(false, 1)); //遊戲開場的對話
         }
         else
         {
@@ -36,10 +36,5 @@ public class ProgressManager //管理劇情進度
     public void Save() 
     {
         Caretaker.Instance.Save<ProgressMemo>(Memo);
-    }
-
-    public void SetFlag(KeyValuePair<bool, int> pair, bool boo) 
-    {
-        pair = new KeyValuePair<bool, int>(boo, pair.Value);
     }
 }

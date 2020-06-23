@@ -473,6 +473,7 @@ public class ItemManager
         }
 
         CurrentBagVolume = 0;
+        KeyAmount = 0;
         _bagTypeDic.Clear();
         _bagEquipDic.Clear();
 

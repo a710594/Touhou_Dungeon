@@ -13,8 +13,8 @@ public class MapMemo
     public List<string> MapList;
     public List<string> GrassList;
     public List<string> KeyList;
-    public List<string> WallList;
-    public List<string> MistList;
+    //public List<string> WallList;
+    //public List<string> MistList;
     public List<string> DoorList;
     public List<string> ExploredList = new List<string>(); //走過的地圖範圍
     public List<string> ExploredWallList = new List<string>(); //已被發現的牆壁的範圍
@@ -26,7 +26,7 @@ public class MapMemo
 
     public MapMemo() { }
 
-    public MapMemo(int arriveFloor, MapInfo info, Vector2 playerPosition, List<Vector2Int> exploredList, List<Vector2Int> exploredWallList, List<Vector2Int> guardList)
+    public MapMemo(int arriveFloor, MapInfo info, Vector2 playerPosition)
     {
         ArriveFloor = arriveFloor;
         MapBound = info.MapBound;
@@ -37,12 +37,10 @@ public class MapMemo
         MapList = Utility.Vector2IntToString(info.MapList);
         GrassList = Utility.Vector2IntToString(info.GrassList);
         KeyList = Utility.Vector2IntToString(info.KeyList);
-        WallList = Utility.Vector2IntToString(info.WallList);
-        MistList = Utility.Vector2IntToString(info.MistList);
         DoorList = Utility.Vector2IntToString(info.DoorList);
-        ExploredList = Utility.Vector2IntToString(exploredList);
-        ExploredWallList = Utility.Vector2IntToString(exploredWallList);
-        GuardList = Utility.Vector2IntToString(guardList);
+        ExploredList = Utility.Vector2IntToString(info.ExploredList);
+        ExploredWallList = Utility.Vector2IntToString(info.ExploredWallList);
+        GuardList = Utility.Vector2IntToString(info.GuardList);
 
         for (int i=0; i<info.RoomPositionList.Count; i++)
         {

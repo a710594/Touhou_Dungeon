@@ -72,12 +72,12 @@ public class SellUI : MonoBehaviour
             if (item.Key is int)
             {
                 data = ItemData.GetData((int)item.Key);
-                itemDic.Add(data.ID, data.Price);
+                itemDic.Add(data.ID, data.Price / 2);
             }
             else if (item.Key is Equip)
             {
                 equip = (Equip)item.Key;
-                itemDic.Add(equip.ID, equip.Price);
+                itemDic.Add(equip.ID, equip.Price / 2);
             }
         }
         ScrollView.SetData(new ArrayList(itemDic));

@@ -21,6 +21,8 @@ public class ExploreUI : MonoBehaviour
     public Joystick Joystick;
 
     private bool _canMove = true;  //角色是否可移動
+    private bool _isJoystickMoving = false;
+    private bool _isKeyboardMoving = false;
 
     public static void Open()
     {
@@ -150,40 +152,60 @@ public class ExploreUI : MonoBehaviour
             ExploreController.Instance.BackToVilliage();
         }
 
-        if (Input.GetKey(KeyCode.LeftArrow))
+        if (_canMove)
         {
-            ExploreController.Instance.PlayerMove(Vector2Int.left);
-        }
-        else if (Input.GetKey(KeyCode.RightArrow))
-        {
-            ExploreController.Instance.PlayerMove(Vector2Int.right);
-        }
-        else if (Input.GetKey(KeyCode.UpArrow))
-        {
-            ExploreController.Instance.PlayerMove(Vector2Int.up);
-        }
-        else if (Input.GetKey(KeyCode.DownArrow))
-        {
-            ExploreController.Instance.PlayerMove(Vector2Int.down);
-        }
-
-        Vector2Int direction = new Vector2Int(Mathf.RoundToInt(Joystick.Horizontal), Mathf.RoundToInt(Joystick.Vertical));
-        if (direction != Vector2Int.zero && _canMove)
-        {
-            if (Mathf.Abs(direction.x) > Mathf.Abs(direction.y))
+            if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A))
             {
-                direction.y = 0;
+                ExploreController.Instance.PlayerMove(Vector2Int.left);
+                _isKeyboardMoving = true;
+            }
+            else if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D))
+            {
+                ExploreController.Instance.PlayerMove(Vector2Int.right);
+                _isKeyboardMoving = true;
+            }
+            else if (Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.W))
+            {
+                ExploreController.Instance.PlayerMove(Vector2Int.up);
+                _isKeyboardMoving = true;
+            }
+            else if (Input.GetKey(KeyCode.DownArrow) || Input.GetKey(KeyCode.S))
+            {
+                ExploreController.Instance.PlayerMove(Vector2Int.down);
+                _isKeyboardMoving = true;
             }
             else
             {
-                direction.x = 0;
+                if (_isKeyboardMoving)
+                {
+                    ExploreController.Instance.PlayerPause();
+                    _isKeyboardMoving = false;
+                }
             }
 
-            ExploreController.Instance.PlayerMove(direction);
-        }
-        else 
-        {
-            ExploreController.Instance.PlayerPause();
+            Vector2Int direction = new Vector2Int(Mathf.RoundToInt(Joystick.Horizontal), Mathf.RoundToInt(Joystick.Vertical));
+            if (direction != Vector2Int.zero)
+            {
+                if (Mathf.Abs(direction.x) > Mathf.Abs(direction.y))
+                {
+                    direction.y = 0;
+                }
+                else
+                {
+                    direction.x = 0;
+                }
+
+                ExploreController.Instance.PlayerMove(direction);
+                _isJoystickMoving = true;
+            }
+            else
+            {
+                if (_isJoystickMoving)
+                {
+                    ExploreController.Instance.PlayerPause();
+                    _isJoystickMoving = false;
+                }
+            }
         }
     }
 }

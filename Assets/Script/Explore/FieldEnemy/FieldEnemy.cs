@@ -8,13 +8,11 @@ public class FieldEnemy : MonoBehaviour
 {
     public SpriteRenderer Sprite;
     public Animator Animator;
-    public Action<int> OnPlayerEnterHandler;
+    public Action<BattleGroupData.RootObject> OnPlayerEnterHandler;
 
     protected Vector2Int _lookAt = Vector2Int.left;
-    protected int _battleGroupId;
     protected float _cycleTime = 0.5f; //移動的週期
-    protected Vector2Int _currentDirection;
-    protected List<Vector2Int> _directionList = new List<Vector2Int>() { Vector2Int.left, Vector2Int.right, Vector2Int.up, Vector2Int.down };
+    protected BattleGroupData.RootObject _data;
     protected Timer _timer = new Timer();
 
     public virtual void Move() { }
@@ -27,29 +25,10 @@ public class FieldEnemy : MonoBehaviour
 
     public virtual void Init(int battleGroupId, Vector2 position)
     {
-        _battleGroupId = battleGroupId;
+        _data = BattleGroupData.GetData(battleGroupId);
+        Animator.runtimeAnimatorController = Resources.Load<RuntimeAnimatorController>("Animator/" + _data.Animator);
+        _cycleTime = _data.MoveCycleTime / 10f;
         transform.position = position;
-    }
-
-    protected Vector2Int GetRandomDirection()
-    {
-        Vector2Int direction;
-        List<Vector2Int> _tempList = new List<Vector2Int>();
-
-        _tempList = new List<Vector2Int>(_directionList);
-        while (_tempList.Count > 0)
-        {
-            direction = _tempList[UnityEngine.Random.Range(0, _tempList.Count)];
-            if (ExploreController.Instance.CanMove(Vector2Int.RoundToInt(transform.position) + direction, true, false))
-            {
-                return direction;
-            }
-            else
-            {
-                _tempList.Remove(direction);
-            }
-        }
-        return Vector2Int.zero;
     }
 
     void OnTriggerEnter2D(Collider2D col)
@@ -58,7 +37,7 @@ public class FieldEnemy : MonoBehaviour
         {
             if (OnPlayerEnterHandler != null)
             {
-                OnPlayerEnterHandler(_battleGroupId);
+                OnPlayerEnterHandler(_data);
             }
         }
     }

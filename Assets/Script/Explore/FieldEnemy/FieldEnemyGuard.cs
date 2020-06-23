@@ -41,7 +41,7 @@ public class FieldEnemyGuard : FieldEnemy
 
             if (OnPlayerEnterHandler != null)
             {
-                OnPlayerEnterHandler(_battleGroupId);
+                OnPlayerEnterHandler(_data);
             }
         }
     }

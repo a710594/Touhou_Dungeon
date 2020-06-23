@@ -19,11 +19,8 @@ public class GameSystem : MonoBehaviour
         ItemManager.Instance.Save();
         TeamManager.Instance.Save();
         ProgressManager.Instance.Save();
-        if (MySceneManager.Instance.CurrentScene == MySceneManager.SceneType.Explore)
-        {
-            ExploreController.Instance.Save();
-        }
-        else if (MySceneManager.Instance.CurrentScene == MySceneManager.SceneType.Battle)
+        ExploreController.Instance.Save();
+        if (MySceneManager.Instance.CurrentScene == MySceneManager.SceneType.Battle)
         {
             BattleController.Instance.Save();
         }
@@ -66,6 +63,7 @@ public class GameSystem : MonoBehaviour
         yield return new WaitForEndOfFrame();
 
         Caretaker.Instance.Init();
+        ExploreController.Instance.Init();
         TeamManager.Instance.Init();
         ItemManager.Instance.Init();
         MySceneManager.Instance.Init();

@@ -26,6 +26,7 @@ public class ChangeSceneUI : MonoBehaviour
 
     public void EndClock(Action callback = null)
     {
+        ClockImage.fillAmount = 1;
         ClockImage.DOFillAmount(0, 0.5f).OnComplete(() =>
         {
             if (callback != null)

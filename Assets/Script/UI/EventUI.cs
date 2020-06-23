@@ -90,6 +90,14 @@ public class EventUI : MonoBehaviour
             OptionButtons[i].gameObject.SetActive(false);
         }
         ConfirmButton.gameObject.SetActive(true);
+
+        if (eventResult is BattleEvent)
+        {
+            if (FinishCallback != null)
+            {
+                FinishCallback(_isDoNothing);
+            }
+        }
     }
 
     private void ConfirmOnClick()

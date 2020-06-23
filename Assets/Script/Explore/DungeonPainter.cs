@@ -52,18 +52,18 @@ public class DungeonPainter
         }
 
         //money
-        GameObject coin;
-        foreach (KeyValuePair<Vector2Int, int> item in info.MoneyDic)
-        {
-            //TilePainter.Instance.Painting("Money", 2, item.Key);
-            coin = ResourceManager.Instance.Spawn("Coin", ResourceManager.Type.Other);
-            coin.transform.position = (Vector2)item.Key;
-        }
+        //GameObject coin;
+        //foreach (KeyValuePair<Vector2Int, int> item in info.MoneyDic)
+        //{
+        //    //TilePainter.Instance.Painting("Money", 2, item.Key);
+        //    coin = ResourceManager.Instance.Spawn("Coin", ResourceManager.Type.Other);
+        //    coin.transform.position = (Vector2)item.Key;
+        //}
 
         //explore point
         foreach (KeyValuePair<Vector2Int, int> item in info.ExploreEventDic)
         {
-            TilePainter.Instance.Painting("ExplorePoint", 2, item.Key);
+            TilePainter.Instance.Painting(EventData.GetData(item.Value).Tile, 2, item.Key);
         }
 
         //起點
@@ -73,16 +73,29 @@ public class DungeonPainter
         TilePainter.Instance.Painting("DownStairs", 0, info.Goal);
 
         //Wall
-        for (int i = 0; i < info.WallList.Count; i++)
+        //for (int i = 0; i < info.WallList.Count; i++)
+        //{
+        //    TilePainter.Instance.Painting(info.DungeonData.WallTile, 0, info.WallList[i]);
+        //}
+        Vector2Int position;
+        for (int i = 0; i <= info.MapBound.size.x + 30; i++)
         {
-            TilePainter.Instance.Painting(info.DungeonData.WallTile, 0, info.WallList[i]);
+            for (int j = 0; j <= info.MapBound.size.y + 30; j++)
+            {
+                position = new Vector2Int(info.MapBound.xMin + i - 15, info.MapBound.yMin + j - 15);
+                if (!info.MapList.Contains(position))
+                {
+                    TilePainter.Instance.Painting(info.DungeonData.WallTile, 0, position);
+                }
+                TilePainter.Instance.Painting("Mist", 3, position);
+            }
         }
 
         //Mist
-        for (int i = 0; i < info.MistList.Count; i++)
-        {
-            TilePainter.Instance.Painting("Mist", 3, info.MistList[i]);
-        }
+        //for (int i = 0; i < info.MistList.Count; i++)
+        //{
+        //    TilePainter.Instance.Painting("Mist", 3, info.MistList[i]);
+        //}
 
         //Vector2Int position;
         //for (int i = 0; i <= info.MapBound.size.x + 20; i++)

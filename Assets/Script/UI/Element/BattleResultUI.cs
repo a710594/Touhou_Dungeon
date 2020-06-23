@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -15,12 +16,15 @@ public class BattleResultUI : MonoBehaviour
     public GameObject ItemGroup;
     public CharacterLvCard[] CharacterLvCards;
 
+    private Action _callback;
+
     private bool _isWin;
     private Timer _timer = new Timer();
 
-    public void Open(bool isWin, List<int> orignalLvList = null, List<int> orignalExpList = null, List<int> itemList = null)
+    public void Open(bool isWin, List<int> orignalLvList = null, List<int> orignalExpList = null, List<int> itemList = null, Action callback = null)
     {
         _isWin = isWin;
+        _callback = callback;
         gameObject.SetActive(true);
         WinLabel.SetActive(isWin);
         LoseLabel.SetActive(!isWin);
@@ -94,20 +98,27 @@ public class BattleResultUI : MonoBehaviour
         }
         else
         {
-            if (_isWin)
+            if (_callback != null)
             {
-                MySceneManager.Instance.ChangeScene(MySceneManager.SceneType.Explore, () =>
-                {
-                    ExploreController.Instance.SetFloor();
-                });
+                _callback();
             }
             else
             {
-                MySceneManager.Instance.ChangeScene(MySceneManager.SceneType.Villiage, () =>
+                if (_isWin)
                 {
-                    ItemManager.Instance.PutBagItemIntoWarehouse();
-                    TeamManager.Instance.RecoverAllMember();
-                });
+                    MySceneManager.Instance.ChangeScene(MySceneManager.SceneType.Explore, () =>
+                    {
+                        ExploreController.Instance.SetFloorFromMemo();
+                    });
+                }
+                else
+                {
+                    MySceneManager.Instance.ChangeScene(MySceneManager.SceneType.Villiage, () =>
+                    {
+                        ItemManager.Instance.PutBagItemIntoWarehouse();
+                        TeamManager.Instance.RecoverAllMember();
+                    });
+                }
             }
         }
     }

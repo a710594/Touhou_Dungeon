@@ -29,23 +29,25 @@ public class BattleController : MachineBehaviour
             return _power;
         }
     }
+    private int _power = 0;
+
+    private Action _battleEndHandler;
 
     private int _turn = 1;
-    private int _power = 0;
     private int _exp;
     private BattleMemo _memo = new BattleMemo();
     private List<int> _enemyList = new List<int>();
     private List<BattleCharacter> _actionQueue = new List<BattleCharacter>();
     private List<BattleCharacterPlayer> _playerList = new List<BattleCharacterPlayer>(); //戰鬥結束時需要的友方資料
 
-    public void Init(int battlefieldId, int battleGroupId)
+    public void Init(int battlefieldId, BattleGroupData.RootObject battleGroupData, Action callback = null)
     {
-        BattleGroupData.RootObject battleGroupData = BattleGroupData.GetData(battleGroupId);
         BattlefieldGenerator.Instance.Generate(battlefieldId, battleGroupData.EnemyList.Count);
 
         _turn = 1;
         _power =  TeamManager.Instance.Power;
         _exp = battleGroupData.Exp;
+        _battleEndHandler = callback;
         CharacterList.Clear();
 
         TeamMember member;
@@ -67,7 +69,7 @@ public class BattleController : MachineBehaviour
 
         _enemyList.Clear();
         BattleCharacterAI characterAI;
-        List<KeyValuePair<int, int>> enemyList = battleGroupData.GetEnemy(battleGroupId);
+        List<KeyValuePair<int, int>> enemyList = battleGroupData.GetEnemy();
         for (int i = 0; i < enemyList.Count; i++)
         {
             _enemyList.Add(enemyList[i].Key);
@@ -869,7 +871,7 @@ public class BattleController : MachineBehaviour
             List<int> orignalLvList = TeamManager.Instance.GetLvList();
             List<int> orignalExpList = TeamManager.Instance.GetExpList();
             TeamManager.Instance.AddExp(parent._exp);
-            BattleUI.Instance.SetResult(true, orignalLvList, orignalExpList, dropItemList);
+            BattleUI.Instance.SetResult(true, orignalLvList, orignalExpList, dropItemList, parent._battleEndHandler);
         }
 
         public override void ScreenOnClick(Vector2Int position) { }

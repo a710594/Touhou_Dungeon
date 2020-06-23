@@ -203,9 +203,9 @@ public class BattleUI : MonoBehaviour
         TurnLabel.SetLabel("Turn" + turn.ToString());
     }
 
-    public void SetResult(bool isWin, List<int> orignalLvList = null, List<int> orignalExpList = null, List<int> itemList = null)
+    public void SetResult(bool isWin, List<int> orignalLvList = null, List<int> orignalExpList = null, List<int> itemList = null, Action callback = null)
     {
-        ResultUI.Open(isWin, orignalLvList, orignalExpList, itemList);
+        ResultUI.Open(isWin, orignalLvList, orignalExpList, itemList, callback);
     }
 
     public void SetPower(int power) 

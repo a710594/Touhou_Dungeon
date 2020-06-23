@@ -19,6 +19,7 @@ public class EventData
     public class RootObject
     {
         public int ID { get; set; }
+        public string Tile { get; set; }
         public string Comment_Chinese { get; set; }
         public string OptionChinese_1 { get; set; }
         public TypeEnum Result_1_1;

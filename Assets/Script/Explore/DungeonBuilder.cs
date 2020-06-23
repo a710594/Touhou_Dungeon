@@ -223,12 +223,7 @@ public class DungeonBuilder
 
         //money
         Dictionary<Vector2Int, int> moneyDic = new Dictionary<Vector2Int, int>();
-        //for (int i = 0; i < monetAmount; i++)
-        //{
-        //    position = spaceList[Random.Range(0, spaceList.Count)];
-        //    moneyDic.Add(position, Random.Range(_dungeonData.MinMoney, _dungeonData.MaxMoney));
-        //    spaceList.Remove(position);
-        //}
+
         for (int i = 0; i < roomList.Count; i++)
         {
             foreach (KeyValuePair<Vector2Int, int> item in roomList[i].MoneyDic)
@@ -289,20 +284,20 @@ public class DungeonBuilder
         }
 
         //Wall
-        List<Vector2Int> wallList = new List<Vector2Int>();
-        List<Vector2Int> mistList = new List<Vector2Int>();
-        for (int i = 0; i <= mapBound.size.x + 30; i++)
-        {
-            for (int j = 0; j <= mapBound.size.y + 30; j++)
-            {
-                position = new Vector2Int(mapBound.xMin + i - 15, mapBound.yMin + j - 15);
-                if (!_mapList.Contains(position))
-                {
-                    wallList.Add(position);
-                }
-                mistList.Add(position);
-            }
-        }
+        //List<Vector2Int> wallList = new List<Vector2Int>();
+        //List<Vector2Int> mistList = new List<Vector2Int>();
+        //for (int i = 0; i <= mapBound.size.x + 30; i++)
+        //{
+        //    for (int j = 0; j <= mapBound.size.y + 30; j++)
+        //    {
+        //        position = new Vector2Int(mapBound.xMin + i - 15, mapBound.yMin + j - 15);
+        //        if (!_mapList.Contains(position))
+        //        {
+        //            wallList.Add(position);
+        //        }
+        //        mistList.Add(position);
+        //    }
+        //}
 
 
         info = new MapInfo();
@@ -317,8 +312,8 @@ public class DungeonBuilder
         info.ExploreEventDic = exploreEventDic;
         info.TreasureDic = treasureDic;
         info.DoorList = doorList;
-        info.WallList = wallList;
-        info.MistList = mistList;
+        //info.WallList = wallList;
+        //info.MistList = mistList;
         for (int i=0; i<roomList.Count; i++)
         {
             info.RoomPositionList.Add(roomList[i].PositionList);
