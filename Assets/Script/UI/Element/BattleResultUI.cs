@@ -16,15 +16,17 @@ public class BattleResultUI : MonoBehaviour
     public GameObject ItemGroup;
     public CharacterLvCard[] CharacterLvCards;
 
-    private Action _callback;
+    private Action _winCallback;
+    private Action _loseCallback;
 
     private bool _isWin;
     private Timer _timer = new Timer();
 
-    public void Open(bool isWin, List<int> orignalLvList = null, List<int> orignalExpList = null, List<int> itemList = null, Action callback = null)
+    public void Open(bool isWin, List<int> orignalLvList, List<int> orignalExpList, List<int> itemList, Action winCallback, Action loseCallback)
     {
         _isWin = isWin;
-        _callback = callback;
+        _winCallback = winCallback;
+        _loseCallback = loseCallback;
         gameObject.SetActive(true);
         WinLabel.SetActive(isWin);
         LoseLabel.SetActive(!isWin);
@@ -98,18 +100,25 @@ public class BattleResultUI : MonoBehaviour
         }
         else
         {
-            if (_callback != null)
+            if (_isWin)
             {
-                _callback();
-            }
-            else
-            {
-                if (_isWin)
+                if (_winCallback != null)
+                {
+                    _winCallback();
+                }
+                else
                 {
                     MySceneManager.Instance.ChangeScene(MySceneManager.SceneType.Explore, () =>
                     {
                         ExploreController.Instance.SetFloorFromMemo();
                     });
+                }
+            }
+            else
+            {
+                if (_loseCallback != null)
+                {
+                    _loseCallback();
                 }
                 else
                 {

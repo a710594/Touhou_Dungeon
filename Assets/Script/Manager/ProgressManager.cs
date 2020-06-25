@@ -25,7 +25,8 @@ public class ProgressManager //管理劇情進度
         if (memo == null)
         {
             Memo = new ProgressMemo();
-            Memo.FlagList.Add(new KeyValuePair<bool, int>(false, 1)); //遊戲開場的對話
+            Memo.FlagList.Add(new KeyValuePair<bool, int>(false, 1001));
+            Memo.FlagList.Add(new KeyValuePair<bool, int>(false, 2001));
         }
         else
         {

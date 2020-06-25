@@ -72,7 +72,10 @@ public class PrepareUI : MonoBehaviour
     {
         MySceneManager.Instance.ChangeScene(MySceneManager.SceneType.Explore, () =>
         {
-            ExploreController.Instance.GenerateFloor(_targetFloor);
+            LoadingUI.Instance.Open(()=> 
+            {
+                ExploreController.Instance.GenerateFloor(_targetFloor);
+            });
         });
     }
 

@@ -31,7 +31,8 @@ public class BattleController : MachineBehaviour
     }
     private int _power = 0;
 
-    private Action _battleEndHandler;
+    private Action _winCallback;
+    private Action _loseCallback;
 
     private int _turn = 1;
     private int _exp;
@@ -40,14 +41,15 @@ public class BattleController : MachineBehaviour
     private List<BattleCharacter> _actionQueue = new List<BattleCharacter>();
     private List<BattleCharacterPlayer> _playerList = new List<BattleCharacterPlayer>(); //戰鬥結束時需要的友方資料
 
-    public void Init(int battlefieldId, BattleGroupData.RootObject battleGroupData, Action callback = null)
+    public void Init(int battlefieldId, BattleGroupData.RootObject battleGroupData, Action winCallback = null, Action loseCallback = null)
     {
         BattlefieldGenerator.Instance.Generate(battlefieldId, battleGroupData.EnemyList.Count);
 
         _turn = 1;
         _power =  TeamManager.Instance.Power;
         _exp = battleGroupData.Exp;
-        _battleEndHandler = callback;
+        _winCallback = winCallback;
+        _loseCallback = loseCallback;
         CharacterList.Clear();
 
         TeamMember member;
@@ -90,8 +92,11 @@ public class BattleController : MachineBehaviour
         });
     }
 
-    public void InitFromMemo()
+    public void InitFromMemo(Action winCallback = null, Action loseCallback = null)
     {
+        _winCallback = winCallback;
+        _loseCallback = loseCallback;
+
         BattleMemo memo = Caretaker.Instance.Load<BattleMemo>();
         BattlefieldGenerator.Instance.Generate(memo.MapDic);
         BattleFieldManager.Instance.MapBound = memo.MapBound;
@@ -871,7 +876,7 @@ public class BattleController : MachineBehaviour
             List<int> orignalLvList = TeamManager.Instance.GetLvList();
             List<int> orignalExpList = TeamManager.Instance.GetExpList();
             TeamManager.Instance.AddExp(parent._exp);
-            BattleUI.Instance.SetResult(true, orignalLvList, orignalExpList, dropItemList, parent._battleEndHandler);
+            BattleUI.Instance.SetResult(true, orignalLvList, orignalExpList, dropItemList, parent._winCallback, parent._loseCallback);
         }
 
         public override void ScreenOnClick(Vector2Int position) { }

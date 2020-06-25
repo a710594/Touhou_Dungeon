@@ -17,13 +17,15 @@ public class DungeonBuilder
         }
     }
 
+    public MapInfo MapInfo;
+
     private DungeonData.RootObject _dungeonData;
     private List<Vector2Int> _mapList = new List<Vector2Int>();
     private List<Vector2Int> _normalRoomMapList = new List<Vector2Int>(); //一般房間的地圖
     private List<Vector2Int> _treasureRoomMapList = new List<Vector2Int>(); //寶藏房間的地圖
     private List<KeyValuePair<Vector2Int, Room>> _wallDirectionDic = new List<KeyValuePair<Vector2Int, Room>>();
 
-    public void Generate(int dungeonId, out MapInfo info)
+    public void Generate(int dungeonId)
     {
         int roomId;
         int random;
@@ -300,23 +302,23 @@ public class DungeonBuilder
         //}
 
 
-        info = new MapInfo();
-        info.DungeonData = _dungeonData;
-        info.MapBound = Utility.GetMapBounds(_mapList);
-        info.Start = start;
-        info.Goal = goal;
-        info.MapList = _mapList;
-        info.GrassList = grassList;
-        info.KeyList = keyList;
-        info.MoneyDic = moneyDic;
-        info.ExploreEventDic = exploreEventDic;
-        info.TreasureDic = treasureDic;
-        info.DoorList = doorList;
+        MapInfo = new MapInfo();
+        MapInfo.DungeonData = _dungeonData;
+        MapInfo.MapBound = Utility.GetMapBounds(_mapList);
+        MapInfo.Start = start;
+        MapInfo.Goal = goal;
+        MapInfo.MapList = _mapList;
+        MapInfo.GrassList = grassList;
+        MapInfo.KeyList = keyList;
+        MapInfo.MoneyDic = moneyDic;
+        MapInfo.ExploreEventDic = exploreEventDic;
+        MapInfo.TreasureDic = treasureDic;
+        MapInfo.DoorList = doorList;
         //info.WallList = wallList;
         //info.MistList = mistList;
         for (int i=0; i<roomList.Count; i++)
         {
-            info.RoomPositionList.Add(roomList[i].PositionList);
+            MapInfo.RoomPositionList.Add(roomList[i].PositionList);
         }
     }
 

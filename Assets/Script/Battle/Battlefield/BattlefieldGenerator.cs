@@ -62,23 +62,35 @@ public class BattlefieldGenerator
             tempPositionList.Remove(reservedLits[i]);
         }
 
-        pos = tempPositionList[Random.Range(0, tempPositionList.Count)];
-        enemyPositionList.Add(pos); //第一個敵人的位置
-        Debug.Log("1:" + pos);
-        tempPositionList.Remove(pos);
+        Vector2Int firstPos = new Vector2Int();
+        firstPos = tempPositionList[Random.Range(0, tempPositionList.Count)];
+        enemyPositionList.Add(firstPos); //第一個敵人的位置
+        Debug.Log("1:" + firstPos);
+        tempPositionList.Remove(firstPos);
         for (int i=1; i<enemyAmount; i++) //其他敵人的位置與第一個敵人的位置相近
         {
-            pos = new Vector2Int(pos.x + Random.Range(-enemyAmount, enemyAmount + 1), pos.y + Random.Range(-enemyAmount, enemyAmount + 1));
-            if (tempPositionList.Contains(pos))
+            //pos = new Vector2Int(enemyPositionList[0].x + Random.Range(-enemyAmount, enemyAmount + 1), enemyPositionList[0].y + Random.Range(-enemyAmount, enemyAmount + 1));
+            //if (tempPositionList.Contains(pos))
+            //{
+            //    enemyPositionList.Add(pos);
+            //    Debug.Log(i + ":" + pos);
+            //}
+            //else
+            //{
+            //    i--;
+            //}
+            //tempPositionList.Remove(pos);
+            while (tempPositionList.Count > 0) 
             {
-                enemyPositionList.Add(pos);
-                Debug.Log(i + ":" + pos);
+                pos = tempPositionList[Random.Range(0, tempPositionList.Count)];
+                tempPositionList.Remove(pos);
+                if (Utility.GetDistance(pos, firstPos) <= enemyAmount) 
+                {
+                    enemyPositionList.Add(pos);
+                    Debug.Log(i + ":" + pos);
+                    break;
+                }
             }
-            else
-            {
-                i--;
-            }
-            tempPositionList.Remove(pos);
         }
 
         //牆壁

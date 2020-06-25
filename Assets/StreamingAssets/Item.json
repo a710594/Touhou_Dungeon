@@ -13,6 +13,9 @@
 {"ID":3003,"Name_Chinese":"大回復藥","Comment_Chinese":"回復 80 HP","Icon":"Medicine","Type":3,"SeedType":0,"Price":80,"Volume":1,"Skill":29},
 {"ID":3004,"Name_Chinese":"特大回復藥","Comment_Chinese":"回復 160 HP","Icon":"Medicine","Type":3,"SeedType":0,"Price":160,"Volume":1,"Skill":30},
 {"ID":3005,"Name_Chinese":"終極回復藥","Comment_Chinese":"回復 320 HP","Icon":"Medicine","Type":3,"SeedType":0,"Price":320,"Volume":1,"Skill":31},
-{"ID":41001,"Name_Chinese":"木劍","Comment_Chinese":"基礎的武器。","Icon":"Sword","Type":4,"SeedType":0,"Price":100,"Volume":3,"Skill":0},
-{"ID":41002,"Name_Chinese":"木杖","Comment_Chinese":"基礎的法器。","Icon":"Wand","Type":4,"SeedType":0,"Price":100,"Volume":3,"Skill":0},
-{"ID":42001,"Name_Chinese":"襯衫","Comment_Chinese":"一件普通的衣服。","Icon":"Armor","Type":4,"SeedType":0,"Price":100,"Volume":3,"Skill":0}]
+{"ID":41001,"Name_Chinese":"木劍","Comment_Chinese":"基礎的武器。","Icon":"Sword","Type":4,"SeedType":0,"Price":10,"Volume":3,"Skill":0},
+{"ID":41002,"Name_Chinese":"木杖","Comment_Chinese":"基礎的法器。","Icon":"Wand","Type":4,"SeedType":0,"Price":10,"Volume":3,"Skill":0},
+{"ID":41003,"Name_Chinese":"鐵劍","Comment_Chinese":"鐵打的武器。","Icon":"Sword","Type":4,"SeedType":0,"Price":200,"Volume":3,"Skill":0},
+{"ID":41004,"Name_Chinese":"花蕊木杖","Comment_Chinese":"有著花蕊裝飾的法杖。","Icon":"Wand","Type":4,"SeedType":0,"Price":200,"Volume":3,"Skill":0},
+{"ID":42001,"Name_Chinese":"襯衫","Comment_Chinese":"一件普通的衣服。","Icon":"Armor","Type":4,"SeedType":0,"Price":10,"Volume":3,"Skill":0},
+{"ID":42002,"Name_Chinese":"皮甲","Comment_Chinese":"皮革製的服裝。","Icon":"Armor","Type":4,"SeedType":0,"Price":200,"Volume":3,"Skill":0}]

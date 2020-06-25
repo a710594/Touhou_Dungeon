@@ -16,6 +16,10 @@ public class TreasureData
         public int Probability_1 { get; set; }
         public int Item_2 { get; set; }
         public int Probability_2 { get; set; }
+        public int Item_3 { get; set; }
+        public int Probability_3 { get; set; }
+        public int Item_4 { get; set; }
+        public int Probability_4 { get; set; }
 
         public List<int> ItemList = new List<int>();
 
@@ -58,6 +62,14 @@ public class TreasureData
             for (int j = 0; j < dataList[i].Probability_2; j++)
             {
                 dataList[i].ItemList.Add(dataList[i].Item_2);
+            }
+            for (int j = 0; j < dataList[i].Probability_3; j++)
+            {
+                dataList[i].ItemList.Add(dataList[i].Item_3);
+            }
+            for (int j = 0; j < dataList[i].Probability_4; j++)
+            {
+                dataList[i].ItemList.Add(dataList[i].Item_4);
             }
 
             _dataDic.Add(dataList[i].ID, dataList[i]);

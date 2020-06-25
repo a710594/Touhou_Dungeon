@@ -12,25 +12,44 @@ public class IconCard : MonoBehaviour {
     public Text NameLabel;
     public Text AmountLabel;
     public ButtonPlus CardButton;
-    public int ID;
-    public int Amount;
 
     public void Init(int id)
     {
-        ItemData.RootObject data = ItemData.GetData(id);
-        Init(data);
+        if (id >= 0)
+        {
+            ItemData.RootObject data = ItemData.GetData(id);
+            Init(data);
+        }
+        else
+        {
+            SetMoney(id * -1);
+        }
     }
 
     public void Init(int id, int amount)
     {
-        ItemData.RootObject data = ItemData.GetData(id);
-        Init(data, amount);
+        if (id >= 0)
+        {
+            ItemData.RootObject data = ItemData.GetData(id);
+            Init(data, amount);
+        }
+        else
+        {
+            SetMoney(id * -1);
+        }
     }
 
     public void Init(int id, int have, int need)
     {
-        ItemData.RootObject data = ItemData.GetData(id);
-        Init(data, have, need);
+        if (id >= 0)
+        {
+            ItemData.RootObject data = ItemData.GetData(id);
+            Init(data, have, need);
+        }
+        else
+        {
+            SetMoney(id * -1);
+        }
     }
 
     private void Init(ItemData.RootObject data)
@@ -39,8 +58,6 @@ public class IconCard : MonoBehaviour {
         Icon.overrideSprite = Resources.Load<Sprite>("Image/Item/" + data.Icon);
         NameLabel.text = data.GetName();
         AmountLabel.gameObject.SetActive(false);
-        ID = data.ID;
-        Amount = 0;
     }
 
     private  void Init(ItemData.RootObject data, int amount)
@@ -56,8 +73,6 @@ public class IconCard : MonoBehaviour {
             NameLabel.text = data.GetName();
             AmountLabel.gameObject.SetActive(true);
             AmountLabel.text = amount.ToString();
-            ID = data.ID;
-            Amount = amount;
         }
     }
 
@@ -79,8 +94,15 @@ public class IconCard : MonoBehaviour {
         NameLabel.text = data.GetName();
         AmountLabel.gameObject.SetActive(true);
         AmountLabel.text = have.ToString() + "/" + need.ToString();
-        ID = data.ID;
-        Amount = 0;
+    }
+
+    private void SetMoney(int money)
+    {
+        Icon.gameObject.SetActive(true);
+        Icon.overrideSprite = Resources.Load<Sprite>("Image/Item/Coin");
+        NameLabel.text = LanguageData.GetText(12, LanguageSystem.Instance.CurrentLanguage);
+        AmountLabel.gameObject.SetActive(true);
+        AmountLabel.text = money.ToString();
     }
 
     public void Clear()
@@ -88,8 +110,6 @@ public class IconCard : MonoBehaviour {
         //Icon.overrideSprite = null;
         Icon.gameObject.SetActive(false);
         AmountLabel.gameObject.SetActive(false);
-        ID = 0;
-        Amount = 0;
     }
 
     private void CardOnClick(object data)

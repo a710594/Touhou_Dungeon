@@ -41,7 +41,7 @@ public class AI : MonoBehaviour
 
             Vector2Int position = new Vector2Int();
             List<Vector2Int> detectRangeList = _character.GetDetectRange();
-            BattleCharacter target = GetTarget(BattleCharacter.CampEnum.Partner/*, detectRangeList*/);
+            BattleCharacter target = GetTarget(BattleCharacter.CampEnum.Partner, detectRangeList);
 
             if (target != null)
             {
@@ -150,10 +150,11 @@ public class AI : MonoBehaviour
     {
     }
 
-    protected BattleCharacter GetTarget(BattleCharacter.CampEnum targetCamp/*, List<Vector2Int> detectRangeList*/)
+    protected BattleCharacter GetTarget(BattleCharacter.CampEnum targetCamp, List<Vector2Int> detectRangeList)
     {
         BattleCharacter character;
-        List<BattleCharacter> candidateList = new List<BattleCharacter>();
+        List<BattleCharacter> candidateList = new List<BattleCharacter>(); //只要是目標陣營活著的角色都算
+        List<BattleCharacter> inRangeList = new List<BattleCharacter>(); //符合上述條件且打得到的角色才算
 
         for (int i=0; i<BattleController.Instance.CharacterList.Count; i++)
         {
@@ -162,12 +163,18 @@ public class AI : MonoBehaviour
             {
                 if (character.Camp == targetCamp)
                 {
-                    //if (detectRangeList.Contains(Vector2Int.RoundToInt(character.transform.position)))
-                    //{
-                        candidateList.Add(character);
-                    //}
+                    candidateList.Add(character);
+                    if (detectRangeList.Contains(Vector2Int.RoundToInt(character.transform.position)))
+                    {
+                        inRangeList.Add(character);
+                    }
                 }
             }
+        }
+
+        if (inRangeList.Count > 0)
+        {
+            candidateList = inRangeList;
         }
 
         BattleCharacter target = null;

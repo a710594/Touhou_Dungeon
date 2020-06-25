@@ -41,7 +41,8 @@ public class ExploreController
 
     public void GenerateFloor(int floor)
     {
-        DungeonBuilder.Instance.Generate(floor, out _mapInfo);
+        DungeonBuilder.Instance.Generate(floor);
+        _mapInfo = DungeonBuilder.Instance.MapInfo;
         DungeonPainter.Instance.Paint(_mapInfo);
 
         _playerPosition = _mapInfo.Start;
@@ -113,7 +114,10 @@ public class ExploreController
 
     public void ChangeFloor(int floor)
     {
-        GenerateFloor(floor);
+        LoadingUI.Instance.Open(() =>
+        {
+            GenerateFloor(floor);
+        });
 
         if (floor > ArriveFloor)
         {
@@ -156,10 +160,6 @@ public class ExploreController
     {
         if (_mapInfo.TreasureDic.ContainsKey(position))
         {
-            for (int i=0; i< _mapInfo.TreasureDic[position].ItemList.Count; i++)
-            {
-                Debug.Log(ItemData.GetData(_mapInfo.TreasureDic[position].ItemList[i]).GetName());
-            }
             ItemManager.Instance.AddItem(_mapInfo.TreasureDic[position].ItemList, ItemManager.Type.Bag);
             TilePainter.Instance.Clear(2, position);
             ItemConfirmUI.Open(_mapInfo.TreasureDic[position].ItemList);

@@ -17,6 +17,7 @@ public class ExploreUI : MonoBehaviour
     public LittleMap LittleMap;
     public TipLabel TipLabel;
     public GameObject MapGroup;
+    public GameObject LoadingGroup;
     public StairsGroup StairsGroup;
     public Joystick Joystick;
 
@@ -77,6 +78,11 @@ public class ExploreUI : MonoBehaviour
     public void StopTipLabel()
     {
         TipLabel.Stop();
+    }
+
+    public void SetLoadingGroup(bool isVisible) 
+    {
+        LoadingGroup.SetActive(isVisible);
     }
 
     private void OpenMapGroup()

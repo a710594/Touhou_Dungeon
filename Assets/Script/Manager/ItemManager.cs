@@ -158,7 +158,14 @@ public class ItemManager
     {
         for (int i = 0; i < idList.Count; i++)
         {
-            AddBagItem(idList[i], 1);
+            if (idList[i] >= 0)
+            {
+                AddBagItem(idList[i], 1);
+            }
+            else //負數代表錢
+            {
+                AddMoney(idList[i] * -1);
+            }
         }
     }
 
@@ -166,7 +173,14 @@ public class ItemManager
     {
         for (int i = 0; i < idList.Count; i++)
         {
-            AddWarehouseItem(idList[i], 1);
+            if (idList[i] >= 0)
+            {
+                AddWarehouseItem(idList[i], 1);
+            }
+            else //負數代表錢
+            {
+                AddMoney(idList[i] * -1);
+            }
         }
     }
 

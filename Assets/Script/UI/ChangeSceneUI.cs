@@ -15,6 +15,7 @@ public class ChangeSceneUI : MonoBehaviour
 
     public void StartClock(Action callback = null)
     {
+        ClockImage.gameObject.SetActive(true);
         ClockImage.DOFillAmount(1, 0.5f).OnComplete(()=> 
         {
             if (callback != null)
@@ -26,9 +27,11 @@ public class ChangeSceneUI : MonoBehaviour
 
     public void EndClock(Action callback = null)
     {
+        ClockImage.gameObject.SetActive(true);
         ClockImage.fillAmount = 1;
         ClockImage.DOFillAmount(0, 0.5f).OnComplete(() =>
         {
+            ClockImage.gameObject.SetActive(false);
             if (callback != null)
             {
                 callback();
