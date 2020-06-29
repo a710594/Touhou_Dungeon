@@ -119,6 +119,7 @@ public class TeamManager
 
     public void RecoverAllMember() 
     {
+        _power = 0;
         for (int i = 0; i < MemberList.Count; i++)
         {
             MemberList[i].RecoverCompletelyHP();

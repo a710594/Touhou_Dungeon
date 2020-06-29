@@ -26,6 +26,13 @@ public class GameSystem : MonoBehaviour
         }
     }
 
+    public void AutoSave()
+    {
+#if !UNITY_EDITOR
+        SaveMemo();
+#endif
+    }
+
     public void ClearMemo()
     {
         Caretaker.Instance.ClearData<SceneMemo>();
@@ -102,5 +109,15 @@ public class GameSystem : MonoBehaviour
         {
             ClearMemo();
         }
+    }
+
+    void OnApplicationPause()
+    {
+        AutoSave();
+    }
+
+    void OnApplicationQuit()
+    {
+        AutoSave();
     }
 }

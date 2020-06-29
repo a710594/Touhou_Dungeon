@@ -79,7 +79,7 @@ public class IconCard : MonoBehaviour {
     public void Init(Equip equip)
     {
         Icon.gameObject.SetActive(true);
-        Icon.overrideSprite = Resources.Load<Sprite>("Image/" + equip.Icon);
+        Icon.overrideSprite = Resources.Load<Sprite>("Image/Item/" + equip.Icon);
         NameLabel.text = equip.Name;
         AmountLabel.gameObject.SetActive(false);
         //AmountLabel.gameObject.SetActive(true);

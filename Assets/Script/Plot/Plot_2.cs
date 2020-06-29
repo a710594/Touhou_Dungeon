@@ -11,6 +11,7 @@ public class Plot_2 //新手教學戰鬥後的對話,對話結束後到探索場
         ConversationUI.Open(flag.Value, () =>
         {
             TeamManager.Instance.RecoverAllMember();
+            ItemManager.Instance.AddItem(0, 1, ItemManager.Type.Bag);
             LoadingUI.Instance.Open(() =>
             {
                 ExploreController.Instance.GenerateFloor(1);

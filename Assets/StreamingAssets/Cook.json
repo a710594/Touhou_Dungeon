@@ -1,1 +1,6 @@
-[{"ID":1,"ResultID":2003,"Material_1":2002,"Amount_1":3,"Material_2":0,"Amount_2":0,"Material_3":0,"Amount_3":0,"Material_4":0,"Amount_4":0,"Material_5":0,"Amount_5":0}]
+[{"ID":1,"ResultID":2003,"Material_1":2002,"Amount_1":3,"Material_2":0,"Amount_2":0,"Material_3":0,"Amount_3":0,"Material_4":0,"Amount_4":0,"Material_5":0,"Amount_5":0},
+{"ID":2,"ResultID":2005,"Material_1":2002,"Amount_1":2,"Material_2":2004,"Amount_2":1,"Material_3":0,"Amount_3":0,"Material_4":0,"Amount_4":0,"Material_5":0,"Amount_5":0},
+{"ID":3,"ResultID":2007,"Material_1":2006,"Amount_1":3,"Material_2":0,"Amount_2":0,"Material_3":0,"Amount_3":0,"Material_4":0,"Amount_4":0,"Material_5":0,"Amount_5":0},
+{"ID":4,"ResultID":2008,"Material_1":2002,"Amount_1":2,"Material_2":2006,"Amount_2":1,"Material_3":0,"Amount_3":0,"Material_4":0,"Amount_4":0,"Material_5":0,"Amount_5":0},
+{"ID":5,"ResultID":2009,"Material_1":2002,"Amount_1":1,"Material_2":2004,"Amount_2":1,"Material_3":2006,"Amount_3":1,"Material_4":0,"Amount_4":0,"Material_5":0,"Amount_5":0},
+{"ID":6,"ResultID":2010,"Material_1":2002,"Amount_1":1,"Material_2":2004,"Amount_2":1,"Material_3":2006,"Amount_3":1,"Material_4":1006,"Amount_4":1,"Material_5":0,"Amount_5":0}]

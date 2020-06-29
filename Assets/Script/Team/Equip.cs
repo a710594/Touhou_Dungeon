@@ -9,7 +9,6 @@ public class Equip
     public string Comment;
     public string Icon;
     public int Volume;
-    public int Amount;
     public int Price;
     public EquipData.TypeEnum Type;
     public int ATK;
@@ -37,6 +36,7 @@ public class Equip
             Comment = itemData.GetComment();
             Icon = itemData.Icon;
             Volume = itemData.Volume;
+            Price = itemData.Price;
             Type = equipData.Type;
             ATK = equipData.ATK;
             DEF = equipData.DEF;

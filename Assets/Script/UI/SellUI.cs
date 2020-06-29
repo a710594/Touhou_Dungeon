@@ -104,7 +104,7 @@ public class SellUI : MonoBehaviour
         int sellPrice = _selectedData.Price / 2;
         int maxAmount = ItemManager.Instance.GetItemAmount(_selectedData.ID, ItemManager.Type.Warehouse);
 
-        SetAmountGroup.Open(maxAmount, "要買幾個？", (amount) =>
+        SetAmountGroup.Open(maxAmount, "要賣幾個？", (amount) =>
         {
             ItemManager.Instance.AddMoney(sellPrice * amount);
             ItemManager.Instance.MinusItem(_selectedData.ID, amount, ItemManager.Type.Warehouse);

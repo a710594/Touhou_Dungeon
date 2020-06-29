@@ -25,7 +25,7 @@ public class ItemManager
     }
 
     private int _maxMoney = 99999;
-    public readonly int MaxBagVolume = 50;
+    public readonly int MaxBagVolume = 100;
 
     public int Money;
     public int CurrentBagVolume = 0;
@@ -51,15 +51,10 @@ public class ItemManager
             _warehouseEquipDic.Add(type, new List<Equip>());
         }
 
-        //temp
-        AddWarehouseItem(2004, 5);
-        Money = 50;
-
         ItemMemo memo = Caretaker.Instance.Load<ItemMemo>();
         if (memo != null)
         {
             Money = memo.Money;
-            CurrentBagVolume = memo.CurrentBagVolume;
             KeyAmount = memo.KeyAmount;
 
             foreach (KeyValuePair<int, int> item in memo.BagItemDic)

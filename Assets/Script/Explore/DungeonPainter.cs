@@ -51,15 +51,6 @@ public class DungeonPainter
             TilePainter.Instance.Painting("Key", 2, info.KeyList[i]);
         }
 
-        //money
-        //GameObject coin;
-        //foreach (KeyValuePair<Vector2Int, int> item in info.MoneyDic)
-        //{
-        //    //TilePainter.Instance.Painting("Money", 2, item.Key);
-        //    coin = ResourceManager.Instance.Spawn("Coin", ResourceManager.Type.Other);
-        //    coin.transform.position = (Vector2)item.Key;
-        //}
-
         //explore point
         foreach (KeyValuePair<Vector2Int, int> item in info.ExploreEventDic)
         {
@@ -72,11 +63,6 @@ public class DungeonPainter
         //終點
         TilePainter.Instance.Painting("DownStairs", 0, info.Goal);
 
-        //Wall
-        //for (int i = 0; i < info.WallList.Count; i++)
-        //{
-        //    TilePainter.Instance.Painting(info.DungeonData.WallTile, 0, info.WallList[i]);
-        //}
         Vector2Int position;
         for (int i = 0; i <= info.MapBound.size.x + 30; i++)
         {
@@ -91,26 +77,9 @@ public class DungeonPainter
             }
         }
 
-        //Mist
-        //for (int i = 0; i < info.MistList.Count; i++)
-        //{
-        //    TilePainter.Instance.Painting("Mist", 3, info.MistList[i]);
-        //}
-
-        //Vector2Int position;
-        //for (int i = 0; i <= info.MapBound.size.x + 20; i++)
-        //{
-        //    for (int j = 0; j <= info.MapBound.size.y + 20; j++)
-        //    {
-        //        position = new Vector2Int(info.MapBound.xMin + i - 10, info.MapBound.yMin + j - 10);
-        //        if (!info.MapList.Contains(position))
-        //        {
-        //            TilePainter.Instance.Painting(dungeonData.WallTile, 0, position);
-        //        }
-
-        //        //mist
-        //        TilePainter.Instance.Painting("Black", 2, position);
-        //    }
-        //}
+        for (int i=0; i<info.ExploredList.Count; i++)
+        {
+            TilePainter.Instance.Clear(3, info.ExploredList[i]);
+        }
     }
 }

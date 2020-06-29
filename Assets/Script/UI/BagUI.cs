@@ -161,7 +161,14 @@ public class BagUI : MonoBehaviour
 
             if (_managerType == ItemManager.Type.Bag)
             {
-                DiscardButton.gameObject.SetActive(true);
+                if (_selectedItem.ID == 0) //緊急逃脫裝置不可丟棄
+                {
+                    DiscardButton.gameObject.SetActive(false); 
+                }
+                else
+                {
+                    DiscardButton.gameObject.SetActive(true);
+                }
             }
             else
             {

@@ -346,12 +346,6 @@ public class ExploreController
 
     private void SetVisibleRange(bool isInit)
     {
-        //if (isInit)
-        //{
-        //    _exploredList.Clear();
-        //    _wallList.Clear();
-        //}
-
         Vector2Int playerPosition = Vector2Int.RoundToInt(_player.transform.position);
         Vector2Int circlePoint = new Vector2Int();
         List<Vector2Int> circleList = new List<Vector2Int>();

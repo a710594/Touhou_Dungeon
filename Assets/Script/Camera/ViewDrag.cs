@@ -3,6 +3,7 @@ using System.Collections;
 
 public class ViewDrag : MonoBehaviour
 {
+    public float MaxSpeed = 5;
     public Rigidbody2D Rigidbody2D;
 
     private bool _isDrag = false;
@@ -41,7 +42,7 @@ public class ViewDrag : MonoBehaviour
         Vector3 direction = Camera.main.ScreenToWorldPoint(current_position) - Camera.main.ScreenToWorldPoint(hit_position);
 
         // Invert direction to that terrain appears to move with the mouse.
-        direction = Vector2.ClampMagnitude(direction * -5, 10);
+        direction = Vector2.ClampMagnitude(direction * -5, MaxSpeed);
         if (direction.magnitude < 1)
         {
             direction = Vector2.zero;

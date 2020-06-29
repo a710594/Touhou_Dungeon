@@ -55,6 +55,21 @@ public class CookData
                 dataList[i].MaterialList.Add(dataList[i].Material_2);
                 dataList[i].AmountList.Add(dataList[i].Amount_2);
             }
+            if (dataList[i].Material_3 != 0)
+            {
+                dataList[i].MaterialList.Add(dataList[i].Material_3);
+                dataList[i].AmountList.Add(dataList[i].Amount_3);
+            }
+            if (dataList[i].Material_4 != 0)
+            {
+                dataList[i].MaterialList.Add(dataList[i].Material_4);
+                dataList[i].AmountList.Add(dataList[i].Amount_4);
+            }
+            if (dataList[i].Material_5 != 0)
+            {
+                dataList[i].MaterialList.Add(dataList[i].Material_5);
+                dataList[i].AmountList.Add(dataList[i].Amount_5);
+            }
 
             _dataDic.Add(dataList[i].ID, dataList[i]);
         }
