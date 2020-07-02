@@ -52,21 +52,19 @@ public class BattleInfoUI : MonoBehaviour
             }
         }
 
-        if (character is BattleCharacterPlayer)
+        if (!character.Info.IsAI)
         {
-            BattleCharacterPlayer player = (BattleCharacterPlayer)character;
-
             Image.gameObject.SetActive(true);
-            if (player.MediumImage != string.Empty)
+            if (character.MediumImage != string.Empty)
             {
-                Image.overrideSprite = Resources.Load<Sprite>("Image/Character/Medium/" + player.MediumImage);
+                Image.overrideSprite = Resources.Load<Sprite>("Image/Character/Medium/" + character.MediumImage);
             }
             else
             {
                 Image.overrideSprite = Resources.Load<Sprite>("Image/Character/Medium/NoImage_M");
             }
             MpBar.gameObject.SetActive(true);
-            MpBar.SetValue(player.Info.CurrentMP, player.Info.MaxMP);
+            MpBar.SetValue(character.Info.CurrentMP, character.Info.MaxMP);
         }
         else
         {

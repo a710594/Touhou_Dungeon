@@ -8,6 +8,7 @@ using UnityEngine.UI;
 public class GameSystem : MonoBehaviour
 {
     public static Action LanguageChangeHandler;
+    public static GameSystem Instance;
 
     public Text TestText;
 
@@ -84,6 +85,8 @@ public class GameSystem : MonoBehaviour
         if (!_exists)
         {
             _exists = true;
+            Instance = this;
+            StartCoroutine(Init());
             DontDestroyOnLoad(transform.gameObject);//使物件切換場景時不消失
         }
         else
@@ -91,8 +94,6 @@ public class GameSystem : MonoBehaviour
             Destroy(gameObject); //破壞場景切換後重複產生的物件
             return;
         }
-
-        StartCoroutine(Init());
     }
 
     private void Update()

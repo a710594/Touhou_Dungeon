@@ -13,6 +13,7 @@ public class ExploreUI : MonoBehaviour
     public Button TeamButton;
     public Button FormationButton;
     public Button CookButton;
+    public Button SaveButton;
     public ButtonPlus[] InteractiveButtons;
     public LittleMap LittleMap;
     public TipLabel TipLabel;
@@ -117,6 +118,11 @@ public class ExploreUI : MonoBehaviour
         CookUI.Open(ItemManager.Type.Bag);
     }
 
+    private void Save() 
+    {
+        GameSystem.Instance.SaveMemo();
+    }
+
     private void InteractiveOnClick(ButtonPlus button)
     {
         button.gameObject.SetActive(false);
@@ -133,6 +139,7 @@ public class ExploreUI : MonoBehaviour
         TeamButton.onClick.AddListener(OpenTeam);
         FormationButton.onClick.AddListener(OpenFormation);
         CookButton.onClick.AddListener(OpenCook);
+        SaveButton.onClick.AddListener(Save);
 
         for (int i=0; i<InteractiveButtons.Length; i++)
         {

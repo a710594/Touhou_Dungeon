@@ -8,18 +8,7 @@ public class TilePainter : MonoBehaviour
 {
     private static readonly string _tilePath = "Tile/";
 
-    private static TilePainter _instance;
-    public static TilePainter Instance
-    {
-        get
-        {
-            if (_instance == null)
-            {
-                _instance = GameObject.Find("Grid").GetComponent<TilePainter>();
-            }
-            return _instance;
-        }
-    }
+    public static TilePainter Instance;
 
     public Tilemap[] TileMap;
 
@@ -98,5 +87,7 @@ public class TilePainter : MonoBehaviour
         {
             TileMap[i].CompressBounds();
         }
+
+        Instance = this;
     }
 }

@@ -52,12 +52,6 @@ public class ExploreController
 
     public void SetFloor()
     {
-        //if (_mapInfo == null)
-        //{
-        //    SetFloorFromMemo();
-        //    return;
-        //}
-
         DungeonPainter.Instance.Paint(_mapInfo);
 
         _player = GameObject.Find("ExploreCharacter").GetComponent<ExploreCharacter>();
@@ -83,7 +77,8 @@ public class ExploreController
         }
 
         GenerateCoin();
-        GenerateEnemy();
+        //GenerateEnemy();
+        GameSystem.Instance.AutoSave();
     }
 
     public void SetFloorFromMemo()

@@ -272,14 +272,14 @@ public class BattleUI : MonoBehaviour
     {
         BattleController.Instance.ChangeToSelectSkillState();
         SetActionGroupVisible(false);
-        SetSkillScrollViewData(BattleController.Instance.SelectedCharacter.SkillList);
+        SetSkillScrollViewData(BattleController.Instance.SelectedCharacter.Info.SkillList);
     }
 
     private void SpellCardActionOnClick()
     {
         BattleController.Instance.ChangeToSelectSkillState();
         SetActionGroupVisible(false);
-        SetSkillScrollViewData(BattleController.Instance.SelectedCharacter.SpellCardList);
+        SetSkillScrollViewData(BattleController.Instance.SelectedCharacter.Info.SpellCardList);
     }
 
     private void ItemActionOnClick()

@@ -13,6 +13,6 @@ public class BattleMemo
     public int Power;
     public int Exp;
     public int QueueLength;
-    public List<BattlePlayerMemo> PlayerList = new List<BattlePlayerMemo>();
-    public List<BattleEnemyMemo> EnemyList = new List<BattleEnemyMemo>();
+    public List<int> DropItemList = new List<int>();
+    public List<BattleCharacterMemo> CharacterList = new List<BattleCharacterMemo>();
 }

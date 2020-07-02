@@ -79,7 +79,7 @@ public class ShopUI : MonoBehaviour
     {
         ItemData.RootObject data;
         List<int> idList = ShopData.GetIDList(type);
-        Dictionary<int, int> itemDic = new Dictionary<int, int>(); //id, price
+        Dictionary<object, int> itemDic = new Dictionary<object, int>(); //id, price
         for (int i = 0; i < idList.Count; i++)
         {
             data = ItemData.GetData(idList[i]);

@@ -78,7 +78,7 @@ public class TeamManager
         Caretaker.Instance.Save<TeamMemo>(memo);
     }
 
-    public void Refresh(int power, List<BattleCharacterPlayer> list)
+    public void Refresh(int power, List<BattleCharacter> list)
     {
         _power = power;
 

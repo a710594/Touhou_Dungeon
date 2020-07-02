@@ -164,7 +164,7 @@ public class TeamMember
         FoodBuff = memo.FoodBuff;
     }
 
-    public void Refresh(BattleCharacterPlayer character)
+    public void Refresh(BattleCharacter character)
     {
         CurrentHP = character.Info.CurrentHP;
         CurrentMP = character.Info.CurrentMP;

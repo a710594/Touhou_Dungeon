@@ -67,7 +67,7 @@ public class BattleCharacterInfo
     {
         get
         {
-            return Mathf.RoundToInt((float)_atk * GetBuffATK() * BattleFieldManager.Instance.GetFieldBuff(_position).ATK);
+            return Mathf.RoundToInt((float)_atk * GetBuffATK() * BattleFieldManager.Instance.GetFieldBuff(Position).ATK);
         }
     }
 
@@ -78,7 +78,7 @@ public class BattleCharacterInfo
     {
         get
         {
-            return Mathf.RoundToInt((float)_def * GetBuffDEF() * BattleFieldManager.Instance.GetFieldBuff(_position).DEF);
+            return Mathf.RoundToInt((float)_def * GetBuffDEF() * BattleFieldManager.Instance.GetFieldBuff(Position).DEF);
         }
     }
 
@@ -89,7 +89,7 @@ public class BattleCharacterInfo
     {
         get
         {
-            return Mathf.RoundToInt((float)_mtk * GetBuffMTK() * BattleFieldManager.Instance.GetFieldBuff(_position).MTK);
+            return Mathf.RoundToInt((float)_mtk * GetBuffMTK() * BattleFieldManager.Instance.GetFieldBuff(Position).MTK);
         }
     }
 
@@ -100,7 +100,7 @@ public class BattleCharacterInfo
     {
         get
         {
-            return Mathf.RoundToInt((float)_mef * GetBuffMEF() * BattleFieldManager.Instance.GetFieldBuff(_position).MEF);
+            return Mathf.RoundToInt((float)_mef * GetBuffMEF() * BattleFieldManager.Instance.GetFieldBuff(Position).MEF);
         }
     }
 
@@ -111,7 +111,7 @@ public class BattleCharacterInfo
     {
         get
         {
-            return Mathf.RoundToInt((float)_agi * GetBuffAGI() * BattleFieldManager.Instance.GetFieldBuff(_position).AGI);
+            return Mathf.RoundToInt((float)_agi * GetBuffAGI() * BattleFieldManager.Instance.GetFieldBuff(Position).AGI);
         }
     }
 
@@ -120,7 +120,7 @@ public class BattleCharacterInfo
     {
         get
         {
-            return Mathf.RoundToInt((float)_sen * GetBuffSEN() * BattleFieldManager.Instance.GetFieldBuff(_position).SEN);
+            return Mathf.RoundToInt((float)_sen * GetBuffSEN() * BattleFieldManager.Instance.GetFieldBuff(Position).SEN);
         }
     }
 
@@ -166,21 +166,25 @@ public class BattleCharacterInfo
         }
     }
 
+    public bool IsAI = false;
     public bool HasUseSkill = false;
     public int ID;
     public int Lv;
     public string Name;
+    public Vector2 Position = new Vector2();
     public FoodBuff FoodBuff = null;
 
     public Dictionary<int, BattleStatus> StatusDic = new Dictionary<int, BattleStatus>();
     public int SleepingId = -1;
     public float ParalysisProbability = 0;
     public Dictionary<int, int> PoisonDic = new Dictionary<int, int>(); //id, damage
-
-    private Vector2 _position = new Vector2();
+    
+    public List<Skill> SkillList = new List<Skill>();
+    public List<Skill> SpellCardList = new List<Skill>();
 
     public void Init(TeamMember member) //for player
     {
+        IsAI = false;
         ID = member.Data.ID;
         Lv = member.Lv;
         Name = member.Data.GetName();
@@ -203,10 +207,40 @@ public class BattleCharacterInfo
         {
             FoodBuff = member.FoodBuff;
         }
+
+        int id;
+        SkillData.RootObject skillData;
+        Skill skill;
+        for (int i = 0; i < member.SkillList.Count; i++)
+        {
+            id = member.SkillList[i];
+            skillData = SkillData.GetData(id);
+            skill = SkillFactory.GetNewSkill(skillData);
+            if (skillData.CD > 0)
+            {
+                BattleController.Instance.TurnEndHandler += skill.SetCD;
+            }
+
+            SkillList.Add(skill);
+        }
+
+        for (int i = 0; i < member.SpellCardList.Count; i++)
+        {
+            id = member.SpellCardList[i];
+            skillData = SkillData.GetData(id);
+            skill = SkillFactory.GetNewSkill(skillData);
+            if (skillData.CD > 0)
+            {
+                BattleController.Instance.TurnEndHandler += skill.SetCD;
+            }
+
+            SpellCardList.Add(skill);
+        }
     }
 
-    public void Init(BattlePlayerMemo memo)
+    public void Init(BattleCharacterMemo memo)
     {
+        IsAI = memo.IsAI;
         ID = memo.ID;
         Lv = memo.Lv;
         Name = JobData.GetData(memo.ID).GetName();
@@ -233,12 +267,40 @@ public class BattleCharacterInfo
         SleepingId = memo.SleepingId;
         ParalysisProbability = memo.ParalysisProbability;
         PoisonDic = memo.PoisonDic;
+
+        SkillData.RootObject skillData;
+        Skill skill;
+        for (int i = 0; i < memo.SkillList.Count; i++)
+        {
+            skillData = SkillData.GetData(memo.SkillList[i]);
+            skill = SkillFactory.GetNewSkill(skillData);
+            skill.CurrentCD = memo.SkillCdList[i];
+            if (skillData.CD > 0)
+            {
+                BattleController.Instance.TurnEndHandler += skill.SetCD;
+            }
+
+            SkillList.Add(skill);
+        }
+
+        for (int i = 0; i < memo.SpellCardList.Count; i++)
+        {
+            skillData = SkillData.GetData(memo.SpellCardList[i]);
+            skill = SkillFactory.GetNewSkill(skillData);
+            if (skillData.CD > 0)
+            {
+                BattleController.Instance.TurnEndHandler += skill.SetCD;
+            }
+
+            SpellCardList.Add(skill);
+        }
     }
 
     public virtual void Init(int id, int lv) //for enemy
     {
         EnemyData.RootObject data = EnemyData.GetData(id);
 
+        IsAI = true;
         ID = id;
         Lv = lv;
         Name = data.Name;
@@ -257,19 +319,9 @@ public class BattleCharacterInfo
         EquipMEF = data.Equip_MEF;
     }
 
-    public void Init(BattleEnemyMemo memo) 
-    {
-        Init(memo.ID, memo.Lv);
-        CurrentHP = memo.CurrentHP;
-        StatusDic = memo.StatusDic;
-        SleepingId = memo.SleepingId;
-        ParalysisProbability = memo.ParalysisProbability;
-        PoisonDic = memo.PoisonDic;
-    }
-
     public void SetPosition(Vector2 position)
     {
-        _position = position;
+        Position = position;
     }
 
     public void CheckBattleStatus()

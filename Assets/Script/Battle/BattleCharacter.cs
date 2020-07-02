@@ -40,9 +40,8 @@ public class BattleCharacter : MonoBehaviour
     public Skill SelectedSkill;
     public SpriteOutline SpriteOutline;
     public GrayScale GrayScale;
+    public AI AI;
     public BattleCharacterInfo Info = new BattleCharacterInfo();
-    public List<Skill> SkillList = new List<Skill>();
-    public List<Skill> SpellCardList = new List<Skill>();
 
     public LiveStateEnum LiveState
     {
@@ -63,11 +62,73 @@ public class BattleCharacter : MonoBehaviour
         }
     }
 
+    public bool CanHitTarget
+    {
+        get 
+        {
+            return AI.CanHitTarget;
+        }
+    }
+
     protected Vector2 _originalPosition = new Vector2();
     protected Vector2 _lastPosition = new Vector2(); //上一步的位置
     protected Vector2Int _lookAt = Vector2Int.left;
-    protected Queue<Vector2Int> _path;
     protected List<Vector2Int> _moveRangeList = new List<Vector2Int>();
+    private List<Vector2Int> _detectRangeList = new List<Vector2Int>();
+
+
+    public void Init(TeamMember member)
+    {
+        Info.Init(member);
+        Init(member.Data);
+    }
+    public void Init(BattleCharacterMemo memo)
+    {
+        Info.Init(memo);
+        Init(JobData.GetData(memo.ID));
+    }
+
+    private void Init(JobData.RootObject data)
+    {
+        _originalPosition = transform.position;
+
+        Camp = CampEnum.Partner;
+        MediumImage = data.MediumImage;
+        LargeImage = data.LargeImage;
+
+        Sprite.sprite = Resources.Load<Sprite>("Image/Character/Small/" + data.SmallImage);
+        if (data.Animator != string.Empty)
+        {
+            Animator.runtimeAnimatorController = Resources.Load<RuntimeAnimatorController>("Animator/" + data.Animator);
+        }
+
+        if (LiveState == LiveStateEnum.Dying)
+        {
+            GrayScale.SetScale(0);
+            Animator.SetBool("IsDying", true);
+        }
+
+        BattleController.Instance.TurnEndHandler += CheckBattleStatus;
+    }
+
+    public void Init(int id, int lv)
+    {
+        EnemyData.RootObject data = EnemyData.GetData(id);
+
+        Info.Init(id, lv);
+        _originalPosition = transform.position;
+        Camp = CampEnum.Enemy;
+        Sprite.sprite = Resources.Load<Sprite>("Image/Character/Small/" + data.Image);
+        if (data.Animator != string.Empty)
+        {
+            Animator.runtimeAnimatorController = Resources.Load<RuntimeAnimatorController>("Animator/" + data.Animator);
+        }
+        gameObject.AddComponent(Type.GetType(data.AI));
+        AI = GetComponent(Type.GetType(data.AI)) as AI;
+        AI.Init(this, data.SkillList);
+
+        BattleController.Instance.TurnEndHandler += CheckBattleStatus;
+    }
 
     public void CheckBattleStatus()
     {
@@ -93,11 +154,10 @@ public class BattleCharacter : MonoBehaviour
         }
     }
 
-    //public void InitOrignalPosition()
-    //{
-    //    _lastPosition = _originalPosition;
-    //    _originalPosition = transform.position;
-    //}
+    public void ReturnToOriginalPosition()
+    {
+        transform.position = _originalPosition;
+    }
 
     public List<Vector2Int> GetMoveRange()
     {
@@ -133,17 +193,23 @@ public class BattleCharacter : MonoBehaviour
 
     public Queue<Vector2Int> GetPath(Vector2Int position)
     {
+        Queue<Vector2Int> path;
         List<Vector2Int> list = BattleFieldManager.Instance.GetPath(transform.position, position, Camp);
         if (list != null)
         {
-            _path = new Queue<Vector2Int>(list);
+            path = new Queue<Vector2Int>(list);
         }
         else
         {
-            _path = null;
+            path = null;
         }
 
-        return _path;
+        return path;
+    }
+
+    public void StartMove(Queue<Vector2Int> path, Action callback)
+    {
+        StartCoroutine(Move(path, callback));
     }
 
     public void InitActionCount()
@@ -218,6 +284,59 @@ public class BattleCharacter : MonoBehaviour
         SelectedSkill.GetRange(TargetPosition, orign, this, BattleController.Instance.CharacterList);
     }
 
+    public List<Vector2Int> GetDetectRange() //偵查範圍:移動後可用技能擊中目標的範圍
+    {
+        if (SelectedSkill == null)
+        {
+            return null;
+        }
+
+        GetMoveRange();
+        _detectRangeList = new List<Vector2Int>(_moveRangeList);
+
+        Vector2Int position = new Vector2Int();
+        List<Vector2Int> newPositionList = new List<Vector2Int>();
+        for (int i = 0; i < SelectedSkill.Data.Distance; i++)
+        {
+            for (int j = 0; j < _detectRangeList.Count; j++)
+            {
+                position = _detectRangeList[j];
+                if (!_detectRangeList.Contains(position + Vector2Int.right))
+                {
+                    newPositionList.Add(position + Vector2Int.right);
+                }
+                if (!_detectRangeList.Contains(position + Vector2Int.left))
+                {
+                    newPositionList.Add(position + Vector2Int.left);
+                }
+                if (!_detectRangeList.Contains(position + Vector2Int.up))
+                {
+                    newPositionList.Add(position + Vector2Int.up);
+                }
+                if (!_detectRangeList.Contains(position + Vector2Int.down))
+                {
+                    newPositionList.Add(position + Vector2Int.down);
+                }
+            }
+            for (int j = 0; j < newPositionList.Count; j++)
+            {
+                _detectRangeList.Add(newPositionList[j]);
+            }
+        }
+        _detectRangeList = BattleFieldManager.Instance.RemoveBound(_detectRangeList);
+        return _detectRangeList;
+    }
+
+    public void ShowDetectRange()
+    {
+        TilePainter.Instance.Clear(3);
+
+        for (int i = 0; i < _detectRangeList.Count; i++)
+        {
+            TilePainter.Instance.Painting("RedBlock", 3, _detectRangeList[i]);
+        }
+    }
+
     public void SetTarget(Vector2Int position)
     {
         TargetPosition = position;
@@ -228,9 +347,20 @@ public class BattleCharacter : MonoBehaviour
         return position == TargetPosition;
     }
 
+    public void SelectSkill(Skill skill)
+    {
+        SelectedSkill = skill;
+    }
+
     public virtual void UseSkill(Action callback)
     {
         SelectedSkill.Use(this, callback);
+
+        if (Camp == CampEnum.Partner)
+        {
+            Info.CurrentMP -= SelectedSkill.Data.MP;
+            BattleController.Instance.MinusPower(SelectedSkill.Data.NeedPower);
+        }
     }
 
     public virtual void SetDamage(int damage, AttackSkill.HitType hitType, Action<BattleCharacter> callback)
@@ -388,6 +518,11 @@ public class BattleCharacter : MonoBehaviour
         SpriteOutline.SetOutline(show);
     }
 
+    public void StartAI(Action callback)
+    {
+        AI.StartAI(callback);
+    }
+
     protected virtual void SetDeath(Action callback)
     {
         Sprite.DOFade(0, 0.5f).OnComplete(() =>
@@ -405,6 +540,45 @@ public class BattleCharacter : MonoBehaviour
     {
         GrayScale.SetScale(0);
         Animator.SetBool("IsDying", true);
+        if (callback != null)
+        {
+            callback();
+        }
+    }
+
+    private IEnumerator Move(Queue<Vector2Int> path, Action callback)
+    {
+        Vector2Int position = new Vector2Int();
+
+        if (Animator != null)
+        {
+            Animator.SetBool("IsMoving", true);
+        }
+
+        while (path.Count > 0)
+        {
+            position = path.Dequeue();
+
+            if (transform.position.x - position.x > 0 && _lookAt == Vector2Int.right)
+            {
+                Sprite.flipX = false;
+                _lookAt = Vector2Int.left;
+            }
+            else if (transform.position.x - position.x < 0 && _lookAt == Vector2Int.left)
+            {
+                Sprite.flipX = true;
+                _lookAt = Vector2Int.right;
+            }
+            transform.DOMove((Vector2)position, 0.2f).SetEase(Ease.Linear);
+
+            yield return new WaitForSeconds(0.2f);
+        }
+
+        if (Animator != null)
+        {
+            Animator.SetBool("IsMoving", false);
+        }
+
         if (callback != null)
         {
             callback();

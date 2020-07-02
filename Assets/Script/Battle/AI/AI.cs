@@ -1,23 +1,17 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class AI : MonoBehaviour
 {
-    public int[] SkillID;
+    public bool CanHitTarget = false;
 
-    protected BattleCharacterAI _character;
+    protected Skill _selectedSkill;
+    protected BattleCharacter _character;
     protected List<Skill> _skillList = new List<Skill>();
 
-    //public void Init()
-    //{
-    //    for (int i = 0; i < SkillID.Length; i++)
-    //    {
-    //        _skillList.Add(SkillFactory.GetNewSkill(SkillID[i]));
-    //    }
-    //}
-
-    public void Init(BattleCharacterAI character, List<int> list)
+    public void Init(BattleCharacter character, List<int> list)
     {
         _character = character;
 
@@ -28,18 +22,12 @@ public class AI : MonoBehaviour
         _character.SelectedSkill = _skillList[0];
     }
 
-    public virtual void StartAI()
-    {
-        StartCoroutine(Run());
-    }
-
-    protected IEnumerator Run()
+    public void StartAI(Action callback)
     {
         if (!_character.Info.HasUseSkill) //還沒用過技能
         {
             SelectSkill();
 
-            Vector2Int position = new Vector2Int();
             List<Vector2Int> detectRangeList = _character.GetDetectRange();
             BattleCharacter target = GetTarget(BattleCharacter.CampEnum.Partner, detectRangeList);
 
@@ -48,10 +36,11 @@ public class AI : MonoBehaviour
                 Debug.Log(target.Info.Name);
 
                 _character.SetTarget(Vector2Int.RoundToInt(target.transform.position));
-                if (_character.InSkillDistance())
+                if (Utility.GetDistance(transform.position, target.transform.position) <= _selectedSkill.Data.Distance) //目標已在射程內,無需移動
                 {
-                    _character.HasTarget = true;
+                    CanHitTarget = true;
                     _character.GetSkillRange();
+                    callback();
                 }
                 else
                 {
@@ -70,9 +59,9 @@ public class AI : MonoBehaviour
                         }
                     }
 
-                    if (positionList.Count > 0)
+                    if (positionList.Count > 0) //可以打到目標
                     {
-                        _character.HasTarget = true;
+                        CanHitTarget = true;
                         //尋找最短路徑
                         Queue<Vector2Int> path = _character.GetPath(positionList[0]);
                         Queue<Vector2Int> shortestPath = path;
@@ -85,20 +74,24 @@ public class AI : MonoBehaviour
                             }
                         }
 
-                        _character.StartMoveAnimation();
-                        while (shortestPath.Count > 0)
+                        //_character.StartMoveAnimation();
+                        //while (shortestPath.Count > 0)
+                        //{
+                        //    position = shortestPath.Dequeue();
+                        //    _character.Move(position);
+                        //    yield return new WaitForSeconds(0.2f);
+                        //}
+                        //_character.StopMoveAnimation();
+                        _character.StartMove(shortestPath, ()=> 
                         {
-                            position = shortestPath.Dequeue();
-                            _character.Move(position);
-                            yield return new WaitForSeconds(0.2f);
-                        }
-                        _character.StopMoveAnimation();
-                        _character.MoveDone();
-                        _character.GetSkillRange();
+                            _character.MoveDone();
+                            _character.GetSkillRange();
+                            callback();
+                        });
                     }
-                    else
+                    else //不能打到目標,但還是要盡可能接近目標
                     {
-                        _character.HasTarget = false;
+                        CanHitTarget = false;
                         positionList = _character.GetMoveRange(); //可能移動的位置
                         for (int i = 0; i < positionList.Count; i++) //移除有角色的位置
                         {
@@ -109,7 +102,7 @@ public class AI : MonoBehaviour
                             }
                         }
 
-                        //尋找離玩家最近的點
+                        //尋找離目標最近的點
                         Vector2Int closestPosition = positionList[0];
                         for (int i = 1; i < positionList.Count; i++)
                         {
@@ -120,30 +113,34 @@ public class AI : MonoBehaviour
                         }
                         Queue<Vector2Int> path = _character.GetPath(closestPosition);
 
-                        _character.StartMoveAnimation();
-                        while (path.Count > 0)
+                        //_character.StartMoveAnimation();
+                        //while (path.Count > 0)
+                        //{
+                        //    position = path.Dequeue();
+                        //    _character.Move(position);
+                        //    yield return new WaitForSeconds(0.2f);
+                        //}
+                        //_character.StopMoveAnimation();
+                        _character.StartMove(path, ()=> 
                         {
-                            position = path.Dequeue();
-                            _character.Move(position);
-                            yield return new WaitForSeconds(0.2f);
-                        }
-                        _character.StopMoveAnimation();
-                        _character.MoveDone();
-                        _character.ActionDoneCompletely();
+                            _character.MoveDone();
+                            _character.ActionDoneCompletely();
+                            callback();
+                        });
                     }
                 }
             }
             else
             {
-                _character.HasTarget = false;
+                CanHitTarget = false;
+                callback();
             }
         }
         else
         {
-            _character.HasTarget = false;
+            CanHitTarget = false;
+            callback();
         }
-
-        _character.EndAI();
     }
 
     protected virtual void SelectSkill()
@@ -180,16 +177,12 @@ public class AI : MonoBehaviour
         BattleCharacter target = null;
         if (candidateList.Count > 0)
         {
-            int distance;
-            int minDistance;
             target = candidateList[0];
-            minDistance = Utility.GetDistance(_character.transform.position, target.transform.position);
             for (int i = 1; i < candidateList.Count; i++)
             {
-                distance = Utility.GetDistance(_character.transform.position, candidateList[i].transform.position);
-                if (distance < minDistance)
+                if ((_selectedSkill.Data.IsMagic && candidateList[i].Info.MEF < target.Info.MEF) ||
+                    !_selectedSkill.Data.IsMagic && candidateList[i].Info.DEF < target.Info.DEF) //挑皮薄的
                 {
-                    minDistance = distance;
                     target = candidateList[i];
                 }
             }
