@@ -34,6 +34,8 @@ public class JobData
         public int UnlockLv_4 { get; set; }
         public int Skill_5 { get; set; }
         public int UnlockLv_5 { get; set; }
+        public int Skill_6 { get; set; }
+        public int UnlockLv_6 { get; set; }
         public int SpellCard_1 { get; set; }
         public string Name_Chinese { get; set; }
         public string Name_English { get; set; }
@@ -114,6 +116,11 @@ public class JobData
             if (dataList[i].Skill_5 != 0)
             {
                 dataList[i].SkillUnlockDic.Add(dataList[i].Skill_5, dataList[i].UnlockLv_5);
+            }
+
+            if (dataList[i].Skill_6 != 0)
+            {
+                dataList[i].SkillUnlockDic.Add(dataList[i].Skill_6, dataList[i].UnlockLv_6);
             }
 
             if (dataList[i].SpellCard_1 != 0)

@@ -19,7 +19,7 @@ public class ItemConfirmUI : MonoBehaviour
         {
             _instance = ResourceManager.Instance.Spawn("ItemConfirmUI", ResourceManager.Type.UI).GetComponent<ItemConfirmUI>();
         }
-        Time.timeScale = 0;
+        ExploreController.Instance.StopEnemy();
         _instance._onFinishHandler = callback;
         _instance.Init(idList);
     }
@@ -36,13 +36,13 @@ public class ItemConfirmUI : MonoBehaviour
 
     private void Close()
     {
+        ExploreController.Instance.ContinueEnemy();
         Destroy(_instance.gameObject);
         _instance = null;
     }
 
     private void ConfirmOnClick()
     {
-        Time.timeScale = 1;
         _instance.Close();
         if (_onFinishHandler != null)
         {

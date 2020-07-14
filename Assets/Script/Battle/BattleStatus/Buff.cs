@@ -21,7 +21,7 @@ public class Buff : BattleStatus
     public float MEF = 1;
     public float AGI = 1;
     public float SEN = 1;
-    public float MoveDistance;
+    public float MOV;
 
     public Buff() { }
 
@@ -29,15 +29,38 @@ public class Buff : BattleStatus
     {
         Data = BattleStatusData.GetData(id);
 
-        ATK = (float)Data.ATK / 100f;
-        DEF = (float)Data.DEF / 100f;
-        MTK = (float)Data.MTK / 100f;
-        MEF = (float)Data.MEF / 100f;
-        AGI = (float)Data.AGI / 100f;
-        SEN = (float)Data.SEN / 100f;
-        MoveDistance = (float)Data.MoveDistance / 100f;
+        if (Data.ValueType == BattleStatusData.TypeEnum.ATK)
+        {
+            ATK = (float)Data.Value / 100f;
+        }
+        else if (Data.ValueType == BattleStatusData.TypeEnum.DEF)
+        {
+            DEF = (float)Data.Value / 100f;
+        }
+        else if (Data.ValueType == BattleStatusData.TypeEnum.MTK)
+        {
+            MTK = (float)Data.Value / 100f;
+        }
+        else if (Data.ValueType == BattleStatusData.TypeEnum.MEF)
+        {
+            MEF = (float)Data.Value / 100f;
+        }
+        else if (Data.ValueType == BattleStatusData.TypeEnum.AGI)
+        {
+            AGI = (float)Data.Value / 100f;
+        }
+        else if (Data.ValueType == BattleStatusData.TypeEnum.SEN)
+        {
+            ATK = (float)Data.Value / 100f;
+        }
+        else if (Data.ValueType == BattleStatusData.TypeEnum.MOV)
+        {
+            MOV = (float)Data.Value / 100f;
+        }
+
         RemainTurn = Data.Turn;
         Comment = Data.Comment;
+        Message = Data.Message;
         Icon = Data.Icon;
     }
 }

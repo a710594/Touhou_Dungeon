@@ -10,9 +10,10 @@ public class Paralysis : BattleStatus
     {
         Data = BattleStatusData.GetData(id);
 
-        Probability = Data.Probability;
+        Probability = Data.Value;
         RemainTurn = Data.Turn;
         Comment = Data.Comment;
+        Message = Data.Message;
         Icon = Data.Icon;
     }
 }

@@ -17,7 +17,7 @@ public class AI : MonoBehaviour
 
         for (int i = 0; i < list.Count; i++)
         {
-            _skillList.Add(SkillFactory.GetNewSkill(list[i]));
+            _skillList.Add(SkillFactory.GetNewSkill(list[i], _character.Info));
         }
         _character.SelectedSkill = _skillList[0];
     }
@@ -29,7 +29,7 @@ public class AI : MonoBehaviour
             SelectSkill();
 
             List<Vector2Int> detectRangeList = _character.GetDetectRange();
-            BattleCharacter target = GetTarget(BattleCharacter.CampEnum.Partner, detectRangeList);
+            BattleCharacter target = GetTarget(BattleCharacterInfo.CampEnum.Partner, detectRangeList);
 
             if (target != null)
             {
@@ -74,14 +74,6 @@ public class AI : MonoBehaviour
                             }
                         }
 
-                        //_character.StartMoveAnimation();
-                        //while (shortestPath.Count > 0)
-                        //{
-                        //    position = shortestPath.Dequeue();
-                        //    _character.Move(position);
-                        //    yield return new WaitForSeconds(0.2f);
-                        //}
-                        //_character.StopMoveAnimation();
                         _character.StartMove(shortestPath, ()=> 
                         {
                             _character.MoveDone();
@@ -113,14 +105,6 @@ public class AI : MonoBehaviour
                         }
                         Queue<Vector2Int> path = _character.GetPath(closestPosition);
 
-                        //_character.StartMoveAnimation();
-                        //while (path.Count > 0)
-                        //{
-                        //    position = path.Dequeue();
-                        //    _character.Move(position);
-                        //    yield return new WaitForSeconds(0.2f);
-                        //}
-                        //_character.StopMoveAnimation();
                         _character.StartMove(path, ()=> 
                         {
                             _character.MoveDone();
@@ -147,29 +131,38 @@ public class AI : MonoBehaviour
     {
     }
 
-    protected BattleCharacter GetTarget(BattleCharacter.CampEnum targetCamp, List<Vector2Int> detectRangeList)
+    protected BattleCharacter GetTarget(BattleCharacterInfo.CampEnum targetCamp, List<Vector2Int> detectRangeList)
     {
         BattleCharacter character;
         List<BattleCharacter> candidateList = new List<BattleCharacter>(); //只要是目標陣營活著的角色都算
         List<BattleCharacter> inRangeList = new List<BattleCharacter>(); //符合上述條件且打得到的角色才算
+        List<BattleCharacter> strikingList = new List<BattleCharacter>(); //符合上述條件且有注目狀態的角色
 
         for (int i=0; i<BattleController.Instance.CharacterList.Count; i++)
         {
             character = BattleController.Instance.CharacterList[i];
             if (character.LiveState != BattleCharacter.LiveStateEnum.Dead)
             {
-                if (character.Camp == targetCamp)
+                if (character.Info.Camp == targetCamp)
                 {
                     candidateList.Add(character);
                     if (detectRangeList.Contains(Vector2Int.RoundToInt(character.transform.position)))
                     {
                         inRangeList.Add(character);
+                        if (character.Info.IsStriking)
+                        {
+                            strikingList.Add(character);
+                        }
                     }
                 }
             }
         }
 
-        if (inRangeList.Count > 0)
+        if (strikingList.Count > 0)
+        {
+            candidateList = strikingList;
+        }
+        else if (inRangeList.Count > 0)
         {
             candidateList = inRangeList;
         }

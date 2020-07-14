@@ -23,6 +23,11 @@ public class FieldEnemy : MonoBehaviour
         transform.DOKill();
     }
 
+    public void Continue()
+    {
+        _timer.Start(_cycleTime, Move, true);
+    }
+
     public virtual void Init(int battleGroupId, Vector2 position)
     {
         _data = BattleGroupData.GetData(battleGroupId);

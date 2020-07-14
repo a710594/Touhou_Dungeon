@@ -23,7 +23,7 @@ public class CookUI : MonoBehaviour
 
     public static void Open(ItemManager.Type type)
     {
-        Time.timeScale = 0;
+        ExploreController.Instance.StopEnemy();
         if (Instance == null)
         {
             Instance = ResourceManager.Instance.Spawn("CookUI", ResourceManager.Type.UI).GetComponent<CookUI>();
@@ -33,8 +33,8 @@ public class CookUI : MonoBehaviour
 
     public void Close()
     {
+        ExploreController.Instance.ContinueEnemy();
         TipLabel.Stop();
-        Time.timeScale = 1;
         Destroy(Instance.gameObject);
         Instance = null;
     }

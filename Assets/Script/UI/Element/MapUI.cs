@@ -3,14 +3,18 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class LittleMap : MonoBehaviour
+public class MapUI : MonoBehaviour
 {
     public float Scale = 1;
-    public Image Map;
+    //public Image LittleMap;
+    //public Image BigMap;
+    public MapElement LittleMap;
+    public MapElement BigMap;
     public Text FloorLabel;
-    public GameObject Player;
-    public GameObject Start;
-    public GameObject Goal;
+    public GameObject BigMapGroup;
+    //public GameObject Player;
+    //public GameObject Start;
+    //public GameObject Goal;
 
     private Vector2Int _playerPosition = new Vector2Int();
     private Vector2Int _goalPosition = new Vector2Int();
@@ -31,8 +35,10 @@ public class LittleMap : MonoBehaviour
         _texture2d = new Texture2D(mapBound.size.x + 3, mapBound.size.y + 3, TextureFormat.ARGB32, false);
         _texture2d.filterMode = FilterMode.Point;
         sprite = Sprite.Create(_texture2d, new Rect(0, 0, _texture2d.width, _texture2d.height), Vector2.zero);
-        Map.sprite = sprite;
-        Map.rectTransform.sizeDelta = new Vector2(_texture2d.width * Scale, _texture2d.height * Scale);
+        //LittleMap.sprite = sprite;
+        //BigMap.sprite = sprite;
+        //LittleMap.rectTransform.sizeDelta = new Vector2(_texture2d.width * Scale, _texture2d.height * Scale);
+        //BigMap.rectTransform.sizeDelta = new Vector2(_texture2d.width * Scale, _texture2d.height * Scale);
 
         for (int i = 0; i < _texture2d.width; i++)
         {
@@ -44,16 +50,31 @@ public class LittleMap : MonoBehaviour
 
         _texture2d.Apply();
 
-        Start.transform.localPosition = new Vector2((startPosition.x - _mapBound.center.x) * Scale, (startPosition.y - _mapBound.center.y) * Scale);
-        Goal.transform.localPosition = new Vector2((goalPosition.x - _mapBound.center.x) * Scale, (goalPosition.y - _mapBound.center.y) * Scale);
+        //Start.transform.localPosition = new Vector2((startPosition.x - _mapBound.center.x) * Scale, (startPosition.y - _mapBound.center.y) * Scale);
+        //Goal.transform.localPosition = new Vector2((goalPosition.x - _mapBound.center.x) * Scale, (goalPosition.y - _mapBound.center.y) * Scale);
 
+        //if (playerPosition == goalPosition)
+        //{
+        //    Goal.SetActive(true);
+        //}
+        //else
+        //{
+        //    Goal.SetActive(false);
+        //}
+
+        Vector2 mapStartPosition = new Vector2((startPosition.x - _mapBound.center.x) * Scale, (startPosition.y - _mapBound.center.y) * Scale);
+        Vector2 mapGoalPosition = new Vector2((goalPosition.x - _mapBound.center.x) * Scale, (goalPosition.y - _mapBound.center.y) * Scale);
+        LittleMap.Init(mapStartPosition, mapGoalPosition, sprite, _texture2d);
+        BigMap.Init(mapStartPosition, mapGoalPosition, sprite, _texture2d);
         if (playerPosition == goalPosition)
         {
-            Goal.SetActive(true);
+            LittleMap.SetGoalVisible(true);
+            BigMap.SetGoalVisible(true);
         }
         else
         {
-            Goal.SetActive(false);
+            LittleMap.SetGoalVisible(false);
+            BigMap.SetGoalVisible(false);
         }
     }
 
@@ -70,7 +91,9 @@ public class LittleMap : MonoBehaviour
 
             if (exploredList[i] == _goalPosition)
             {
-                Goal.SetActive(true);
+                //Goal.SetActive(true);
+                LittleMap.SetGoalVisible(true);
+                BigMap.SetGoalVisible(true);
             }
         }
 
@@ -86,8 +109,18 @@ public class LittleMap : MonoBehaviour
 
         float positionX = (_mapBound.center.x - _playerPosition.x) * Scale;
         float positionY = (_mapBound.center.y - _playerPosition.y) * Scale;
-        Map.transform.localPosition = new Vector2(positionX, positionY);
+        Vector2 mapPosition = new Vector2(positionX, positionY);
+        Vector2 mapPlayerPosition = new Vector2((_playerPosition.x - _mapBound.center.x) * Scale, (_playerPosition.y - _mapBound.center.y) * Scale);
+        //LittleMap.transform.localPosition = new Vector2(positionX, positionY);
+        //BigMap.transform.localPosition = new Vector2(positionX, positionY);
 
-        Player.transform.localPosition = new Vector2((_playerPosition.x - _mapBound.center.x) * Scale, (_playerPosition.y - _mapBound.center.y) * Scale);
+        //Player.transform.localPosition = new Vector2((_playerPosition.x - _mapBound.center.x) * Scale, (_playerPosition.y - _mapBound.center.y) * Scale);
+        LittleMap.Refresh(mapPlayerPosition, mapPosition);
+        BigMap.Refresh(mapPlayerPosition, mapPosition);
+    }
+
+    public void SetBigMapGroupVisible(bool isVisible)
+    {
+        BigMapGroup.SetActive(isVisible);
     }
 }

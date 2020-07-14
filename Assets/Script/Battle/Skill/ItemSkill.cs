@@ -1,4 +1,4 @@
-﻿using System;
+﻿/*using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -14,9 +14,9 @@ public class ItemSkill : Skill
         }
     }
 
-    public override void Use(BattleCharacter executor, Action callback)
+    public override void Use(Action callback)
     {
-        base.Use(executor, callback);
+        base.Use(callback);
         ItemManager.Instance.MinusItem(ItemID, 1, ItemManager.Type.Bag);
     }
-}
+}*/

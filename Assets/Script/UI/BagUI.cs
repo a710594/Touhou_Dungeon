@@ -37,7 +37,7 @@ public class BagUI : MonoBehaviour
 
     public static void Open(ItemManager.Type type)
     {
-        Time.timeScale = 0;
+        ExploreController.Instance.StopEnemy();
         if (Instance == null)
         {
             Instance = ResourceManager.Instance.Spawn("BagUI", ResourceManager.Type.UI).GetComponent<BagUI>();
@@ -48,7 +48,7 @@ public class BagUI : MonoBehaviour
 
     public static void Open(ItemManager.Type type, TeamMember teamMember, List<Equip> equipList)
     {
-        Time.timeScale = 0;
+        ExploreController.Instance.StopEnemy();
         if (Instance == null)
         {
             Instance = ResourceManager.Instance.Spawn("BagUI", ResourceManager.Type.UI).GetComponent<BagUI>();
@@ -59,7 +59,7 @@ public class BagUI : MonoBehaviour
 
     public static void Close()
     {
-        Time.timeScale = 1;
+        ExploreController.Instance.ContinueEnemy();
         Destroy(Instance.gameObject);
         Instance = null;
     }
@@ -283,7 +283,7 @@ public class BagUI : MonoBehaviour
             if (_selectedItem.Type == ItemData.TypeEnum.GoHome)
             {
                 ExploreController.Instance.BackToVilliage();
-                Time.timeScale = 1;
+                Close();
             }
             else
             {

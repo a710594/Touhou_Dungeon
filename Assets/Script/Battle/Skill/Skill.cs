@@ -5,14 +5,22 @@ using UnityEngine;
 
 public class Skill
 {
+    public enum HitType
+    {
+        Miss,
+        Hit,
+        Critical
+    }
+
     public SkillData.RootObject Data;
     public int CurrentCD = 0;
+    public int ItemID = 0;
 
     protected int _skillCallBackCount = 0;
-    private int _targetCount = 0;
+    protected int _targetCount = 0;
     protected Action _skillCallback;
     protected Skill _subSkill;
-    protected BattleCharacter _executor;
+    protected BattleCharacterInfo _user;
     protected List<Vector2Int> _skillDistanceList = new List<Vector2Int>();
     protected List<Vector2Int> _skillRangeList = new List<Vector2Int>();
     protected List<BattleCharacter> _targetList = new List<BattleCharacter>();
@@ -32,11 +40,11 @@ public class Skill
         }
     }
 
-    public virtual bool CanUse(int currentMP, out string notUseReason)
+    public virtual bool CanUse(out string notUseReason)
     {
         notUseReason = "";
 
-        if (currentMP < Data.MP)
+        if (_user.CurrentMP < Data.MP)
         {
             notUseReason = "MP 不足";
             return false;
@@ -49,6 +57,16 @@ public class Skill
         else if (Data.NeedPower > BattleController.Instance.Power)
         {
             notUseReason = "Power 不足";
+            return false;
+        }
+        else if (Data.Priority < _user.CurrentPriority)
+        {
+            notUseReason = "還沒到可使用該技能的時機";
+            return false;
+        }
+        else if (Data.Priority > _user.CurrentPriority)
+        {
+            notUseReason = "已經過了可使用該技能的時機";
             return false;
         }
 
@@ -140,9 +158,17 @@ public class Skill
         return _targetList;
     }
 
-    public virtual void Use(BattleCharacter executor, Action callback)
+    public void SetUser(BattleCharacterInfo user)
     {
-        _executor = executor;
+        _user = user;
+        if (_subSkill != null)
+        {
+            _subSkill.SetUser(_user);
+        }
+    }
+
+    public virtual void Use(Action callback)
+    {
         if (Data.CD > 0)
         {
             CurrentCD = Data.CD + 1; //要加一是因為本回合不減CD
@@ -151,36 +177,85 @@ public class Skill
         if (_subSkill != null)
         {
             _subSkill.InitSkillCallbackCount();
-            _subSkill.SetExecutor(_executor);
         }
         _skillCallback = callback;
         GetTargetList();
 
-        if (_targetList.Count > 0 && executor.Camp == BattleCharacter.CampEnum.Partner && !IsSpellCard)
+        if (_targetList.Count > 0 && _user.Camp == BattleCharacterInfo.CampEnum.Partner && !IsSpellCard)
         {
-            BattleController.Instance.AddPower(_targetList.Count * executor.SelectedSkill.Data.AddPower);
+            BattleController.Instance.AddPower(_targetList.Count * Data.AddPower);
             BattleUI.Instance.DropPowerPoint(_targetList);
         }
 
         if (IsSpellCard)
         {
-            BattleUI.Instance.ShowSpellCard(Data.GetName(), executor.LargeImage, UseCallback);
+            BattleUI.Instance.ShowSpellCard(Data.GetName(), _user.JobData.LargeImage, UseCallback);
         }
         else
         {
             BattleUI.Instance.SetSkillLabel(true, Data.GetName());
             UseCallback();
         }
+
+        if (ItemID != 0)
+        {
+            ItemManager.Instance.MinusItem(ItemID, 1, ItemManager.Type.Bag);
+        }
     }
 
     public void InitSkillCallbackCount()
     {
         _skillCallBackCount = 0;
+        if (_subSkill != null)
+        {
+            _subSkill.InitSkillCallbackCount();
+        }
     }
 
+    protected HitType hitType;
     public virtual void SetEffect(BattleCharacter target)
     {
+        if (target != null)
+        {
+            hitType = CheckHit(_user, target.Info, target.LiveState);
+        }
+    }
 
+    protected HitType CheckHit(BattleCharacterInfo executor, BattleCharacterInfo target, BattleCharacter.LiveStateEnum targetLiveState)
+    {
+        float misssRate;
+        Debug.Log(("!!!" + Data.HitRate / 100f));
+        misssRate = (float)(target.AGI - executor.SEN * (Data.HitRate / 100f)) / (float)target.AGI; //迴避率
+
+        if (misssRate >= 0) //迴避率為正,骰迴避
+        {
+            if (misssRate < UnityEngine.Random.Range(0f, 1f))
+            {
+                return HitType.Hit;
+            }
+            else
+            {
+                if (targetLiveState == BattleCharacter.LiveStateEnum.Dying)
+                {
+                    return HitType.Hit;
+                }
+                else
+                {
+                    return HitType.Miss;
+                }
+            }
+        }
+        else //迴避率為負,骰爆擊
+        {
+            if (misssRate < UnityEngine.Random.Range(0f, 1f) * -1f)
+            {
+                return HitType.Critical;
+            }
+            else
+            {
+                return HitType.Hit;
+            }
+        }
     }
 
     protected virtual void UseCallback() //Use 之後會呼叫的方法
@@ -211,11 +286,19 @@ public class Skill
 
     protected void OnSkillEnd()
     {
-        _skillCallBackCount++;
-        if (_skillCallBackCount == _targetCount && _skillCallback != null)
+        if (Data.Type == SkillData.TypeEnum.Field || Data.Type == SkillData.TypeEnum.CureLeastHP)
         {
             BattleUI.Instance.SetSkillLabel(false);
             _skillCallback();
+        }
+        else
+        {
+            _skillCallBackCount++;
+            if (_skillCallBackCount == _targetCount && _skillCallback != null)
+            {
+                BattleUI.Instance.SetSkillLabel(false);
+                _skillCallback();
+            }
         }
     }
 
@@ -231,21 +314,21 @@ public class Skill
         }
         else if (Data.Target == SkillData.TargetType.Us)
         {
-            if (executor.Camp == BattleCharacter.CampEnum.Enemy)
+            if (executor.Info.Camp == BattleCharacterInfo.CampEnum.Enemy)
             {
                 for (int i = 0; i < characterList.Count; i++)
                 {
-                    if (characterList[i].Camp == BattleCharacter.CampEnum.Partner && characterList[i].LiveState == BattleCharacter.LiveStateEnum.Alive)
+                    if (characterList[i].Info.Camp == BattleCharacterInfo.CampEnum.Partner && characterList[i].LiveState != BattleCharacter.LiveStateEnum.Dead)
                     {
                         positionList.Remove(Vector2Int.RoundToInt(characterList[i].transform.position));
                     }
                 }
             }
-            else if (executor.Camp == BattleCharacter.CampEnum.Partner)
+            else if (executor.Info.Camp == BattleCharacterInfo.CampEnum.Partner)
             {
                 for (int i = 0; i < characterList.Count; i++)
                 {
-                    if (characterList[i].Camp == BattleCharacter.CampEnum.Enemy && characterList[i].LiveState == BattleCharacter.LiveStateEnum.Alive)
+                    if (characterList[i].Info.Camp == BattleCharacterInfo.CampEnum.Enemy && characterList[i].LiveState != BattleCharacter.LiveStateEnum.Dead)
                     {
                         positionList.Remove(Vector2Int.RoundToInt(characterList[i].transform.position));
                     }
@@ -254,21 +337,21 @@ public class Skill
         }
         else if (Data.Target == SkillData.TargetType.Them)
         {
-            if (executor.Camp == BattleCharacter.CampEnum.Enemy)
+            if (executor.Info.Camp == BattleCharacterInfo.CampEnum.Enemy)
             {
                 for (int i = 0; i < characterList.Count; i++)
                 {
-                    if (characterList[i].Camp == BattleCharacter.CampEnum.Enemy && characterList[i].LiveState == BattleCharacter.LiveStateEnum.Alive)
+                    if (characterList[i].Info.Camp == BattleCharacterInfo.CampEnum.Enemy && characterList[i].LiveState != BattleCharacter.LiveStateEnum.Dead)
                     {
                         positionList.Remove(Vector2Int.RoundToInt(characterList[i].transform.position));
                     }
                 }
             }
-            else if (executor.Camp == BattleCharacter.CampEnum.Partner)
+            else if (executor.Info.Camp == BattleCharacterInfo.CampEnum.Partner)
             {
                 for (int i = 0; i < characterList.Count; i++)
                 {
-                    if (characterList[i].Camp == BattleCharacter.CampEnum.Partner && characterList[i].LiveState == BattleCharacter.LiveStateEnum.Alive)
+                    if (characterList[i].Info.Camp == BattleCharacterInfo.CampEnum.Partner && characterList[i].LiveState != BattleCharacter.LiveStateEnum.Dead)
                     {
                         positionList.Remove(Vector2Int.RoundToInt(characterList[i].transform.position));
                     }
@@ -277,11 +360,6 @@ public class Skill
         }
 
         return positionList;
-    }
-
-    private void SetExecutor(BattleCharacter executor) //給 subSkill 用的
-    {
-        _executor = executor;
     }
 
     private void SetCallback(int targetCount, Action callback) //給 subSkill 用的

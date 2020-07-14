@@ -4,6 +4,14 @@ using UnityEngine;
 
 public class BattleCharacterInfo
 {
+    public enum CampEnum
+    {
+        Partner = 0,
+        Enemy,
+        All,
+        None,
+    }
+
     private static readonly int _maxActionCount = 2;
 
     public int MaxHP;
@@ -149,11 +157,11 @@ public class BattleCharacterInfo
         }
     }
 
-    public bool IsParalysis
+    public bool IsStriking
     {
         get
         {
-            return Random.Range(0, 100) < ParalysisProbability;
+            return StrikingId != -1;
         }
     }
 
@@ -167,25 +175,31 @@ public class BattleCharacterInfo
     }
 
     public bool IsAI = false;
+    public bool IsTeamMember = false;
     public bool HasUseSkill = false;
-    public int ID;
     public int Lv;
+    public int CurrentPriority;
     public string Name;
     public Vector2 Position = new Vector2();
+    public CampEnum Camp;
     public FoodBuff FoodBuff = null;
+    public JobData.RootObject JobData;
+    public EnemyData.RootObject EnemyData;
 
     public Dictionary<int, BattleStatus> StatusDic = new Dictionary<int, BattleStatus>();
     public int SleepingId = -1;
-    public float ParalysisProbability = 0;
+    public int StrikingId = -1;
+    public Dictionary<int, int> ParalysisDic = new Dictionary<int, int>(); //id, Probability
     public Dictionary<int, int> PoisonDic = new Dictionary<int, int>(); //id, damage
-    
+
+    public List<int> PriorityList = new List<int>(); //技能中有的優先值
     public List<Skill> SkillList = new List<Skill>();
     public List<Skill> SpellCardList = new List<Skill>();
 
     public void Init(TeamMember member) //for player
     {
         IsAI = false;
-        ID = member.Data.ID;
+        IsTeamMember = true;
         Lv = member.Lv;
         Name = member.Data.GetName();
         MaxHP = member.MaxHP;
@@ -203,6 +217,8 @@ public class BattleCharacterInfo
         EquipDEF = member.Armor.DEF;
         EquipMTK = member.Weapon.MTK;
         EquipMEF = member.Armor.MEF;
+        Camp = CampEnum.Partner;
+        JobData = member.Data;
         if (!member.FoodBuff.IsEmpty)
         {
             FoodBuff = member.FoodBuff;
@@ -215,10 +231,15 @@ public class BattleCharacterInfo
         {
             id = member.SkillList[i];
             skillData = SkillData.GetData(id);
-            skill = SkillFactory.GetNewSkill(skillData);
+            skill = SkillFactory.GetNewSkill(skillData, this);
             if (skillData.CD > 0)
             {
                 BattleController.Instance.TurnEndHandler += skill.SetCD;
+            }
+
+            if (!PriorityList.Contains(skill.Data.Priority))
+            {
+                PriorityList.Add(skill.Data.Priority);
             }
 
             SkillList.Add(skill);
@@ -228,10 +249,15 @@ public class BattleCharacterInfo
         {
             id = member.SpellCardList[i];
             skillData = SkillData.GetData(id);
-            skill = SkillFactory.GetNewSkill(skillData);
+            skill = SkillFactory.GetNewSkill(skillData, this);
             if (skillData.CD > 0)
             {
                 BattleController.Instance.TurnEndHandler += skill.SetCD;
+            }
+
+            if (!PriorityList.Contains(skill.Data.Priority))
+            {
+                PriorityList.Add(skill.Data.Priority);
             }
 
             SpellCardList.Add(skill);
@@ -241,9 +267,8 @@ public class BattleCharacterInfo
     public void Init(BattleCharacterMemo memo)
     {
         IsAI = memo.IsAI;
-        ID = memo.ID;
+        IsTeamMember = memo.IsTeamMember;
         Lv = memo.Lv;
-        Name = JobData.GetData(memo.ID).GetName();
         MaxHP = memo.MaxHP;
         CurrentHP = memo.CurrentHP;
         MaxMP = memo.MaxMP;
@@ -261,11 +286,23 @@ public class BattleCharacterInfo
         EquipMEF = memo.EquipMEF;
         _actionCount = memo.ActionCount;
         HasUseSkill = memo.HasUseSkill;
+        Camp = (CampEnum)memo.Camp;
+        CurrentPriority = memo.CurrentPriority;
         FoodBuff = memo.FoodBuff;
+        if (memo.JobID != 0)
+        {
+            JobData = global::JobData.GetData(memo.JobID);
+            Name = JobData.GetName();
+        }
+        else if (memo.EnemyID != 0)
+        {
+            EnemyData = global::EnemyData.GetData(memo.EnemyID);
+        }
 
         StatusDic = memo.StatusDic;
         SleepingId = memo.SleepingId;
-        ParalysisProbability = memo.ParalysisProbability;
+        StrikingId = memo.StrikingId;
+        ParalysisDic = memo.ParalysisDic;
         PoisonDic = memo.PoisonDic;
 
         SkillData.RootObject skillData;
@@ -273,11 +310,16 @@ public class BattleCharacterInfo
         for (int i = 0; i < memo.SkillList.Count; i++)
         {
             skillData = SkillData.GetData(memo.SkillList[i]);
-            skill = SkillFactory.GetNewSkill(skillData);
+            skill = SkillFactory.GetNewSkill(skillData, this);
             skill.CurrentCD = memo.SkillCdList[i];
             if (skillData.CD > 0)
             {
                 BattleController.Instance.TurnEndHandler += skill.SetCD;
+            }
+
+            if (!PriorityList.Contains(skill.Data.Priority))
+            {
+                PriorityList.Add(skill.Data.Priority);
             }
 
             SkillList.Add(skill);
@@ -286,10 +328,15 @@ public class BattleCharacterInfo
         for (int i = 0; i < memo.SpellCardList.Count; i++)
         {
             skillData = SkillData.GetData(memo.SpellCardList[i]);
-            skill = SkillFactory.GetNewSkill(skillData);
+            skill = SkillFactory.GetNewSkill(skillData, this);
             if (skillData.CD > 0)
             {
                 BattleController.Instance.TurnEndHandler += skill.SetCD;
+            }
+
+            if (!PriorityList.Contains(skill.Data.Priority))
+            {
+                PriorityList.Add(skill.Data.Priority);
             }
 
             SpellCardList.Add(skill);
@@ -298,25 +345,36 @@ public class BattleCharacterInfo
 
     public virtual void Init(int id, int lv) //for enemy
     {
-        EnemyData.RootObject data = EnemyData.GetData(id);
+        EnemyData = global::EnemyData.GetData(id);
 
         IsAI = true;
-        ID = id;
+        IsTeamMember = false;
         Lv = lv;
-        Name = data.Name;
-        MaxHP = Mathf.RoundToInt(data.HP * (1 + (lv - 1) * 0.1f));
+        Name = EnemyData.Name;
+        MaxHP = Mathf.RoundToInt(EnemyData.HP * (1 + (lv - 1) * 0.1f));
         CurrentHP = MaxHP;
-        _atk = Mathf.RoundToInt(data.ATK * (1 + (lv - 1) * 0.1f));
-        _def = Mathf.RoundToInt(data.DEF * (1 + (lv - 1) * 0.1f));
-        _mtk = Mathf.RoundToInt(data.MTK * (1 + (lv - 1) * 0.1f));
-        _mef = Mathf.RoundToInt(data.MEF * (1 + (lv - 1) * 0.1f));
-        _agi = Mathf.RoundToInt(data.AGI * (1 + (lv - 1) * 0.1f));
-        _sen = Mathf.RoundToInt(data.SEN * (1 + (lv - 1) * 0.1f));
-        _mov = data.MOV;
-        EquipATK = data.Equip_ATK;
-        EquipDEF = data.Equip_DEF;
-        EquipMTK = data.Equip_MTK;
-        EquipMEF = data.Equip_MEF;
+        _atk = Mathf.RoundToInt(EnemyData.ATK * (1 + (lv - 1) * 0.1f));
+        _def = Mathf.RoundToInt(EnemyData.DEF * (1 + (lv - 1) * 0.1f));
+        _mtk = Mathf.RoundToInt(EnemyData.MTK * (1 + (lv - 1) * 0.1f));
+        _mef = Mathf.RoundToInt(EnemyData.MEF * (1 + (lv - 1) * 0.1f));
+        _agi = Mathf.RoundToInt(EnemyData.AGI * (1 + (lv - 1) * 0.1f));
+        _sen = Mathf.RoundToInt(EnemyData.SEN * (1 + (lv - 1) * 0.1f));
+        _mov = EnemyData.MOV;
+        EquipATK = EnemyData.Equip_ATK;
+        EquipDEF = EnemyData.Equip_DEF;
+        EquipMTK = EnemyData.Equip_MTK;
+        EquipMEF = EnemyData.Equip_MEF;
+        Camp = CampEnum.Enemy;
+
+        SkillData.RootObject skillData;
+        for (int i=0; i<EnemyData.SkillList.Count; i++)
+        {
+            skillData = SkillData.GetData(EnemyData.SkillList[i]);
+            if (!PriorityList.Contains(skillData.Priority))
+            {
+                PriorityList.Add(skillData.Priority);
+            }
+        }
     }
 
     public void SetPosition(Vector2 position)
@@ -343,17 +401,40 @@ public class BattleCharacterInfo
                     }
                     else if (statusList[i] is Paralysis)
                     {
-                        ParalysisProbability = 0;
+                        ParalysisDic.Remove(keyList[i]);
                     }
                     else if (statusList[i] is Sleeping)
                     {
                         SleepingId = -1;
+                    }
+                    else if (statusList[i] is Striking)
+                    {
+                        StrikingId = -1;
                     }
 
                     StatusDic.Remove(keyList[i]);
                 }
             }
         }
+    }
+
+    public bool CanAct(out BattleStatus battleStatus)
+    {
+        foreach (KeyValuePair<int, BattleStatus> item in StatusDic)
+        {
+            if (item.Value is Sleeping)
+            {
+                battleStatus = item.Value;
+                return false;
+            }
+            else if (item.Value is Paralysis && Random.Range(0, 100) < ((Paralysis)item.Value).Probability)
+            {
+                battleStatus = item.Value;
+                return false;
+            }
+        }
+        battleStatus = null;
+        return true;
     }
 
     public void InitActionCount()
@@ -412,6 +493,40 @@ public class BattleCharacterInfo
         return new List<int>(PoisonDic.Values);
     }
 
+    public void SetParalysis(int id)
+    {
+        Paralysis paralysis;
+
+        if (!StatusDic.ContainsKey(id))
+        {
+            paralysis = new Paralysis(id);
+            StatusDic.Add(id, paralysis);
+            ParalysisDic.Add(id, paralysis.Probability);
+        }
+        else
+        {
+            paralysis = (Paralysis)StatusDic[id];
+            paralysis.ResetTurn();
+        }
+    }
+
+    public void SetStriking(int id)
+    {
+        Striking striking;
+
+        if (!StatusDic.ContainsKey(id))
+        {
+            striking = new Striking(id);
+            StatusDic.Add(id, striking);
+            StrikingId = id;
+        }
+        else
+        {
+            striking = (Striking)StatusDic[id];
+            striking.ResetTurn();
+        }
+    }
+
     public void ClearAbnormal()
     {
         List<int> keyList = new List<int>(StatusDic.Keys);
@@ -423,24 +538,15 @@ public class BattleCharacterInfo
             {
                 if (statusList[i] is Poison || statusList[i] is Paralysis || statusList[i] is Sleeping)
                 {
-                    if (statusList[i] is Poison)
-                    {
-                        PoisonDic.Remove(statusList[i].Data.ID);
-                    }
-                    else if (statusList[i] is Paralysis)
-                    {
-                        ParalysisProbability = 0;
-                    }
-                    else if (statusList[i] is Sleeping)
-                    {
-                        SleepingId = -1;
-                    }
-
-                    statusList[i].RemainTurn = 0;
+                    //statusList[i].RemainTurn = 0;
                     StatusDic.Remove(keyList[i]);
                 }
             }
         }
+        PoisonDic.Clear();
+        ParalysisDic.Clear();
+        SleepingId = -1;
+
     }
 
     public void SetBuff(int id)
@@ -457,6 +563,11 @@ public class BattleCharacterInfo
             buff = (Buff)StatusDic[id];
             buff.ResetTurn();
         }
+    }
+
+    public void SetCurrentPriority(int priority)
+    {
+        CurrentPriority = priority;
     }
 
     private float GetBuffATK()

@@ -4,9 +4,11 @@ using UnityEngine;
 
 public class BattleCharacterMemo
 {
-    public bool IsAI = false;
+    public bool IsAI;
+    public bool IsTeamMember;
     public int Lv;
-    public int ID;
+    public int JobID;
+    public int EnemyID;
     public int MaxHP;
     public int CurrentHP;
     public int MaxMP;
@@ -23,6 +25,8 @@ public class BattleCharacterMemo
     public int EquipMTK;
     public int EquipMEF;
     public int ActionCount;
+    public int Camp;
+    public int CurrentPriority;
     public bool HasUseSkill;
     public FoodBuff FoodBuff;
     public List<int> SkillList = new List<int>();
@@ -31,11 +35,14 @@ public class BattleCharacterMemo
 
     public Dictionary<int, BattleStatus> StatusDic;
     public int SleepingId = -1;
-    public float ParalysisProbability = 0;
+    public int StrikingId = -1;
+    public Dictionary<int, int> ParalysisDic;
     public Dictionary<int, int> PoisonDic;
 
     public bool IsSelected;
-    public int QueueIndex = -1;
+    //public int QueueIndex = -1;
+    public List<int> QueueIndexList = new List<int>(); //actionQueue index
+    public List<int> PriorityList = new List<int>(); //技能的優先值
     public Vector3 Position;
 
     public BattleCharacterMemo() { }
@@ -43,8 +50,16 @@ public class BattleCharacterMemo
     public BattleCharacterMemo(BattleCharacterInfo info) 
     {
         IsAI = info.IsAI;
+        IsTeamMember = info.IsTeamMember;
         Lv = info.Lv;
-        ID = info.ID;
+        if (info.JobData != null)
+        {
+            JobID = info.JobData.ID;
+        }
+        if (info.EnemyData != null)
+        {
+            EnemyID = info.EnemyData.ID;
+        }
         MaxHP = info.MaxHP;
         CurrentHP = info.CurrentHP;
         MaxMP = info.MaxMP;
@@ -61,6 +76,8 @@ public class BattleCharacterMemo
         EquipMTK = info.EquipMTK;
         EquipMEF = info.EquipMEF;
         ActionCount = info.ActionCount;
+        Camp = (int)info.Camp;
+        CurrentPriority = info.CurrentPriority;
         HasUseSkill = info.HasUseSkill;
         FoodBuff = info.FoodBuff;
         for (int i=0; i<info.SkillList.Count; i++) 
@@ -74,7 +91,8 @@ public class BattleCharacterMemo
         }
         StatusDic = info.StatusDic;
         SleepingId = info.SleepingId;
-        ParalysisProbability = info.ParalysisProbability;
+        StrikingId = info.StrikingId;
+        ParalysisDic = info.ParalysisDic;
         PoisonDic = info.PoisonDic;
         Position = info.Position;
     }

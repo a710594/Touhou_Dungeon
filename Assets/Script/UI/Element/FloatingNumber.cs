@@ -35,13 +35,22 @@ public class FloatingNumber : MonoBehaviour
 
     public void Play(string text, Type type)
     {
-        if (Encoding.Default.GetByteCount(text) > 10)
+        //if (Encoding.Default.GetByteCount(text) > 10)
+        //{
+        //    Label.fontSize = 30;
+        //}
+        //else
+        //{
+        //    Label.fontSize = 80;
+        //}
+
+        if (int.TryParse(text, out int n))
         {
-            Label.fontSize = 30;
+            Label.fontSize = 80;
         }
         else
         {
-            Label.fontSize = 80;
+            Label.fontSize = 30;
         }
 
         this.transform.localPosition = _originalPosition;

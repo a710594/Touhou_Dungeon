@@ -30,7 +30,7 @@ public class BattleFieldManager
         MapBound = Utility.GetMapBounds(new List<Vector2Int>(MapDic.Keys));
     }
 
-    public List<Vector2Int> GetPath(Vector2 from, Vector2 to, BattleCharacter.CampEnum camp) //camp:尋路的人是我方還是敵方
+    public List<Vector2Int> GetPath(Vector2 from, Vector2 to, BattleCharacterInfo.CampEnum camp) //camp:尋路的人是我方還是敵方
     {
         //Refresh(from, to, true);
 
@@ -48,8 +48,8 @@ public class BattleFieldManager
         {
             if (BattleController.Instance.CharacterList[i].LiveState != BattleCharacter.LiveStateEnum.Dead)
             {
-                if ((camp == BattleCharacter.CampEnum.Partner && BattleController.Instance.CharacterList[i].Camp == BattleCharacter.CampEnum.Enemy) ||
-                    (camp == BattleCharacter.CampEnum.Enemy && BattleController.Instance.CharacterList[i].Camp == BattleCharacter.CampEnum.Partner)) //與自己不同陣營的角色會被視為障礙物
+                if ((camp == BattleCharacterInfo.CampEnum.Partner && BattleController.Instance.CharacterList[i].Info.Camp == BattleCharacterInfo.CampEnum.Enemy) ||
+                    (camp == BattleCharacterInfo.CampEnum.Enemy && BattleController.Instance.CharacterList[i].Info.Camp == BattleCharacterInfo.CampEnum.Partner)) //與自己不同陣營的角色會被視為障礙物
                 {
                     position = Vector2Int.RoundToInt(BattleController.Instance.CharacterList[i].transform.position);
                     if (position != from && position != to)
@@ -64,7 +64,7 @@ public class BattleFieldManager
         return AStarAlgor.Instance.GetPath(Vector2Int.RoundToInt(from), Vector2Int.RoundToInt(to), pathFindDic, false);
     }
 
-    public int GetPathLength(Vector2 from, Vector2 to, BattleCharacter.CampEnum camp)
+    public int GetPathLength(Vector2 from, Vector2 to, BattleCharacterInfo.CampEnum camp)
     {
         int pathLength = 0;
         List<Vector2Int> pathList = GetPath(from, to, camp);

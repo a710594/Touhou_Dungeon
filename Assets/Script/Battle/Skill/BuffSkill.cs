@@ -5,13 +5,14 @@ using UnityEngine;
 
 public class BuffSkill : Skill
 {
-    public BuffSkill(SkillData.RootObject data)
+    public BuffSkill(SkillData.RootObject data, BattleCharacterInfo user)
     {
+        _user = user;
         Data = data;
         if (data.SubID != 0)
         {
             SkillData.RootObject skillData = SkillData.GetData(Data.SubID);
-            _subSkill = SkillFactory.GetNewSkill(skillData);
+            _subSkill = SkillFactory.GetNewSkill(skillData, user);
         }
     }
 
@@ -35,6 +36,11 @@ public class BuffSkill : Skill
     {
         base.SetEffect(target);
 
-        target.SetBuff(Data.StatusID, CheckSkillCallback);
+        if (Data.Target == SkillData.TargetType.Us) //目標為我方則必中
+        {
+            hitType = HitType.Hit;
+        }
+
+        target.SetBuff(Data.StatusID, hitType, CheckSkillCallback);
     }
 }

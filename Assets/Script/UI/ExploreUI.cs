@@ -15,9 +15,8 @@ public class ExploreUI : MonoBehaviour
     public Button CookButton;
     public Button SaveButton;
     public ButtonPlus[] InteractiveButtons;
-    public LittleMap LittleMap;
+    public MapUI MapUI;
     public TipLabel TipLabel;
-    public GameObject MapGroup;
     public GameObject LoadingGroup;
     public StairsGroup StairsGroup;
     public Joystick Joystick;
@@ -42,12 +41,12 @@ public class ExploreUI : MonoBehaviour
 
     public void InitLittleMap(int floor, Vector2Int playerPosition, Vector2Int startPosition, Vector2Int goalPosition, BoundsInt mapBound, List<Vector2Int> mapList)
     {
-        LittleMap.Init(floor, playerPosition, startPosition, goalPosition, mapBound, mapList);
+        MapUI.Init(floor, playerPosition, startPosition, goalPosition, mapBound, mapList);
     }
 
     public void RefreshLittleMap(Vector2Int characterPosition, List<Vector2Int> exploredList, List<Vector2Int> wallList)
     {
-        LittleMap.Refresh(characterPosition, exploredList, wallList);
+        MapUI.Refresh(characterPosition, exploredList, wallList);
     }
 
     public void SetInetractiveButtonVisible(List<Vector2Int> positionList)
@@ -88,14 +87,14 @@ public class ExploreUI : MonoBehaviour
 
     private void OpenMapGroup()
     {
-        MapGroup.SetActive(true);
-        Time.timeScale = 0;
+        MapUI.SetBigMapGroupVisible(true);
+        ExploreController.Instance.StopEnemy(); 
     }
 
     private void CloseMapGroup()
     {
-        MapGroup.SetActive(false);
-        Time.timeScale = 1;
+        MapUI.SetBigMapGroupVisible(false);
+        ExploreController.Instance.ContinueEnemy();
     }
 
     private void OpenBag()

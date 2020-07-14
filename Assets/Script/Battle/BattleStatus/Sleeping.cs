@@ -10,6 +10,7 @@ public class Sleeping : BattleStatus
 
         RemainTurn = Data.Turn;
         Comment = Data.Comment;
+        Message = Data.Message;
         Icon = Data.Icon;
     }
 }

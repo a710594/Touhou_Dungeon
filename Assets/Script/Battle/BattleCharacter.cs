@@ -6,14 +6,6 @@ using DG.Tweening;
 
 public class BattleCharacter : MonoBehaviour
 {
-    public enum CampEnum
-    {
-        Partner = 0,
-        Enemy,
-        All,
-        None,
-    }
-
     public enum NotActReason
     {
         Sleeping,
@@ -30,10 +22,7 @@ public class BattleCharacter : MonoBehaviour
 
     public Action OnDeathHandler;
 
-    public string MediumImage;
-    public string LargeImage;
     public Vector2Int TargetPosition = new Vector2Int();
-    public CampEnum Camp;
     public SpriteRenderer Sprite;
     public Animator Animator;
     public Transform ValueBarAnchor;
@@ -51,7 +40,7 @@ public class BattleCharacter : MonoBehaviour
             {
                 return LiveStateEnum.Alive;
             }
-            else if (Info.CurrentHP == 0 && Camp == CampEnum.Partner)
+            else if (Info.CurrentHP == 0 && Info.IsTeamMember)
             {
                 return LiveStateEnum.Dying;
             }
@@ -85,16 +74,20 @@ public class BattleCharacter : MonoBehaviour
     public void Init(BattleCharacterMemo memo)
     {
         Info.Init(memo);
-        Init(JobData.GetData(memo.ID));
+        if (!Info.IsTeamMember)
+        {
+            Init(memo.EnemyID, memo.Lv);
+            Info.CurrentHP = memo.CurrentHP;
+        }
+        else
+        {
+            Init(JobData.GetData(memo.JobID));
+        }
     }
 
     private void Init(JobData.RootObject data)
     {
         _originalPosition = transform.position;
-
-        Camp = CampEnum.Partner;
-        MediumImage = data.MediumImage;
-        LargeImage = data.LargeImage;
 
         Sprite.sprite = Resources.Load<Sprite>("Image/Character/Small/" + data.SmallImage);
         if (data.Animator != string.Empty)
@@ -117,7 +110,6 @@ public class BattleCharacter : MonoBehaviour
 
         Info.Init(id, lv);
         _originalPosition = transform.position;
-        Camp = CampEnum.Enemy;
         Sprite.sprite = Resources.Load<Sprite>("Image/Character/Small/" + data.Image);
         if (data.Animator != string.Empty)
         {
@@ -135,23 +127,9 @@ public class BattleCharacter : MonoBehaviour
         Info.CheckBattleStatus();
     }
 
-    public bool CanAct(out NotActReason reason)
+    public bool CanAct(out BattleStatus battleStatus)
     {
-        if (Info.IsSleeping)
-        {
-            reason = NotActReason.Sleeping;
-            return false;
-        }
-        else if (Info.IsParalysis)
-        {
-            reason = NotActReason.Paralysis;
-            return false;
-        }
-        else
-        {
-            reason = NotActReason.None;
-            return true;
-        }
+        return Info.CanAct(out battleStatus); 
     }
 
     public void ReturnToOriginalPosition()
@@ -167,12 +145,16 @@ public class BattleCharacter : MonoBehaviour
         List<Vector2Int> positionList = Utility.GetRhombusPositionList(Info.MOV, orign, false);
         for (int i = 0; i < positionList.Count; i++)
         {
-            int pathLength = BattleFieldManager.Instance.GetPathLength(orign, positionList[i], Camp);
-            if (pathLength != -1 && pathLength - 1 <= Info.MOV) //pathLength - 1 是因為要扣掉自己那一格
+            if (BattleController.Instance.GetCharacterByPosition(positionList[i]) == null)
             {
-                _moveRangeList.Add(positionList[i]);
+                int pathLength = BattleFieldManager.Instance.GetPathLength(orign, positionList[i], Info.Camp);
+                if (pathLength != -1 && pathLength - 1 <= Info.MOV) //pathLength - 1 是因為要扣掉自己那一格
+                {
+                    _moveRangeList.Add(positionList[i]);
+                }
             }
         }
+        _moveRangeList.Add(orign);
         return _moveRangeList;
     }
 
@@ -194,7 +176,7 @@ public class BattleCharacter : MonoBehaviour
     public Queue<Vector2Int> GetPath(Vector2Int position)
     {
         Queue<Vector2Int> path;
-        List<Vector2Int> list = BattleFieldManager.Instance.GetPath(transform.position, position, Camp);
+        List<Vector2Int> list = BattleFieldManager.Instance.GetPath(transform.position, position, Info.Camp);
         if (list != null)
         {
             path = new Queue<Vector2Int>(list);
@@ -354,38 +336,38 @@ public class BattleCharacter : MonoBehaviour
 
     public virtual void UseSkill(Action callback)
     {
-        SelectedSkill.Use(this, callback);
+        SelectedSkill.Use(callback);
 
-        if (Camp == CampEnum.Partner)
+        if (Info.IsTeamMember)
         {
             Info.CurrentMP -= SelectedSkill.Data.MP;
             BattleController.Instance.MinusPower(SelectedSkill.Data.NeedPower);
         }
     }
 
-    public virtual void SetDamage(int damage, AttackSkill.HitType hitType, Action<BattleCharacter> callback)
+    public virtual void SetDamage(int damage, Skill.HitType hitType, Action<BattleCharacter> callback)
     {
         Info.CurrentHP -= damage;
 
         string text = "";
         FloatingNumber.Type floatingNumberType = FloatingNumber.Type.Other;
-        if (hitType == AttackSkill.HitType.Critical)
+        if (hitType == Skill.HitType.Critical)
         {
             floatingNumberType = FloatingNumber.Type.Critical;
             text = damage.ToString();
         }
-        else if (hitType == AttackSkill.HitType.Hit)
+        else if (hitType == Skill.HitType.Hit)
         {
             floatingNumberType = FloatingNumber.Type.Damage;
             text = damage.ToString();
         }
-        else if (hitType == AttackSkill.HitType.Miss)
+        else if (hitType == Skill.HitType.Miss)
         {
             floatingNumberType = FloatingNumber.Type.Miss;
             text = "Miss";
         }
 
-        BattleUI.Instance.SetFloatingNumber(this, text, floatingNumberType, () =>
+        BattleUI.Instance.SetFloatingNumber(this, text, floatingNumberType, true, () =>
         {
             if (Info.CurrentHP <= 0)
             {
@@ -426,17 +408,24 @@ public class BattleCharacter : MonoBehaviour
         }
     }
 
-    public void SetPoison(int id, int damage, Action<BattleCharacter> callback)
+    public void SetPoison(int id, int damage, Skill.HitType hitType, Action<BattleCharacter> callback)
     {
-        Info.SetPoison(id, damage);
-
-        BattleUI.Instance.SetStatus(this, BattleStatusData.GetData(id).Comment, FloatingNumber.Type.Other, () =>
+        if (hitType != Skill.HitType.Miss)
         {
-            if (callback != null)
+            Info.SetPoison(id, damage);
+
+            BattleUI.Instance.SetFloatingNumber(this, BattleStatusData.GetData(id).Message, FloatingNumber.Type.Other, false, () =>
             {
                 callback(this);
-            }
-        });
+            });
+        }
+        else
+        {
+            BattleUI.Instance.SetFloatingNumber(this, "Miss", FloatingNumber.Type.Miss, false, () =>
+            {
+                callback(this);
+            });
+        }
     }
 
     public virtual void SetPoisonDamage(Action callback) //回合結束時計算毒傷害
@@ -447,7 +436,7 @@ public class BattleCharacter : MonoBehaviour
         {
             Info.CurrentHP -= damageList[i];
 
-            BattleUI.Instance.SetFloatingNumber(this, damageList[i].ToString(), FloatingNumber.Type.Poison, () =>
+            BattleUI.Instance.SetFloatingNumber(this, damageList[i].ToString(), FloatingNumber.Type.Poison, true, () =>
             {
                 callbackCount++;
                 if (Info.CurrentHP <= 0)
@@ -472,7 +461,47 @@ public class BattleCharacter : MonoBehaviour
         }
     }
 
-    public virtual void SetRecover(int recover, Action<BattleCharacter> callback)
+    public void SetParalysis(int id, Skill.HitType hitType, Action<BattleCharacter> callback)
+    {
+        if (hitType != Skill.HitType.Miss)
+        {
+            Info.SetParalysis(id);
+
+            BattleUI.Instance.SetFloatingNumber(this, BattleStatusData.GetData(id).Message, FloatingNumber.Type.Other, false, () =>
+            {
+                callback(this);
+            });
+        }
+        else
+        {
+            BattleUI.Instance.SetFloatingNumber(this, "Miss", FloatingNumber.Type.Miss, false, () =>
+            {
+                callback(this);
+            });
+        }
+    }
+
+    public void SetStriking(int id, Skill.HitType hitType, Action<BattleCharacter> callback)
+    {
+        if (hitType != Skill.HitType.Miss)
+        {
+            Info.SetStriking(id);
+
+            BattleUI.Instance.SetFloatingNumber(this, BattleStatusData.GetData(id).Message, FloatingNumber.Type.Other, false, () =>
+            {
+                callback(this);
+            });
+        }
+        else
+        {
+            BattleUI.Instance.SetFloatingNumber(this, "Miss", FloatingNumber.Type.Miss, false, () =>
+            {
+                callback(this);
+            });
+        }
+    }
+
+    public void SetRecover(int recover, Action<BattleCharacter> callback)
     {
         if (LiveState == BattleCharacter.LiveStateEnum.Dying)
         {
@@ -481,7 +510,7 @@ public class BattleCharacter : MonoBehaviour
         }
 
         Info.CurrentHP += recover;
-        BattleUI.Instance.SetFloatingNumber(this, recover.ToString(), FloatingNumber.Type.Recover, () =>
+        BattleUI.Instance.SetFloatingNumber(this, recover.ToString(), FloatingNumber.Type.Recover, true, () =>
         {
             if (callback != null)
             {
@@ -494,7 +523,7 @@ public class BattleCharacter : MonoBehaviour
     {
         Info.ClearAbnormal();
 
-        BattleUI.Instance.SetStatus(this, "解除異常狀態", FloatingNumber.Type.Other, () =>
+        BattleUI.Instance.SetFloatingNumber(this, "解除異常狀態", FloatingNumber.Type.Other, false, () =>
         {
             if (callback != null)
             {
@@ -503,14 +532,24 @@ public class BattleCharacter : MonoBehaviour
         });
     }
 
-    public void SetBuff(int id, Action<BattleCharacter> callback)
+    public void SetBuff(int id, Skill.HitType hitType, Action<BattleCharacter> callback)
     {
-        Info.SetBuff(id);
-
-        BattleUI.Instance.SetStatus(this, BattleStatusData.GetData(id).Comment, FloatingNumber.Type.Other, () =>
+        if (hitType != Skill.HitType.Miss)
         {
-            callback(this);
-        });
+            Info.SetBuff(id);
+
+            BattleUI.Instance.SetFloatingNumber(this, BattleStatusData.GetData(id).Message, FloatingNumber.Type.Other, false, () =>
+            {
+                callback(this);
+            });
+        }
+        else
+        {
+            BattleUI.Instance.SetFloatingNumber(this, "Miss", FloatingNumber.Type.Miss, false, () =>
+            {
+                callback(this);
+            });
+        }
     }
 
     public void SetOutline(bool show)
@@ -523,7 +562,12 @@ public class BattleCharacter : MonoBehaviour
         AI.StartAI(callback);
     }
 
-    protected virtual void SetDeath(Action callback)
+    public void SetCurrentPriority(int priority)
+    {
+        Info.SetCurrentPriority(priority);
+    }
+
+    private void SetDeath(Action callback)
     {
         Sprite.DOFade(0, 0.5f).OnComplete(() =>
         {

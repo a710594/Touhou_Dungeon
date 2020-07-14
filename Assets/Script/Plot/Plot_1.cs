@@ -4,8 +4,7 @@ using UnityEngine;
 
 public class Plot_1 //遊戲的第一個事件,對話後進行新手教學戰鬥
 {
-    // Start is called before the first frame update
-    public void Start()
+    public void Run()
     {
         KeyValuePair<bool, int> flag = ProgressManager.Instance.Memo.FlagList[0];
 

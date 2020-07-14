@@ -21,6 +21,7 @@ public class BattleController : MachineBehaviour
 
     public BattleCharacter SelectedCharacter;
     public List<BattleCharacter> CharacterList = new List<BattleCharacter>();
+    public List<Skill> ItemSkillList = new List<Skill>(); //回復藥等道具技能
 
     public int Power
     {
@@ -31,6 +32,20 @@ public class BattleController : MachineBehaviour
     }
     private int _power = 0;
 
+    private class ActionQueueElement
+    {
+        public ActionQueueElement() { }
+
+        public ActionQueueElement(BattleCharacter character, int priority)
+        {
+            Character = character;
+            Priority = priority;
+        }
+
+        public BattleCharacter Character;
+        public int Priority;
+    }
+
     private Action _winCallback;
     private Action _loseCallback;
 
@@ -38,7 +53,8 @@ public class BattleController : MachineBehaviour
     private int _exp;
     private BattleMemo _memo = new BattleMemo();
     private List<int> _dropItemList = new List<int>();
-    private List<BattleCharacter> _actionQueue = new List<BattleCharacter>();
+    //private List<BattleCharacter> _actionQueue = new List<BattleCharacter>();
+    private List<ActionQueueElement> _actionQueue = new List<ActionQueueElement>();
     private List<BattleCharacter> _playerList = new List<BattleCharacter>(); //戰鬥結束時需要的友方資料
 
     public void Init(int battlefieldId, BattleGroupData.RootObject battleGroupData, Action winCallback = null, Action loseCallback = null)
@@ -87,6 +103,25 @@ public class BattleController : MachineBehaviour
             character.SetPosition(BattleFieldManager.Instance.EnemyPositionList[i]);
         }
 
+        int itemId;
+        ItemData.RootObject itemData;
+        SkillData.RootObject skillData;
+        Skill skill;
+        Dictionary<object, int> itemDic = ItemManager.Instance.GetItemDicByType(ItemManager.Type.Bag, ItemData.TypeEnum.Medicine);
+
+        if (itemDic != null)
+        {
+            foreach (KeyValuePair<object, int> item in itemDic)
+            {
+                itemId = (int)item.Key;
+                itemData = ItemData.GetData(itemId);
+                skillData = SkillData.GetData(itemData.Skill);
+                skill = SkillFactory.GetNewSkill(skillData, null);
+                skill.ItemID = itemId;
+                ItemSkillList.Add(skill);
+            }
+        }
+
         Camera.main.transform.position = new Vector3(BattleFieldManager.Instance.Center.x, BattleFieldManager.Instance.Center.y, Camera.main.transform.position.z);
         ChangeSceneUI.Instance.EndClock(() =>
         {
@@ -114,7 +149,10 @@ public class BattleController : MachineBehaviour
         _turn = memo.Turn;
         _power = memo.Power;
         _exp = memo.Exp;
-        _actionQueue = new List<BattleCharacter>(memo.QueueLength);
+        for (int i=0; i<memo.QueueLength; i++)
+        {
+            _actionQueue.Add(new ActionQueueElement());
+        }
         _dropItemList = memo.DropItemList;
         CharacterList.Clear();
 
@@ -124,10 +162,21 @@ public class BattleController : MachineBehaviour
         {
             character = ResourceManager.Instance.Spawn("BattleCharacter/BattleCharacter", ResourceManager.Type.Other).GetComponent<BattleCharacter>();
             character.Init(memo.CharacterList[i]);
-            CharacterList.Add(character);
-            _playerList.Add(character);
             character.SetPosition(memo.CharacterList[i].Position);
-            _actionQueue[memo.CharacterList[i].QueueIndex] = character;
+
+            CharacterList.Add(character);
+            if (character.Info.IsTeamMember)
+            {
+                _playerList.Add(character);
+            }
+            //if (memo.CharacterList[i].QueueIndex != -1)
+            //{
+            //    _actionQueue[memo.CharacterList[i].QueueIndex] = character;
+            //}
+            for (int j=0; j<memo.CharacterList[i].QueueIndexList.Count; j++)
+            {
+                _actionQueue[memo.CharacterList[i].QueueIndexList[j]] = new ActionQueueElement(character, memo.CharacterList[i].PriorityList[j]);
+            }
 
             if (memo.CharacterList[i].IsSelected)
             {
@@ -146,7 +195,10 @@ public class BattleController : MachineBehaviour
             SelectedCharacter.SetOutline(true);
             BattleUI.Open();
             BattleUI.Instance.Init(_power, CharacterList);
-            //BattleUI.Instance.SetPriorityQueueVisible(true);
+            List<BattleCharacter> list = ActionQueueToList(_actionQueue);
+            list.Insert(0, SelectedCharacter);
+            BattleUI.Instance.InitPriorityQueue(list);
+            BattleUI.Instance.ScrollPriorityQueue(SelectedCharacter);
             ChangeState<SelectActionState>();
         });
     }
@@ -232,7 +284,6 @@ public class BattleController : MachineBehaviour
 
     public void SetIdle() //角色待機
     {
-        SelectedCharacter.ActionDoneCompletely();
         ChangeState<SelectCharacterState>();
     }
 
@@ -257,26 +308,14 @@ public class BattleController : MachineBehaviour
         BattleUI.Instance.SetPower(_power);
     }
 
-    private void SortCharacter(List<BattleCharacter> list) //按照敏捷和技能優先權來排序
+    private List<BattleCharacter> ActionQueueToList(List<ActionQueueElement> actionQueue)
     {
-        list.Sort((x, y) =>
+        List<BattleCharacter> list = new List<BattleCharacter>();
+        for (int i=0; i<actionQueue.Count; i++)
         {
-            if (x.Info.AGI  == y.Info.AGI)
-            {
-                if (x.Camp == BattleCharacter.CampEnum.Enemy && y.Camp == BattleCharacter.CampEnum.Partner)
-                {
-                    return 1;
-                }
-                else
-                {
-                    return -1;
-                }
-            }
-            else
-            {
-                return (y.Info.AGI).CompareTo(x.Info.AGI);
-            }
-        });
+            list.Add(actionQueue[i].Character);
+        }
+        return list;
     }
 
     private ResultType CheckResult()
@@ -288,11 +327,11 @@ public class BattleController : MachineBehaviour
         {
             if (CharacterList[i].LiveState == BattleCharacter.LiveStateEnum.Alive)
             {
-                if (CharacterList[i].Camp == BattleCharacter.CampEnum.Partner)
+                if (CharacterList[i].Info.Camp == BattleCharacterInfo.CampEnum.Partner)
                 {
                     partnerCount++;
                 }
-                else if (CharacterList[i].Camp == BattleCharacter.CampEnum.Enemy)
+                else if (CharacterList[i].Info.Camp == BattleCharacterInfo.CampEnum.Enemy)
                 {
                     enemyCount++;
                 }
@@ -331,13 +370,16 @@ public class BattleController : MachineBehaviour
         _memo.CharacterList.Clear();
         for (int i = 0; i < CharacterList.Count; i++)
         {
+            CharacterList[i].SetPosition(CharacterList[i].transform.position);
             _memo.CharacterList.Add(new BattleCharacterMemo(CharacterList[i].Info));
             _memo.CharacterList[_memo.CharacterList.Count - 1].IsSelected = GameObject.ReferenceEquals(CharacterList[i], SelectedCharacter);
             for (int j = 0; j < _actionQueue.Count; j++)
             {
-                if (GameObject.ReferenceEquals(CharacterList[i], _actionQueue[j]))
+                if (GameObject.ReferenceEquals(CharacterList[i], _actionQueue[j].Character))
                 {
-                    _memo.CharacterList[_memo.CharacterList.Count - 1].QueueIndex = j;
+                    //_memo.CharacterList[_memo.CharacterList.Count - 1].QueueIndex = j;
+                    _memo.CharacterList[_memo.CharacterList.Count - 1].QueueIndexList.Add(j);
+                    _memo.CharacterList[_memo.CharacterList.Count - 1].PriorityList.Add(_actionQueue[j].Priority);
                 }
             }
         }
@@ -366,18 +408,42 @@ public class BattleController : MachineBehaviour
 
             BattleUI.Instance.SetTurnLabel(parent._turn);
 
-            parent.SortCharacter(parent.CharacterList);
+            //parent.SortCharacter(parent.CharacterList);
 
             parent._actionQueue.Clear();
             for (int i = 0; i < parent.CharacterList.Count; i++)
             {
                 if (parent.CharacterList[i].LiveState == BattleCharacter.LiveStateEnum.Alive)
                 {
-                    parent._actionQueue.Add(parent.CharacterList[i]);
+                    //parent._actionQueue.Add(parent.CharacterList[i]);
                     parent.CharacterList[i].InitActionCount();
-                    //parent.CharacterList[i].InitOrignalPosition();
+                    for (int j=0; j< parent.CharacterList[i].Info.PriorityList.Count; j++)
+                    {
+                        parent._actionQueue.Add(new ActionQueueElement(parent.CharacterList[i], parent.CharacterList[i].Info.PriorityList[j]));
+                    }
                 }
             }
+
+            parent._actionQueue.Sort((x, y) =>
+            {
+                if (x.Character.Info.AGI * x.Priority == y.Character.Info.AGI * y.Priority) //比較角色的敏捷 * 技能優先值
+                {
+                    if (x.Character.Info.Camp == BattleCharacterInfo.CampEnum.Enemy && y.Character.Info.Camp == BattleCharacterInfo.CampEnum.Partner) //若相同,則玩家優先
+                    {
+                        return 1;
+                    }
+                    else
+                    {
+                        return -1;
+                    }
+                }
+                else
+                {
+                    return (y.Character.Info.AGI * y.Priority).CompareTo(x.Character.Info.AGI * x.Priority);
+                }
+            });
+            BattleUI.Instance.InitPriorityQueue(parent.ActionQueueToList(parent._actionQueue));
+
             parent.ChangeState<SelectCharacterState>();
         }
     }
@@ -398,56 +464,78 @@ public class BattleController : MachineBehaviour
                 {
                     //BattleUI.Instance.ScrollPriorityQueue(new List<BattleCharacter>(parent._actionQueue));
                 }
+                BattleUI.Instance.ScrollPriorityQueue(parent.SelectedCharacter);
 
-                BattleCharacter character = parent._actionQueue[0];
+                BattleCharacter character = parent._actionQueue[0].Character;
+                character.SetCurrentPriority(parent._actionQueue[0].Priority);
                 parent._actionQueue.RemoveAt(0);
-                if (character.LiveState == BattleCharacter.LiveStateEnum.Alive)
+                if (character.LiveState == BattleCharacter.LiveStateEnum.Alive && character.Info.ActionCount > 0)
                 {
                     CameraController.Instance.SetParent(character.Sprite.transform, true, () =>
-                     {
-                         BattleCharacter.NotActReason reason;
-                         if (character.CanAct(out reason))
+                    {
+                         if (parent.SelectedCharacter != null)
                          {
-                             if (parent.SelectedCharacter != null)
-                             {
-                                 parent.SelectedCharacter.SetOutline(false);
-                             }
-
-                             parent.SelectedCharacter = character;
-                             parent.SelectedCharacter.SetOutline(true);
-                             BattleUI.Instance.SetInfo(true, parent.SelectedCharacter);
-
-                             if (!parent.SelectedCharacter.Info.IsAI)
-                             {
-                                 parent.ChangeState<SelectActionState>();
-                             }
-                             else
-                             {
-                                 parent.ChangeState<AIState>();
-                             }
-                             return;
+                             parent.SelectedCharacter.SetOutline(false);
                          }
-                         else
-                         {
-                             string text = "";
-                             FloatingNumber.Type type = FloatingNumber.Type.Other;
-                             if (reason == BattleCharacter.NotActReason.Paralysis)
-                             {
-                                 text = "麻痺";
-                                 type = FloatingNumber.Type.Paralysis;
-                             }
-                             else if (reason == BattleCharacter.NotActReason.Sleeping)
-                             {
-                                 text = "睡眠";
-                                 type = FloatingNumber.Type.Sleeping;
-                             }
 
-                             BattleUI.Instance.SetStatus(character, text, type, () =>
-                             {
-                                 parent.ChangeState<SelectCharacterState>();
-                             });
-                         }
-                     });
+                         parent.SelectedCharacter = character;
+                         parent.SelectedCharacter.SetOutline(true);
+                         BattleUI.Instance.SetInfo(true, parent.SelectedCharacter);
+
+                        //BattleCharacter.NotActReason reason;
+                        //if (character.CanAct(out reason))
+                        //{
+                        //    if (!parent.SelectedCharacter.Info.IsAI)
+                        //    {
+                        //        parent.ChangeState<SelectActionState>();
+                        //    }
+                        //    else
+                        //    {
+                        //        parent.ChangeState<AIState>();
+                        //    }
+                        //    return;
+                        //}
+                        //else
+                        //{
+                        //    string text = "";
+                        //    FloatingNumber.Type type = FloatingNumber.Type.Other;
+                        //    if (reason == BattleCharacter.NotActReason.Paralysis)
+                        //    {
+                        //        text = "麻痺";
+                        //        type = FloatingNumber.Type.Paralysis;
+                        //    }
+                        //    else if (reason == BattleCharacter.NotActReason.Sleeping)
+                        //    {
+                        //        text = "睡眠";
+                        //        type = FloatingNumber.Type.Sleeping;
+                        //    }
+
+                        //    BattleUI.Instance.SetFloatingNumber(character, text, type, false, () =>
+                        //    {
+                        //        parent.ChangeState<SelectCharacterState>();
+                        //    });
+                        //}
+                        BattleStatus status;
+                        if (character.CanAct(out status))
+                        {
+                            if (!parent.SelectedCharacter.Info.IsAI)
+                            {
+                                parent.ChangeState<SelectActionState>();
+                            }
+                            else
+                            {
+                                parent.ChangeState<AIState>();
+                            }
+                            return;
+                        }
+                        else
+                        {
+                            BattleUI.Instance.SetFloatingNumber(character, status.Message, FloatingNumber.Type.Other, false, () =>
+                            {
+                                parent.ChangeState<SelectCharacterState>();
+                            });
+                        }
+                    });
                 }
                 else
                 {

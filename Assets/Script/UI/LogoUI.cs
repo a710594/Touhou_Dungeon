@@ -9,15 +9,15 @@ public class LogoUI : MonoBehaviour
 
     private void OnClick() 
     {
-        /*if (!ProgressManager.Instance.Memo.FlagList[0].Key) //尚未結束第一個對話
+        if (!ProgressManager.Instance.Memo.FlagList[0].Key) //尚未結束第一個對話
         {
             MySceneManager.Instance.ChangeScene(MySceneManager.SceneType.Battle, () =>
             {
                 Plot_1 plot_1 = new Plot_1();
-                plot_1.Start();
+                plot_1.Run();
             });
         }
-        else */if (MySceneManager.Instance.CurrentScene == MySceneManager.SceneType.Explore)
+        else if (MySceneManager.Instance.CurrentScene == MySceneManager.SceneType.Explore)
         {
             MySceneManager.Instance.ChangeScene(MySceneManager.SceneType.Explore, () =>
             {

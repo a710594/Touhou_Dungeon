@@ -21,7 +21,7 @@ public class CalculaterUI : MonoBehaviour
     {
         CalculaterGroup[0].SetData();
         CalculaterGroup[1].SetData();
-        Skill skill = SkillFactory.GetNewSkill(int.Parse(SkillInputField.text));
+        Skill skill = SkillFactory.GetNewSkill(int.Parse(SkillInputField.text), CalculaterGroup[0].Info);
         SkillLabel.text = skill.Data.GetName();
         int damage = ((AttackSkill)skill).CalculateDamage(CalculaterGroup[0].Info, CalculaterGroup[1].Info, false);
         ResultLabel.text = CalculaterGroup[0].Info.Name + " 對 " + CalculaterGroup[1].Info.Name + " 造成了 " + damage + " 傷害";

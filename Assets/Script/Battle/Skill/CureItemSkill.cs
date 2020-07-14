@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CureItemSkill : ItemSkill
+public class CureItemSkill : Skill
 {
     public CureItemSkill(SkillData.RootObject data)
     {
@@ -11,7 +11,7 @@ public class CureItemSkill : ItemSkill
         if (data.SubID != 0)
         {
             SkillData.RootObject skillData = SkillData.GetData(Data.SubID);
-            _subSkill = SkillFactory.GetNewSkill(skillData);
+            _subSkill = SkillFactory.GetNewSkill(skillData, null);
         }
     }
 
@@ -35,6 +35,6 @@ public class CureItemSkill : ItemSkill
     {
         base.SetEffect(target);
 
-        target.SetRecover(-Data.Damage, CheckSkillCallback);
+        target.SetRecover(Data.Value, CheckSkillCallback); //與 CureSkill 不同的地方之一是回復量的計算
     }
 }

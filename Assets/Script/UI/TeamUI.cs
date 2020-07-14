@@ -32,7 +32,7 @@ public class TeamUI : MonoBehaviour
 
     public static void Open()
     {
-        Time.timeScale = 0;
+        ExploreController.Instance.StopEnemy();
         if (Instance == null)
         {
             Instance = ResourceManager.Instance.Spawn("TeamUI", ResourceManager.Type.UI).GetComponent<TeamUI>();
@@ -42,7 +42,7 @@ public class TeamUI : MonoBehaviour
 
     public static void Close()
     {
-        Time.timeScale = 1;
+        ExploreController.Instance.ContinueEnemy();
         Destroy(Instance.gameObject);
         Instance = null;
     }

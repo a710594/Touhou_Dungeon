@@ -77,7 +77,7 @@ public class ExploreController
         }
 
         GenerateCoin();
-        //GenerateEnemy();
+        GenerateEnemy();
         GameSystem.Instance.AutoSave();
     }
 
@@ -211,10 +211,7 @@ public class ExploreController
 
     public void BackToVilliage()
     {
-        for (int i = 0; i < _fieldEnemyList.Count; i++)
-        {
-            _fieldEnemyList[i].Stop();
-        }
+        StopEnemy();
         ExploreUI.Instance.StopTipLabel();
 
         MySceneManager.Instance.ChangeScene(MySceneManager.SceneType.Villiage, () =>
@@ -266,10 +263,7 @@ public class ExploreController
     public void EnterBattle(BattleGroupData.RootObject data)
     {
         //AudioSystem.Instance.Stop(true);
-        for (int i = 0; i < _fieldEnemyList.Count; i++)
-        {
-            _fieldEnemyList[i].Stop();
-        }
+        StopEnemy();
         ExploreUI.Instance.StopTipLabel();
 
         ChangeSceneUI.Instance.StartClock(() =>
@@ -288,6 +282,22 @@ public class ExploreController
     public bool IsWall(Vector2Int position)
     {
         return !_mapInfo.MapList.Contains(position);
+    }
+
+    public void StopEnemy()
+    {
+        for (int i = 0; i < _fieldEnemyList.Count; i++)
+        {
+            _fieldEnemyList[i].Stop();
+        }
+    }
+
+    public void ContinueEnemy()
+    {
+        for (int i = 0; i < _fieldEnemyList.Count; i++)
+        {
+            _fieldEnemyList[i].Continue();
+        }
     }
 
     private Vector2Int GetLegalPosition(List<Vector2Int> positionList = null) //取得合法位置(空地)
@@ -364,13 +374,10 @@ public class ExploreController
             {
                 if (!_mapInfo.MapList.Contains(lineList[j]) || _mapInfo.DoorList.Contains(lineList[j]))
                 {
-                    if(!_mapInfo.ExploredWallList.Contains(lineList[j]))
+                    if (!_mapInfo.ExploredWallList.Contains(lineList[j]))
+                    {
                         _mapInfo.ExploredWallList.Add(lineList[j]);
-                        
-                    //if(!_exploredList.Contains(lineList[j]))
-                    //    _exploredList.Add(lineList[j]);
-                    //TilePainter.Instance.Clear(2, lineList[j]);
-                    //_mapInfo.MistList.Remove(lineList[j]);
+                    }  
                     break;
                 }
 
@@ -408,7 +415,6 @@ public class ExploreController
         {
             if (_fieldEnemyList[i] != null)
             {
-                _fieldEnemyList[i].Stop();
                 GameObject.Destroy(_fieldEnemyList[i].gameObject);
             }
         }

@@ -6,23 +6,31 @@ using Newtonsoft.Json;
 
 public class BattleStatusData
 {
+    public enum TypeEnum
+    {
+        ATK = 1,
+        DEF,
+        MTK,
+        MEF,
+        AGI,
+        SEN,
+        MOV,
+        Damage,
+        Probability,
+        Striking,
+    }
+
     public class RootObject
     {
         public int ID { get; set; }
-        public string Name { get; set; }
-        public string Comment { get; set; }
         public string Icon { get; set; }
         public string Field { get; set; }
-        public int ATK { get; set; }
-        public int DEF { get; set; }
-        public int MTK { get; set; }
-        public int MEF { get; set; }
-        public int AGI { get; set; }
-        public int SEN { get; set; }
-        public int MoveDistance { get; set; }
-        public int Damage { get; set; }
-        public int Probability { get; set; }
+        public int Value { get; set; }
+        public TypeEnum ValueType { get; set; }
         public int Turn { get; set; }
+        public string Name { get; set; }
+        public string Comment { get; set; }
+        public string Message { get; set; }
     }
 
     private static Dictionary<int, RootObject> _dataDic = new Dictionary<int, RootObject>();

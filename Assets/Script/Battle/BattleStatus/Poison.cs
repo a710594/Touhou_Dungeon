@@ -10,9 +10,10 @@ public class Poison : BattleStatus
     {
         Data = BattleStatusData.GetData(id);
 
-        Damage = Data.Damage;
+        Damage = Data.Value;
         RemainTurn = Data.Turn;
         Comment = Data.Comment;
+        Message = Data.Message;
         Icon = Data.Icon;
     }
 }

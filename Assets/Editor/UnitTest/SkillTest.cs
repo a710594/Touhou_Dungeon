@@ -29,12 +29,12 @@ public class SkillTest
             SkillData.Load();
         }
 
-        CureSkill cureSkill = (CureSkill)SkillFactory.GetNewSkill(3);
+        CureSkill cureSkill = (CureSkill)SkillFactory.GetNewSkill(3, null);
         BattleCharacterInfo Info = new BattleCharacterInfo();
         TeamMember teamMember = new TeamMember();
         teamMember.Init(3, 1);
         Info.Init(teamMember);
-        Debug.Log(Info.MEF + " " + cureSkill.Data.Damage);
+        Debug.Log(Info.MEF + " " + cureSkill.Data.Value);
         Assert.AreEqual(18, cureSkill.CalculateRecover(Info));
     }
 

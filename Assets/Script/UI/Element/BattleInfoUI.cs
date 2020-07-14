@@ -52,12 +52,12 @@ public class BattleInfoUI : MonoBehaviour
             }
         }
 
-        if (!character.Info.IsAI)
+        if (character.Info.IsTeamMember)
         {
             Image.gameObject.SetActive(true);
-            if (character.MediumImage != string.Empty)
+            if (character.Info.JobData.MediumImage != string.Empty)
             {
-                Image.overrideSprite = Resources.Load<Sprite>("Image/Character/Medium/" + character.MediumImage);
+                Image.overrideSprite = Resources.Load<Sprite>("Image/Character/Medium/" + character.Info.JobData.MediumImage);
             }
             else
             {

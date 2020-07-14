@@ -7,6 +7,7 @@ public class BattleStatus
     public BattleStatusData.RootObject Data;
     public int RemainTurn;
     public string Comment;
+    public string Message;
     public string Icon;
 
     public void ResetTurn()

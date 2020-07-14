@@ -32,6 +32,7 @@ public class BattleUI : MonoBehaviour
     public GameObject PowerPoint;
     public GameObject ActionGroup;
     public BattleResultUI ResultUI;
+    public PriorityQueue PriorityQueue;
 
     private Skill _tempSkill = null;
     private Timer _timer = new Timer();
@@ -112,20 +113,20 @@ public class BattleUI : MonoBehaviour
         }
     }
 
-    public void SetStatus(BattleCharacter character, string comment, FloatingNumber.Type type, Action callback)
-    {
-        _floatingNumberPoolDic[character].transform.position = Camera.main.WorldToScreenPoint(character.Sprite.transform.position);
+    //public void SetStatus(BattleCharacter character, string comment, FloatingNumber.Type type, Action callback)
+    //{
+    //    _floatingNumberPoolDic[character].transform.position = Camera.main.WorldToScreenPoint(character.Sprite.transform.position);
 
-        _floatingNumberPoolDic[character].Play(comment, type, () =>
-        {
-        }, () =>
-        {
-            if (callback != null)
-            {
-                callback();
-            }
-        });
-    }
+    //    _floatingNumberPoolDic[character].Play(comment, type, () =>
+    //    {
+    //    }, () =>
+    //    {
+    //        if (callback != null)
+    //        {
+    //            callback();
+    //        }
+    //    });
+    //}
 
     public void SetSkillScrollViewVisible(bool isVisible)
     {
@@ -148,41 +149,15 @@ public class BattleUI : MonoBehaviour
         SkillScrollView.RemoveSelectedItem();
     }
 
-    public void SetItem()
-    {
-        int itemId;
-        ItemData.RootObject itemData;
-        SkillData.RootObject skillData;
-        ItemSkill skill;
-        List<ItemSkill> itemSkillList = new List<ItemSkill>();
-        Dictionary<object, int> itemDic = ItemManager.Instance.GetItemDicByType(ItemManager.Type.Bag, ItemData.TypeEnum.Medicine);
-
-        if (itemDic != null)
-        {
-            foreach (KeyValuePair<object, int> item in itemDic)
-            {
-                itemId = (int)item.Key;
-                itemData = ItemData.GetData(itemId);
-                skillData = SkillData.GetData(itemData.Skill);
-                skill = (ItemSkill)SkillFactory.GetNewSkill(skillData);
-                skill.ItemID = itemId;
-                itemSkillList.Add(skill);
-            }
-            SkillScrollView.SetData(new ArrayList(itemSkillList));
-            SkillScrollView.AddClickHandler(SkillOnClick);
-        }
-        else
-        {
-            SkillScrollView.SetData(new ArrayList());
-        }
-    }
-
-    public void SetFloatingNumber(BattleCharacter character, string text, FloatingNumber.Type type, Action callback)
+    public void SetFloatingNumber(BattleCharacter character, string text, FloatingNumber.Type type, bool setHPBar, Action callback)
     {
         _floatingNumberPoolDic[character].transform.position = Camera.main.WorldToScreenPoint(character.Sprite.transform.position);
         _floatingNumberPoolDic[character].Play(text, type, () =>
         {
-            SetLittleHPBar(character, true);
+            if (setHPBar)
+            {
+                SetLittleHPBar(character, true);
+            }
         }, () =>
         {
             if (callback != null)
@@ -251,6 +226,16 @@ public class BattleUI : MonoBehaviour
         }
     }
 
+    public void InitPriorityQueue(List<BattleCharacter> list)
+    {
+        PriorityQueue.Init(list);
+    }
+
+    public void ScrollPriorityQueue(BattleCharacter character)
+    {
+        PriorityQueue.Scroll(character);
+    }
+
     private void JumpPowerPoint(GameObject obj) 
     {
         obj.transform.DOLocalJump(obj.transform.localPosition + Vector3.right * UnityEngine.Random.Range(-50, 50), 50, 1, 0.5f).OnComplete(() =>
@@ -286,7 +271,13 @@ public class BattleUI : MonoBehaviour
     {
         BattleController.Instance.ChangeToSelectSkillState();
         SetActionGroupVisible(false);
-        SetItem();
+        //SetItem();
+        List<Skill> itemSkillList = BattleController.Instance.ItemSkillList;
+        for (int i=0; i<itemSkillList.Count; i++)
+        {
+            itemSkillList[i].SetUser(BattleController.Instance.SelectedCharacter.Info);
+        }
+        SetSkillScrollViewData(itemSkillList);
     }
 
     private void UndoOnClick()

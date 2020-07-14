@@ -5,13 +5,14 @@ using UnityEngine;
 
 public class ClearAbnormalSkill : Skill
 {
-    public ClearAbnormalSkill(SkillData.RootObject data)
+    public ClearAbnormalSkill(SkillData.RootObject data, BattleCharacterInfo user)
     {
         Data = data;
+        _user = user;
         if (data.SubID != 0)
         {
             SkillData.RootObject skillData = SkillData.GetData(Data.SubID);
-            _subSkill = SkillFactory.GetNewSkill(skillData);
+            _subSkill = SkillFactory.GetNewSkill(skillData, user);
         }
     }
 

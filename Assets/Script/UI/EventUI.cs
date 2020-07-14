@@ -22,14 +22,14 @@ public class EventUI : MonoBehaviour
             Instance = ResourceManager.Instance.Spawn("EventUI", ResourceManager.Type.UI).GetComponent<EventUI>();
         }
         Instance.SetData(id, callback);
-        Time.timeScale = 0;
+        ExploreController.Instance.StopEnemy();
     }
 
     public void Close()
     {
         Destroy(Instance.gameObject);
         Instance = null;
-        Time.timeScale = 1;
+        ExploreController.Instance.ContinueEnemy();
 
         if (FinishCallback != null)
         {

@@ -16,7 +16,6 @@ public class BattleEvent : EventResult
         _timer.Start(0.5f, ()=> 
         {
             ExploreController.Instance.ForceEnterBattle();
-            Time.timeScale = 1;
         });
     }
 }
