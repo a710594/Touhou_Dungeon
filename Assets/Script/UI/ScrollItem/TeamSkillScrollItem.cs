@@ -26,7 +26,7 @@ public class TeamSkillScrollItem : ScrollItem
 
     public override void SetData(object obj)
     {
-        if (obj is UnlockData)
+        /*if (obj is UnlockData)
         {
             UnlockData data = (UnlockData)obj; //skillId, IsUnlock
             base.SetData(data.SkillData);
@@ -49,6 +49,12 @@ public class TeamSkillScrollItem : ScrollItem
             base.SetData(data);
             NameLabel.text = data.GetName();
             Mask.SetActive(false);
-        }
+        }*/
+
+        KeyValuePair<int, int> pair = (KeyValuePair<int, int>)obj;
+        KeyValuePair<SkillData.RootObject, int> data = new KeyValuePair<SkillData.RootObject, int>(SkillData.GetData(pair.Key), pair.Value);
+        base.SetData(data);
+        NameLabel.text = data.Key.GetName();
+        Mask.SetActive(false);
     }
 }

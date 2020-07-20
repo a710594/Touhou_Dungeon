@@ -22,10 +22,10 @@ public class BattleFieldUI : MonoBehaviour
         MoveCostLabel.text =  LanguageData.GetText(9, LanguageSystem.Instance.CurrentLanguage) + ":" + battleField.MoveCost.ToString(); //移動消耗
         CommentLabel.text = battleField.Comment;
 
-        if (battleField.Buff != null)
+        if (battleField.Status != null)
         {
             BuffGroup.SetActive(true);
-            BuffCommentLabel.text = battleField.Buff.Comment;
+            BuffCommentLabel.text = battleField.Status.Comment;
         }
         else
         {

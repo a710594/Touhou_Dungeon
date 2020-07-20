@@ -15,47 +15,25 @@ public class Buff : BattleStatus
         MoveDistance,
     }
 
-    public float ATK = 1;
-    public float DEF = 1;
-    public float MTK = 1;
-    public float MEF = 1;
-    public float AGI = 1;
-    public float SEN = 1;
-    public float MOV;
+    public float Value;
 
     public Buff() { }
 
-    public Buff(int id)
+    public Buff(int id, int lv)
     {
         Data = BattleStatusData.GetData(id);
+        if (Data.ValueList.Count >= lv)
+        {
+            Value = Data.ValueList[lv - 1];
+        }
+        else
+        {
+            Value = Data.ValueList[0];
+        }
 
-        if (Data.ValueType == BattleStatusData.TypeEnum.ATK)
+        if (Data.ValueType != BattleStatusData.TypeEnum.MOV)
         {
-            ATK = (float)Data.Value / 100f;
-        }
-        else if (Data.ValueType == BattleStatusData.TypeEnum.DEF)
-        {
-            DEF = (float)Data.Value / 100f;
-        }
-        else if (Data.ValueType == BattleStatusData.TypeEnum.MTK)
-        {
-            MTK = (float)Data.Value / 100f;
-        }
-        else if (Data.ValueType == BattleStatusData.TypeEnum.MEF)
-        {
-            MEF = (float)Data.Value / 100f;
-        }
-        else if (Data.ValueType == BattleStatusData.TypeEnum.AGI)
-        {
-            AGI = (float)Data.Value / 100f;
-        }
-        else if (Data.ValueType == BattleStatusData.TypeEnum.SEN)
-        {
-            ATK = (float)Data.Value / 100f;
-        }
-        else if (Data.ValueType == BattleStatusData.TypeEnum.MOV)
-        {
-            MOV = (float)Data.Value / 100f;
+            Value /= 100f;
         }
 
         RemainTurn = Data.Turn;

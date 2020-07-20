@@ -75,7 +75,8 @@ public class BattleCharacterInfo
     {
         get
         {
-            return Mathf.RoundToInt((float)_atk * GetBuffATK() * BattleFieldManager.Instance.GetFieldBuff(Position).ATK);
+            //return Mathf.RoundToInt((float)_atk * GetBuffATK() * BattleFieldManager.Instance.GetFieldBuff(Position).ATK);
+            return Mathf.RoundToInt((float)_atk * GetBuff(BattleStatusData.TypeEnum.ATK));
         }
     }
 
@@ -86,7 +87,8 @@ public class BattleCharacterInfo
     {
         get
         {
-            return Mathf.RoundToInt((float)_def * GetBuffDEF() * BattleFieldManager.Instance.GetFieldBuff(Position).DEF);
+            //return Mathf.RoundToInt((float)_def * GetBuffDEF() * BattleFieldManager.Instance.GetFieldBuff(Position).DEF);
+            return Mathf.RoundToInt((float)_def * GetBuff(BattleStatusData.TypeEnum.DEF));
         }
     }
 
@@ -97,7 +99,8 @@ public class BattleCharacterInfo
     {
         get
         {
-            return Mathf.RoundToInt((float)_mtk * GetBuffMTK() * BattleFieldManager.Instance.GetFieldBuff(Position).MTK);
+            //return Mathf.RoundToInt((float)_mtk * GetBuffMTK() * BattleFieldManager.Instance.GetFieldBuff(Position).MTK);
+            return Mathf.RoundToInt((float)_mtk * GetBuff(BattleStatusData.TypeEnum.MTK));
         }
     }
 
@@ -108,7 +111,8 @@ public class BattleCharacterInfo
     {
         get
         {
-            return Mathf.RoundToInt((float)_mef * GetBuffMEF() * BattleFieldManager.Instance.GetFieldBuff(Position).MEF);
+            //return Mathf.RoundToInt((float)_mef * GetBuffMEF() * BattleFieldManager.Instance.GetFieldBuff(Position).MEF);
+            return Mathf.RoundToInt((float)_mef * GetBuff(BattleStatusData.TypeEnum.MEF));
         }
     }
 
@@ -119,7 +123,8 @@ public class BattleCharacterInfo
     {
         get
         {
-            return Mathf.RoundToInt((float)_agi * GetBuffAGI() * BattleFieldManager.Instance.GetFieldBuff(Position).AGI);
+            //return Mathf.RoundToInt((float)_agi * GetBuffAGI() * BattleFieldManager.Instance.GetFieldBuff(Position).AGI);
+            return Mathf.RoundToInt((float)_agi * GetBuff(BattleStatusData.TypeEnum.AGI));
         }
     }
 
@@ -128,7 +133,8 @@ public class BattleCharacterInfo
     {
         get
         {
-            return Mathf.RoundToInt((float)_sen * GetBuffSEN() * BattleFieldManager.Instance.GetFieldBuff(Position).SEN);
+            //return Mathf.RoundToInt((float)_sen * GetBuffSEN() * BattleFieldManager.Instance.GetFieldBuff(Position).SEN);
+            return Mathf.RoundToInt((float)_sen * GetBuff(BattleStatusData.TypeEnum.SEN));
         }
     }
 
@@ -137,7 +143,8 @@ public class BattleCharacterInfo
     {
         get
         {
-            return _mov;
+            //return Mathf.RoundToInt((float)_mov + GetBuffMOV() + BattleFieldManager.Instance.GetFieldBuff(Position).MOV);
+            return Mathf.RoundToInt((float)_mov + GetBuff(BattleStatusData.TypeEnum.MOV));
         }
     }
 
@@ -227,11 +234,12 @@ public class BattleCharacterInfo
         int id;
         SkillData.RootObject skillData;
         Skill skill;
-        for (int i = 0; i < member.SkillList.Count; i++)
+        //for (int i = 0; i < member.SkillDic.Count; i++)
+        foreach (KeyValuePair<int, int> item in member.SkillDic)
         {
-            id = member.SkillList[i];
+            id = item.Key;
             skillData = SkillData.GetData(id);
-            skill = SkillFactory.GetNewSkill(skillData, this);
+            skill = SkillFactory.GetNewSkill(skillData, this, item.Value);
             if (skillData.CD > 0)
             {
                 BattleController.Instance.TurnEndHandler += skill.SetCD;
@@ -245,11 +253,12 @@ public class BattleCharacterInfo
             SkillList.Add(skill);
         }
 
-        for (int i = 0; i < member.SpellCardList.Count; i++)
+        //for (int i = 0; i < member.SpellCardDic.Count; i++)
+        foreach (KeyValuePair<int, int> item in member.SpellCardDic)
         {
-            id = member.SpellCardList[i];
+            id = item.Key;
             skillData = SkillData.GetData(id);
-            skill = SkillFactory.GetNewSkill(skillData, this);
+            skill = SkillFactory.GetNewSkill(skillData, this, item.Value);
             if (skillData.CD > 0)
             {
                 BattleController.Instance.TurnEndHandler += skill.SetCD;
@@ -310,7 +319,7 @@ public class BattleCharacterInfo
         for (int i = 0; i < memo.SkillList.Count; i++)
         {
             skillData = SkillData.GetData(memo.SkillList[i]);
-            skill = SkillFactory.GetNewSkill(skillData, this);
+            skill = SkillFactory.GetNewSkill(skillData, this, memo.SkillLvList[i]);
             skill.CurrentCD = memo.SkillCdList[i];
             if (skillData.CD > 0)
             {
@@ -328,7 +337,8 @@ public class BattleCharacterInfo
         for (int i = 0; i < memo.SpellCardList.Count; i++)
         {
             skillData = SkillData.GetData(memo.SpellCardList[i]);
-            skill = SkillFactory.GetNewSkill(skillData, this);
+            skill = SkillFactory.GetNewSkill(skillData, this, memo.SpellCardLvList[i]);
+            skill.CurrentCD = memo.SpellCardCdList[i];
             if (skillData.CD > 0)
             {
                 BattleController.Instance.TurnEndHandler += skill.SetCD;
@@ -471,13 +481,13 @@ public class BattleCharacterInfo
         SleepingId = -1;
     }
 
-    public void SetPoison(int id, int damage)
+    public void SetPoison(int id, int damage, int lv)
     {
         Poison poison;
 
         if (!StatusDic.ContainsKey(id))
         {
-            poison = new Poison(id);
+            poison = new Poison(id, lv);
             StatusDic.Add(id, poison);
             PoisonDic.Add(id, damage);
         }
@@ -493,13 +503,13 @@ public class BattleCharacterInfo
         return new List<int>(PoisonDic.Values);
     }
 
-    public void SetParalysis(int id)
+    public void SetParalysis(int id, int lv)
     {
         Paralysis paralysis;
 
         if (!StatusDic.ContainsKey(id))
         {
-            paralysis = new Paralysis(id);
+            paralysis = new Paralysis(id, lv);
             StatusDic.Add(id, paralysis);
             ParalysisDic.Add(id, paralysis.Probability);
         }
@@ -549,13 +559,13 @@ public class BattleCharacterInfo
 
     }
 
-    public void SetBuff(int id)
+    public void SetBuff(int id, int lv)
     {
         Buff buff;
 
         if (!StatusDic.ContainsKey(id))
         {
-            buff = new Buff(id);
+            buff = new Buff(id, lv);
             StatusDic.Add(id, buff);
         }
         else
@@ -570,105 +580,41 @@ public class BattleCharacterInfo
         CurrentPriority = priority;
     }
 
-    private float GetBuffATK()
+    private float GetBuff(BattleStatusData.TypeEnum valueType)
     {
-        float buffAtk = 1;
+        float value;
+        float total;
         Buff buff;
+
+        //if (valueType == BattleStatusData.TypeEnum.MOV)
+        //{
+        //    total = 0;
+        //    total += BattleFieldManager.Instance.GetFieldBuff(Position, valueType);
+        //}
+        //else
+        //{
+        //    total = 1;
+        //}
+        total = BattleFieldManager.Instance.GetFieldBuff(Position, valueType);
 
         foreach (KeyValuePair<int, BattleStatus> item in StatusDic)
         {
-            if (item.Value is Buff)
+            if (item.Value is Buff && item.Value.Data.ValueType == valueType)
             {
                 buff = (Buff)item.Value;
-                buffAtk *= buff.ATK;
+                if (valueType == BattleStatusData.TypeEnum.MOV)
+                {
+                    value = buff.Value;
+                    total += value;
+                }
+                else
+                {
+                    value = (float)buff.Value;
+                    total *= value;
+                }
             }
         }
 
-        return buffAtk;
-    }
-
-    private float GetBuffDEF()
-    {
-        float buffDef = 1;
-        Buff buff;
-
-        foreach (KeyValuePair<int, BattleStatus> item in StatusDic)
-        {
-            if (item.Value is Buff)
-            {
-                buff = (Buff)item.Value;
-                buffDef *= buff.DEF;
-            }
-        }
-
-        return buffDef;
-    }
-
-    private float GetBuffMTK()
-    {
-        float buffMtk = 1;
-        Buff buff;
-
-        foreach (KeyValuePair<int, BattleStatus> item in StatusDic)
-        {
-            if (item.Value is Buff)
-            {
-                buff = (Buff)item.Value;
-                buffMtk *= buff.MTK;
-            }
-        }
-
-        return buffMtk;
-    }
-
-    private float GetBuffMEF()
-    {
-        float buffMef = 1;
-        Buff buff;
-
-        foreach (KeyValuePair<int, BattleStatus> item in StatusDic)
-        {
-            if (item.Value is Buff)
-            {
-                buff = (Buff)item.Value;
-                buffMef *= buff.MEF;
-            }
-        }
-
-        return buffMef;
-    }
-
-    private float GetBuffAGI()
-    {
-        float buffAgi = 1;
-        Buff buff;
-
-        foreach (KeyValuePair<int, BattleStatus> item in StatusDic)
-        {
-            if (item.Value is Buff)
-            {
-                buff = (Buff)item.Value;
-                buffAgi *= buff.AGI;
-            }
-        }
-
-        return buffAgi;
-    }
-
-    private float GetBuffSEN()
-    {
-        float buffSen = 1;
-        Buff buff;
-
-        foreach (KeyValuePair<int, BattleStatus> item in StatusDic)
-        {
-            if (item.Value is Buff)
-            {
-                buff = (Buff)item.Value;
-                buffSen *= buff.SEN;
-            }
-        }
-
-        return buffSen;
+        return total;
     }
 }

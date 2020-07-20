@@ -6,7 +6,7 @@ using ByTheTale.StateMachine;
 
 public class BattleController : MachineBehaviour
 {
-    private static readonly int _maxPower = 100;
+    private static readonly int _maxPower = 50;
 
     public enum ResultType
     {
@@ -116,7 +116,7 @@ public class BattleController : MachineBehaviour
                 itemId = (int)item.Key;
                 itemData = ItemData.GetData(itemId);
                 skillData = SkillData.GetData(itemData.Skill);
-                skill = SkillFactory.GetNewSkill(skillData, null);
+                skill = SkillFactory.GetNewSkill(skillData, null, 1);
                 skill.ItemID = itemId;
                 ItemSkillList.Add(skill);
             }

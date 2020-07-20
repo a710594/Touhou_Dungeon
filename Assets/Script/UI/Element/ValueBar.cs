@@ -18,7 +18,14 @@ public class ValueBar : MonoBehaviour
 
     public void SetValue(int current, int max)
     {
-        _bar.fillAmount = (float)current / (float)max;
+        if (max != 0)
+        {
+            _bar.fillAmount = (float)current / (float)max;
+        }
+        else
+        {
+            _bar.fillAmount = 0;
+        }
         _label.text = current.ToString() + "/" + max.ToString();
     }
 
@@ -26,29 +33,43 @@ public class ValueBar : MonoBehaviour
     {
         _isTweening = true;
         _maxHP = max;
-        _tweener = _bar.DOFillAmount((float)current / (float)max, 0.5f).OnComplete(()=> 
+        if (max != 0)
         {
-            if (callback != null)
+            _tweener = _bar.DOFillAmount((float)current / (float)max, 0.5f).OnComplete(() =>
             {
-                callback();
-            }
-        });
-        _tweener.SetUpdate(true);
+                if (callback != null)
+                {
+                    callback();
+                }
+            });
+            _tweener.SetUpdate(true);
+        }
+        else
+        {
+            _bar.fillAmount = 0;
+        }
     }
 
     public void SetValueTween(int from, int to, int max, Action callback)
     {
         _isTweening = true;
         _maxHP = max;
-        _bar.fillAmount = (float)from / (float)max;
-        _tweener = _bar.DOFillAmount((float)to / (float)max, 0.5f).OnComplete(() =>
+        if (max != 0)
         {
-            if (callback != null)
+            _bar.fillAmount = (float)from / (float)max;
+            _tweener = _bar.DOFillAmount((float)to / (float)max, 0.5f).OnComplete(() =>
             {
-                callback();
-            }
-        });
-        _tweener.SetUpdate(true);
+                if (callback != null)
+                {
+                    callback();
+                }
+            });
+            _tweener.SetUpdate(true);
+        }
+        else
+        {
+            _bar.fillAmount = 0;
+        }
     }
 
     protected virtual void UpdateData() 

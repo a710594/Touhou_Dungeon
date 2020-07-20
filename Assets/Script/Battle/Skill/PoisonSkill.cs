@@ -4,14 +4,15 @@ using UnityEngine;
 
 public class PoisonSkill : Skill
 {
-    public PoisonSkill(SkillData.RootObject data, BattleCharacterInfo user)
+    public PoisonSkill(SkillData.RootObject data, BattleCharacterInfo user, int lv)
     {
         Data = data;
+        Lv = lv;
         _user = user;
         if (data.SubID != 0)
         {
             SkillData.RootObject skillData = SkillData.GetData(Data.SubID);
-            _subSkill = SkillFactory.GetNewSkill(skillData, user);
+            _subSkill = SkillFactory.GetNewSkill(skillData, user, lv);
         }
     }
 
@@ -35,12 +36,12 @@ public class PoisonSkill : Skill
     {
         base.SetEffect(target);
 
-        target.SetPoison(Data.StatusID, CalculateDamage(target.Info), hitType, CheckSkillCallback);
+        target.SetPoison(Data.StatusID, CalculateDamage(target.Info), Lv, hitType, CheckSkillCallback);
     }
 
     private int CalculateDamage(BattleCharacterInfo target)
     {
-        float poisonDamage = BattleStatusData.GetData(Data.StatusID).Value;
+        float poisonDamage = BattleStatusData.GetData(Data.StatusID).ValueList[Lv];
         return (int)(poisonDamage / 100f * (float)target.MaxHP);
     }
 }

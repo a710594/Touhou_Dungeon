@@ -17,7 +17,7 @@ public class AI : MonoBehaviour
 
         for (int i = 0; i < list.Count; i++)
         {
-            _skillList.Add(SkillFactory.GetNewSkill(list[i], _character.Info));
+            _skillList.Add(SkillFactory.GetNewSkill(list[i], _character.Info, 1)); //等級填1是暫時的
         }
         _character.SelectedSkill = _skillList[0];
     }
@@ -95,22 +95,31 @@ public class AI : MonoBehaviour
                         }
 
                         //尋找離目標最近的點
-                        Vector2Int closestPosition = positionList[0];
-                        for (int i = 1; i < positionList.Count; i++)
+                        if (positionList.Count > 0)
                         {
-                            if (Utility.GetDistance(positionList[i], _character.TargetPosition) < Utility.GetDistance(closestPosition, _character.TargetPosition))
+                            Vector2Int closestPosition = positionList[0];
+                            for (int i = 1; i < positionList.Count; i++)
                             {
-                                closestPosition = positionList[i];
+                                if (Utility.GetDistance(positionList[i], _character.TargetPosition) < Utility.GetDistance(closestPosition, _character.TargetPosition))
+                                {
+                                    closestPosition = positionList[i];
+                                }
                             }
-                        }
-                        Queue<Vector2Int> path = _character.GetPath(closestPosition);
+                            Queue<Vector2Int> path = _character.GetPath(closestPosition);
 
-                        _character.StartMove(path, ()=> 
+                            _character.StartMove(path, () =>
+                            {
+                                _character.MoveDone();
+                                _character.ActionDoneCompletely();
+                                callback();
+                            });
+                        }
+                        else
                         {
                             _character.MoveDone();
                             _character.ActionDoneCompletely();
                             callback();
-                        });
+                        }
                     }
                 }
             }

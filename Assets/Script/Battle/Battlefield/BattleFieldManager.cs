@@ -123,25 +123,54 @@ public class BattleFieldManager
         return battleField;
     }
 
-    public Buff GetFieldBuff(Vector2 position)
+    public float GetFieldBuff(Vector2 position, BattleStatusData.TypeEnum valueType)
     {
         BattleField battleField;
         MapDic.TryGetValue(Vector2Int.RoundToInt(position), out battleField);
-        if (battleField != null)
+        if (battleField != null && battleField.Status is Buff)
         {
-            Buff buff = battleField.Buff;
-            if (buff != null)
+            Buff buff = (Buff)battleField.Status;
+            if (buff != null && buff.Data.ValueType == valueType)
             {
-                return buff;
+                return buff.Value;
             }
             else
             {
-                return new Buff(); //如果該地形上沒有 buff,就回傳一個空的 buff
+                if (valueType == BattleStatusData.TypeEnum.MOV)
+                {
+                    return 0;
+                }
+                else
+                {
+                    return 1;
+                }
             }
         }
         else
         {
-            return new Buff(); //如果沒有該座標的地形,就回傳一個空的 buff
+            if (valueType == BattleStatusData.TypeEnum.MOV)
+            {
+                return 0;
+            }
+            else
+            {
+                return 1;
+            }
+        }
+    }
+
+
+    public bool IsNoDamageField(Vector2 position)
+    {
+        BattleField battleField;
+        MapDic.TryGetValue(Vector2Int.RoundToInt(position), out battleField);
+        if (battleField != null && battleField.Status is NoDamage)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
         }
     }
 }

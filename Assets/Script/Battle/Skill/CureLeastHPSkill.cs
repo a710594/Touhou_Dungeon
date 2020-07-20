@@ -4,14 +4,16 @@ using UnityEngine;
 
 public class CureLeastHPSkill : Skill
 {
-    public CureLeastHPSkill(SkillData.RootObject data, BattleCharacterInfo user)
+    public CureLeastHPSkill(SkillData.RootObject data, BattleCharacterInfo user, int lv)
     {
         Data = data;
+        Lv = lv;
         _user = user;
+        _value = data.ValueList[lv - 1];
         if (data.SubID != 0)
         {
             SkillData.RootObject skillData = SkillData.GetData(Data.SubID);
-            _subSkill = SkillFactory.GetNewSkill(skillData, user);
+            _subSkill = SkillFactory.GetNewSkill(skillData, user, lv);
         }
     }
 
@@ -53,6 +55,6 @@ public class CureLeastHPSkill : Skill
 
     public int CalculateRecover(BattleCharacterInfo executor)
     {
-        return (int)((float)executor.MEF / 10f * (float)Data.Value);
+        return (int)((float)executor.MEF / 10f * _value);
     }
 }

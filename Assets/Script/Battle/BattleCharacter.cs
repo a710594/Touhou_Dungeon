@@ -366,6 +366,11 @@ public class BattleCharacter : MonoBehaviour
             floatingNumberType = FloatingNumber.Type.Miss;
             text = "Miss";
         }
+        else if (hitType == Skill.HitType.NoDamage)
+        {
+            floatingNumberType = FloatingNumber.Type.Miss;
+            text = "NoDamage";
+        }
 
         BattleUI.Instance.SetFloatingNumber(this, text, floatingNumberType, true, () =>
         {
@@ -408,11 +413,11 @@ public class BattleCharacter : MonoBehaviour
         }
     }
 
-    public void SetPoison(int id, int damage, Skill.HitType hitType, Action<BattleCharacter> callback)
+    public void SetPoison(int id, int damage, int lv, Skill.HitType hitType, Action<BattleCharacter> callback)
     {
         if (hitType != Skill.HitType.Miss)
         {
-            Info.SetPoison(id, damage);
+            Info.SetPoison(id, damage, lv);
 
             BattleUI.Instance.SetFloatingNumber(this, BattleStatusData.GetData(id).Message, FloatingNumber.Type.Other, false, () =>
             {
@@ -461,11 +466,11 @@ public class BattleCharacter : MonoBehaviour
         }
     }
 
-    public void SetParalysis(int id, Skill.HitType hitType, Action<BattleCharacter> callback)
+    public void SetParalysis(int id, int lv, Skill.HitType hitType, Action<BattleCharacter> callback)
     {
         if (hitType != Skill.HitType.Miss)
         {
-            Info.SetParalysis(id);
+            Info.SetParalysis(id, lv);
 
             BattleUI.Instance.SetFloatingNumber(this, BattleStatusData.GetData(id).Message, FloatingNumber.Type.Other, false, () =>
             {
@@ -532,11 +537,11 @@ public class BattleCharacter : MonoBehaviour
         });
     }
 
-    public void SetBuff(int id, Skill.HitType hitType, Action<BattleCharacter> callback)
+    public void SetBuff(int id, int lv, Skill.HitType hitType, Action<BattleCharacter> callback)
     {
         if (hitType != Skill.HitType.Miss)
         {
-            Info.SetBuff(id);
+            Info.SetBuff(id, lv);
 
             BattleUI.Instance.SetFloatingNumber(this, BattleStatusData.GetData(id).Message, FloatingNumber.Type.Other, false, () =>
             {

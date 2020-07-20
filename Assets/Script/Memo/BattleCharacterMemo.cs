@@ -31,7 +31,10 @@ public class BattleCharacterMemo
     public FoodBuff FoodBuff;
     public List<int> SkillList = new List<int>();
     public List<int> SkillCdList = new List<int>();
+    public List<int> SkillLvList = new List<int>();
     public List<int> SpellCardList = new List<int>();
+    public List<int> SpellCardCdList = new List<int>();
+    public List<int> SpellCardLvList = new List<int>();
 
     public Dictionary<int, BattleStatus> StatusDic;
     public int SleepingId = -1;
@@ -84,10 +87,13 @@ public class BattleCharacterMemo
         {
             SkillList.Add(info.SkillList[i].Data.ID);
             SkillCdList.Add(info.SkillList[i].CurrentCD);
+            SkillLvList.Add(info.SkillList[i].Lv);
         }
         for (int i = 0; i < info.SpellCardList.Count; i++)
         {
             SpellCardList.Add(info.SpellCardList[i].Data.ID);
+            SpellCardCdList.Add(info.SpellCardList[i].CurrentCD);
+            SpellCardLvList.Add(info.SpellCardList[i].Lv);
         }
         StatusDic = info.StatusDic;
         SleepingId = info.SleepingId;

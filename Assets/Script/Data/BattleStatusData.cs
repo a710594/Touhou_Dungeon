@@ -18,6 +18,7 @@ public class BattleStatusData
         Damage,
         Probability,
         Striking,
+        NoDamage, //無敵
     }
 
     public class RootObject
@@ -25,12 +26,18 @@ public class BattleStatusData
         public int ID { get; set; }
         public string Icon { get; set; }
         public string Field { get; set; }
-        public int Value { get; set; }
+        public int Value_1 { get; set; }
+        public int Value_2 { get; set; }
+        public int Value_3 { get; set; }
+        public int Value_4 { get; set; }
+        public int Value_5 { get; set; }
         public TypeEnum ValueType { get; set; }
         public int Turn { get; set; }
         public string Name { get; set; }
         public string Comment { get; set; }
         public string Message { get; set; }
+
+        public List<int> ValueList = new List<int>();
     }
 
     private static Dictionary<int, RootObject> _dataDic = new Dictionary<int, RootObject>();
@@ -53,6 +60,27 @@ public class BattleStatusData
 
         for (int i = 0; i < dataList.Count; i++)
         {
+            if (dataList[i].Value_1 != 0)
+            {
+                dataList[i].ValueList.Add(dataList[i].Value_1);
+            }
+            if (dataList[i].Value_2 != 0)
+            {
+                dataList[i].ValueList.Add(dataList[i].Value_2);
+            }
+            if (dataList[i].Value_3 != 0)
+            {
+                dataList[i].ValueList.Add(dataList[i].Value_3);
+            }
+            if (dataList[i].Value_4 != 0)
+            {
+                dataList[i].ValueList.Add(dataList[i].Value_4);
+            }
+            if (dataList[i].Value_5 != 0)
+            {
+                dataList[i].ValueList.Add(dataList[i].Value_5);
+            }
+
             _dataDic.Add(dataList[i].ID, dataList[i]);
         }
     }

@@ -22,8 +22,8 @@ public class TeamMemberMemo
     public Equip Weapon;
     public Equip Armor;
     public FoodBuff FoodBuff; //食物的效果一次只會有一個,戰鬥結束後就會消失
-    public List<int> SkillList;
-    public List<int> SpellCardList;
+    public Dictionary<int, int> SkillList; //id, lv
+    public Dictionary<int, int> SpellCardList; //id, lv
 
     public TeamMemberMemo() { }
 
@@ -47,8 +47,8 @@ public class TeamMemberMemo
         Weapon = member.Weapon;
         Armor = member.Armor;
         FoodBuff = member.FoodBuff;
-        SkillList = member.SkillList;
-        SpellCardList = member.SpellCardList;
+        SkillList = member.SkillDic;
+        SpellCardList = member.SpellCardDic;
     }
 
 }

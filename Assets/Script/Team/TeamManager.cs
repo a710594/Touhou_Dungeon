@@ -64,6 +64,7 @@ public class TeamManager
                 MemberList.Add(member);
             }
         }
+        _power = 50; //temp
     }
 
     public void Save() 

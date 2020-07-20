@@ -61,12 +61,12 @@ public class TeamUI : MonoBehaviour
 
     private void SetSkillData()
     {
-        SkillGroup.SetData(_selectedMember, false);
+        SkillGroup.Init(_selectedMember, false);
     }
 
     private void SetSpellCardData()
     {
-        SkillGroup.SetData(_selectedMember, true);
+        SkillGroup.Init(_selectedMember, true);
     }
 
     public void SetEquipData()

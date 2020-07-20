@@ -5,14 +5,15 @@ using UnityEngine;
 
 public class FieldSkill : Skill
 {
-    public FieldSkill(SkillData.RootObject data, BattleCharacterInfo user)
+    public FieldSkill(SkillData.RootObject data, BattleCharacterInfo user, int lv)
     {
         Data = data;
+        Lv = lv;
         _user = user;
         if (data.SubID != 0)
         {
             SkillData.RootObject skillData = SkillData.GetData(Data.SubID);
-            _subSkill = SkillFactory.GetNewSkill(skillData, user);
+            _subSkill = SkillFactory.GetNewSkill(skillData, user, lv);
         }
     }
 
@@ -29,7 +30,7 @@ public class FieldSkill : Skill
 
         for (int i = 0; i < _skillRangeList.Count; i++)
         {
-            BattleFieldManager.Instance.MapDic[_skillRangeList[i]].SetBuff(Data.StatusID);
+            BattleFieldManager.Instance.MapDic[_skillRangeList[i]].SetBuff(Data.StatusID, Lv);
         }
 
         //BattleUI.Instance.SetFloatingNumber(_user, Data.GetComment(), FloatingNumber.Type.Other, () =>
@@ -39,5 +40,10 @@ public class FieldSkill : Skill
         //});
         BattleUI.Instance.SetSkillLabel(false);
         CheckSkillCallback(target);
+    }
+
+    public void SetSkillRange(List<Vector2Int> list) //for subskill
+    {
+        _skillRangeList = list;
     }
 }

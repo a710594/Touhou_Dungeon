@@ -5,14 +5,16 @@ using UnityEngine;
 
 public class AttackSkill : Skill
 {
-    public AttackSkill(SkillData.RootObject data, BattleCharacterInfo user)
+    public AttackSkill(SkillData.RootObject data, BattleCharacterInfo user, int lv)
     {
         Data = data;
+        Lv = lv;
         _user = user;
+        _value = data.ValueList[lv - 1];
         if (data.SubID != 0)
         {
             SkillData.RootObject skillData = SkillData.GetData(Data.SubID);
-            _subSkill = SkillFactory.GetNewSkill(skillData, user);
+            _subSkill = SkillFactory.GetNewSkill(skillData, user, lv);
         }
     }
 
@@ -55,12 +57,12 @@ public class AttackSkill : Skill
         if (Data.IsMagic)
         {
             damage = (float)executor.MTK / (float)target.MEF;
-            damage = damage * Data.Value * (1 + (executor.Lv - 1) * 0.1f) + executor.EquipMTK - target.EquipMEF;
+            damage = damage * _value * (1 + (executor.Lv - 1) * 0.1f) + executor.EquipMTK - target.EquipMEF;
         }
         else
         {
             damage = (float)executor.ATK / (float)target.DEF;
-            damage = damage * Data.Value * (1 + (executor.Lv - 1) * 0.1f) + executor.EquipATK - target.EquipDEF;
+            damage = damage * _value * (1 + (executor.Lv - 1) * 0.1f) + executor.EquipATK - target.EquipDEF;
         }
 
 
@@ -81,5 +83,46 @@ public class AttackSkill : Skill
         damage = (int)(damage * (UnityEngine.Random.Range(100f, 110f) / 100f)); //加上10%的隨機傷害
 
         return Mathf.RoundToInt(damage);
+    }
+
+    protected override HitType CheckHit(BattleCharacterInfo executor, BattleCharacterInfo target, BattleCharacter.LiveStateEnum targetLiveState)
+    {
+        if (BattleFieldManager.Instance.IsNoDamageField(target.Position))
+        {
+            return HitType.NoDamage;
+        }
+
+        float misssRate;
+        misssRate = (float)(target.AGI - executor.SEN * (Data.HitRate / 100f)) / (float)target.AGI; //迴避率
+
+        if (misssRate >= 0) //迴避率為正,骰迴避
+        {
+            if (misssRate < UnityEngine.Random.Range(0f, 1f))
+            {
+                return HitType.Hit;
+            }
+            else
+            {
+                if (targetLiveState == BattleCharacter.LiveStateEnum.Dying)
+                {
+                    return HitType.Hit;
+                }
+                else
+                {
+                    return HitType.Miss;
+                }
+            }
+        }
+        else //迴避率為負,骰爆擊
+        {
+            if (misssRate < UnityEngine.Random.Range(0f, 1f) * -1f)
+            {
+                return HitType.Critical;
+            }
+            else
+            {
+                return HitType.Hit;
+            }
+        }
     }
 }

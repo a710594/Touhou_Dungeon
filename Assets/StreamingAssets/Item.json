@@ -5,6 +5,7 @@
 {"ID":1004,"Name_Chinese":"花苞","Comment_Chinese":"含苞待放的花","Icon":"Leaf","Type":1,"SeedType":0,"Price":10,"Volume":1,"Skill":0},
 {"ID":1005,"Name_Chinese":"藥草","Comment_Chinese":"製作藥品的原料","Icon":"Leaf","Type":1,"SeedType":0,"Price":10,"Volume":1,"Skill":0},
 {"ID":1006,"Name_Chinese":"香料","Comment_Chinese":"能讓料理更美味","Icon":"Mineral","Type":1,"SeedType":0,"Price":10,"Volume":1,"Skill":0},
+{"ID":1007,"Name_Chinese":"技能書","Comment_Chinese":"可用於提升技能等級","Icon":"Book","Type":1,"SeedType":0,"Price":10,"Volume":1,"Skill":0},
 {"ID":2001,"Name_Chinese":"蘋果","Comment_Chinese":"好吃的蘋果","Icon":"Fruit","Type":2,"SeedType":0,"Price":5,"Volume":1,"Skill":0},
 {"ID":2002,"Name_Chinese":"香菇肉","Comment_Chinese":"走路菇的肉...是素的還是葷的？回復 5 HP","Icon":"Fruit","Type":2,"SeedType":0,"Price":10,"Volume":1,"Skill":0},
 {"ID":2003,"Name_Chinese":"烤香菇串","Comment_Chinese":"將香菇串起來炭烤而成。回復 20 HP、20 MP","Icon":"Meal","Type":2,"SeedType":0,"Price":30,"Volume":1,"Skill":0},

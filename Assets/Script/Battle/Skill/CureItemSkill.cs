@@ -5,13 +5,15 @@ using UnityEngine;
 
 public class CureItemSkill : Skill
 {
-    public CureItemSkill(SkillData.RootObject data)
+    public CureItemSkill(SkillData.RootObject data, int lv)
     {
         Data = data;
+        Lv = lv;
+        _value = data.ValueList[lv - 1];
         if (data.SubID != 0)
         {
             SkillData.RootObject skillData = SkillData.GetData(Data.SubID);
-            _subSkill = SkillFactory.GetNewSkill(skillData, null);
+            _subSkill = SkillFactory.GetNewSkill(skillData, null, lv);
         }
     }
 
@@ -35,6 +37,6 @@ public class CureItemSkill : Skill
     {
         base.SetEffect(target);
 
-        target.SetRecover(Data.Value, CheckSkillCallback); //與 CureSkill 不同的地方之一是回復量的計算
+        target.SetRecover(_value, CheckSkillCallback); //與 CureSkill 不同的地方之一是回復量的計算
     }
 }

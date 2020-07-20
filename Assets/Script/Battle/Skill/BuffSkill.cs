@@ -5,14 +5,15 @@ using UnityEngine;
 
 public class BuffSkill : Skill
 {
-    public BuffSkill(SkillData.RootObject data, BattleCharacterInfo user)
+    public BuffSkill(SkillData.RootObject data, BattleCharacterInfo user, int lv)
     {
         _user = user;
         Data = data;
+        Lv = lv;
         if (data.SubID != 0)
         {
             SkillData.RootObject skillData = SkillData.GetData(Data.SubID);
-            _subSkill = SkillFactory.GetNewSkill(skillData, user);
+            _subSkill = SkillFactory.GetNewSkill(skillData, user, lv);
         }
     }
 
@@ -41,6 +42,6 @@ public class BuffSkill : Skill
             hitType = HitType.Hit;
         }
 
-        target.SetBuff(Data.StatusID, hitType, CheckSkillCallback);
+        target.SetBuff(Data.StatusID, Lv, hitType, CheckSkillCallback);
     }
 }

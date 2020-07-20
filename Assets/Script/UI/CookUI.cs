@@ -69,13 +69,17 @@ public class CookUI : MonoBehaviour
                     MaterialNameLabel[i].gameObject.SetActive(true);
                     MaterialNameLabel[i].text = ItemData.GetData(cookData.MaterialList[i]).GetName();
                     MaterialAmountLabel[i].gameObject.SetActive(true);
-                    MaterialAmountLabel[i].text = have.ToString() + "/" + need.ToString();
 
                     if (have < need)
                     {
                         ProduceButton.SetColor(Color.grey);
                         _canProduce = false;
                         _tipText = "材料不足";
+                        MaterialAmountLabel[i].text = "<color=#FF0000>" + have.ToString() + "</color>/" + need.ToString();
+                    }
+                    else
+                    {
+                        MaterialAmountLabel[i].text = have.ToString() + "/" + need.ToString();
                     }
                 }
                 else

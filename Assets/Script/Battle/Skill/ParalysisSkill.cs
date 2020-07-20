@@ -4,14 +4,15 @@ using UnityEngine;
 
 public class ParalysisSkill : Skill
 {
-    public ParalysisSkill(SkillData.RootObject data, BattleCharacterInfo user)
+    public ParalysisSkill(SkillData.RootObject data, BattleCharacterInfo user, int lv)
     {
         Data = data;
+        Lv = lv;
         _user = user;
         if (data.SubID != 0)
         {
             SkillData.RootObject skillData = SkillData.GetData(Data.SubID);
-            _subSkill = SkillFactory.GetNewSkill(skillData, user);
+            _subSkill = SkillFactory.GetNewSkill(skillData, user, lv);
         }
     }
 
@@ -35,6 +36,6 @@ public class ParalysisSkill : Skill
     {
         base.SetEffect(target);
 
-        target.SetParalysis(Data.StatusID, hitType, CheckSkillCallback);
+        target.SetParalysis(Data.StatusID, Lv, hitType, CheckSkillCallback);
     }
 }

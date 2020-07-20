@@ -10,7 +10,7 @@ public class BattleField
     public string TileName; //畫地圖用的
     public string BuffTileName; //畫地圖用的
     public string Comment;
-    public Buff Buff = null;
+    public BattleStatus Status = null;
 
     public BattleField() { }
 
@@ -31,27 +31,34 @@ public class BattleField
         Comment = data.GetComment();
     }
 
-    public void SetBuff(int id)
+    public void SetBuff(int id, int lv)
     {
-        if (Buff == null)
+        if (Status == null)
         {
             BattleController.Instance.TurnEndHandler += CheckRemainTurn;
         }
 
         BattleStatusData.RootObject data = BattleStatusData.GetData(id);
-        Buff = new Buff(id);
+        if ((int)data.ValueType <= 7)
+        {
+            Status = new Buff(id, lv);
+        }
+        else if (data.ValueType == BattleStatusData.TypeEnum.NoDamage)
+        {
+            Status = new NoDamage(id);
+        }
         BuffTileName = data.Field;
         TilePainter.Instance.Painting(data.Field, 1, Position);
     }
 
     public void CheckRemainTurn()
     {
-        if (Buff.RemainTurn != -1) //-1代表永久
+        if (Status.RemainTurn != -1) //-1代表永久
         {
-            Buff.RemainTurn--;
-            if (Buff.RemainTurn == 0)
+            Status.RemainTurn--;
+            if (Status.RemainTurn == 0)
             {
-                Buff = null;
+                Status = null;
                 BattleController.Instance.TurnEndHandler -= CheckRemainTurn;
                 TilePainter.Instance.Clear(1, Position);
             }

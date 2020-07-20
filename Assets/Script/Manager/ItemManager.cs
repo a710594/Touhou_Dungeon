@@ -81,6 +81,7 @@ public class ItemManager
                 }
             }
         }
+        AddBagItem(1007, 5);
     }
 
     public void Save()

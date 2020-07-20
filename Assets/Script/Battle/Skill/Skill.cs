@@ -9,15 +9,18 @@ public class Skill
     {
         Miss,
         Hit,
-        Critical
+        Critical,
+        NoDamage,
     }
 
     public SkillData.RootObject Data;
     public int CurrentCD = 0;
     public int ItemID = 0;
+    public int Lv;
 
     protected int _skillCallBackCount = 0;
     protected int _targetCount = 0;
+    protected int _value;
     protected Action _skillCallback;
     protected Skill _subSkill;
     protected BattleCharacterInfo _user;
@@ -221,10 +224,9 @@ public class Skill
         }
     }
 
-    protected HitType CheckHit(BattleCharacterInfo executor, BattleCharacterInfo target, BattleCharacter.LiveStateEnum targetLiveState)
+    protected virtual HitType CheckHit(BattleCharacterInfo executor, BattleCharacterInfo target, BattleCharacter.LiveStateEnum targetLiveState)
     {
         float misssRate;
-        Debug.Log(("!!!" + Data.HitRate / 100f));
         misssRate = (float)(target.AGI - executor.SEN * (Data.HitRate / 100f)) / (float)target.AGI; //迴避率
 
         if (misssRate >= 0) //迴避率為正,骰迴避
@@ -247,14 +249,15 @@ public class Skill
         }
         else //迴避率為負,骰爆擊
         {
-            if (misssRate < UnityEngine.Random.Range(0f, 1f) * -1f)
-            {
-                return HitType.Critical;
-            }
-            else
-            {
-                return HitType.Hit;
-            }
+            //if (misssRate < UnityEngine.Random.Range(0f, 1f) * -1f)
+            //{
+            //    return HitType.Critical;
+            //}
+            //else
+            //{
+            //    return HitType.Hit;
+            //}
+            return HitType.Hit;
         }
     }
 
@@ -276,7 +279,15 @@ public class Skill
         if (_subSkill != null)
         {
             _subSkill.SetCallback(_targetCount, _skillCallback);
-            _subSkill.SetEffect(target);
+            if (_subSkill is FieldSkill)
+            {
+                ((FieldSkill)_subSkill).SetSkillRange(_skillRangeList);
+                _subSkill.SetEffect(null);
+            }
+            else
+            {
+                _subSkill.SetEffect(target);
+            }
         }
         else
         {
