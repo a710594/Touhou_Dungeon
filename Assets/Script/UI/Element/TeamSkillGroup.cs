@@ -18,9 +18,11 @@ public class TeamSkillGroup : MonoBehaviour
     public Text NeedPowerLabel;
     public Text CommentLabel;
     public Text ItemAmountLabel;
+    public Text BattleStatusTitlle;
     public Button UpgradeButton;
     public TipLabel TipLabel;
     public LoopScrollView SkillScrollView;
+    public Text[] BattleStatusComment;
 
     private bool _isSpellCard;
     private int _needItemAmount;
@@ -74,39 +76,39 @@ public class TeamSkillGroup : MonoBehaviour
         _data = data;
         _needItemAmount = lv;
         _currentItemAmount = ItemManager.Instance.GetItemAmount(_bookId, _itemManagerType);
-        NameLabel.text = _data.GetName();
+        NameLabel.text = data.GetName();
         LvLabel.text = "Lv." + lv;
-        MPLabel.text = "MP：" + _data.MP;
-        CDLabel.text = "冷卻：" + _data.CD;
-        PriorityLabel.text = "行動速度：" + _data.Priority;
-        AddPowerLabel.text = "增加 Power：" + _data.AddPower;
-        NeedPowerLabel.text = "需要 Power：" + _data.NeedPower;
-        CommentLabel.text = _data.GetComment();
+        MPLabel.text = "MP：" + data.MP;
+        CDLabel.text = "冷卻：" + data.CD;
+        PriorityLabel.text = "行動速度：" + data.Priority;
+        AddPowerLabel.text = "增加 Power：" + data.AddPower;
+        NeedPowerLabel.text = "需要 Power：" + data.NeedPower;
+        CommentLabel.text = data.GetComment();
 
-        if (_data.ValueList.Count > 0)
+        if (data.ValueList.Count > 0)
         {
-            if (_data.Type == SkillData.TypeEnum.Attack)
+            if (data.Type == SkillData.TypeEnum.Attack)
             {
-                DamageLabel.text = "傷害：" + _data.ValueList[lv - 1];
+                DamageLabel.text = "傷害：" + data.ValueList[lv - 1];
             }
             else
             {
-                DamageLabel.text = "回復：" + _data.ValueList[lv - 1];
+                DamageLabel.text = "回復：" + data.ValueList[lv - 1];
             }
         }
         else
         {
             DamageLabel.text = "傷害：" + 0;
         }
-        if (_data.Target == SkillData.TargetType.Us)
+        if (data.Target == SkillData.TargetType.Us)
         {
             TargetLabel.text = "目標：我方";
         }
-        else if (_data.Target == SkillData.TargetType.Them)
+        else if (data.Target == SkillData.TargetType.Them)
         {
             TargetLabel.text = "目標：敵方";
         }
-        else if (_data.Target == SkillData.TargetType.All)
+        else if (data.Target == SkillData.TargetType.All)
         {
             TargetLabel.text = "目標：全體";
         }
@@ -132,6 +134,44 @@ public class TeamSkillGroup : MonoBehaviour
             ItemAmountLabel.gameObject.SetActive(false);
             UpgradeButton.gameObject.SetActive(false);
         }
+
+        BattleStatusTitlle.gameObject.SetActive(true);
+        for (int i=0; i<BattleStatusComment.Length; i++)
+        {
+            if (data != null)
+            {
+                if (data.StatusID != 0)
+                {
+                    BattleStatusData.RootObject statusData = BattleStatusData.GetData(data.StatusID);
+                    if ((int)statusData.ValueType <= 7)
+                    {
+                        BattleStatusComment[i].gameObject.SetActive(true);
+                        BattleStatusComment[i].text = statusData.GetComment(lv);
+                    }
+                    else
+                    {
+                        BattleStatusComment[i].gameObject.SetActive(false);
+                    }
+                }
+                else
+                {
+                    BattleStatusComment[i].gameObject.SetActive(false);
+                }
+
+                if (data.SubID != 0)
+                {
+                    data = SkillData.GetData(data.SubID);
+                }
+                else
+                {
+                    data = null;
+                }
+            }
+            else
+            {
+                BattleStatusComment[i].gameObject.SetActive(false);
+            }
+        }
     }
 
     private void Clear()
@@ -148,6 +188,12 @@ public class TeamSkillGroup : MonoBehaviour
         CommentLabel.text = string.Empty;
         UpgradeButton.gameObject.SetActive(false);
         ItemAmountLabel.gameObject.SetActive(false);
+
+        BattleStatusTitlle.gameObject.SetActive(false);
+        for (int i=0; i<BattleStatusComment.Length; i++)
+        {
+            BattleStatusComment[i].gameObject.SetActive(false);
+        }
     }
 
     private void SkillOnClick(object obj)

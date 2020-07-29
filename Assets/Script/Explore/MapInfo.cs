@@ -4,15 +4,21 @@ using UnityEngine;
 
 //DungeonBuilder 到 ExploreController 的中間資料
 public class MapInfo
-
 {
+    public int ID;
+    public int LastFloor;
+    public int NextFloor;
     public BoundsInt MapBound;
     public Vector2Int Start;
     public Vector2Int Goal;
-    public DungeonData.RootObject DungeonData;
+    //public DungeonData.RootObject DungeonData;
+    public string GroundTile;
+    public string DoorTile;
+    public string GrassTile;
+    public string WallTile;
     public List<Vector2Int> MapList;
     public List<Vector2Int> GrassList;
-    public List<Vector2Int> KeyList;
+    public List<Vector2Int> KeyList = new List<Vector2Int>();
     public List<Vector2Int> DoorList = new List<Vector2Int>();
     public List<Vector2Int> ExploredList = new List<Vector2Int>(); //走過的地圖範圍
     public List<Vector2Int> ExploredWallList = new List<Vector2Int>(); //已被發現的牆壁的範圍
@@ -27,10 +33,16 @@ public class MapInfo
 
     public MapInfo(MapMemo memo)
     {
+        ID = memo.ID;
+        LastFloor = memo.LastFloor;
+        NextFloor = memo.NextFloor;
         MapBound = memo.MapBound;
         Start = memo.Start;
         Goal = memo.Goal;
-        DungeonData = memo.DungeonData;
+        GroundTile = memo.GroundTile;
+        DoorTile = memo.DoorTile;
+        GrassTile = memo.GrassTile;
+        WallTile = memo.WallTile;
         MapList = Utility.StringToVector2Int(memo.MapList);
         GrassList = Utility.StringToVector2Int(memo.GrassList);
         KeyList = Utility.StringToVector2Int(memo.KeyList);

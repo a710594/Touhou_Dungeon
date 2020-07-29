@@ -154,6 +154,7 @@ public class ConversationUI : MonoBehaviour
         NameLabel.text = string.Empty;
         Typewriter.ClearText();
 
+        _isClickable = false;
         FadeImage.DOFade(1, 1).OnComplete(() =>
         {
             if (_onFinishHandler != null)

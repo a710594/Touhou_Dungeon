@@ -17,22 +17,18 @@ public class DungeonBuilder
         }
     }
 
-    public MapInfo MapInfo;
-
-    private DungeonData.RootObject _dungeonData;
     private List<Vector2Int> _mapList = new List<Vector2Int>();
     private List<Vector2Int> _normalRoomMapList = new List<Vector2Int>(); //一般房間的地圖
     private List<Vector2Int> _treasureRoomMapList = new List<Vector2Int>(); //寶藏房間的地圖
     private List<KeyValuePair<Vector2Int, Room>> _wallDirectionDic = new List<KeyValuePair<Vector2Int, Room>>();
 
-    public void Generate(int dungeonId)
+    public MapInfo Generate(DungeonData.RootObject data)
     {
         int roomId;
         int random;
         Room room;
         Vector2Int position;
         Vector2Int roomPosition;
-        _dungeonData = DungeonData.GetData(dungeonId);
         List<KeyValuePair<Vector2Int, Room>> tempWallDirectionDic = new List<KeyValuePair<Vector2Int, Room>>();
         List<Room> roomList = new List<Room>();
         List<Room> treasureRoomList = new List<Room>();
@@ -43,7 +39,7 @@ public class DungeonBuilder
         _wallDirectionDic.Clear();
 
         //First Room
-        roomId = _dungeonData.RoomList[0];
+        roomId = data.RoomList[0];
         room = RoomData.GetRoomClassByID(roomId);
         room.SetData(RoomData.GetData(roomId));
         roomList.Add(room);
@@ -52,9 +48,9 @@ public class DungeonBuilder
         AddWallDirectionList(room);
 
         //The other room
-        for (int i = 0; i < _dungeonData.RoomAmount - 1; i++)
+        for (int i = 0; i < data.RoomAmount - 1; i++)
         {
-            roomId = _dungeonData.GetRandomRoomID();
+            roomId = data.GetRandomRoomID();
             room = RoomData.GetRoomClassByID(roomId);
             room.SetData(RoomData.GetData(roomId));
             if (room is TreasureRoom)
@@ -237,11 +233,11 @@ public class DungeonBuilder
 
         //explore point
         Dictionary<Vector2Int, int> exploreEventDic = new Dictionary<Vector2Int, int>();
-        int explorePointAmount = Random.Range(_dungeonData.MinEventPoint, _dungeonData.MaxEventPoint + 1);
+        int explorePointAmount = Random.Range(data.MinEventPoint, data.MaxEventPoint + 1);
         for (int i = 0; i < explorePointAmount; i++)
         {
             position = spaceList[Random.Range(0, spaceList.Count)];
-            exploreEventDic.Add(position, _dungeonData.GetRandomEventID());
+            exploreEventDic.Add(position, data.GetRandomEventID());
             spaceList.Remove(position);
         }
 
@@ -285,41 +281,31 @@ public class DungeonBuilder
             i--;
         }
 
-        //Wall
-        //List<Vector2Int> wallList = new List<Vector2Int>();
-        //List<Vector2Int> mistList = new List<Vector2Int>();
-        //for (int i = 0; i <= mapBound.size.x + 30; i++)
-        //{
-        //    for (int j = 0; j <= mapBound.size.y + 30; j++)
-        //    {
-        //        position = new Vector2Int(mapBound.xMin + i - 15, mapBound.yMin + j - 15);
-        //        if (!_mapList.Contains(position))
-        //        {
-        //            wallList.Add(position);
-        //        }
-        //        mistList.Add(position);
-        //    }
-        //}
+        MapInfo mapInfo = new MapInfo();
+        mapInfo.ID = data.ID;
+        mapInfo.LastFloor = data.LastFloor;
+        mapInfo.NextFloor = data.NextFloor;
+        mapInfo.MapBound = Utility.GetMapBounds(_mapList);
+        mapInfo.Start = start;
+        mapInfo.Goal = goal;
+        mapInfo.GroundTile = data.GroundTile;
+        mapInfo.DoorTile = data.DoorTile;
+        mapInfo.GrassTile = data.GrassTile;
+        mapInfo.WallTile = data.WallTile;
+        mapInfo.MapList = _mapList;
+        mapInfo.GrassList = grassList;
+        mapInfo.KeyList = keyList;
+        mapInfo.MoneyDic = moneyDic;
+        mapInfo.ExploreEventDic = exploreEventDic;
+        mapInfo.TreasureDic = treasureDic;
+        mapInfo.DoorList = doorList;
 
-
-        MapInfo = new MapInfo();
-        MapInfo.DungeonData = _dungeonData;
-        MapInfo.MapBound = Utility.GetMapBounds(_mapList);
-        MapInfo.Start = start;
-        MapInfo.Goal = goal;
-        MapInfo.MapList = _mapList;
-        MapInfo.GrassList = grassList;
-        MapInfo.KeyList = keyList;
-        MapInfo.MoneyDic = moneyDic;
-        MapInfo.ExploreEventDic = exploreEventDic;
-        MapInfo.TreasureDic = treasureDic;
-        MapInfo.DoorList = doorList;
-        //info.WallList = wallList;
-        //info.MistList = mistList;
         for (int i=0; i<roomList.Count; i++)
         {
-            MapInfo.RoomPositionList.Add(roomList[i].PositionList);
+            mapInfo.RoomPositionList.Add(roomList[i].PositionList);
         }
+
+        return mapInfo;
     }
 
     private void AddWallDirectionList(Room room)

@@ -24,19 +24,19 @@ public class DungeonPainter
         //ground
         for (int i=0; i<info.MapList.Count; i++)
         {
-            TilePainter.Instance.Painting(info.DungeonData.GroundTile, 0, info.MapList[i]);
+            TilePainter.Instance.Painting(info.GroundTile, 0, info.MapList[i]);
         }
 
         //door
         for(int i=0; i<info.DoorList.Count; i++)
         {
-            TilePainter.Instance.Painting(info.DungeonData.DoorTile, 2, info.DoorList[i]);
+            TilePainter.Instance.Painting(info.DoorTile, 2, info.DoorList[i]);
         }
 
         //grass
         for (int i = 0; i < info.GrassList.Count; i++)
         {
-            TilePainter.Instance.Painting(info.DungeonData.GrassTile, 0, info.GrassList[i]);
+            TilePainter.Instance.Painting(info.GrassTile, 0, info.GrassList[i]);
         }
 
         //treasure
@@ -63,6 +63,7 @@ public class DungeonPainter
         //終點
         TilePainter.Instance.Painting("DownStairs", 0, info.Goal);
 
+        //Mist
         Vector2Int position;
         for (int i = 0; i <= info.MapBound.size.x + 30; i++)
         {
@@ -71,7 +72,7 @@ public class DungeonPainter
                 position = new Vector2Int(info.MapBound.xMin + i - 15, info.MapBound.yMin + j - 15);
                 if (!info.MapList.Contains(position))
                 {
-                    TilePainter.Instance.Painting(info.DungeonData.WallTile, 0, position);
+                    TilePainter.Instance.Painting(info.WallTile, 0, position);
                 }
                 TilePainter.Instance.Painting("Mist", 3, position);
             }

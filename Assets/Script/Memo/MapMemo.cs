@@ -4,12 +4,18 @@ using UnityEngine;
 
 public class MapMemo
 {
-    public int ArriveFloor;
+    public int ArriveFloor; //最多到達第幾樓
+    public int ID;
+    public int LastFloor;
+    public int NextFloor;
     public BoundsInt MapBound;
     public Vector2Int Start;
     public Vector2Int Goal;
     public Vector2 PlayerPosition; //玩家的位置
-    public DungeonData.RootObject DungeonData;
+    public string GroundTile;
+    public string DoorTile;
+    public string GrassTile;
+    public string WallTile;
     public List<string> MapList;
     public List<string> GrassList;
     public List<string> KeyList;
@@ -29,11 +35,17 @@ public class MapMemo
     public MapMemo(int arriveFloor, MapInfo info, Vector2 playerPosition)
     {
         ArriveFloor = arriveFloor;
+        ID = info.ID;
+        LastFloor = info.LastFloor;
+        NextFloor = info.NextFloor;
         MapBound = info.MapBound;
         Start = info.Start;
         Goal = info.Goal;
         PlayerPosition = playerPosition;
-        DungeonData = info.DungeonData;
+        GroundTile = info.GroundTile;
+        DoorTile = info.DoorTile;
+        GrassTile = info.GrassTile;
+        WallTile = info.WallTile;
         MapList = Utility.Vector2IntToString(info.MapList);
         GrassList = Utility.Vector2IntToString(info.GrassList);
         KeyList = Utility.Vector2IntToString(info.KeyList);

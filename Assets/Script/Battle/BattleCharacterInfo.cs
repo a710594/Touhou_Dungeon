@@ -481,13 +481,11 @@ public class BattleCharacterInfo
         SleepingId = -1;
     }
 
-    public void SetPoison(int id, int damage, int lv)
+    public void SetPoison(Poison poison, int damage)
     {
-        Poison poison;
-
+        int id = poison.Data.ID;
         if (!StatusDic.ContainsKey(id))
         {
-            poison = new Poison(id, lv);
             StatusDic.Add(id, poison);
             PoisonDic.Add(id, damage);
         }

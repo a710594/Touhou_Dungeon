@@ -81,7 +81,9 @@ public class ItemManager
                 }
             }
         }
-        AddBagItem(1007, 5);
+        AddBagItem(1001, 2);
+        AddBagItem(1003, 3);
+        AddMoney(1000);
     }
 
     public void Save()

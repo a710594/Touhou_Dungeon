@@ -32,6 +32,9 @@ public class BattleCharacter : MonoBehaviour
     public AI AI;
     public BattleCharacterInfo Info = new BattleCharacterInfo();
 
+    public int EnemyId;
+    public int Lv;
+
     public LiveStateEnum LiveState
     {
         get
@@ -120,6 +123,11 @@ public class BattleCharacter : MonoBehaviour
         AI.Init(this, data.SkillList);
 
         BattleController.Instance.TurnEndHandler += CheckBattleStatus;
+    }
+
+    public void InitByInspector() //使用 Inspector 上的資料來 Init
+    {
+        Init(EnemyId, Lv);
     }
 
     public void CheckBattleStatus()
@@ -413,13 +421,13 @@ public class BattleCharacter : MonoBehaviour
         }
     }
 
-    public void SetPoison(int id, int damage, int lv, Skill.HitType hitType, Action<BattleCharacter> callback)
+    public void SetPoison(Poison poison, int damage, Skill.HitType hitType, Action<BattleCharacter> callback)
     {
         if (hitType != Skill.HitType.Miss)
         {
-            Info.SetPoison(id, damage, lv);
+            Info.SetPoison(poison, damage);
 
-            BattleUI.Instance.SetFloatingNumber(this, BattleStatusData.GetData(id).Message, FloatingNumber.Type.Other, false, () =>
+            BattleUI.Instance.SetFloatingNumber(this, poison.Data.Message, FloatingNumber.Type.Other, false, () =>
             {
                 callback(this);
             });

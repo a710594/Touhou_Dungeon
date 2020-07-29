@@ -5,7 +5,7 @@ using DG.Tweening;
 
 public class AudioSystem : MonoBehaviour
 {
-    private static readonly string _audioPath = "Audio/";
+    private static readonly string _audioPath = "Audio/Music/";
 
     public static AudioSystem Instance = null;
 
@@ -23,20 +23,21 @@ public class AudioSystem : MonoBehaviour
         }
 
 
-        //if (name != null)
-        //{
-            AudioClip clip;
-            if (_clipDic.TryGetValue(name, out clip))
+        AudioClip clip;
+        if (_clipDic.TryGetValue(name, out clip))
+        {
+            Source.clip = clip;
+            Source.Play();
+            if (isTween)
             {
-                Source.clip = clip;
-                if (isTween)
-                {
-                    Source.volume = 0;
-                    Source.DOFade(1, 0.5f);
-                }
-                Source.Play();
+                Source.volume = 0;
+                Source.DOFade(1, 0.5f);
             }
-        //}
+            else
+            {
+                Source.volume = 1;
+            }
+        }
     }
 
     public void Stop(bool isTween = false)

@@ -70,13 +70,9 @@ public class PrepareUI : MonoBehaviour
 
     private void GoOnClick()
     {
-        MySceneManager.Instance.ChangeScene(MySceneManager.SceneType.Explore, () =>
-        {
-            LoadingUI.Instance.Open(()=> 
-            {
-                ExploreController.Instance.GenerateFloor(_targetFloor);
-            });
-        });
+        AudioSystem.Instance.Stop(true);
+        AudioSystem.Instance.Play("Forest", true);
+        ExploreController.Instance.GenerateFloor(_targetFloor);
     }
 
     private void CloseOnClick()

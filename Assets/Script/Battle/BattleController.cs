@@ -19,9 +19,16 @@ public class BattleController : MachineBehaviour
 
     public static BattleController Instance;
 
+    [HideInInspector]
     public BattleCharacter SelectedCharacter;
+    [HideInInspector]
     public List<BattleCharacter> CharacterList = new List<BattleCharacter>();
     public List<Skill> ItemSkillList = new List<Skill>(); //回復藥等道具技能
+
+    //特殊場景
+    public int BattlefieldId;
+    public int Exp;
+    public BattleCharacter[] Enemys;
 
     public int Power
     {
@@ -57,15 +64,13 @@ public class BattleController : MachineBehaviour
     private List<ActionQueueElement> _actionQueue = new List<ActionQueueElement>();
     private List<BattleCharacter> _playerList = new List<BattleCharacter>(); //戰鬥結束時需要的友方資料
 
-    public void Init(int battlefieldId, BattleGroupData.RootObject battleGroupData, Action winCallback = null, Action loseCallback = null)
+    public void Init(int battlefieldId, BattleGroupData.RootObject battleGroupData)
     {
         BattlefieldGenerator.Instance.Generate(battlefieldId, battleGroupData.EnemyList.Count);
 
         _turn = 1;
         _power =  TeamManager.Instance.Power;
         _exp = battleGroupData.Exp;
-        _winCallback = winCallback;
-        _loseCallback = loseCallback;
         CharacterList.Clear();
 
         BattleCharacter character;
@@ -123,11 +128,84 @@ public class BattleController : MachineBehaviour
         }
 
         Camera.main.transform.position = new Vector3(BattleFieldManager.Instance.Center.x, BattleFieldManager.Instance.Center.y, Camera.main.transform.position.z);
+        AudioSystem.Instance.Play("Battle", true);
         ChangeSceneUI.Instance.EndClock(() =>
         {
             BattleUI.Open();
             BattleUI.Instance.Init(_power, CharacterList);
-            //BattleUI.Instance.SetPriorityQueueVisible(true);
+            ChangeState<TurnStartState>();
+        });
+    }
+    public void SpecialInit(Action winCallback, Action loseCallback) //特殊場景的 Init
+    {
+        BattlefieldGenerator.Instance.GenerateFromTilemap(BattlefieldId);
+
+        _turn = 1;
+        _power = TeamManager.Instance.Power;
+        _exp = Exp;
+        _winCallback = winCallback;
+        _loseCallback = loseCallback;
+        CharacterList.Clear();
+
+        BattleCharacter character;
+
+        TeamMember member;
+        for (int i = 0; i < TeamManager.Instance.MemberList.Count; i++)
+        {
+            member = TeamManager.Instance.MemberList[i];
+            character = ResourceManager.Instance.Spawn("BattleCharacter/BattleCharacter", ResourceManager.Type.Other).GetComponent<BattleCharacter>();
+            character.Init(member);
+            CharacterList.Add(character);
+            _playerList.Add(character);
+            character.SetPosition((Vector2)(member.Formation + BattleFieldManager.Instance.Center));
+
+            if (character.LiveState == BattleCharacter.LiveStateEnum.Dead)
+            {
+                character.Sprite.color = Color.clear;
+            }
+        }
+
+        EnemyData.RootObject data;
+        List<int> itemList = new List<int>(); //單隻怪的掉落物
+        for (int i = 0; i < Enemys.Length; i++)
+        {
+            character = Enemys[i];
+            character.InitByInspector();
+            CharacterList.Add(character);
+
+            data = character.Info.EnemyData;
+            itemList = data.GetDropItemList();
+            for (int j = 0; j < itemList.Count; j++)
+            {
+                _dropItemList.Add(itemList[j]);
+            }
+        }
+
+        int itemId;
+        ItemData.RootObject itemData;
+        SkillData.RootObject skillData;
+        Skill skill;
+        Dictionary<object, int> itemDic = ItemManager.Instance.GetItemDicByType(ItemManager.Type.Bag, ItemData.TypeEnum.Medicine);
+
+        if (itemDic != null)
+        {
+            foreach (KeyValuePair<object, int> item in itemDic)
+            {
+                itemId = (int)item.Key;
+                itemData = ItemData.GetData(itemId);
+                skillData = SkillData.GetData(itemData.Skill);
+                skill = SkillFactory.GetNewSkill(skillData, null, 1);
+                skill.ItemID = itemId;
+                ItemSkillList.Add(skill);
+            }
+        }
+
+        Camera.main.transform.position = new Vector3(BattleFieldManager.Instance.Center.x, BattleFieldManager.Instance.Center.y, Camera.main.transform.position.z);
+        AudioSystem.Instance.Play("Battle", true);
+        ChangeSceneUI.Instance.EndClock(() =>
+        {
+            BattleUI.Open();
+            BattleUI.Instance.Init(_power, CharacterList);
             ChangeState<TurnStartState>();
         });
     }
@@ -138,13 +216,13 @@ public class BattleController : MachineBehaviour
         _loseCallback = loseCallback;
 
         BattleMemo memo = Caretaker.Instance.Load<BattleMemo>();
-        BattlefieldGenerator.Instance.Generate(memo.MapDic);
-        BattleFieldManager.Instance.MapBound = memo.MapBound;
-        BattleFieldManager.Instance.MapDic = new Dictionary<Vector2Int, BattleField>();
-        foreach (KeyValuePair<string, BattleField> item in memo.MapDic)
-        {
-            BattleFieldManager.Instance.MapDic.Add(Utility.StringToVector2Int(item.Key), item.Value);
-        }
+        BattlefieldGenerator.Instance.Generate(memo);
+        //BattleFieldManager.Instance.MapBound = memo.MapBound;
+        //BattleFieldManager.Instance.MapDic = new Dictionary<Vector2Int, BattleField>();
+        //foreach (KeyValuePair<string, BattleField> item in memo.MapDic)
+        //{
+        //    BattleFieldManager.Instance.MapDic.Add(Utility.StringToVector2Int(item.Key), item.Value);
+        //}
 
         _turn = memo.Turn;
         _power = memo.Power;
@@ -199,6 +277,7 @@ public class BattleController : MachineBehaviour
             list.Insert(0, SelectedCharacter);
             BattleUI.Instance.InitPriorityQueue(list);
             BattleUI.Instance.ScrollPriorityQueue(SelectedCharacter);
+            AudioSystem.Instance.Play("Battle", true);
             ChangeState<SelectActionState>();
         });
     }
@@ -482,39 +561,6 @@ public class BattleController : MachineBehaviour
                          parent.SelectedCharacter.SetOutline(true);
                          BattleUI.Instance.SetInfo(true, parent.SelectedCharacter);
 
-                        //BattleCharacter.NotActReason reason;
-                        //if (character.CanAct(out reason))
-                        //{
-                        //    if (!parent.SelectedCharacter.Info.IsAI)
-                        //    {
-                        //        parent.ChangeState<SelectActionState>();
-                        //    }
-                        //    else
-                        //    {
-                        //        parent.ChangeState<AIState>();
-                        //    }
-                        //    return;
-                        //}
-                        //else
-                        //{
-                        //    string text = "";
-                        //    FloatingNumber.Type type = FloatingNumber.Type.Other;
-                        //    if (reason == BattleCharacter.NotActReason.Paralysis)
-                        //    {
-                        //        text = "麻痺";
-                        //        type = FloatingNumber.Type.Paralysis;
-                        //    }
-                        //    else if (reason == BattleCharacter.NotActReason.Sleeping)
-                        //    {
-                        //        text = "睡眠";
-                        //        type = FloatingNumber.Type.Sleeping;
-                        //    }
-
-                        //    BattleUI.Instance.SetFloatingNumber(character, text, type, false, () =>
-                        //    {
-                        //        parent.ChangeState<SelectCharacterState>();
-                        //    });
-                        //}
                         BattleStatus status;
                         if (character.CanAct(out status))
                         {
@@ -567,8 +613,11 @@ public class BattleController : MachineBehaviour
             {
                 BattleUI.Instance.SetInfo(true, character);
 
-                character.GetDetectRange();
-                character.ShowDetectRange();
+                if (character.Info.Camp == BattleCharacterInfo.CampEnum.Enemy)
+                {
+                    character.GetDetectRange();
+                    character.ShowDetectRange();
+                }
             }
             else
             {
@@ -581,6 +630,8 @@ public class BattleController : MachineBehaviour
             {
                 BattleUI.Instance.SetBattleFieldVisible(true);
                 BattleUI.Instance.SetBattleFieldData(battleField);
+                TilePainter.Instance.Clear(4);
+                TilePainter.Instance.Painting("Select", 4, position);
             }
         }
 
@@ -590,6 +641,7 @@ public class BattleController : MachineBehaviour
 
             BattleUI.Instance.SetActionGroupVisible(false);
             BattleUI.Instance.SetBattleFieldVisible(false);
+            TilePainter.Instance.Clear(4);
         }
     }
 
@@ -613,8 +665,11 @@ public class BattleController : MachineBehaviour
             if (character != null)
             {
                 BattleUI.Instance.SetInfo(true, character);
-                character.GetDetectRange();
-                character.ShowDetectRange();
+                if (character.Info.Camp == BattleCharacterInfo.CampEnum.Enemy)
+                {
+                    character.GetDetectRange();
+                    character.ShowDetectRange();
+                }
             }
             else
             {
@@ -637,6 +692,8 @@ public class BattleController : MachineBehaviour
             {
                 BattleUI.Instance.SetBattleFieldVisible(true);
                 BattleUI.Instance.SetBattleFieldData(battleField);
+                TilePainter.Instance.Clear(4);
+                TilePainter.Instance.Painting("Select", 4, position);
             }
         }
 
@@ -645,6 +702,7 @@ public class BattleController : MachineBehaviour
             BattleUI.Instance.SetMoveConfirmVisible(false);
             BattleUI.Instance.SetReturnActionVisible(false);
             BattleUI.Instance.SetBattleFieldVisible(false);
+            TilePainter.Instance.Clear(4);
         }
     }
 
@@ -668,9 +726,11 @@ public class BattleController : MachineBehaviour
             if (character != null)
             {
                 BattleUI.Instance.SetInfo(true, character);
-
-                character.GetDetectRange();
-                character.ShowDetectRange();
+                if (character.Info.Camp == BattleCharacterInfo.CampEnum.Enemy)
+                {
+                    character.GetDetectRange();
+                    character.ShowDetectRange();
+                }
             }
             else
             {
@@ -688,6 +748,8 @@ public class BattleController : MachineBehaviour
             {
                 BattleUI.Instance.SetBattleFieldVisible(true);
                 BattleUI.Instance.SetBattleFieldData(battleField);
+                TilePainter.Instance.Clear(4);
+                TilePainter.Instance.Painting("Select", 4, position);
             }
         }
 
@@ -697,6 +759,7 @@ public class BattleController : MachineBehaviour
             BattleUI.Instance.SetReturnActionVisible(false);
             BattleUI.Instance.SetSkillScrollViewVisible(false);
             BattleUI.Instance.SetBattleFieldVisible(false);
+            TilePainter.Instance.Clear(4);
         }
     }
 
@@ -893,7 +956,6 @@ public class BattleController : MachineBehaviour
         {
             base.Enter();
 
-            Debug.Log("Lose");
             BattleUI.Instance.SetResult(false);
         }
 

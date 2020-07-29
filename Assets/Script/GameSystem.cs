@@ -21,7 +21,7 @@ public class GameSystem : MonoBehaviour
         TeamManager.Instance.Save();
         ProgressManager.Instance.Save();
         ExploreController.Instance.Save();
-        if (MySceneManager.Instance.CurrentScene == MySceneManager.SceneType.Battle)
+        if (BattleController.Instance != null) //現在在戰鬥中
         {
             BattleController.Instance.Save();
         }

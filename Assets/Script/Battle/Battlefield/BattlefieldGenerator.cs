@@ -69,17 +69,6 @@ public class BattlefieldGenerator
         tempPositionList.Remove(firstPos);
         for (int i=1; i<enemyAmount; i++) //其他敵人的位置與第一個敵人的位置相近
         {
-            //pos = new Vector2Int(enemyPositionList[0].x + Random.Range(-enemyAmount, enemyAmount + 1), enemyPositionList[0].y + Random.Range(-enemyAmount, enemyAmount + 1));
-            //if (tempPositionList.Contains(pos))
-            //{
-            //    enemyPositionList.Add(pos);
-            //    Debug.Log(i + ":" + pos);
-            //}
-            //else
-            //{
-            //    i--;
-            //}
-            //tempPositionList.Remove(pos);
             while (tempPositionList.Count > 0) 
             {
                 pos = tempPositionList[Random.Range(0, tempPositionList.Count)];
@@ -143,9 +132,9 @@ public class BattlefieldGenerator
         BattleFieldManager.Instance.Init(center, enemyPositionList, mapDic);
     }
 
-    public void Generate(Dictionary<string, BattleField> mapDic) 
+    public void Generate(BattleMemo memo) 
     {
-        foreach (KeyValuePair<string, BattleField> item in mapDic)
+        foreach (KeyValuePair<string, BattleField> item in memo.MapDic)
         {
             TilePainter.Instance.Painting(item.Value.TileName, 0, Utility.StringToVector2Int(item.Key));
             if (item.Value.Status != null)
@@ -154,5 +143,49 @@ public class BattlefieldGenerator
                 TilePainter.Instance.Painting(item.Value.BuffTileName, 1, Utility.StringToVector2Int(item.Key));
             }
         }
+
+        BattleFieldManager.Instance.Init(memo);
+    }
+
+    public void GenerateFromTilemap(int id)
+    {
+        BattlefieldData.RootObject battlefieldData = BattlefieldData.GetData(id);
+        BattleTileData.RootObject tileData;
+        Dictionary<Vector2Int, BattleField> mapDic = new Dictionary<Vector2Int, BattleField>();
+        TilemapToPositionList tilemapToPositionList = GameObject.Find("TilemapToPositionList").GetComponent<TilemapToPositionList>();
+        List<Vector2Int> positionList;
+
+        //地板
+        positionList = tilemapToPositionList.GetPositionList(0);
+        tileData = BattleTileData.GetData(battlefieldData.GroundID);
+        for (int i = 0; i < positionList.Count; i++)
+        {
+            mapDic.Add(positionList[i], new BattleField(positionList[i], tileData));
+        }
+
+        //草
+        positionList = tilemapToPositionList.GetPositionList(1);
+        tileData = BattleTileData.GetData(battlefieldData.GrassID);
+        for (int i = 0; i < positionList.Count; i++)
+        {
+            //mapDic.Add(positionList[i], new BattleField(positionList[i], tileData));
+            mapDic[positionList[i]].SetData(tileData);
+        }
+
+        //牆壁
+        positionList = tilemapToPositionList.GetPositionList(2);
+        tileData = BattleTileData.GetData(battlefieldData.BlockID);
+        for (int i = 0; i < positionList.Count; i++)
+        {
+            //mapDic.Add(positionList[i], new BattleField(positionList[i], tileData));
+            mapDic[positionList[i]].SetData(tileData);
+        }
+
+        //敵人的位置
+        List<Vector2Int> enemyPositionList = new List<Vector2Int>();
+
+        enemyPositionList.Add(new Vector2Int(0, 2));
+
+        BattleFieldManager.Instance.Init(Vector2Int.zero, enemyPositionList, mapDic);
     }
 }

@@ -327,10 +327,9 @@ public class BattleUI : MonoBehaviour
     private void SkillOnClick(object data)
     {
         SkillScrollItem scrollItem = (SkillScrollItem)data;
+        Skill skill = scrollItem.Skill;
         if (scrollItem.CanUse)
         {
-            Skill skill = scrollItem.Skill;
-
             skill.GetDistance(BattleController.Instance.SelectedCharacter, BattleController.Instance.CharacterList);
             _tempSkill = skill;
             TipLabel.SetVisible(false);
@@ -343,7 +342,7 @@ public class BattleUI : MonoBehaviour
         }
 
         SkillInfoUI.gameObject.SetActive(true);
-        SkillInfoUI.SetData(scrollItem.Skill.Data);
+        SkillInfoUI.SetData(skill.Data, skill.Lv);
     }
 
     private void Awake()
@@ -353,6 +352,7 @@ public class BattleUI : MonoBehaviour
         SetReturnActionVisible(false);
         SkillScrollView.gameObject.SetActive(false);
         ResultUI.gameObject.SetActive(false);
+        BattleFieldUI.gameObject.SetActive(false);
 
         MoveActionButton.onClick.AddListener(MoveActionOnClick);
         SkillActionButton.onClick.AddListener(SkillActionOnClick);

@@ -38,6 +38,37 @@ public class BattleStatusData
         public string Message { get; set; }
 
         public List<int> ValueList = new List<int>();
+
+        public string GetComment(int lv)
+        {
+            string result;
+            if (lv <= ValueList.Count)
+            {
+                result = Comment.Replace("{}", GetCommentValue(lv));
+            }
+            else
+            {
+                result = Comment;
+            }
+            return result;
+        }
+
+        public string GetCommentValue(int lv)
+        {
+            string value = string.Empty;
+            if (lv <= ValueList.Count)
+            {
+                if (ValueList[lv - 1] >= 100)
+                {
+                    value = (ValueList[lv - 1] - 100).ToString();
+                }
+                else
+                {
+                    value = (100 - ValueList[lv - 1]).ToString();
+                }
+            }
+            return value;
+        }
     }
 
     private static Dictionary<int, RootObject> _dataDic = new Dictionary<int, RootObject>();

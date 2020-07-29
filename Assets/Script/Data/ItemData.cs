@@ -34,6 +34,15 @@ public class ItemData
         public int Price { get; set; }
         public int Volume { get; set; }
         public int Skill { get; set; }
+        public int Material_1 { get; set; }
+        public int Amount_1 { get; set; }
+        public int Material_2 { get; set; }
+        public int Amount_2 { get; set; }
+        public int Material_3 { get; set; }
+        public int Amount_3 { get; set; }
+
+        public List<int> MaterialList = new List<int>();
+        public List<int> AmountList = new List<int>();
 
         public Dictionary<LanguageSystem.Language, string> NameDic = new Dictionary<LanguageSystem.Language, string>();
         public Dictionary<LanguageSystem.Language, string> CommentDic = new Dictionary<LanguageSystem.Language, string>();
@@ -74,6 +83,22 @@ public class ItemData
             dataList[i].NameDic.Add(LanguageSystem.Language.Chinese, dataList[i].Name_Chinese);
 
             dataList[i].CommentDic.Add(LanguageSystem.Language.Chinese, dataList[i].Comment_Chinese);
+
+            if (dataList[i].Material_1 != 0)
+            {
+                dataList[i].MaterialList.Add(dataList[i].Material_1);
+                dataList[i].AmountList.Add(dataList[i].Amount_1);
+            }
+            if (dataList[i].Material_2 != 0)
+            {
+                dataList[i].MaterialList.Add(dataList[i].Material_2);
+                dataList[i].AmountList.Add(dataList[i].Amount_2);
+            }
+            if (dataList[i].Material_3 != 0)
+            {
+                dataList[i].MaterialList.Add(dataList[i].Material_3);
+                dataList[i].AmountList.Add(dataList[i].Amount_3);
+            }
 
             _dataDic.Add(dataList[i].ID, dataList[i]);
         }

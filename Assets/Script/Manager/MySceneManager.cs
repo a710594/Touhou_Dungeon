@@ -12,6 +12,8 @@ public class MySceneManager
         Villiage,
         Explore,
         Battle,
+        FirstBattle,
+        Explore_BOSS_1,
     }
 
     private static MySceneManager _instance;

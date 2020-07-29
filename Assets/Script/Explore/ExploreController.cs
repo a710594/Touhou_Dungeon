@@ -39,25 +39,54 @@ public class ExploreController
 
     }
 
-    public void GenerateFloor(int floor)
+    public void GenerateFloor(int id)
     {
-        DungeonBuilder.Instance.Generate(floor);
-        _mapInfo = DungeonBuilder.Instance.MapInfo;
-        DungeonPainter.Instance.Paint(_mapInfo);
+        MySceneManager.SceneType scene;
+        DungeonData.RootObject data = DungeonData.GetData(id);
+        if (data.SceneIndex == 0)
+        {
+            scene = MySceneManager.SceneType.Explore;
+        }
+        else
+        {
+            scene = (MySceneManager.SceneType)data.SceneIndex;
+        }
 
-        _playerPosition = _mapInfo.Start;
-        _mapInfo.GuardList.Add(_mapInfo.Goal);
-        SetFloor();
+        StopEnemy();
+        MySceneManager.Instance.ChangeScene(scene, () =>
+        {
+            LoadingUI.Instance.Open(()=> 
+            {
+                if (scene != MySceneManager.SceneType.Explore)
+                {
+                    _mapInfo = GameObject.Find("DungeonFromScene").GetComponent<DungeonFromScene>().GetMapInfo();
+                }
+                else
+                {
+                    _mapInfo = DungeonBuilder.Instance.Generate(data);
+                    _mapInfo.GuardList.Add(_mapInfo.Goal);
+                    DungeonPainter.Instance.Paint(_mapInfo);
+                }
+
+                _playerPosition = _mapInfo.Start;
+                SetFloor();
+            });
+        });
     }
+
+    //public void GetMapInfoFromScene()
+    //{
+    //    _mapInfo = GameObject.Find("DungeonFromScene").GetComponent<DungeonFromScene>().GetMapInfo();
+    //    _playerPosition = _mapInfo.Start;
+    //    SetFloor();
+    //}
 
     public void SetFloor()
     {
-        DungeonPainter.Instance.Paint(_mapInfo);
-
         _player = GameObject.Find("ExploreCharacter").GetComponent<ExploreCharacter>();
         _player.transform.position = _playerPosition;
         ExploreUI.Open();
-        ExploreUI.Instance.InitLittleMap(_mapInfo.DungeonData.Floor, Vector2Int.RoundToInt(_player.transform.position), _mapInfo.Start, _mapInfo.Goal, _mapInfo.MapBound, _mapInfo.MapList);
+        ExploreUI.Instance.InitLittleMap(_mapInfo.ID, Vector2Int.RoundToInt(_player.transform.position), _mapInfo.Start, _mapInfo.Goal, _mapInfo.MapBound, _mapInfo.MapList);
         SetVisibleRange(true);
         ExploreUI.Instance.RefreshLittleMap(Vector2Int.RoundToInt(_player.transform.position), _mapInfo.ExploredList, _mapInfo.ExploredWallList);
         SetInteractive(Vector2Int.RoundToInt(_player.transform.position));
@@ -91,7 +120,9 @@ public class ExploreController
 
         _playerPosition = _memo.PlayerPosition;
         ArriveFloor = _memo.ArriveFloor;
+        DungeonPainter.Instance.Paint(_mapInfo);
         SetFloor();
+        AudioSystem.Instance.Play("Forest");
     }
 
     public void Save()
@@ -133,11 +164,11 @@ public class ExploreController
                 //不要刪
                 if (newPosition == _mapInfo.Start)
                 {
-                    ExploreUI.Instance.OpenStairsGroup(_mapInfo.DungeonData.LastFloor);
+                    ExploreUI.Instance.OpenStairsGroup(_mapInfo.LastFloor);
                 }
                 else if (newPosition == _mapInfo.Goal)
                 {
-                    ExploreUI.Instance.OpenStairsGroup(_mapInfo.DungeonData.NextFloor);
+                    ExploreUI.Instance.OpenStairsGroup(_mapInfo.NextFloor);
                 }
 
                 SetVisibleRange(false);
@@ -205,13 +236,14 @@ public class ExploreController
 
     public void ForceEnterBattle() //事件或測試時使用
     {
-        DungeonBattleGroupData.RootObject data = DungeonBattleGroupData.GetData(_mapInfo.DungeonData.ID);
+        DungeonBattleGroupData.RootObject data = DungeonBattleGroupData.GetData(_mapInfo.ID);
         EnterBattle(BattleGroupData.GetData(data.GetRandomBattleGroup()));
     }
 
     public void BackToVilliage()
     {
         StopEnemy();
+        _fieldEnemyList.Clear();
         ExploreUI.Instance.StopTipLabel();
 
         MySceneManager.Instance.ChangeScene(MySceneManager.SceneType.Villiage, () =>
@@ -268,6 +300,7 @@ public class ExploreController
 
         ChangeSceneUI.Instance.StartClock(() =>
         {
+            AudioSystem.Instance.Stop(true);
             MySceneManager.Instance.ChangeScene(MySceneManager.SceneType.Battle, () =>
             {
                 BattleController.Instance.Init(1, data);
@@ -432,7 +465,7 @@ public class ExploreController
                 {
                     enemy = ResourceManager.Instance.Spawn("FieldEnemy/FieldEnemyRandom", ResourceManager.Type.Other).GetComponent<FieldEnemy>();
                     enemy.OnPlayerEnterHandler += EnterBattle;
-                    DungeonBattleGroupData.RootObject data = DungeonBattleGroupData.GetData(_mapInfo.DungeonData.ID);
+                    DungeonBattleGroupData.RootObject data = DungeonBattleGroupData.GetData(_mapInfo.ID);
                     enemy.Init(data.GetRandomBattleGroup(), position);
                     _fieldEnemyList.Add(enemy);
 
@@ -449,7 +482,7 @@ public class ExploreController
             enemy = ResourceManager.Instance.Spawn("FieldEnemy/FieldEnemyGuard", ResourceManager.Type.Other).GetComponent<FieldEnemy>();
             enemy.OnPlayerEnterHandler += EnterBattle;
             ((FieldEnemyGuard)enemy).CheckPositionHandler += EncounterGuard;
-            DungeonBattleGroupData.RootObject data = DungeonBattleGroupData.GetData(_mapInfo.DungeonData.ID);
+            DungeonBattleGroupData.RootObject data = DungeonBattleGroupData.GetData(_mapInfo.ID);
             enemy.Init(data.GoalBattleGroup, _mapInfo.Goal);
             _fieldEnemyList.Add(enemy);
         }

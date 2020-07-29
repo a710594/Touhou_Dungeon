@@ -9,9 +9,10 @@ public class DungeonData
     public class RootObject
     {
         public int ID { get; set; }
-        public int Floor { get; set; }
+        public string FloorName { get; set; }
         public int LastFloor { get; set; }
         public int NextFloor { get; set; }
+        public int SceneIndex { get; set; }
         public int RoomAmount { get; set; }
         public int Room_1 { get; set; }
         public int Probability_1 { get; set; }

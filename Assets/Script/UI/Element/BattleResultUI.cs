@@ -108,6 +108,7 @@ public class BattleResultUI : MonoBehaviour
                 }
                 else
                 {
+                    AudioSystem.Instance.Stop(false);
                     MySceneManager.Instance.ChangeScene(MySceneManager.SceneType.Explore, () =>
                     {
                         ExploreController.Instance.SetFloorFromMemo();
@@ -122,6 +123,7 @@ public class BattleResultUI : MonoBehaviour
                 }
                 else
                 {
+                    AudioSystem.Instance.Stop(false);
                     MySceneManager.Instance.ChangeScene(MySceneManager.SceneType.Villiage, () =>
                     {
                         ItemManager.Instance.PutBagItemIntoWarehouse();
