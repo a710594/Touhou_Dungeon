@@ -77,21 +77,22 @@ public class Skill
     }
 
     //有可能出現沒有任何格子可選的情況,有空要修
-    public void GetDistance(BattleCharacter executor, List<BattleCharacter> characterList)
+    public List<Vector2Int> GetDistance(BattleCharacter executor)
     {
         TilePainter.Instance.Clear(2);
         _skillDistanceList.Clear();
 
         Vector2Int orign = Vector2Int.FloorToInt(executor.transform.position);
         List<Vector2Int> positionList = Utility.GetRhombusPositionList(Data.Distance, orign, false);
+        List<BattleCharacter> characterList = BattleController.Instance.CharacterList;
         positionList = RemovePosition(executor, characterList, positionList);
         positionList = BattleFieldManager.Instance.RemoveBound(positionList);
 
         for (int i = 0; i < positionList.Count; i++)
         {
-            TilePainter.Instance.Painting("RedGrid", 2, positionList[i]);
             _skillDistanceList.Add(positionList[i]);
         }
+        return _skillDistanceList;
     }
 
     public void GetRange(Vector2Int target, Vector2Int orign, BattleCharacter executor, List<BattleCharacter> characterList)
@@ -297,7 +298,8 @@ public class Skill
 
     protected void OnSkillEnd()
     {
-        if (Data.Type == SkillData.TypeEnum.Field || Data.Type == SkillData.TypeEnum.CureLeastHP)
+        //這幾種技能的目標比較特殊,不走一般計算目標數的流程
+        if (Data.Type == SkillData.TypeEnum.Field || Data.Type == SkillData.TypeEnum.CureLeastHP || Data.Type == SkillData.TypeEnum.Summon)
         {
             BattleUI.Instance.SetSkillLabel(false);
             _skillCallback();

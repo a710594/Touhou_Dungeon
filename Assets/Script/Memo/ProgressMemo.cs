@@ -4,5 +4,5 @@ using UnityEngine;
 
 public class ProgressMemo
 {
-    public List<KeyValuePair<bool, int>> FlagList = new List<KeyValuePair<bool, int>>();
+    public List<bool> FlagList = new List<bool>();
 }

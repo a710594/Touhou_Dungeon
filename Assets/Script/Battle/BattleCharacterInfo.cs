@@ -184,6 +184,7 @@ public class BattleCharacterInfo
     public bool IsAI = false;
     public bool IsTeamMember = false;
     public bool HasUseSkill = false;
+    public bool IsActive = true; //對 NPC 而言,代表是否會行動.對 PC 而言則必為 true
     public int Lv;
     public int CurrentPriority;
     public string Name;
@@ -275,6 +276,7 @@ public class BattleCharacterInfo
 
     public void Init(BattleCharacterMemo memo)
     {
+        IsActive = memo.IsActive;
         IsAI = memo.IsAI;
         IsTeamMember = memo.IsTeamMember;
         Lv = memo.Lv;

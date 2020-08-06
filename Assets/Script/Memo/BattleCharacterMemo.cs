@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class BattleCharacterMemo
 {
+    public bool IsActive;
     public bool IsAI;
     public bool IsTeamMember;
     public int Lv;
@@ -52,6 +53,7 @@ public class BattleCharacterMemo
 
     public BattleCharacterMemo(BattleCharacterInfo info) 
     {
+        IsActive = info.IsActive;
         IsAI = info.IsAI;
         IsTeamMember = info.IsTeamMember;
         Lv = info.Lv;

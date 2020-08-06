@@ -8,7 +8,7 @@ public class ConversationTester : MonoBehaviour
     void Start()
     {
         ConversationData.Load();
-        ConversationUI.Open(1);
+        ConversationUI.Open(1, true);
     }
 
     // Update is called once per frame

@@ -236,6 +236,11 @@ public class BattleUI : MonoBehaviour
         PriorityQueue.Scroll(character);
     }
 
+    public void SetVisible(bool isVisible)
+    {
+        gameObject.SetActive(isVisible);
+    }
+
     private void JumpPowerPoint(GameObject obj) 
     {
         obj.transform.DOLocalJump(obj.transform.localPosition + Vector3.right * UnityEngine.Random.Range(-50, 50), 50, 1, 0.5f).OnComplete(() =>
@@ -330,11 +335,15 @@ public class BattleUI : MonoBehaviour
         Skill skill = scrollItem.Skill;
         if (scrollItem.CanUse)
         {
-            skill.GetDistance(BattleController.Instance.SelectedCharacter, BattleController.Instance.CharacterList);
+            List<Vector2Int> positionList = skill.GetDistance(BattleController.Instance.SelectedCharacter);
             _tempSkill = skill;
             TipLabel.SetVisible(false);
             BattleController.Instance.SelectSkill(_tempSkill);
-            //SkillConfirmButton.gameObject.SetActive(true);
+
+            for (int i=0; i<positionList.Count; i++)
+            {
+                TilePainter.Instance.Painting("RedGrid", 2, positionList[i]);
+            }
         }
         else
         {

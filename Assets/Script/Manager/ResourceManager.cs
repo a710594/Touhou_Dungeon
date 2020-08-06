@@ -42,6 +42,7 @@ public class ResourceManager
         }
 
         obj = (GameObject)GameObject.Instantiate(Resources.Load(_path + name), Vector3.zero, Quaternion.identity);
+        obj.name = name;
         if (parent != null)
         {
             obj.transform.SetParent(parent);

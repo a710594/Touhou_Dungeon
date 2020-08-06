@@ -20,7 +20,7 @@ public class BattleCharacter : MonoBehaviour
         Dead,
     }
 
-    public Action OnDeathHandler;
+    public Action<BattleCharacter> OnDeathHandler;
 
     public Vector2Int TargetPosition = new Vector2Int();
     public SpriteRenderer Sprite;
@@ -32,6 +32,7 @@ public class BattleCharacter : MonoBehaviour
     public AI AI;
     public BattleCharacterInfo Info = new BattleCharacterInfo();
 
+    public bool IsActive = true;
     public int EnemyId;
     public int Lv;
 
@@ -128,6 +129,7 @@ public class BattleCharacter : MonoBehaviour
     public void InitByInspector() //使用 Inspector 上的資料來 Init
     {
         Init(EnemyId, Lv);
+        Info.IsActive = IsActive;
     }
 
     public void CheckBattleStatus()
@@ -249,11 +251,6 @@ public class BattleCharacter : MonoBehaviour
     public void ActionDoneCompletely()
     {
         Info.ActionDoneCompletely();
-    }
-
-    public void GetSkillDistance()
-    {
-        SelectedSkill.GetDistance(this, BattleController.Instance.CharacterList);
     }
 
     public bool IsInSkillDistance(Vector2Int position)
@@ -580,6 +577,12 @@ public class BattleCharacter : MonoBehaviour
         Info.SetCurrentPriority(priority);
     }
 
+    public void SetActive(bool isActive)
+    {
+        IsActive = isActive;
+        Info.IsActive = isActive;
+    }
+
     private void SetDeath(Action callback)
     {
         Sprite.DOFade(0, 0.5f).OnComplete(() =>
@@ -589,6 +592,11 @@ public class BattleCharacter : MonoBehaviour
             if (callback != null)
             {
                 callback();
+            }
+
+            if (OnDeathHandler != null)
+            {
+                OnDeathHandler(this);
             }
         });
     }

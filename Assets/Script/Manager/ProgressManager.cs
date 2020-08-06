@@ -25,8 +25,10 @@ public class ProgressManager //管理劇情進度
         if (memo == null)
         {
             Memo = new ProgressMemo();
-            Memo.FlagList.Add(new KeyValuePair<bool, int>(false, 1001));
-            Memo.FlagList.Add(new KeyValuePair<bool, int>(false, 2001));
+            for (int i=0; i<3; i++)
+            {
+                Memo.FlagList.Add(false);
+            }
         }
         else
         {
@@ -37,5 +39,10 @@ public class ProgressManager //管理劇情進度
     public void Save() 
     {
         Caretaker.Instance.Save<ProgressMemo>(Memo);
+    }
+
+    public void SetFlag(int index, bool flag)
+    {
+        Memo.FlagList[index] = flag;
     }
 }

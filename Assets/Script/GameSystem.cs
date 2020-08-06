@@ -98,10 +98,6 @@ public class GameSystem : MonoBehaviour
 
     private void Update()
     {
-        //if (Input.GetKeyDown(KeyCode.A))
-        //{
-        //    LanguageSystem.Instance.ChangeLanguage(LanguageSystem.Language.English);
-        //}
         if (Input.GetKeyDown(KeyCode.F3))
         {
             SaveMemo();
@@ -109,6 +105,12 @@ public class GameSystem : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.F4))
         {
             ClearMemo();
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha6))
+        {
+            AudioSystem.Instance.Stop(true);
+            AudioSystem.Instance.Play("Forest", true);
+            ExploreController.Instance.GenerateFloor(6);
         }
     }
 

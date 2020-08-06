@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class AI : MonoBehaviour
 {
+    [HideInInspector]
     public bool CanHitTarget = false;
 
     protected Skill _selectedSkill;
@@ -22,7 +23,7 @@ public class AI : MonoBehaviour
         _character.SelectedSkill = _skillList[0];
     }
 
-    public void StartAI(Action callback)
+    public virtual void StartAI(Action callback)
     {
         if (!_character.Info.HasUseSkill) //還沒用過技能
         {
@@ -42,7 +43,7 @@ public class AI : MonoBehaviour
                     _character.GetSkillRange();
                     callback();
                 }
-                else
+                else if (_character.Info.MOV > 0)//需要移動
                 {
                     List<Vector2Int> positionList = Utility.GetRhombusPositionList(_character.SelectedSkill.Data.Distance, _character.TargetPosition, false); //技能可打中目標的位置
                     for (int i = 0; i < positionList.Count; i++)
@@ -74,7 +75,7 @@ public class AI : MonoBehaviour
                             }
                         }
 
-                        _character.StartMove(shortestPath, ()=> 
+                        _character.StartMove(shortestPath, () =>
                         {
                             _character.MoveDone();
                             _character.GetSkillRange();
@@ -84,29 +85,24 @@ public class AI : MonoBehaviour
                     else //不能打到目標,但還是要盡可能接近目標
                     {
                         CanHitTarget = false;
-                        positionList = _character.GetMoveRange(); //可能移動的位置
-                        for (int i = 0; i < positionList.Count; i++) //移除有角色的位置
+                        positionList = new List<Vector2Int>(_character.GetPath(_character.TargetPosition));
+                        Queue<Vector2Int> path = new Queue<Vector2Int>();
+                        int pathLength = 0;
+                        for (int i=1; i< positionList.Count; i++) //擷取小於等於移動距離的路徑
                         {
-                            if (BattleController.Instance.GetCharacterByPosition(positionList[i]) != null)
+                            pathLength += BattleFieldManager.Instance.GetField(positionList[i]).MoveCost;
+                            if (pathLength <= _character.Info.MOV)
                             {
-                                positionList.RemoveAt(i);
-                                i--;
+                                path.Enqueue(positionList[i]);
+                            }
+                            else
+                            {
+                                break;
                             }
                         }
 
-                        //尋找離目標最近的點
-                        if (positionList.Count > 0)
+                        if (path.Count > 0)
                         {
-                            Vector2Int closestPosition = positionList[0];
-                            for (int i = 1; i < positionList.Count; i++)
-                            {
-                                if (Utility.GetDistance(positionList[i], _character.TargetPosition) < Utility.GetDistance(closestPosition, _character.TargetPosition))
-                                {
-                                    closestPosition = positionList[i];
-                                }
-                            }
-                            Queue<Vector2Int> path = _character.GetPath(closestPosition);
-
                             _character.StartMove(path, () =>
                             {
                                 _character.MoveDone();
@@ -120,7 +116,49 @@ public class AI : MonoBehaviour
                             _character.ActionDoneCompletely();
                             callback();
                         }
+
+                        //positionList = _character.GetMoveRange(); //可能移動的位置
+                        //for (int i = 0; i < positionList.Count; i++) //移除有角色的位置
+                        //{
+                        //    if (BattleController.Instance.GetCharacterByPosition(positionList[i]) != null)
+                        //    {
+                        //        positionList.RemoveAt(i);
+                        //        i--;
+                        //    }
+                        //}
+
+                        ////尋找離目標最近的點
+                        //if (positionList.Count > 0)
+                        //{
+                        //    Vector2Int closestPosition = positionList[0];
+                        //    for (int i = 1; i < positionList.Count; i++)
+                        //    {
+                        //        if (Utility.GetDistance(positionList[i], _character.TargetPosition) < Utility.GetDistance(closestPosition, _character.TargetPosition))
+                        //        {
+                        //            closestPosition = positionList[i];
+                        //        }
+                        //    }
+                        //    Queue<Vector2Int> path = _character.GetPath(closestPosition);
+
+                        //    _character.StartMove(path, () =>
+                        //    {
+                        //        _character.MoveDone();
+                        //        _character.ActionDoneCompletely();
+                        //        callback();
+                        //    });
+                        //}
+                        //else
+                        //{
+                        //    _character.MoveDone();
+                        //    _character.ActionDoneCompletely();
+                        //    callback();
+                        //}
                     }
+                }
+                else
+                {
+                    CanHitTarget = false;
+                    callback();
                 }
             }
             else
@@ -140,7 +178,7 @@ public class AI : MonoBehaviour
     {
     }
 
-    protected BattleCharacter GetTarget(BattleCharacterInfo.CampEnum targetCamp, List<Vector2Int> detectRangeList)
+    protected virtual BattleCharacter GetTarget(BattleCharacterInfo.CampEnum targetCamp, List<Vector2Int> detectRangeList)
     {
         BattleCharacter character;
         List<BattleCharacter> candidateList = new List<BattleCharacter>(); //只要是目標陣營活著的角色都算

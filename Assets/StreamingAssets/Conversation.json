@@ -45,4 +45,11 @@
 {"ID":2023,"Name":"霧雨魔理沙","Comment_Chinese":"「……不覺得是陷阱嗎？總覺得這傢伙相當詭異。」","Background":"-","BGM":"-","Image_1":"-","Motion_1":0,"Image_2":"Marisa_L","Motion_2":0,"NextID":2024},
 {"ID":2024,"Name":"博麗靈夢","Comment_Chinese":"「不。我大概知道這傢伙是誰了。是她的話，的確正面去找她解決才是正解。」","Background":"-","BGM":"-","Image_1":"Reimu_L","Motion_1":0,"Image_2":"-","Motion_2":0,"NextID":2025},
 {"ID":2025,"Name":"霧雨魔理沙","Comment_Chinese":"「居然！？」","Background":"-","BGM":"-","Image_1":"-","Motion_1":0,"Image_2":"Marisa_L","Motion_2":0,"NextID":2026},
-{"ID":2026,"Name":"博麗靈夢","Comment_Chinese":"「總之出發吧，魔理沙、早苗。」","Background":"-","BGM":"-","Image_1":"Reimu_L","Motion_1":0,"Image_2":"-","Motion_2":0,"NextID":0}]
+{"ID":2026,"Name":"博麗靈夢","Comment_Chinese":"「總之出發吧，魔理沙、早苗。」","Background":"-","BGM":"-","Image_1":"Reimu_L","Motion_1":0,"Image_2":"-","Motion_2":0,"NextID":0},
+{"ID":3001,"Name":"博麗靈夢","Comment_Chinese":"test 1","Background":"x","BGM":"x","Image_1":"Reimu_L","Motion_1":0,"Image_2":"x","Motion_2":0,"NextID":3002},
+{"ID":3002,"Name":"八雲紫","Comment_Chinese":"test 2","Background":"-","BGM":"-","Image_1":"-","Motion_1":0,"Image_2":"Yukari_L","Motion_2":0,"NextID":3003},
+{"ID":3003,"Name":"博麗靈夢","Comment_Chinese":"test 3","Background":"-","BGM":"-","Image_1":"Reimu_L","Motion_1":0,"Image_2":"-","Motion_2":0,"NextID":3004},
+{"ID":3004,"Name":"八雲紫","Comment_Chinese":"test 4","Background":"-","BGM":"-","Image_1":"-","Motion_1":0,"Image_2":"Yukari_L","Motion_2":0,"NextID":0},
+{"ID":4001,"Name":"博麗靈夢","Comment_Chinese":"诶？紫人咧？","Background":"x","BGM":"x","Image_1":"Reimu_L","Motion_1":0,"Image_2":"x","Motion_2":0,"NextID":4002},
+{"ID":4002,"Name":"八雲紫","Comment_Chinese":"有本事就把我找出來吧！","Background":"-","BGM":"-","Image_1":"-","Motion_1":0,"Image_2":"x","Motion_2":0,"NextID":4003},
+{"ID":4003,"Name":"博麗靈夢","Comment_Chinese":"大概是又躲到縫隙裡了，先攻擊縫隙看看吧。","Background":"-","BGM":"-","Image_1":"Reimu_L","Motion_1":0,"Image_2":"x","Motion_2":0,"NextID":0}]

@@ -15,10 +15,13 @@ public class BattleController : MachineBehaviour
         None,
     }
 
+    public Action TurnStartHandler;
     public Action TurnEndHandler;
 
     public static BattleController Instance;
 
+    [HideInInspector]
+    public int Turn = 1;
     [HideInInspector]
     public BattleCharacter SelectedCharacter;
     [HideInInspector]
@@ -56,7 +59,6 @@ public class BattleController : MachineBehaviour
     private Action _winCallback;
     private Action _loseCallback;
 
-    private int _turn = 1;
     private int _exp;
     private BattleMemo _memo = new BattleMemo();
     private List<int> _dropItemList = new List<int>();
@@ -68,7 +70,7 @@ public class BattleController : MachineBehaviour
     {
         BattlefieldGenerator.Instance.Generate(battlefieldId, battleGroupData.EnemyList.Count);
 
-        _turn = 1;
+        Turn = 1;
         _power =  TeamManager.Instance.Power;
         _exp = battleGroupData.Exp;
         CharacterList.Clear();
@@ -140,7 +142,7 @@ public class BattleController : MachineBehaviour
     {
         BattlefieldGenerator.Instance.GenerateFromTilemap(BattlefieldId);
 
-        _turn = 1;
+        Turn = 1;
         _power = TeamManager.Instance.Power;
         _exp = Exp;
         _winCallback = winCallback;
@@ -217,14 +219,8 @@ public class BattleController : MachineBehaviour
 
         BattleMemo memo = Caretaker.Instance.Load<BattleMemo>();
         BattlefieldGenerator.Instance.Generate(memo);
-        //BattleFieldManager.Instance.MapBound = memo.MapBound;
-        //BattleFieldManager.Instance.MapDic = new Dictionary<Vector2Int, BattleField>();
-        //foreach (KeyValuePair<string, BattleField> item in memo.MapDic)
-        //{
-        //    BattleFieldManager.Instance.MapDic.Add(Utility.StringToVector2Int(item.Key), item.Value);
-        //}
 
-        _turn = memo.Turn;
+        Turn = memo.Turn;
         _power = memo.Power;
         _exp = memo.Exp;
         for (int i=0; i<memo.QueueLength; i++)
@@ -247,10 +243,7 @@ public class BattleController : MachineBehaviour
             {
                 _playerList.Add(character);
             }
-            //if (memo.CharacterList[i].QueueIndex != -1)
-            //{
-            //    _actionQueue[memo.CharacterList[i].QueueIndex] = character;
-            //}
+
             for (int j=0; j<memo.CharacterList[i].QueueIndexList.Count; j++)
             {
                 _actionQueue[memo.CharacterList[i].QueueIndexList[j]] = new ActionQueueElement(character, memo.CharacterList[i].PriorityList[j]);
@@ -387,6 +380,19 @@ public class BattleController : MachineBehaviour
         BattleUI.Instance.SetPower(_power);
     }
 
+    public void AddCharacer(BattleCharacter character)
+    {
+        character.InitActionCount();
+        CharacterList.Add(character);
+        BattleUI.Instance.InitCharacter(character);
+
+        List<ActionQueueElement> tempList = new List<ActionQueueElement>();
+        tempList.Add(new ActionQueueElement(character, character.Info.PriorityList[0]));
+        tempList.AddRange(_actionQueue);
+        _actionQueue = tempList;
+        BattleUI.Instance.InitPriorityQueue(ActionQueueToList(_actionQueue));
+    }
+
     private List<BattleCharacter> ActionQueueToList(List<ActionQueueElement> actionQueue)
     {
         List<BattleCharacter> list = new List<BattleCharacter>();
@@ -440,7 +446,7 @@ public class BattleController : MachineBehaviour
             _memo.MapDic.Add(Utility.Vector2IntToString(item.Key), item.Value);
         }
 
-        _memo.Turn = _turn;
+        _memo.Turn = Turn;
         _memo.Power = Power;
         _memo.Exp = _exp;
         _memo.QueueLength = _actionQueue.Count;
@@ -485,18 +491,15 @@ public class BattleController : MachineBehaviour
         {
             base.Enter();
 
-            BattleUI.Instance.SetTurnLabel(parent._turn);
-
-            //parent.SortCharacter(parent.CharacterList);
+            BattleUI.Instance.SetTurnLabel(parent.Turn);
 
             parent._actionQueue.Clear();
             for (int i = 0; i < parent.CharacterList.Count; i++)
             {
-                if (parent.CharacterList[i].LiveState == BattleCharacter.LiveStateEnum.Alive)
+                if (parent.CharacterList[i].LiveState == BattleCharacter.LiveStateEnum.Alive && parent.CharacterList[i].IsActive)
                 {
-                    //parent._actionQueue.Add(parent.CharacterList[i]);
                     parent.CharacterList[i].InitActionCount();
-                    for (int j=0; j< parent.CharacterList[i].Info.PriorityList.Count; j++)
+                    for (int j = 0; j < parent.CharacterList[i].Info.PriorityList.Count; j++)
                     {
                         parent._actionQueue.Add(new ActionQueueElement(parent.CharacterList[i], parent.CharacterList[i].Info.PriorityList[j]));
                     }
@@ -523,6 +526,11 @@ public class BattleController : MachineBehaviour
             });
             BattleUI.Instance.InitPriorityQueue(parent.ActionQueueToList(parent._actionQueue));
 
+            if (parent.TurnStartHandler != null)
+            {
+                parent.TurnStartHandler();
+            }
+
             parent.ChangeState<SelectCharacterState>();
         }
     }
@@ -535,14 +543,6 @@ public class BattleController : MachineBehaviour
 
             if (parent._actionQueue.Count > 0)
             {
-                if (parent._actionQueue.Count == parent.CharacterList.Count)
-                {
-                    //BattleUI.Instance.SetPriorityQueueData(new List<BattleCharacter>(parent._actionQueue));
-                }
-                else
-                {
-                    //BattleUI.Instance.ScrollPriorityQueue(new List<BattleCharacter>(parent._actionQueue));
-                }
                 BattleUI.Instance.ScrollPriorityQueue(parent.SelectedCharacter);
 
                 BattleCharacter character = parent._actionQueue[0].Character;
@@ -907,7 +907,7 @@ public class BattleController : MachineBehaviour
             }
             else
             {
-                parent._turn++;
+                parent.Turn++;
 
                 if (parent.TurnEndHandler != null)
                 {

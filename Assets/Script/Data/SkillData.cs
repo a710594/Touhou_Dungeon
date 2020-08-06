@@ -20,6 +20,7 @@ public class SkillData
         CureItem,
         Striking,
         CureLeastHP,
+        Summon,
     }
 
     public enum RangeTypeEnum
@@ -60,6 +61,7 @@ public class SkillData
         public int StatusID { get; set; }
         public int AddPower { get; set; }
         public int NeedPower { get; set; }
+        public int Summon { get; set; }
         public int SubID { get; set; }
         public string ParticleName { get; set; }
         public string Name { get; set; }

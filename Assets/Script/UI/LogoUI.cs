@@ -128,13 +128,13 @@ public class LogoUI : MachineBehaviour
             parent.StopCoroutine(_coroutine);
             parent.TitleLogo.DOKill();
 
-            if (!ProgressManager.Instance.Memo.FlagList[0].Key) //尚未結束第一個對話
+            if (!ProgressManager.Instance.Memo.FlagList[0]) //尚未結束第一個對話
             {
                 parent.gameObject.SetActive(false);
                 Plot_1 plot_1 = new Plot_1();
                 plot_1.Start();
             }
-            else if (!ProgressManager.Instance.Memo.FlagList[1].Key) //尚未結束第二個對話
+            else if (!ProgressManager.Instance.Memo.FlagList[1]) //尚未結束第二個對話
             {
                 parent.gameObject.SetActive(false);
                 Plot_2 plot_2 = new Plot_2();

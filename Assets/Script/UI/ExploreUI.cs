@@ -36,7 +36,6 @@ public class ExploreUI : MonoBehaviour
     public static void Close()
     {
         Destroy(Instance.gameObject);
-        Instance = null;
     }
 
     public void InitLittleMap(int floor, Vector2Int playerPosition, Vector2Int startPosition, Vector2Int goalPosition, BoundsInt mapBound, List<Vector2Int> mapList)

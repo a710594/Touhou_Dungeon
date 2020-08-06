@@ -17,21 +17,22 @@ public class ConversationUI : MonoBehaviour
     public Image FadeImage;
     public Image[] CharacterImage;
 
+    private int _siblingIndex;
     private bool _isPlayingBGM = false;
-    //private bool _isFinal = false;
     private bool _isClickable = true;
+    private bool _isFadeEnd = true; //結束時淡出
     private ConversationData.RootObject _data;
     private Timer _timer = new Timer();
     private Action _onFinishHandler;
     private List<string> _conversationList = new List<string>();
 
-    public static void Open(int id, Action callback = null)
+    public static void Open(int id, bool isFadeEnd, Action callback = null)
     {
         if (Instance == null)
         {
             Instance = ResourceManager.Instance.Spawn("ConversationUI", ResourceManager.Type.UI).GetComponent<ConversationUI>();
         }
-        Instance.Init(id, callback);
+        Instance.Init(id, isFadeEnd, callback);
     }
 
     public static void Close()
@@ -43,13 +44,14 @@ public class ConversationUI : MonoBehaviour
         }
     }
 
-    private void Init(int id, Action callback = null)
+    private void Init(int id, bool isFadeEnd, Action callback = null)
     {
         ConversationData.RootObject data = ConversationData.GetData(id);
         Typewriter.ClearText();
         SetData(data);
 
         _data = data;
+        _isFadeEnd = isFadeEnd;
         _onFinishHandler = callback;
         //_isFinal = data.IsFinal;
         //_onFinishHandler += Close;
@@ -118,11 +120,13 @@ public class ConversationUI : MonoBehaviour
             else if (data.Images[i] == "-")
             {
                 CharacterImage[i].color = Color.gray;
+                CharacterImage[i].transform.SetSiblingIndex(_siblingIndex);
             }
             else
             {
                 CharacterImage[i].gameObject.SetActive(true);
                 CharacterImage[i].color = Color.white;
+                CharacterImage[i].transform.SetSiblingIndex(_siblingIndex + 1);
                 if (data.Images[i] != "o")
                 {
                     CharacterImage[i].sprite = Resources.Load<Sprite>("Image/Character/Large/" + data.Images[i]);
@@ -155,14 +159,25 @@ public class ConversationUI : MonoBehaviour
         Typewriter.ClearText();
 
         _isClickable = false;
-        FadeImage.DOFade(1, 1).OnComplete(() =>
+        if (_isFadeEnd)
+        {
+            FadeImage.DOFade(1, 1).OnComplete(() =>
+            {
+                if (_onFinishHandler != null)
+                {
+                    _onFinishHandler();
+                }
+                Close();
+            });
+        }
+        else
         {
             if (_onFinishHandler != null)
             {
                 _onFinishHandler();
             }
             Close();
-        });
+        }
     }
 
     private void NextOnClick()
@@ -189,6 +204,8 @@ public class ConversationUI : MonoBehaviour
 
     private void Awake()
     {
+        _siblingIndex = CharacterImage[0].transform.GetSiblingIndex();
+
         for (int i=0; i<CharacterImage.Length; i++)
         {
             CharacterImage[i].gameObject.SetActive(false);

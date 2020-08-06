@@ -53,6 +53,10 @@ public class SkillFactory
         {
             skill = new CureLeastHPSkill(skillData, user, lv);
         }
+        else if (skillData.Type == SkillData.TypeEnum.Summon)
+        {
+            skill = new SummonSkill(skillData, user, lv);
+        }
 
         return skill;
     }

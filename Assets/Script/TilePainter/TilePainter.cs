@@ -27,7 +27,11 @@ public class TilePainter : MonoBehaviour
         {
             _paintingList.Add(orderInLayer, new List<Vector2Int>());
         }
-        _paintingList[orderInLayer].Add(position);
+
+        if (!_paintingList[orderInLayer].Contains(position))
+        {
+            _paintingList[orderInLayer].Add(position);
+        }
     }
 
     public void Fill(string tileName, int orderInLayer, BoundsInt bounds)

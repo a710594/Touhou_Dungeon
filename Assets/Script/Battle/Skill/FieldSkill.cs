@@ -33,11 +33,6 @@ public class FieldSkill : Skill
             BattleFieldManager.Instance.MapDic[_skillRangeList[i]].SetBuff(Data.StatusID, Lv);
         }
 
-        //BattleUI.Instance.SetFloatingNumber(_user, Data.GetComment(), FloatingNumber.Type.Other, () =>
-        //{
-        //    BattleUI.Instance.SetSkillLabel(false);
-        //    _skillCallback();
-        //});
         BattleUI.Instance.SetSkillLabel(false);
         CheckSkillCallback(target);
     }

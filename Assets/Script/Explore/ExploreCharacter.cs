@@ -6,6 +6,8 @@ using DG.Tweening;
 
 public class ExploreCharacter : MonoBehaviour
 {
+    public Action MoveCallback;
+
     public SpriteRenderer Sprite;
     public Animator Animator;
 
@@ -13,7 +15,7 @@ public class ExploreCharacter : MonoBehaviour
     private bool _isStop = false;
     private Vector2Int _lookAt = Vector2Int.left;
 
-    public void Move(Vector2Int direction, Action callback = null)
+    public void Move(Vector2Int direction, Action callback)
     {
         if (_isMoving  || _isStop)
         {
@@ -38,10 +40,13 @@ public class ExploreCharacter : MonoBehaviour
         transform.DOMove((Vector2)position, 0.2f).SetEase(Ease.Linear).OnComplete(() =>
         {
             _isMoving = false;
-            if (callback != null)
+
+            if (MoveCallback != null)
             {
-                callback();
+                MoveCallback();
             }
+
+            callback();
         });
     }
 
