@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 public class Skill
 {
@@ -21,6 +22,7 @@ public class Skill
     protected int _skillCallBackCount = 0;
     protected int _targetCount = 0;
     protected int _value;
+    protected Vector3 _targetPosition;
     protected Action _skillCallback;
     protected Skill _subSkill;
     protected BattleCharacterInfo _user;
@@ -95,8 +97,9 @@ public class Skill
         return _skillDistanceList;
     }
 
-    public void GetRange(Vector2Int target, Vector2Int orign, BattleCharacter executor, List<BattleCharacter> characterList)
+    public virtual void GetRange(Vector2Int target, BattleCharacter executor, List<BattleCharacter> characterList)
     {
+        _targetPosition = new Vector3(target.x, target.y, Camera.main.transform.position.z);
         List<Vector2Int> positionList = new List<Vector2Int>();
         TilePainter.Instance.Clear(2);
         _skillRangeList.Clear();
@@ -127,6 +130,7 @@ public class Skill
         }
         else if (Data.RangeType == SkillData.RangeTypeEnum.Rectangle)
         {
+            Vector2Int orign = Vector2Int.RoundToInt(executor.transform.position);
             positionList = Utility.GetRectanglePositionList(Data.Range_1, Data.Range_2, orign, target - orign);
             positionList = RemovePosition(executor, characterList, positionList);
             positionList = BattleFieldManager.Instance.RemoveBound(positionList);
@@ -185,20 +189,24 @@ public class Skill
         _skillCallback = callback;
         GetTargetList();
 
-        if (_targetList.Count > 0 && _user.Camp == BattleCharacterInfo.CampEnum.Partner && !IsSpellCard)
-        {
-            BattleController.Instance.AddPower(_targetList.Count * Data.AddPower);
-            BattleUI.Instance.DropPowerPoint(_targetList);
-        }
-
         if (IsSpellCard)
         {
-            BattleUI.Instance.ShowSpellCard(Data.GetName(), _user.JobData.LargeImage, UseCallback);
+            BattleUI.Instance.ShowSpellCard(Data.GetName(), _user.JobData.LargeImage, ()=> 
+            {
+                Camera.main.transform.DOMove(_targetPosition, 0.5f).OnComplete(() =>
+                {
+                    UseCallback();
+                });
+            });
         }
         else
         {
             BattleUI.Instance.SetSkillLabel(true, Data.GetName());
-            UseCallback();
+
+            Camera.main.transform.DOMove(_targetPosition, 0.5f).OnComplete(() =>
+            {
+                UseCallback();
+            });
         }
 
         if (ItemID != 0)
@@ -264,6 +272,12 @@ public class Skill
 
     protected virtual void UseCallback() //Use 之後會呼叫的方法
     {
+        if (_targetList.Count > 0 && _user.Camp == BattleCharacterInfo.CampEnum.Partner && !IsSpellCard)
+        {
+            BattleController.Instance.AddPower(_targetList.Count * Data.AddPower);
+            BattleUI.Instance.DropPowerPoint(_targetList);
+        }
+
         if (Data.ParticleName != "x")
         {
             GameObject particle;
@@ -316,7 +330,7 @@ public class Skill
     }
 
     //移除非技能目標
-    private List<Vector2Int> RemovePosition(BattleCharacter executor, List<BattleCharacter> characterList, List<Vector2Int> positionList)
+    protected List<Vector2Int> RemovePosition(BattleCharacter executor, List<BattleCharacter> characterList, List<Vector2Int> positionList)
     {
         if (Data.Target == SkillData.TargetType.None)
         {

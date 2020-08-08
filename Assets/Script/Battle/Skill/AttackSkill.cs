@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class AttackSkill : Skill
 {
+    public AttackSkill() { }
+
     public AttackSkill(SkillData.RootObject data, BattleCharacterInfo user, int lv)
     {
         Data = data;

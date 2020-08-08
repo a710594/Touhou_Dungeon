@@ -30,6 +30,7 @@ public class BattleCharacterMemo
     public int CurrentPriority;
     public bool HasUseSkill;
     public FoodBuff FoodBuff;
+    public Queue<int> HPQueue = new Queue<int>();
     public List<int> SkillList = new List<int>();
     public List<int> SkillCdList = new List<int>();
     public List<int> SkillLvList = new List<int>();
@@ -65,6 +66,7 @@ public class BattleCharacterMemo
         {
             EnemyID = info.EnemyData.ID;
         }
+        HPQueue = info.HPQueue;
         MaxHP = info.MaxHP;
         CurrentHP = info.CurrentHP;
         MaxMP = info.MaxMP;

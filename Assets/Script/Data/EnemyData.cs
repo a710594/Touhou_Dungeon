@@ -12,7 +12,9 @@ public class EnemyData
         public string Name { get; set; }
         public string Image { get; set; }
         public string Animator { get; set; }
-        public int HP { get; set; }
+        public int HP_1 { get; set; }
+        public int HP_2 { get; set; }
+        public int HP_3 { get; set; }
         public int ATK { get; set; }
         public int DEF { get; set; }
         public int MTK { get; set; }
@@ -36,6 +38,7 @@ public class EnemyData
         public int Probability_3 { get; set; }
         public int ItemAmount { get; set; }
 
+        public List<int> HPList = new List<int>();
         public List<int> SkillList = new List<int>();
         public List<int> ItemList = new List<int>();
 
@@ -73,6 +76,15 @@ public class EnemyData
 
         for (int i = 0; i < dataList.Count; i++)
         {
+            if (dataList[i].HP_1 != 0)
+                dataList[i].HPList.Add(dataList[i].HP_1);
+
+            if (dataList[i].HP_2 != 0)
+                dataList[i].HPList.Add(dataList[i].HP_2);
+
+            if (dataList[i].HP_3 != 0)
+                dataList[i].HPList.Add(dataList[i].HP_3);
+
             if (dataList[i].Skill_1 != 0)
                 dataList[i].SkillList.Add(dataList[i].Skill_1);
 

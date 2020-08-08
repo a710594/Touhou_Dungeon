@@ -559,7 +559,7 @@ public class BattleController : MachineBehaviour
 
                          parent.SelectedCharacter = character;
                          parent.SelectedCharacter.SetOutline(true);
-                         BattleUI.Instance.SetInfo(true, parent.SelectedCharacter);
+                         //BattleUI.Instance.SetInfo(true, parent.SelectedCharacter);
 
                         BattleStatus status;
                         if (character.CanAct(out status))
@@ -798,7 +798,7 @@ public class BattleController : MachineBehaviour
         {
             base.Enter();
 
-            BattleUI.Instance.SetInfo(true, parent.SelectedCharacter);
+            //BattleUI.Instance.SetInfo(true, parent.SelectedCharacter);
             parent.SelectedCharacter.SetPosition(parent.SelectedCharacter.transform.position); //這一行是為了方便 debug,有時我會在 run time 的時候移動編輯器上的角色
             parent.SelectedCharacter.StartAI(() =>
             {

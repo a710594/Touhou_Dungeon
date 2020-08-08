@@ -194,6 +194,8 @@ public class BattleCharacterInfo
     public JobData.RootObject JobData;
     public EnemyData.RootObject EnemyData;
 
+    public Queue<int> HPQueue = new Queue<int>();
+
     public Dictionary<int, BattleStatus> StatusDic = new Dictionary<int, BattleStatus>();
     public int SleepingId = -1;
     public int StrikingId = -1;
@@ -280,6 +282,7 @@ public class BattleCharacterInfo
         IsAI = memo.IsAI;
         IsTeamMember = memo.IsTeamMember;
         Lv = memo.Lv;
+        HPQueue = memo.HPQueue;
         MaxHP = memo.MaxHP;
         CurrentHP = memo.CurrentHP;
         MaxMP = memo.MaxMP;
@@ -363,7 +366,8 @@ public class BattleCharacterInfo
         IsTeamMember = false;
         Lv = lv;
         Name = EnemyData.Name;
-        MaxHP = Mathf.RoundToInt(EnemyData.HP * (1 + (lv - 1) * 0.1f));
+        HPQueue = new Queue<int>(EnemyData.HPList);
+        MaxHP = Mathf.RoundToInt(HPQueue.Dequeue() * (1 + (lv - 1) * 0.1f));
         CurrentHP = MaxHP;
         _atk = Mathf.RoundToInt(EnemyData.ATK * (1 + (lv - 1) * 0.1f));
         _def = Mathf.RoundToInt(EnemyData.DEF * (1 + (lv - 1) * 0.1f));
@@ -586,15 +590,6 @@ public class BattleCharacterInfo
         float total;
         Buff buff;
 
-        //if (valueType == BattleStatusData.TypeEnum.MOV)
-        //{
-        //    total = 0;
-        //    total += BattleFieldManager.Instance.GetFieldBuff(Position, valueType);
-        //}
-        //else
-        //{
-        //    total = 1;
-        //}
         total = BattleFieldManager.Instance.GetFieldBuff(Position, valueType);
 
         foreach (KeyValuePair<int, BattleStatus> item in StatusDic)
@@ -616,5 +611,11 @@ public class BattleCharacterInfo
         }
 
         return total;
+    }
+
+    public void HPDequeue() 
+    {
+        MaxHP = Mathf.RoundToInt(HPQueue.Dequeue() * (1 + (Lv - 1) * 0.1f));
+        CurrentHP = MaxHP;
     }
 }

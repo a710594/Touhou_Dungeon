@@ -20,7 +20,8 @@ public class BattleCharacter : MonoBehaviour
         Dead,
     }
 
-    public Action<BattleCharacter> OnDeathHandler;
+    public Action<Action> OnDeathHandler;
+    public Action<int, Action> OnHPDequeueHandler;
 
     public Vector2Int TargetPosition = new Vector2Int();
     public SpriteRenderer Sprite;
@@ -267,8 +268,7 @@ public class BattleCharacter : MonoBehaviour
 
     public void GetSkillRange()
     {
-        Vector2Int orign = Vector2Int.FloorToInt(transform.position);
-        SelectedSkill.GetRange(TargetPosition, orign, this, BattleController.Instance.CharacterList);
+        SelectedSkill.GetRange(TargetPosition, this, BattleController.Instance.CharacterList);
     }
 
     public List<Vector2Int> GetDetectRange() //偵查範圍:移動後可用技能擊中目標的範圍
@@ -393,13 +393,30 @@ public class BattleCharacter : MonoBehaviour
                 }
                 else
                 {
-                    SetDeath(() =>
+                    if (Info.HPQueue.Count > 0)
                     {
-                        if (callback != null)
+                        Info.HPDequeue();
+                        BattleUI.Instance.SetLittleHPBar(this, true);
+
+                        if (OnHPDequeueHandler != null)
+                        {
+                            OnHPDequeueHandler(Info.HPQueue.Count, () =>
+                            {
+                                callback(this);
+                            });
+                        }
+                        else
                         {
                             callback(this);
                         }
-                    });
+                    }
+                    else
+                    {
+                        SetDeath(() =>
+                        {
+                            callback(this);
+                        });
+                    }
                 }
             }
             else
@@ -451,13 +468,30 @@ public class BattleCharacter : MonoBehaviour
                 callbackCount++;
                 if (Info.CurrentHP <= 0)
                 {
-                    if (LiveState == BattleCharacter.LiveStateEnum.Dying)
+                    if (LiveState == LiveStateEnum.Dying)
                     {
                         SetDying(callback);
                     }
                     else
                     {
-                        SetDeath(callback);
+                        if (Info.HPQueue.Count > 0)
+                        {
+                            Info.HPDequeue();
+                            BattleUI.Instance.SetLittleHPBar(this, true);
+
+                            if (OnHPDequeueHandler != null)
+                            {
+                                OnHPDequeueHandler(Info.HPQueue.Count, callback);
+                            }
+                            else
+                            {
+                                callback();
+                            }
+                        }
+                        else
+                        {
+                            SetDeath(callback);
+                        }
                     }
                 }
                 else
@@ -589,14 +623,13 @@ public class BattleCharacter : MonoBehaviour
         {
             BattleUI.Instance.SetLittleHPBar(this, false);
 
-            if (callback != null)
-            {
-                callback();
-            }
-
             if (OnDeathHandler != null)
             {
-                OnDeathHandler(this);
+                OnDeathHandler(callback);
+            }
+            else
+            {
+                callback();
             }
         });
     }

@@ -21,6 +21,7 @@ public class SkillData
         Striking,
         CureLeastHP,
         Summon,
+        Train,
     }
 
     public enum RangeTypeEnum

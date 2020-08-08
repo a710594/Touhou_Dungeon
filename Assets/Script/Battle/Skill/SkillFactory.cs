@@ -57,6 +57,10 @@ public class SkillFactory
         {
             skill = new SummonSkill(skillData, user, lv);
         }
+        else if (skillData.Type == SkillData.TypeEnum.Train)
+        {
+            skill = new TrainSkill(skillData, user, lv);
+        }
 
         return skill;
     }
