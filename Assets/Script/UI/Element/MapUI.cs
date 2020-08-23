@@ -68,12 +68,16 @@ public class MapUI : MonoBehaviour
         BigMap.Init(mapStartPosition, mapGoalPosition, sprite, _texture2d);
         if (playerPosition == goalPosition)
         {
+            LittleMap.SetStartVisible(false);
             LittleMap.SetGoalVisible(true);
+            BigMap.SetStartVisible(false);
             BigMap.SetGoalVisible(true);
         }
         else
         {
+            LittleMap.SetStartVisible(true);
             LittleMap.SetGoalVisible(false);
+            BigMap.SetStartVisible(true);
             BigMap.SetGoalVisible(false);
         }
     }

@@ -36,6 +36,12 @@ public class MySceneManager
         protected set;
     }
 
+    public SceneType LastScene
+    {
+        get;
+        protected set;
+    }
+
     public Action BeforeSceneLoadedHandler;
     public Action AfterSceneLoadedHandler;
 
@@ -88,27 +94,10 @@ public class MySceneManager
         }
     }
 
-    public void ChangeSceneImmediately(SceneType type, Action callback = null)
-    {
-        if (!_isLock)
-        {
-            _isLock = true;
-            _tempType = type;
-
-            if (BeforeSceneLoadedHandler != null)
-            {
-                BeforeSceneLoadedHandler();
-                BeforeSceneLoadedHandler = null;
-            }
-
-            SceneManager.LoadSceneAsync((int)type);
-            AfterSceneLoadedHandler += callback;
-        }
-    }
-
     private void SceneLoaded(Scene scene, LoadSceneMode mode)
     {
         _isLock = false;
+        LastScene = CurrentScene;
         CurrentScene = _tempType;
 
         if (AfterSceneLoadedHandler != null)

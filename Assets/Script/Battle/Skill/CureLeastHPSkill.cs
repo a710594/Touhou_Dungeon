@@ -55,6 +55,6 @@ public class CureLeastHPSkill : Skill
 
     public int CalculateRecover(BattleCharacterInfo executor)
     {
-        return (int)((float)executor.MEF / 10f * _value);
+        return (int)((float)executor.MEF / 100f * _value);
     }
 }

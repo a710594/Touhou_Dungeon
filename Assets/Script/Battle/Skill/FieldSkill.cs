@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class FieldSkill : Skill
 {
+    private Timer _timer = new Timer();
+
     public FieldSkill(SkillData.RootObject data, BattleCharacterInfo user, int lv)
     {
         Data = data;
@@ -34,7 +36,11 @@ public class FieldSkill : Skill
         }
 
         BattleUI.Instance.SetSkillLabel(false);
-        CheckSkillCallback(target);
+
+        _timer.Start(0.5f, ()=> 
+        {
+            CheckSkillCallback(target);
+        });
     }
 
     public void SetSkillRange(List<Vector2Int> list) //for subskill

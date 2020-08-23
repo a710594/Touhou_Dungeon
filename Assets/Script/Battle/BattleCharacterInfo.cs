@@ -237,16 +237,15 @@ public class BattleCharacterInfo
         int id;
         SkillData.RootObject skillData;
         Skill skill;
-        //for (int i = 0; i < member.SkillDic.Count; i++)
         foreach (KeyValuePair<int, int> item in member.SkillDic)
         {
             id = item.Key;
             skillData = SkillData.GetData(id);
             skill = SkillFactory.GetNewSkill(skillData, this, item.Value);
-            if (skillData.CD > 0)
-            {
-                BattleController.Instance.TurnEndHandler += skill.SetCD;
-            }
+            //if (skillData.CD > 0 && BattleController.Instance != null)
+            //{
+            //    BattleController.Instance.TurnEndHandler += skill.SetCD;
+            //}
 
             if (!PriorityList.Contains(skill.Data.Priority))
             {
@@ -256,16 +255,15 @@ public class BattleCharacterInfo
             SkillList.Add(skill);
         }
 
-        //for (int i = 0; i < member.SpellCardDic.Count; i++)
         foreach (KeyValuePair<int, int> item in member.SpellCardDic)
         {
             id = item.Key;
             skillData = SkillData.GetData(id);
             skill = SkillFactory.GetNewSkill(skillData, this, item.Value);
-            if (skillData.CD > 0)
-            {
-                BattleController.Instance.TurnEndHandler += skill.SetCD;
-            }
+            //if (skillData.CD > 0 && BattleController.Instance != null)
+            //{
+            //    BattleController.Instance.TurnEndHandler += skill.SetCD;
+            //}
 
             if (!PriorityList.Contains(skill.Data.Priority))
             {
@@ -382,10 +380,37 @@ public class BattleCharacterInfo
         EquipMEF = EnemyData.Equip_MEF;
         Camp = CampEnum.Enemy;
 
+        SkillData.RootObject skillData = SkillData.GetData(EnemyData.SkillList[0]);
+        PriorityList.Add(skillData.Priority);
+    }
+
+    public virtual void Init(int id, int lv, int EquipAtk,int EquipMtk, int EquipDef, int EquipMef) //計算機中的玩家
+    {
+        JobData = global::JobData.GetData(id);
+
+        IsAI = false;
+        IsTeamMember = true;
+        Lv = lv;
+        Name = JobData.GetName();
+        MaxHP = Mathf.RoundToInt(JobData.HP * (1 + (lv - 1) * 0.1f));
+        CurrentHP = MaxHP;
+        _atk = Mathf.RoundToInt(JobData.ATK * (1 + (lv - 1) * 0.1f));
+        _def = Mathf.RoundToInt(JobData.DEF * (1 + (lv - 1) * 0.1f));
+        _mtk = Mathf.RoundToInt(JobData.MTK * (1 + (lv - 1) * 0.1f));
+        _mef = Mathf.RoundToInt(JobData.MEF * (1 + (lv - 1) * 0.1f));
+        _agi = Mathf.RoundToInt(JobData.AGI * (1 + (lv - 1) * 0.1f));
+        _sen = Mathf.RoundToInt(JobData.SEN * (1 + (lv - 1) * 0.1f));
+        _mov = JobData.MOV;
+        EquipATK = EquipAtk;
+        EquipDEF = EquipDef;
+        EquipMTK = EquipMtk;
+        EquipMEF = EquipMef;
+        Camp = CampEnum.Partner;
+
         SkillData.RootObject skillData;
-        for (int i=0; i<EnemyData.SkillList.Count; i++)
+        for (int i = 0; i < JobData.SkillList.Count; i++)
         {
-            skillData = SkillData.GetData(EnemyData.SkillList[i]);
+            skillData = SkillData.GetData(JobData.SkillList[i]);
             if (!PriorityList.Contains(skillData.Priority))
             {
                 PriorityList.Add(skillData.Priority);
@@ -579,6 +604,32 @@ public class BattleCharacterInfo
         }
     }
 
+    public void SetBuff(int atkBuff, int mtkBuff, int defBuff, int mefBuff) //計算機用的
+    {
+        Buff buff;
+        StatusDic.Clear();
+        if (atkBuff != 0)
+        {
+            buff = new Buff(BattleStatusData.TypeEnum.ATK, atkBuff);
+            StatusDic.Add(0, buff);
+        }
+        if (mtkBuff != 0)
+        {
+            buff = new Buff(BattleStatusData.TypeEnum.MTK, mtkBuff);
+            StatusDic.Add(1, buff);
+        }
+        if (defBuff != 0)
+        {
+            buff = new Buff(BattleStatusData.TypeEnum.DEF, defBuff);
+            StatusDic.Add(2, buff);
+        }
+        if (mefBuff != 0)
+        {
+            buff = new Buff(BattleStatusData.TypeEnum.MEF, mefBuff);
+            StatusDic.Add(3, buff);
+        }
+    }
+
     public void SetCurrentPriority(int priority)
     {
         CurrentPriority = priority;
@@ -594,7 +645,7 @@ public class BattleCharacterInfo
 
         foreach (KeyValuePair<int, BattleStatus> item in StatusDic)
         {
-            if (item.Value is Buff && item.Value.Data.ValueType == valueType)
+            if (item.Value is Buff && ((Buff)item.Value).Type == valueType)
             {
                 buff = (Buff)item.Value;
                 if (valueType == BattleStatusData.TypeEnum.MOV)

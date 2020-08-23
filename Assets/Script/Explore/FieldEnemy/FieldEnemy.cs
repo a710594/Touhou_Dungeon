@@ -34,6 +34,7 @@ public class FieldEnemy : MonoBehaviour
         Animator.runtimeAnimatorController = Resources.Load<RuntimeAnimatorController>("Animator/" + _data.Animator);
         _cycleTime = _data.MoveCycleTime / 10f;
         transform.position = position;
+        _timer.Start(_cycleTime, Move, true);
     }
 
     void OnTriggerEnter2D(Collider2D col)
@@ -54,6 +55,6 @@ public class FieldEnemy : MonoBehaviour
 
     private void Awake()
     {
-        _timer.Start(_cycleTime, Move, true);
+        //_timer.Start(_cycleTime, Move, true);
     }
 }

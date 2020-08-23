@@ -14,8 +14,14 @@ public class CalculaterGroup : MonoBehaviour
     public Dropdown TypeDropDown;
     public InputField IDInputField;
     public InputField LvInputField;
-    public InputField WeaponInputField;
-    public InputField ArmorInputField;
+    public InputField EquipAtkField;
+    public InputField EquipMtkField;
+    public InputField EquipDefField;
+    public InputField EquipMefField;
+    public InputField BuffAtkField;
+    public InputField BuffMtkField;
+    public InputField BuffDefField;
+    public InputField BuffMefField;
     public BattleCharacterInfo Info = new BattleCharacterInfo();
 
     public Text NameLabel;
@@ -33,16 +39,14 @@ public class CalculaterGroup : MonoBehaviour
         TypeEnum type = (TypeEnum)TypeDropDown.value;
         if (type == TypeEnum.Player)
         {
-            TeamMember teamMember = new TeamMember();
-            teamMember.Init(int.Parse(IDInputField.text), int.Parse(LvInputField.text));
-            teamMember.SetEquip(int.Parse(WeaponInputField.text));
-            teamMember.SetEquip(int.Parse(ArmorInputField.text));
-            Info.Init(teamMember);
+            Info.Init(int.Parse(IDInputField.text), int.Parse(LvInputField.text), int.Parse(EquipAtkField.text), int.Parse(EquipMtkField.text), int.Parse(EquipDefField.text), int.Parse(EquipMefField.text));
         }
         else if (type == TypeEnum.Enemy)
         {
             Info.Init(int.Parse(IDInputField.text), int.Parse(LvInputField.text));
         }
+
+        Info.SetBuff(int.Parse(BuffAtkField.text), int.Parse(BuffMtkField.text), int.Parse(BuffDefField.text), int.Parse(BuffMefField.text));
 
         NameLabel.text = Info.Name;
         HPLabel.text = "HP: " + Info.CurrentHP.ToString();
@@ -59,13 +63,17 @@ public class CalculaterGroup : MonoBehaviour
     {
         if (index == 0) //player
         {
-            WeaponInputField.gameObject.SetActive(true);
-            ArmorInputField.gameObject.SetActive(true);
+            EquipAtkField.gameObject.SetActive(true);
+            EquipMtkField.gameObject.SetActive(true);
+            EquipDefField.gameObject.SetActive(true);
+            EquipMefField.gameObject.SetActive(true);
         }
         else if(index == 1) //enemy
         {
-            WeaponInputField.gameObject.SetActive(false);
-            ArmorInputField.gameObject.SetActive(false);
+            EquipAtkField.gameObject.SetActive(false);
+            EquipMtkField.gameObject.SetActive(false);
+            EquipDefField.gameObject.SetActive(false);
+            EquipMefField.gameObject.SetActive(false);
         }
     }
 

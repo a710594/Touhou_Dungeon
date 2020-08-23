@@ -96,16 +96,16 @@ public class BagUI : MonoBehaviour
 
     private void SetScrollView(ItemData.TypeEnum type)
     {
-        Dictionary<object, int> itemDic = new Dictionary<object, int>();
+        List<Item> itemList = new List<Item>();
         if (_managerType == ItemManager.Type.Bag)
         {
-            itemDic = ItemManager.Instance.GetItemDicByType(ItemManager.Type.Bag, type);
+            itemList = ItemManager.Instance.GetItemListByType(ItemManager.Type.Bag, type);
         }
         else
         {
-            itemDic = ItemManager.Instance.GetItemDicByType(ItemManager.Type.Warehouse, type);
+            itemList = ItemManager.Instance.GetItemListByType(ItemManager.Type.Warehouse, type);
         }
-        ScrollView.SetData(new ArrayList(itemDic));
+        ScrollView.SetData(new ArrayList(itemList));
         ScrollView.AddClickHandler(IconOnClick);
     }
 
@@ -148,43 +148,7 @@ public class BagUI : MonoBehaviour
 
     private void IconOnClick(object obj)
     {
-        if (obj is int)
-        {
-            _selectedItem = ItemData.GetData((int)obj);
-            _selectedEquip = null;
-            NameLabel.text = _selectedItem.GetName();
-            CommentLabel.text = _selectedItem.GetComment();
-            EquipComment.gameObject.SetActive(false);
-            VolumeLabel.text = "體積：" + _selectedItem.Volume;
-            ItemImage.gameObject.SetActive(true);
-            ItemImage.overrideSprite = Resources.Load<Sprite>("Image/" + _selectedItem.Icon);
-
-            if (_managerType == ItemManager.Type.Bag)
-            {
-                if (_selectedItem.ID == 0) //緊急逃脫裝置不可丟棄
-                {
-                    DiscardButton.gameObject.SetActive(false); 
-                }
-                else
-                {
-                    DiscardButton.gameObject.SetActive(true);
-                }
-            }
-            else
-            {
-                DiscardButton.gameObject.SetActive(false);
-            }
-
-            if (_selectedItem.Type == ItemData.TypeEnum.Food || _selectedItem.Type == ItemData.TypeEnum.Medicine || _selectedItem.Type == ItemData.TypeEnum.GoHome)
-            {
-                UseButton.gameObject.SetActive(true);
-            }
-            else
-            {
-                UseButton.gameObject.SetActive(false);
-            }
-        }
-        else if (obj is Equip)
+        if (obj is Equip)
         {
             _selectedEquip = (Equip)obj;
             _selectedItem = ItemData.GetData(_selectedEquip.ID); ;
@@ -206,6 +170,42 @@ public class BagUI : MonoBehaviour
             }
 
             if (_selectedMember != null)
+            {
+                UseButton.gameObject.SetActive(true);
+            }
+            else
+            {
+                UseButton.gameObject.SetActive(false);
+            }
+        }
+        else if (obj is Item)
+        {
+            _selectedItem = ItemData.GetData(((Item)obj).ID);
+            _selectedEquip = null;
+            NameLabel.text = _selectedItem.GetName();
+            CommentLabel.text = _selectedItem.GetComment();
+            EquipComment.gameObject.SetActive(false);
+            VolumeLabel.text = "體積：" + _selectedItem.Volume;
+            ItemImage.gameObject.SetActive(true);
+            ItemImage.overrideSprite = Resources.Load<Sprite>("Image/" + _selectedItem.Icon);
+
+            if (_managerType == ItemManager.Type.Bag)
+            {
+                if (_selectedItem.ID == 0) //緊急逃脫裝置不可丟棄
+                {
+                    DiscardButton.gameObject.SetActive(false);
+                }
+                else
+                {
+                    DiscardButton.gameObject.SetActive(true);
+                }
+            }
+            else
+            {
+                DiscardButton.gameObject.SetActive(false);
+            }
+
+            if (_selectedItem.Type == ItemData.TypeEnum.Food || _selectedItem.Type == ItemData.TypeEnum.Medicine || _selectedItem.Type == ItemData.TypeEnum.GoHome)
             {
                 UseButton.gameObject.SetActive(true);
             }
@@ -271,9 +271,9 @@ public class BagUI : MonoBehaviour
             _selectedMember.SetEquip(_selectedEquip, out oldEquip);
             if (oldEquip != null && oldEquip.ID != 0)
             {
-                ItemManager.Instance.AddItem(oldEquip, 1, _managerType);
+                ItemManager.Instance.AddEquip(_managerType, oldEquip);
             }
-            ItemManager.Instance.MinusItem(_selectedEquip, 1, _managerType);
+            ItemManager.Instance.MinusEquip(_managerType, _selectedEquip);
 
             Close();
             TeamUI.Instance.SetEquipData();
@@ -307,7 +307,7 @@ public class BagUI : MonoBehaviour
         {
             if (_selectedEquip != null)
             {
-                ItemManager.Instance.MinusItem(_selectedEquip, 1, _managerType);
+                ItemManager.Instance.MinusEquip(_managerType, _selectedEquip);
             }
             else
             {

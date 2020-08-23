@@ -5,7 +5,7 @@ using UnityEngine;
 //DungeonBuilder 到 ExploreController 的中間資料
 public class MapInfo
 {
-    public int ID;
+    public int Floor;
     public int LastFloor;
     public int NextFloor;
     public BoundsInt MapBound;
@@ -16,8 +16,8 @@ public class MapInfo
     public string DoorTile;
     public string GrassTile;
     public string WallTile;
-    public List<Vector2Int> MapList;
-    public List<Vector2Int> GrassList;
+    public List<Vector2Int> MapList = new List<Vector2Int>();
+    public List<Vector2Int> GrassList = new List<Vector2Int>();
     public List<Vector2Int> KeyList = new List<Vector2Int>();
     public List<Vector2Int> DoorList = new List<Vector2Int>();
     public List<Vector2Int> ExploredList = new List<Vector2Int>(); //走過的地圖範圍
@@ -33,7 +33,7 @@ public class MapInfo
 
     public MapInfo(MapMemo memo)
     {
-        ID = memo.ID;
+        Floor = memo.ID;
         LastFloor = memo.LastFloor;
         NextFloor = memo.NextFloor;
         MapBound = memo.MapBound;

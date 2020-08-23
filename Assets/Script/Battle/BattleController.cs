@@ -66,13 +66,15 @@ public class BattleController : MachineBehaviour
     private List<ActionQueueElement> _actionQueue = new List<ActionQueueElement>();
     private List<BattleCharacter> _playerList = new List<BattleCharacter>(); //戰鬥結束時需要的友方資料
 
-    public void Init(int battlefieldId, BattleGroupData.RootObject battleGroupData)
+    public void Init(int battlefieldId, BattleGroupData.RootObject battleGroupData, Action winCallback, Action loseCallback)
     {
         BattlefieldGenerator.Instance.Generate(battlefieldId, battleGroupData.EnemyList.Count);
 
         Turn = 1;
         _power =  TeamManager.Instance.Power;
         _exp = battleGroupData.Exp;
+        _winCallback = winCallback;
+        _loseCallback = loseCallback;
         CharacterList.Clear();
 
         BattleCharacter character;
@@ -114,13 +116,13 @@ public class BattleController : MachineBehaviour
         ItemData.RootObject itemData;
         SkillData.RootObject skillData;
         Skill skill;
-        Dictionary<object, int> itemDic = ItemManager.Instance.GetItemDicByType(ItemManager.Type.Bag, ItemData.TypeEnum.Medicine);
+        List<Item> medicineList = ItemManager.Instance.GetItemListByType(ItemManager.Type.Bag, ItemData.TypeEnum.Medicine);
 
-        if (itemDic != null)
+        if (medicineList != null)
         {
-            foreach (KeyValuePair<object, int> item in itemDic)
+            foreach (Item item in medicineList)
             {
-                itemId = (int)item.Key;
+                itemId = item.ID;
                 itemData = ItemData.GetData(itemId);
                 skillData = SkillData.GetData(itemData.Skill);
                 skill = SkillFactory.GetNewSkill(skillData, null, 1);
@@ -187,13 +189,13 @@ public class BattleController : MachineBehaviour
         ItemData.RootObject itemData;
         SkillData.RootObject skillData;
         Skill skill;
-        Dictionary<object, int> itemDic = ItemManager.Instance.GetItemDicByType(ItemManager.Type.Bag, ItemData.TypeEnum.Medicine);
+        List<Item> medicineList = ItemManager.Instance.GetItemListByType(ItemManager.Type.Bag, ItemData.TypeEnum.Medicine);
 
-        if (itemDic != null)
+        if (medicineList != null)
         {
-            foreach (KeyValuePair<object, int> item in itemDic)
+            foreach (Item item in medicineList)
             {
-                itemId = (int)item.Key;
+                itemId = item.ID;
                 itemData = ItemData.GetData(itemId);
                 skillData = SkillData.GetData(itemData.Skill);
                 skill = SkillFactory.GetNewSkill(skillData, null, 1);
@@ -769,7 +771,20 @@ public class BattleController : MachineBehaviour
         {
             base.Enter();
 
-            parent.SelectedCharacter.GetSkillRange();
+            Vector2Int target;
+            List<Vector2Int> rangeList;
+            parent.SelectedCharacter.GetSkillRange(out target, out rangeList);
+            for (int i=0; i<rangeList.Count; i++)
+            {
+                if (rangeList[i] == target)
+                {
+                    TilePainter.Instance.Painting("FrontSight", 4, rangeList[i]);
+                }
+                else
+                {
+                    TilePainter.Instance.Painting("YellowGrid", 2, rangeList[i]);
+                }
+            }
         }
 
         public override void ScreenOnClick(Vector2Int position)
@@ -942,7 +957,7 @@ public class BattleController : MachineBehaviour
             List<int> orignalLvList = TeamManager.Instance.GetLvList();
             List<int> orignalExpList = TeamManager.Instance.GetExpList();
             TeamManager.Instance.AddExp(parent._exp);
-            BattleUI.Instance.SetResult(true, orignalLvList, orignalExpList, parent._dropItemList, parent._winCallback, parent._loseCallback);
+            BattleUI.Instance.SetResult(true, parent._winCallback, orignalLvList, orignalExpList, parent._dropItemList);
         }
 
         public override void ScreenOnClick(Vector2Int position) { }
@@ -956,7 +971,7 @@ public class BattleController : MachineBehaviour
         {
             base.Enter();
 
-            BattleUI.Instance.SetResult(false);
+            BattleUI.Instance.SetResult(false, parent._loseCallback);
         }
 
         public override void ScreenOnClick(Vector2Int position) { }

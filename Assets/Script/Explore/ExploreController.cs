@@ -5,6 +5,12 @@ using UnityEngine;
 
 public class ExploreController
 {
+    public enum InitPlayerPosition
+    {
+        Start,
+        Goal,
+    }
+
     private static ExploreController _instance;
     public static ExploreController Instance
     {
@@ -18,7 +24,14 @@ public class ExploreController
         }
     }
 
-    public int ArriveFloor = 1;
+    public int ArriveFloor = 4;
+    public int CurrentFloor
+    {
+        get
+        {
+            return _mapInfo.Floor;
+        }
+    }
 
     private ExploreCharacter _player;
     private MapInfo _mapInfo;
@@ -26,7 +39,7 @@ public class ExploreController
     private Vector2 _playerPosition;
     private List<GameObject> _coinList = new List<GameObject>();
     private List<FieldEnemy> _fieldEnemyList = new List<FieldEnemy>();
-    private List<Vector2Int> _pathFindList = new List<Vector2Int>();
+    public List<Vector2Int> _pathFindList = new List<Vector2Int>();
     private Vector2Int[] _directions = new Vector2Int[4] { Vector2Int.left, Vector2Int.right, Vector2Int.up, Vector2Int.down };
 
     public void Init()
@@ -39,7 +52,7 @@ public class ExploreController
 
     }
 
-    public void GenerateFloor(int id)
+    public void GenerateFloor(int id, InitPlayerPosition initPlayerPosition)
     {
         MySceneManager.SceneType scene;
         DungeonData.RootObject data = DungeonData.GetData(id);
@@ -64,14 +77,23 @@ public class ExploreController
                 else
                 {
                     _mapInfo = DungeonBuilder.Instance.Generate(data);
-                    _mapInfo.GuardList.Add(_mapInfo.Goal);
                     DungeonPainter.Instance.Paint(_mapInfo);
                 }
 
-                _playerPosition = _mapInfo.Start;
+                if (initPlayerPosition == InitPlayerPosition.Start)
+                {
+                    _playerPosition = _mapInfo.Start;
+                    _mapInfo.GuardList.Add(_mapInfo.Goal);
+                }
+                else if (initPlayerPosition == InitPlayerPosition.Goal)
+                {
+                    _playerPosition = _mapInfo.Goal;
+                    _mapInfo.GuardList.Add(_mapInfo.Start);
+                }
                 SetFloor();
             });
         });
+        Debug.Log("Generate Floor Complete");
     }
 
     //public void GetMapInfoFromScene()
@@ -86,7 +108,7 @@ public class ExploreController
         _player = GameObject.Find("ExploreCharacter").GetComponent<ExploreCharacter>();
         _player.transform.position = _playerPosition;
         ExploreUI.Open();
-        ExploreUI.Instance.InitLittleMap(_mapInfo.ID, Vector2Int.RoundToInt(_player.transform.position), _mapInfo.Start, _mapInfo.Goal, _mapInfo.MapBound, _mapInfo.MapList);
+        ExploreUI.Instance.InitLittleMap(_mapInfo.Floor, Vector2Int.RoundToInt(_player.transform.position), _mapInfo.Start, _mapInfo.Goal, _mapInfo.MapBound, _mapInfo.MapList);
         SetVisibleRange(true);
         ExploreUI.Instance.RefreshLittleMap(Vector2Int.RoundToInt(_player.transform.position), _mapInfo.ExploredList, _mapInfo.ExploredWallList);
         SetInteractive(Vector2Int.RoundToInt(_player.transform.position));
@@ -120,30 +142,34 @@ public class ExploreController
 
         _playerPosition = _memo.PlayerPosition;
         ArriveFloor = _memo.ArriveFloor;
-        DungeonPainter.Instance.Paint(_mapInfo);
+        if (MySceneManager.Instance.CurrentScene == MySceneManager.SceneType.Explore)
+        {
+            DungeonPainter.Instance.Paint(_mapInfo);
+        }
         SetFloor();
         AudioSystem.Instance.Play("Forest");
     }
 
     public void Save()
     {
-        if (MySceneManager.Instance.CurrentScene == MySceneManager.SceneType.Explore)
+        if (_player != null)
         {
-            _playerPosition = Vector2Int.RoundToInt(_player.transform.position);
-            _memo = new MapMemo(ArriveFloor, _mapInfo, _playerPosition);
+            Write();
         }
-        if (_memo != null)
-        {
-            Caretaker.Instance.Save<MapMemo>(_memo);
-        }
+
+        Caretaker.Instance.Save<MapMemo>(_memo);
     }
 
     public void ChangeFloor(int floor)
     {
-        LoadingUI.Instance.Open(() =>
+        if (_mapInfo.Floor < floor)
         {
-            GenerateFloor(floor);
-        });
+            GenerateFloor(floor, InitPlayerPosition.Start);
+        }
+        else
+        {
+            GenerateFloor(floor, InitPlayerPosition.Goal);
+        }
 
         if (floor > ArriveFloor)
         {
@@ -236,7 +262,7 @@ public class ExploreController
 
     public void ForceEnterBattle() //事件或測試時使用
     {
-        DungeonBattleGroupData.RootObject data = DungeonBattleGroupData.GetData(_mapInfo.ID);
+        DungeonBattleGroupData.RootObject data = DungeonBattleGroupData.GetData(_mapInfo.Floor);
         EnterBattle(BattleGroupData.GetData(data.GetRandomBattleGroup()));
     }
 
@@ -245,6 +271,7 @@ public class ExploreController
         StopEnemy();
         _fieldEnemyList.Clear();
         ExploreUI.Instance.StopTipLabel();
+        Write();
 
         MySceneManager.Instance.ChangeScene(MySceneManager.SceneType.Villiage, () =>
         {
@@ -303,13 +330,30 @@ public class ExploreController
             AudioSystem.Instance.Stop(true);
             MySceneManager.Instance.ChangeScene(MySceneManager.SceneType.Battle, () =>
             {
-                BattleController.Instance.Init(1, data);
+                BattleController.Instance.Init(1, data, ()=> 
+                {
+                    AudioSystem.Instance.Stop(false);
+                    MySceneManager.Instance.ChangeScene(MySceneManager.Instance.LastScene, () =>
+                    {
+                        SetFloorFromMemo();
+                        GameSystem.Instance.AutoSave();
+                    });
+                }, ()=> 
+                {
+                    _fieldEnemyList.Clear();
+                    AudioSystem.Instance.Stop(false);
+                    MySceneManager.Instance.ChangeScene(MySceneManager.SceneType.Villiage, () =>
+                    {
+                        ItemManager.Instance.PutBagItemIntoWarehouse();
+                        TeamManager.Instance.RecoverAllMember();
+                    });
+                });
             });
         });
 
         _playerPosition = Vector2Int.RoundToInt(_player.transform.position);
         _player.Stop();
-        _memo = new MapMemo(ArriveFloor, _mapInfo, _playerPosition);
+        Write();
     }
 
     public bool IsWall(Vector2Int position)
@@ -454,18 +498,20 @@ public class ExploreController
 
         _fieldEnemyList.Clear();
         FieldEnemy enemy;
+        DungeonBattleGroupData.RootObject data;
 
         Vector2Int position;
+        Vector2Int playerPosition = Vector2Int.RoundToInt(_player.transform.position);
         for (int i = 0; i < _mapInfo.RoomPositionList.Count; i++)
         {
             for (int j = 0; j < 2; j++) //每個房間生兩隻怪
             {
                 position = GetLegalPosition(_mapInfo.RoomPositionList[i]);
-                if (Vector2.Distance(position, _player.transform.position) > 10) //如果位置不會離玩家太近
+                if (Vector2.Distance(position, playerPosition) > 10 && AStarAlgor.Instance.GetPath(position, playerPosition, _pathFindList, true) != null) //如果位置不會離玩家太近
                 {
                     enemy = ResourceManager.Instance.Spawn("FieldEnemy/FieldEnemyRandom", ResourceManager.Type.Other).GetComponent<FieldEnemy>();
                     enemy.OnPlayerEnterHandler += EnterBattle;
-                    DungeonBattleGroupData.RootObject data = DungeonBattleGroupData.GetData(_mapInfo.ID);
+                    data = DungeonBattleGroupData.GetData(_mapInfo.Floor);
                     enemy.Init(data.GetRandomBattleGroup(), position);
                     _fieldEnemyList.Add(enemy);
 
@@ -477,19 +523,28 @@ public class ExploreController
             }
         }
 
-        if (_mapInfo.GuardList.Contains(_mapInfo.Goal))
+        data = DungeonBattleGroupData.GetData(_mapInfo.Floor);
+        if (data != null)
         {
-            enemy = ResourceManager.Instance.Spawn("FieldEnemy/FieldEnemyGuard", ResourceManager.Type.Other).GetComponent<FieldEnemy>();
-            enemy.OnPlayerEnterHandler += EnterBattle;
-            ((FieldEnemyGuard)enemy).CheckPositionHandler += EncounterGuard;
-            DungeonBattleGroupData.RootObject data = DungeonBattleGroupData.GetData(_mapInfo.ID);
-            enemy.Init(data.GoalBattleGroup, _mapInfo.Goal);
-            _fieldEnemyList.Add(enemy);
+            for (int i = 0; i < _mapInfo.GuardList.Count; i++)
+            {
+                enemy = ResourceManager.Instance.Spawn("FieldEnemy/FieldEnemyGuard", ResourceManager.Type.Other).GetComponent<FieldEnemy>();
+                enemy.OnPlayerEnterHandler += EnterBattle;
+                ((FieldEnemyGuard)enemy).CheckPositionHandler += EncounterGuard;
+                enemy.Init(data.GoalBattleGroup, _mapInfo.GuardList[i]);
+                _fieldEnemyList.Add(enemy);
+            }
         }
     }
 
     private void EncounterGuard(Vector2 position)
     {
         _mapInfo.GuardList.Remove(Vector2Int.RoundToInt(position));
+    }
+
+    public void Write()
+    {
+        _playerPosition = Vector2Int.RoundToInt(_player.transform.position);
+        _memo = new MapMemo(ArriveFloor, _mapInfo, _playerPosition);
     }
 }

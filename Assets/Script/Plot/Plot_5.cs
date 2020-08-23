@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 public class Plot_5 : Plot
 {
@@ -26,15 +27,20 @@ public class Plot_5 : Plot
         BattleCharacter character = GameObject.Find("Yukari").GetComponent<BattleCharacter>();
         character.SetActive(true);
         character.transform.position = new Vector2(0, 4);
-
-        BattleUI.Instance.SetVisible(false);
-        ConversationUI.Open(5001, false, () =>
+        Vector3 cameraPosition = new Vector3(character.transform.position.x, character.transform.position.y, Camera.main.transform.position.z);
+        Camera.main.transform.DOMove(cameraPosition, 1);
+        character.Sprite.color = Color.clear;
+        character.Sprite.DOColor(Color.white, 1).OnComplete(()=> 
         {
-            BattleUI.Instance.SetVisible(true);
-            callback();
-        });
+            BattleUI.Instance.SetVisible(false);
+            ConversationUI.Open(5001, false, () =>
+            {
+                BattleUI.Instance.SetVisible(true);
+                callback();
+            });
 
-        Plot_6 plot_6 = new Plot_6();
-        character.OnHPDequeueHandler += plot_6.Check;
+            Plot_6 plot_6 = new Plot_6();
+            character.OnHPDequeueHandler += plot_6.Check;
+        });
     }
 }

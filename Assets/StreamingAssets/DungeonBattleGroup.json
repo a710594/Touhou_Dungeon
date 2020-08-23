@@ -1,3 +1,5 @@
 [{"ID":1,"BattleGroup_1":101,"Probability_1":1,"BattleGroup_2":0,"Probability_2":0,"BattleGroup_3":0,"Probability_3":0,"GoalBattleGroup":102},
 {"ID":2,"BattleGroup_1":201,"Probability_1":1,"BattleGroup_2":202,"Probability_2":1,"BattleGroup_3":203,"Probability_3":1,"GoalBattleGroup":204},
-{"ID":3,"BattleGroup_1":301,"Probability_1":1,"BattleGroup_2":302,"Probability_2":1,"BattleGroup_3":303,"Probability_3":1,"GoalBattleGroup":304}]
+{"ID":3,"BattleGroup_1":301,"Probability_1":1,"BattleGroup_2":302,"Probability_2":1,"BattleGroup_3":303,"Probability_3":1,"GoalBattleGroup":304},
+{"ID":4,"BattleGroup_1":401,"Probability_1":1,"BattleGroup_2":402,"Probability_2":1,"BattleGroup_3":403,"Probability_3":1,"GoalBattleGroup":404},
+{"ID":5,"BattleGroup_1":501,"Probability_1":1,"BattleGroup_2":502,"Probability_2":1,"BattleGroup_3":503,"Probability_3":1,"GoalBattleGroup":504}]

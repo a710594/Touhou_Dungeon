@@ -11,6 +11,7 @@ public class EnemyData
         public int ID { get; set; }
         public string Name { get; set; }
         public string Image { get; set; }
+        public string LargeImage { get; set; }
         public string Animator { get; set; }
         public int HP_1 { get; set; }
         public int HP_2 { get; set; }
@@ -30,6 +31,7 @@ public class EnemyData
         public string Comment { get; set; }
         public int Skill_1 { get; set; }
         public int Skill_2 { get; set; }
+        public int Skill_3 { get; set; }
         public int Item_1 { get; set; }
         public int Probability_1 { get; set; }
         public int Item_2 { get; set; }
@@ -90,6 +92,9 @@ public class EnemyData
 
             if (dataList[i].Skill_2 != 0)
                 dataList[i].SkillList.Add(dataList[i].Skill_2);
+
+            if (dataList[i].Skill_3 != 0)
+                dataList[i].SkillList.Add(dataList[i].Skill_3);
 
             if (dataList[i].Item_1 != 0)
             {

@@ -92,7 +92,7 @@ public class FieldEnemyRandom : FieldEnemy
     private Vector2Int GetRandomDirection() //回傳的是"方向"
     {
         Vector2Int myPosition = Vector2Int.RoundToInt(transform.position);
-        Vector2Int direction;
+        Vector2Int direction = Vector2Int.right;
         List<Vector2Int> tempList = new List<Vector2Int>(_directionList);
 
         while (tempList.Count > 0)
@@ -104,10 +104,10 @@ public class FieldEnemyRandom : FieldEnemy
             }
             else
             {
-                tempList.Remove(myPosition + direction);
+                tempList.Remove(direction);
             }
         }
-        return myPosition;
+        return direction;
     }
 
 

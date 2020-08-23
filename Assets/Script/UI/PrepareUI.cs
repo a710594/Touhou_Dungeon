@@ -40,16 +40,16 @@ public class PrepareUI : MonoBehaviour
 
     private void SetData()
     {
-        WarehouseScrollView.SetData(new ArrayList(ItemManager.Instance.GetItemDicByType(ItemManager.Type.Warehouse, ItemData.TypeEnum.All)));
+        WarehouseScrollView.SetData(new ArrayList(ItemManager.Instance.GetItemListByType(ItemManager.Type.Warehouse, ItemData.TypeEnum.All)));
         WarehouseScrollView.AddClickHandler(WarehouseIconOnClick);
-        BagScrollView.SetData(new ArrayList(ItemManager.Instance.GetItemDicByType(ItemManager.Type.Bag, ItemData.TypeEnum.All)));
+        BagScrollView.SetData(new ArrayList(ItemManager.Instance.GetItemListByType(ItemManager.Type.Bag, ItemData.TypeEnum.All)));
         BagScrollView.AddClickHandler(BagIconOnClick);
     }
 
     private void WarehouseIconOnClick(object obj)
     {
-        ItemManager.Instance.MinusItem(obj, 1, ItemManager.Type.Warehouse);
-        ItemManager.Instance.AddItem(obj, 1, ItemManager.Type.Bag);
+        ItemManager.Instance.MinusItem((int)obj, 1, ItemManager.Type.Warehouse);
+        ItemManager.Instance.AddItem((int)obj, 1, ItemManager.Type.Bag);
 
         SetData();
     }
@@ -62,8 +62,8 @@ public class PrepareUI : MonoBehaviour
         }
         else
         {
-            ItemManager.Instance.MinusItem(obj, 1, ItemManager.Type.Bag);
-            ItemManager.Instance.AddItem(obj, 1, ItemManager.Type.Warehouse);
+            ItemManager.Instance.MinusItem((int)obj, 1, ItemManager.Type.Bag);
+            ItemManager.Instance.AddItem((int)obj, 1, ItemManager.Type.Warehouse);
             SetData();
         }
     }
@@ -72,7 +72,7 @@ public class PrepareUI : MonoBehaviour
     {
         AudioSystem.Instance.Stop(true);
         AudioSystem.Instance.Play("Forest", true);
-        ExploreController.Instance.GenerateFloor(_targetFloor);
+        ExploreController.Instance.GenerateFloor(_targetFloor, ExploreController.InitPlayerPosition.Start);
     }
 
     private void CloseOnClick()

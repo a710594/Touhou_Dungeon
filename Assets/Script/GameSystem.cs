@@ -14,23 +14,26 @@ public class GameSystem : MonoBehaviour
 
     private static bool _exists;
 
-    public void SaveMemo()
+    public void SaveGame()
     {
-        MySceneManager.Instance.Save();
-        ItemManager.Instance.Save();
-        TeamManager.Instance.Save();
-        ProgressManager.Instance.Save();
-        ExploreController.Instance.Save();
-        if (BattleController.Instance != null) //現在在戰鬥中
+        if (MySceneManager.Instance.CurrentScene == MySceneManager.SceneType.Explore || MySceneManager.Instance.CurrentScene == MySceneManager.SceneType.Villiage)
         {
-            BattleController.Instance.Save();
+            MySceneManager.Instance.Save();
+            ItemManager.Instance.Save();
+            TeamManager.Instance.Save();
+            ProgressManager.Instance.Save();
+            ExploreController.Instance.Save();
+            if (BattleController.Instance != null) //現在在戰鬥中
+            {
+                BattleController.Instance.Save();
+            }
         }
     }
 
     public void AutoSave()
     {
 #if !UNITY_EDITOR
-        SaveMemo();
+        SaveGame();
 #endif
     }
 
@@ -100,27 +103,33 @@ public class GameSystem : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.F3))
         {
-            SaveMemo();
+            SaveGame();
         }
         if (Input.GetKeyDown(KeyCode.F4))
         {
             ClearMemo();
         }
+        if (Input.GetKeyDown(KeyCode.Alpha5))
+        {
+            AudioSystem.Instance.Stop(true);
+            AudioSystem.Instance.Play("Forest", true);
+            ExploreController.Instance.GenerateFloor(5, ExploreController.InitPlayerPosition.Start);
+        }
         if (Input.GetKeyDown(KeyCode.Alpha6))
         {
             AudioSystem.Instance.Stop(true);
             AudioSystem.Instance.Play("Forest", true);
-            ExploreController.Instance.GenerateFloor(6);
+            ExploreController.Instance.GenerateFloor(6, ExploreController.InitPlayerPosition.Start);
         }
     }
 
-    void OnApplicationPause()
-    {
-        AutoSave();
-    }
+    //void OnApplicationPause()
+    //{
+    //    AutoSave();
+    //}
 
-    void OnApplicationQuit()
-    {
-        AutoSave();
-    }
+    //void OnApplicationQuit()
+    //{
+    //    AutoSave();
+    //}
 }

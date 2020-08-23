@@ -26,10 +26,10 @@ public class ItemConfirmUI : MonoBehaviour
 
     private void Init(List<int> idList)
     {
-        List<KeyValuePair<object, int>> itemPair = new List<KeyValuePair<object, int>>();
+        List<KeyValuePair<int, int>> itemPair = new List<KeyValuePair<int, int>>();
         for (int i = 0; i < idList.Count; i++)
         {
-            itemPair.Add(new KeyValuePair<object, int>(idList[i], 0)); //數量設為0是為了不讓 scrollview 顯示數量.實際數量都是1,沒有顯示的必要
+            itemPair.Add(new KeyValuePair<int, int>(idList[i], 1));
         }
         ScrollView.SetData(new ArrayList(itemPair));
     }

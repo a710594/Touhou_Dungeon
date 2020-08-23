@@ -30,6 +30,20 @@ public class Skill
     protected List<Vector2Int> _skillRangeList = new List<Vector2Int>();
     protected List<BattleCharacter> _targetList = new List<BattleCharacter>();
 
+    public Skill() { }
+
+    public Skill(SkillData.RootObject data, BattleCharacterInfo user, int lv)
+    {
+        _user = user;
+        Data = data;
+        Lv = lv;
+        if (data.SubID != 0)
+        {
+            SkillData.RootObject skillData = SkillData.GetData(Data.SubID);
+            _subSkill = SkillFactory.GetNewSkill(skillData, user, lv);
+        }
+    }
+
     public bool IsSpellCard
     {
         get
@@ -97,36 +111,23 @@ public class Skill
         return _skillDistanceList;
     }
 
-    public virtual void GetRange(Vector2Int target, BattleCharacter executor, List<BattleCharacter> characterList)
+    public virtual List<Vector2Int> GetRange(Vector2Int target, BattleCharacter executor, List<BattleCharacter> characterList)
     {
         _targetPosition = new Vector3(target.x, target.y, Camera.main.transform.position.z);
         List<Vector2Int> positionList = new List<Vector2Int>();
         TilePainter.Instance.Clear(2);
         _skillRangeList.Clear();
 
-        TilePainter.Instance.Painting("FrontSight", 4, target);
         if (Data.RangeType == SkillData.RangeTypeEnum.Point)
         {
             positionList.Add(target);
             positionList = RemovePosition(executor, characterList, positionList);
-            if (positionList.Count > 0)
-            {
-                _skillRangeList.Add(positionList[0]);
-            }
         }
         else if (Data.RangeType == SkillData.RangeTypeEnum.Circle)
         {
             positionList = Utility.GetRhombusPositionList(Data.Range_1 - 1, target, false);
             positionList = RemovePosition(executor, characterList, positionList);
             positionList = BattleFieldManager.Instance.RemoveBound(positionList);
-            for (int i = 0; i < positionList.Count; i++)
-            {
-                if (positionList[i] != target)
-                {
-                    TilePainter.Instance.Painting("YellowGrid", 2, positionList[i]);
-                }
-                _skillRangeList.Add(positionList[i]);
-            }
         }
         else if (Data.RangeType == SkillData.RangeTypeEnum.Rectangle)
         {
@@ -134,15 +135,16 @@ public class Skill
             positionList = Utility.GetRectanglePositionList(Data.Range_1, Data.Range_2, orign, target - orign);
             positionList = RemovePosition(executor, characterList, positionList);
             positionList = BattleFieldManager.Instance.RemoveBound(positionList);
-            for (int i = 0; i < positionList.Count; i++)
-            {
-                if (positionList[i] != target)
-                {
-                    TilePainter.Instance.Painting("YellowGrid", 2, positionList[i]);
-                }
-                _skillRangeList.Add(positionList[i]);
-            }
         }
+        else if (Data.RangeType == SkillData.RangeTypeEnum.All)
+        {
+            positionList = new List<Vector2Int>(BattleFieldManager.Instance.MapDic.Keys);
+            positionList = RemovePosition(executor, characterList, positionList);
+            positionList = BattleFieldManager.Instance.RemoveBound(positionList);
+        }
+        _skillRangeList = positionList;
+
+        return _skillRangeList;
     }
 
     public bool IsInDistance(Vector2Int position)
@@ -191,21 +193,28 @@ public class Skill
 
         if (IsSpellCard)
         {
-            BattleUI.Instance.ShowSpellCard(Data.GetName(), _user.JobData.LargeImage, ()=> 
+            string largeImage = "";
+            if (_user.JobData != null)
             {
-                Camera.main.transform.DOMove(_targetPosition, 0.5f).OnComplete(() =>
-                {
-                    UseCallback();
-                });
+                largeImage = _user.JobData.LargeImage;
+            }
+            else if (_user.EnemyData != null)
+            {
+                largeImage = _user.EnemyData.LargeImage;
+            }
+
+            BattleUI.Instance.ShowSpellCard(Data.GetName(), largeImage, ()=> 
+            {
+                CameraMove(UseCallback);
             });
         }
         else
         {
             BattleUI.Instance.SetSkillLabel(true, Data.GetName());
 
-            Camera.main.transform.DOMove(_targetPosition, 0.5f).OnComplete(() =>
+            Camera.main.transform.DOMove(_targetPosition + Vector3.up, Vector2.Distance(_user.Position, _targetPosition) / 4f).OnComplete(() =>
             {
-                UseCallback();
+                CameraMove(UseCallback);
             });
         }
 
@@ -393,5 +402,22 @@ public class Skill
     {
         _targetCount = targetCount;
         _skillCallback = callback;
+    }
+
+    private void CameraMove(Action callback)
+    {
+        float distance = Vector2.Distance(_user.Position, _targetPosition);
+
+        if (distance > 1)
+        {
+            Camera.main.transform.DOMove(_targetPosition + Vector3.up, 0.5f).SetEase(Ease.Linear).OnComplete(() =>
+            {
+                callback();
+            });
+        }
+        else
+        {
+            callback();
+        }
     }
 }

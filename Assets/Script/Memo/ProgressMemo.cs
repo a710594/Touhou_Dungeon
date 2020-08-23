@@ -4,5 +4,6 @@ using UnityEngine;
 
 public class ProgressMemo
 {
-    public List<bool> FlagList = new List<bool>();
+    public bool FirstFlag = false; //開場劇情
+    public bool BOSS_1_Flag= false; //第一場 BOSS 戰
 }

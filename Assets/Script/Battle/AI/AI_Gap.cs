@@ -8,10 +8,12 @@ public class AI_Gap : AI
 {
     public override void StartAI(Action callback)
     {
-        if (!_character.Info.HasUseSkill && BattleController.Instance.Turn % 2 == 1)
+        if (!_myself.Info.HasUseSkill && BattleController.Instance.Turn % 3 == 1)
         {
-            SelectSkill();
-            List<Vector2Int> positionList = _selectedSkill.GetDistance(_character);
+            _selectedSkill = _skillList[0];
+            _myself.SelectedSkill = _selectedSkill; 
+
+            List<Vector2Int> positionList = _selectedSkill.GetDistance(_myself);
             for (int i=0; i<positionList.Count; i++)
             {
                 if (BattleController.Instance.GetCharacterByPosition(positionList[i]) != null)
@@ -23,8 +25,10 @@ public class AI_Gap : AI
 
             if (positionList.Count > 0)
             {
-                _character.SetTarget(positionList[UnityEngine.Random.Range(0, positionList.Count)]);
-                _character.GetSkillRange();
+                _myself.SetTarget(positionList[UnityEngine.Random.Range(0, positionList.Count)]);
+                Vector2Int target;
+                List<Vector2Int> rangeList;
+                _myself.GetSkillRange(out target, out rangeList);
                 CanHitTarget = true;
                 callback();
 
@@ -40,11 +44,5 @@ public class AI_Gap : AI
             CanHitTarget = false;
             callback();
         }
-    }
-
-    protected override void SelectSkill()
-    {
-        _selectedSkill = _skillList[0];
-        _character.SelectedSkill = _selectedSkill;
     }
 }

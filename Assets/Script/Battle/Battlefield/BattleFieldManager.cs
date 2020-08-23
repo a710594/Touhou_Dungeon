@@ -59,7 +59,8 @@ public class BattleFieldManager
             if (BattleController.Instance.CharacterList[i].LiveState != BattleCharacter.LiveStateEnum.Dead)
             {
                 if ((camp == BattleCharacterInfo.CampEnum.Partner && BattleController.Instance.CharacterList[i].Info.Camp == BattleCharacterInfo.CampEnum.Enemy) ||
-                    (camp == BattleCharacterInfo.CampEnum.Enemy && BattleController.Instance.CharacterList[i].Info.Camp == BattleCharacterInfo.CampEnum.Partner)) //與自己不同陣營的角色會被視為障礙物
+                    (camp == BattleCharacterInfo.CampEnum.Enemy && BattleController.Instance.CharacterList[i].Info.Camp == BattleCharacterInfo.CampEnum.Partner) ||
+                    (camp == BattleCharacterInfo.CampEnum.None)) //與自己不同陣營的角色會被視為障礙物, Nono 給想要排除所有角色的人使用
                 {
                     position = Vector2Int.RoundToInt(BattleController.Instance.CharacterList[i].transform.position);
                     if (position != from && position != to)
@@ -140,7 +141,7 @@ public class BattleFieldManager
         if (battleField != null && battleField.Status is Buff)
         {
             Buff buff = (Buff)battleField.Status;
-            if (buff != null && buff.Data.ValueType == valueType)
+            if (buff != null && buff.Type == valueType)
             {
                 return buff.Value;
             }

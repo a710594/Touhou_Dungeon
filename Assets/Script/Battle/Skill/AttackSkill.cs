@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class AttackSkill : Skill
 {
+    private bool _isMagic;
+
     public AttackSkill() { }
 
     public AttackSkill(SkillData.RootObject data, BattleCharacterInfo user, int lv)
@@ -13,11 +15,18 @@ public class AttackSkill : Skill
         Lv = lv;
         _user = user;
         _value = data.ValueList[lv - 1];
+        _isMagic = data.IsMagic;
         if (data.SubID != 0)
         {
             SkillData.RootObject skillData = SkillData.GetData(Data.SubID);
             _subSkill = SkillFactory.GetNewSkill(skillData, user, lv);
         }
+    }
+
+    public AttackSkill(bool isMagic, int damage) //計算機用的
+    {
+        _value = damage;
+        _isMagic = isMagic;
     }
 
     protected override void UseCallback()
@@ -56,17 +65,16 @@ public class AttackSkill : Skill
     public int CalculateDamage(BattleCharacterInfo executor, BattleCharacterInfo target, bool isCritical)
     {
         float damage;
-        if (Data.IsMagic)
+        if (_isMagic)
         {
-            damage = (float)executor.MTK / (float)target.MEF;
+            damage = (float)executor.MTK / (float)target.MEF / 10f;
             damage = damage * _value * (1 + (executor.Lv - 1) * 0.1f) + executor.EquipMTK - target.EquipMEF;
         }
         else
         {
-            damage = (float)executor.ATK / (float)target.DEF;
+            damage = (float)executor.ATK / (float)target.DEF / 10f;
             damage = damage * _value * (1 + (executor.Lv - 1) * 0.1f) + executor.EquipATK - target.EquipDEF;
         }
-
 
         if (damage < 1)
         {

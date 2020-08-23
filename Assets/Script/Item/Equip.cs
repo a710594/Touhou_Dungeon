@@ -2,14 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Equip
+public class Equip :Item
 {
-    public int ID;
-    public string Name;
-    public string Comment;
-    public string Icon;
-    public int Volume;
-    public int Price;
     public EquipData.TypeEnum Type;
     public int ATK;
     public int DEF;
@@ -37,6 +31,7 @@ public class Equip
             Icon = itemData.Icon;
             Volume = itemData.Volume;
             Price = itemData.Price;
+            Amount = 1;
             Type = equipData.Type;
             ATK = equipData.ATK;
             DEF = equipData.DEF;

@@ -17,6 +17,8 @@ public class BattleGroupData
         public int Lv_2 { get; set; }
         public int Enemy_3 { get; set; }
         public int Lv_3 { get; set; }
+        public int Enemy_4 { get; set; }
+        public int Lv_4 { get; set; }
         public int Exp;
 
         public List<int> EnemyList = new List<int>();
@@ -70,6 +72,12 @@ public class BattleGroupData
             {
                 dataList[i].EnemyList.Add(dataList[i].Enemy_3);
                 dataList[i].LvList.Add(dataList[i].Lv_3);
+            }
+
+            if (dataList[i].Enemy_4 != 0)
+            {
+                dataList[i].EnemyList.Add(dataList[i].Enemy_4);
+                dataList[i].LvList.Add(dataList[i].Lv_4);
             }
 
             _dataDic.Add(dataList[i].ID, dataList[i]);

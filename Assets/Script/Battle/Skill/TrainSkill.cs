@@ -17,7 +17,7 @@ public class TrainSkill : AttackSkill
         }
     }
 
-    public override void GetRange(Vector2Int target, BattleCharacter executor, List<BattleCharacter> characterList)
+    public override List<Vector2Int> GetRange(Vector2Int target, BattleCharacter executor, List<BattleCharacter> characterList)
     {
         _targetPosition = new Vector3(target.x, target.y, Camera.main.transform.position.z);
         List<Vector2Int> positionList = new List<Vector2Int>();
@@ -32,6 +32,8 @@ public class TrainSkill : AttackSkill
         }
         positionList = RemovePosition(executor, characterList, positionList);
         _skillRangeList = positionList;
+
+        return _skillRangeList;
     }
 
     protected override void UseCallback()

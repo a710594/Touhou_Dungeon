@@ -128,49 +128,64 @@ public class LogoUI : MachineBehaviour
             parent.StopCoroutine(_coroutine);
             parent.TitleLogo.DOKill();
 
-            if (!ProgressManager.Instance.Memo.FlagList[0]) //尚未結束第一個對話
-            {
-                parent.gameObject.SetActive(false);
-                Plot_1 plot_1 = new Plot_1();
-                plot_1.Start();
-            }
-            else if (!ProgressManager.Instance.Memo.FlagList[1]) //尚未結束第二個對話
-            {
-                parent.gameObject.SetActive(false);
-                Plot_2 plot_2 = new Plot_2();
-                plot_2.Start();
-            }
-            else if (MySceneManager.Instance.CurrentScene == MySceneManager.SceneType.Explore)
+            //if (!ProgressManager.Instance.Memo.FirstFlag) //尚未結束新手教學
+            //{
+            //    parent.gameObject.SetActive(false);
+            //    Plot_1 plot_1 = new Plot_1();
+            //    plot_1.Start();
+            //}
+            //else if (MySceneManager.Instance.CurrentScene == MySceneManager.SceneType.Explore)
+            //{
+            //    MySceneManager.Instance.ChangeScene(MySceneManager.SceneType.Explore, () =>
+            //    {
+            //        ExploreController.Instance.SetFloorFromMemo();
+            //    });
+            //}
+            //else if (MySceneManager.Instance.CurrentScene == MySceneManager.SceneType.Battle)
+            //{
+            //    MySceneManager.Instance.ChangeScene(MySceneManager.SceneType.Battle, () =>
+            //    {
+            //        BattleController.Instance.InitFromMemo();
+            //    });
+            //}
+            //else if (MySceneManager.Instance.CurrentScene == MySceneManager.SceneType.FirstBattle)
+            //{
+            //    MySceneManager.Instance.ChangeScene(MySceneManager.SceneType.Battle, () =>
+            //    {
+            //        BattleController.Instance.InitFromMemo(() =>
+            //        {
+            //            Plot_2 plot_2 = new Plot_2();
+            //            plot_2.Start();
+            //        }, () =>
+            //        {
+            //            MySceneManager.Instance.ChangeScene(MySceneManager.SceneType.Logo);
+            //        });
+            //    });
+            //}
+            //else
+            //{
+            //    MySceneManager.Instance.ChangeScene(MySceneManager.SceneType.Villiage);
+            //}
+
+            if (MySceneManager.Instance.CurrentScene == MySceneManager.SceneType.Explore)
             {
                 MySceneManager.Instance.ChangeScene(MySceneManager.SceneType.Explore, () =>
                 {
                     ExploreController.Instance.SetFloorFromMemo();
                 });
             }
-            else if (MySceneManager.Instance.CurrentScene == MySceneManager.SceneType.Battle)
+            else if (MySceneManager.Instance.CurrentScene == MySceneManager.SceneType.Villiage)
             {
-                MySceneManager.Instance.ChangeScene(MySceneManager.SceneType.Battle, () =>
-                {
-                    BattleController.Instance.InitFromMemo();
-                });
-            }
-            else if (MySceneManager.Instance.CurrentScene == MySceneManager.SceneType.FirstBattle)
-            {
-                MySceneManager.Instance.ChangeScene(MySceneManager.SceneType.Battle, () =>
-                {
-                    BattleController.Instance.InitFromMemo(() =>
-                    {
-                        Plot_2 plot_2 = new Plot_2();
-                        plot_2.Start();
-                    }, () =>
-                    {
-                        MySceneManager.Instance.ChangeScene(MySceneManager.SceneType.Logo);
-                    });
-                });
+                MySceneManager.Instance.ChangeScene(MySceneManager.SceneType.Villiage);
             }
             else
             {
-                MySceneManager.Instance.ChangeScene(MySceneManager.SceneType.Villiage);
+                if (!ProgressManager.Instance.Memo.FirstFlag) //尚未結束新手教學
+                {
+                    parent.gameObject.SetActive(false);
+                    Plot_1 plot_1 = new Plot_1();
+                    plot_1.Start();
+                }
             }
         }
 

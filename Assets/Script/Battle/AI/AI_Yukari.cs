@@ -5,20 +5,45 @@ using UnityEngine;
 
 public class AI_Yukari : AI //八雲紫專用
 {
+    private int _startTurn = -1; //剩下最後一條血的回合
+
     public override void StartAI(Action callback)
     {
-        if (!_character.Info.HasUseSkill) //還沒用過技能
+        if (!_myself.Info.HasUseSkill) //還沒用過技能
         {
-            SelectSkill();
+            BattleCharacter target;
+            if (_myself.Info.HPQueue.Count > 0)
+            {
+                _selectedSkill = _skillList[0]; //電車
+                target = GetTarget();
+            }
+            else
+            {
+                if (_startTurn == -1)
+                {
+                    _startTurn = BattleController.Instance.Turn;
+                }
 
-            List<Vector2Int> detectRangeList = _character.GetDetectRange();
-            BattleCharacter target = GetTarget();
+                if ((BattleController.Instance.Turn - _startTurn) % 2 == 1)
+                {
+                    _selectedSkill = _skillList[1]; //符卡
+                }
+                else
+                {
+                    _selectedSkill = _skillList[2]; //宣告
+                }
+
+                target = _myself;
+            }
+            _myself.SelectedSkill = _selectedSkill;
 
             if (target != null)
             {
-                _character.SetTarget(Vector2Int.RoundToInt(target.transform.position));
+                _myself.SetTarget(Vector2Int.RoundToInt(target.transform.position));
                 CanHitTarget = true;
-                _character.GetSkillRange();
+                Vector2Int targetPosition;
+                List<Vector2Int> rangeList;
+                _myself.GetSkillRange(out targetPosition, out rangeList);
                 callback();
             }
             else
@@ -34,16 +59,11 @@ public class AI_Yukari : AI //八雲紫專用
         }
     }
 
-    protected override void SelectSkill()
-    {
-        _selectedSkill = _skillList[0];
-        _character.SelectedSkill = _selectedSkill;
-    }
-
-    public BattleCharacter GetTarget()
+    protected BattleCharacter GetTarget()
     {
         BattleCharacter character;
         List<BattleCharacter> candidateList = new List<BattleCharacter>(); //只要是目標陣營活著的角色都算
+        List<BattleCharacter> strikingList = new List<BattleCharacter>(); //符合上述條件且有注目狀態的角色
 
         for (int i = 0; i < BattleController.Instance.CharacterList.Count; i++)
         {
@@ -53,30 +73,30 @@ public class AI_Yukari : AI //八雲紫專用
                 if (character.Info.Camp == BattleCharacterInfo.CampEnum.Partner)
                 {
                     candidateList.Add(character);
+                    if (character.Info.IsStriking)
+                    {
+                        strikingList.Add(character);
+                    }
                 }
             }
         }
 
-        //列車的攻擊範圍是橫的一排,挑打誰可以一次打到最多人
-        int y;
-        int count;
-        int maxCount = 0;
-        BattleCharacter target = null;
-        for (int i=0; i<candidateList.Count; i++)
+        if (strikingList.Count > 0)
         {
-            y = (int)candidateList[i].transform.position.y;
-            count = 0;
-            for (int j=0; j<candidateList.Count; j++)
+            candidateList = strikingList;
+        }
+
+        BattleCharacter target = null;
+        if (candidateList.Count > 0)
+        {
+            target = candidateList[0];
+            for (int i = 1; i < candidateList.Count; i++)
             {
-                if (candidateList[j].transform.position.y == y)
+                if ((_selectedSkill.Data.IsMagic && candidateList[i].Info.MEF < target.Info.MEF) ||
+                    !_selectedSkill.Data.IsMagic && candidateList[i].Info.DEF < target.Info.DEF) //挑皮薄的
                 {
-                    count++;
+                    target = candidateList[i];
                 }
-            }
-            if (count > maxCount)
-            {
-                maxCount = count;
-                target = candidateList[i];
             }
         }
 

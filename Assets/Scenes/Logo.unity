@@ -1444,6 +1444,43 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1434932020 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3158468899477304164, guid: 923946682d2057947818dac00ed157c8,
+    type: 3}
+  m_PrefabInstance: {fileID: 3158468899913507988}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1434932022 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3158468899477304166, guid: 923946682d2057947818dac00ed157c8,
+    type: 3}
+  m_PrefabInstance: {fileID: 3158468899913507988}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1434932020}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!95 &1434932024
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1434932020}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 6062e2056c20f414ebafc5c32a89edbf, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &1548356467
 GameObject:
   m_ObjectHideFlags: 0
@@ -1777,6 +1814,31 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Pivot.y
       value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3158468898169417967, guid: 923946682d2057947818dac00ed157c8,
+        type: 3}
+      propertyPath: WordImage.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3158468898169417967, guid: 923946682d2057947818dac00ed157c8,
+        type: 3}
+      propertyPath: Words.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3158468898169417967, guid: 923946682d2057947818dac00ed157c8,
+        type: 3}
+      propertyPath: Words.Array.data[0]
+      value: 
+      objectReference: {fileID: 1434932022}
+    - target: {fileID: 3158468898731932736, guid: 923946682d2057947818dac00ed157c8,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3158468899477304165, guid: 923946682d2057947818dac00ed157c8,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 75
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 923946682d2057947818dac00ed157c8, type: 3}

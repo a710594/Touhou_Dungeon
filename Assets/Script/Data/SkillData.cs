@@ -22,13 +22,15 @@ public class SkillData
         CureLeastHP,
         Summon,
         Train,
+        Donothing,
     }
 
     public enum RangeTypeEnum
     {
         Point = 0,
         Circle,
-        Rectangle
+        Rectangle,
+        All,
     }
 
     public enum TargetType

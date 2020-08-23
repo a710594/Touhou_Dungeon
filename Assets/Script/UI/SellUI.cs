@@ -17,7 +17,7 @@ public class SellUI : MonoBehaviour
     public SetAmountGroup SetAmountGroup;
     public EquipComment EquipComment;
 
-    private object _selectedItem = null;
+    private Item _selectedItem = null;
 
     public static void Open()
     {
@@ -44,14 +44,7 @@ public class SellUI : MonoBehaviour
     private void SetData()
     {
         ItemData.RootObject data;
-        if (_selectedItem is int)
-        {
-            data = ItemData.GetData((int)_selectedItem);
-        }
-        else
-        {
-            data = ItemData.GetData(((Equip)_selectedItem).ID);
-        }
+        data = ItemData.GetData(_selectedItem.ID);
 
         MoneyLabel.text = ItemManager.Instance.Money.ToString();
         NameLabel.text = data.GetName();
@@ -72,25 +65,24 @@ public class SellUI : MonoBehaviour
     private void SetScrollView(ItemData.TypeEnum type)
     {
         ItemData.RootObject data;
-        Equip equip;
-        Dictionary<object, int> managerDic = ItemManager.Instance.GetItemDicByType(ItemManager.Type.Warehouse, type);
-        Dictionary<object, int> itemDic = new Dictionary<object, int>(); //id or Equip, price
+        List<Item> itemList = ItemManager.Instance.GetItemListByType(ItemManager.Type.Warehouse, type);
+        List<KeyValuePair<Item, int>> sellDic = new List<KeyValuePair<Item, int>>(); //Item, price
 
-        managerDic.Remove(0); //移除緊急逃脫裝置,那是非賣品
-        foreach (KeyValuePair<object, int> item in managerDic)
+        for (int i = 0; i < itemList.Count; i++)
         {
-            if (item.Key is int)
+            if (itemList[i].ID == 0)
             {
-                data = ItemData.GetData((int)item.Key);
-                itemDic.Add(data.ID, data.Price / 2);
-            }
-            else if (item.Key is Equip)
-            {
-                equip = (Equip)item.Key;
-                itemDic.Add(equip, equip.Price / 2);
+                itemList.RemoveAt(i); //移除緊急逃脫裝置,那是非賣品
+                i--;
             }
         }
-        ScrollView.SetData(new ArrayList(itemDic));
+
+        foreach (Item item in itemList)
+        {
+            data = ItemData.GetData(item.ID);
+            sellDic.Add(new KeyValuePair<Item, int> (item, data.Price / 2));
+        }
+        ScrollView.SetData(new ArrayList(sellDic));
         ScrollView.AddClickHandler(MenuOnClick);
     }
 
@@ -105,34 +97,22 @@ public class SellUI : MonoBehaviour
 
     private void MenuOnClick(object obj)
     {
-        _selectedItem = obj;
+        _selectedItem = (Item)obj;
         SetData();
     }
 
     private void SellOnClick(object obj)
     {
-        int id;
         int sellPrice;
         int maxAmount;
 
-        if (_selectedItem is int)
-        {
-            id = (int)_selectedItem;
-            sellPrice = ItemData.GetData(id).Price;
-            maxAmount = ItemManager.Instance.GetItemAmount(id, ItemManager.Type.Warehouse);
-        }
-        else
-        {
-            Equip equip = (Equip)_selectedItem;
-            id = equip.ID;
-            sellPrice = equip.Price / 2;
-            maxAmount = 1;
-        }
+        sellPrice = ItemData.GetData(_selectedItem.ID).Price;
+        maxAmount = ItemManager.Instance.GetItemAmount(_selectedItem.ID, ItemManager.Type.Warehouse);
 
         SetAmountGroup.Open(maxAmount, "要賣幾個？", (amount) =>
         {
             ItemManager.Instance.AddMoney(sellPrice * amount);
-            ItemManager.Instance.MinusItem(_selectedItem, amount, ItemManager.Type.Warehouse);
+            ItemManager.Instance.MinusItem(_selectedItem.ID, amount, ItemManager.Type.Warehouse);
 
             SetData();
             SetScrollView(ItemData.TypeEnum.All);

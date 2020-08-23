@@ -282,7 +282,7 @@ public class DungeonBuilder
         }
 
         MapInfo mapInfo = new MapInfo();
-        mapInfo.ID = data.ID;
+        mapInfo.Floor = data.ID;
         mapInfo.LastFloor = data.LastFloor;
         mapInfo.NextFloor = data.NextFloor;
         mapInfo.MapBound = Utility.GetMapBounds(_mapList);

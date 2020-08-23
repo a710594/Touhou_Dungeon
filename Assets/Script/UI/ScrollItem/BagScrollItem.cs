@@ -9,35 +9,23 @@ public class BagScrollItem : ScrollItem
 
     public override void SetData(object obj)
     {
-        if (obj is KeyValuePair<object, int>)
-        {
-            KeyValuePair<object, int> pair = (KeyValuePair<object, int>)obj;
-            base.SetData(pair.Key);
-
-            if (pair.Key is int)
-            {
-                int id = (int)pair.Key;
-                int amount = pair.Value;
-
-                if (amount != 0)
-                {
-                    Card.Init(id, amount);
-                }
-                else
-                {
-                    Card.Init(id);
-                }
-            }
-            else if (pair.Key is Equip)
-            {
-                Card.Init((Equip)pair.Key);
-            }
-        }
-        else
+        if (obj is Equip)
         {
             Equip equip = (Equip)obj;
             base.SetData(equip);
             Card.Init(equip);
+        }
+        else if (obj is Item)
+        {
+            Item item = (Item)obj;
+            base.SetData(item);
+            Card.Init(item.ID, item.Amount);
+        }
+        else if(obj is KeyValuePair<int, int>)
+        {
+            KeyValuePair<int, int> pair = (KeyValuePair<int, int>)obj;
+            base.SetData(pair.Key);
+            Card.Init(pair.Key, pair.Value);
         }
     }
 }

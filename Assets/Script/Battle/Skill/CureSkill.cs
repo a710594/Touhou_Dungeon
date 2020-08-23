@@ -45,6 +45,6 @@ public class CureSkill : Skill
 
     public int CalculateRecover(BattleCharacterInfo executor)
     {
-        return (int)((float)executor.MEF / 10f * (float)_value);
+        return (int)((float)executor.MEF * (float)_value / 100f);
     }
 }

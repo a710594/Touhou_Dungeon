@@ -19,8 +19,6 @@ public class MapMemo
     public List<string> MapList;
     public List<string> GrassList;
     public List<string> KeyList;
-    //public List<string> WallList;
-    //public List<string> MistList;
     public List<string> DoorList;
     public List<string> ExploredList = new List<string>(); //走過的地圖範圍
     public List<string> ExploredWallList = new List<string>(); //已被發現的牆壁的範圍
@@ -35,7 +33,7 @@ public class MapMemo
     public MapMemo(int arriveFloor, MapInfo info, Vector2 playerPosition)
     {
         ArriveFloor = arriveFloor;
-        ID = info.ID;
+        ID = info.Floor;
         LastFloor = info.LastFloor;
         NextFloor = info.NextFloor;
         MapBound = info.MapBound;

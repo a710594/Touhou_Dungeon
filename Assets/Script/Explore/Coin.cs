@@ -16,7 +16,7 @@ public class Coin : MonoBehaviour
         if (!_isTrigger && collision.tag == "Player")
         {
             _isTrigger = true;
-            Sprite.transform.DOLocalJump(Sprite.transform.localPosition, 1, 1, 0.5f).SetEase(Ease.Linear).OnComplete(() =>
+            Sprite.transform.DOJump(Sprite.transform.position, 1, 1, 0.5f).SetEase(Ease.Linear).OnComplete(() =>
             {
                 Destroy(gameObject);
             });

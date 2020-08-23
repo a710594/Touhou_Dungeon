@@ -50,11 +50,13 @@
 {"ID":3002,"Name":"八雲紫","Comment_Chinese":"test 2","Background":"-","BGM":"-","Image_1":"-","Motion_1":0,"Image_2":"Yukari_L","Motion_2":0,"NextID":3003},
 {"ID":3003,"Name":"博麗靈夢","Comment_Chinese":"test 3","Background":"-","BGM":"-","Image_1":"Reimu_L","Motion_1":0,"Image_2":"-","Motion_2":0,"NextID":3004},
 {"ID":3004,"Name":"八雲紫","Comment_Chinese":"test 4","Background":"-","BGM":"-","Image_1":"-","Motion_1":0,"Image_2":"Yukari_L","Motion_2":0,"NextID":0},
-{"ID":4001,"Name":"博麗靈夢","Comment_Chinese":"诶？紫人咧？","Background":"x","BGM":"x","Image_1":"Reimu_L","Motion_1":0,"Image_2":"x","Motion_2":0,"NextID":4002},
+{"ID":4001,"Name":"博麗靈夢","Comment_Chinese":"诶？紫人咧？","Background":"x","BGM":"-","Image_1":"Reimu_L","Motion_1":0,"Image_2":"x","Motion_2":0,"NextID":4002},
 {"ID":4002,"Name":"八雲紫","Comment_Chinese":"有本事就把我找出來吧！","Background":"-","BGM":"-","Image_1":"-","Motion_1":0,"Image_2":"x","Motion_2":0,"NextID":4003},
 {"ID":4003,"Name":"博麗靈夢","Comment_Chinese":"大概是又躲到縫隙裡了，先攻擊縫隙看看吧。","Background":"-","BGM":"-","Image_1":"Reimu_L","Motion_1":0,"Image_2":"x","Motion_2":0,"NextID":0},
-{"ID":5001,"Name":"博麗靈夢","Comment_Chinese":"果然出現了！","Background":"-","BGM":"-","Image_1":"Reimu_L","Motion_1":0,"Image_2":"x","Motion_2":0,"NextID":5002},
+{"ID":5001,"Name":"博麗靈夢","Comment_Chinese":"果然出現了！","Background":"x","BGM":"-","Image_1":"Reimu_L","Motion_1":0,"Image_2":"x","Motion_2":0,"NextID":5002},
 {"ID":5002,"Name":"八雲紫","Comment_Chinese":"不錯嘛，這樣才有意思。","Background":"-","BGM":"-","Image_1":"-","Motion_1":0,"Image_2":"Yukari_L","Motion_2":0,"NextID":0},
-{"ID":6001,"Name":"博麗靈夢","Comment_Chinese":"如何？！","Background":"-","BGM":"","Image_1":"Reimu_L","Motion_1":0,"Image_2":"x","Motion_2":0,"NextID":6002},
+{"ID":6001,"Name":"博麗靈夢","Comment_Chinese":"如何？！","Background":"x","BGM":"-","Image_1":"Reimu_L","Motion_1":0,"Image_2":"x","Motion_2":0,"NextID":6002},
 {"ID":6002,"Name":"八雲紫","Comment_Chinese":"是時候讓你見識八雲家的厲害了。","Background":"-","BGM":"-","Image_1":"-","Motion_1":0,"Image_2":"Yukari_L","Motion_2":0,"NextID":6003},
-{"ID":6003,"Name":"八雲紫","Comment_Chinese":"出來吧！藍和橙！","Background":"-","BGM":"-","Image_1":"-","Motion_1":0,"Image_2":"Yukari_L","Motion_2":0,"NextID":0}]
+{"ID":6003,"Name":"八雲紫","Comment_Chinese":"出來吧！藍和橙！","Background":"-","BGM":"-","Image_1":"-","Motion_1":0,"Image_2":"Yukari_L","Motion_2":0,"NextID":0},
+{"ID":7001,"Name":"八雲紫","Comment_Chinese":"真不愧是博麗的巫女，接下來是最後的考驗了！","Background":"x","BGM":"-","Image_1":"x","Motion_1":0,"Image_2":"Yukari_L","Motion_2":0,"NextID":7002},
+{"ID":7002,"Name":"博麗靈夢","Comment_Chinese":"速戰速決！","Background":"-","BGM":"-","Image_1":"Reimu_L","Motion_1":0,"Image_2":"-","Motion_2":0,"NextID":0}]

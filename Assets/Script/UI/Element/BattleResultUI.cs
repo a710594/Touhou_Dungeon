@@ -16,17 +16,15 @@ public class BattleResultUI : MonoBehaviour
     public GameObject ItemGroup;
     public CharacterLvCard[] CharacterLvCards;
 
-    private Action _winCallback;
-    private Action _loseCallback;
+    private Action _callback;
 
     private bool _isWin;
     private Timer _timer = new Timer();
 
-    public void Open(bool isWin, List<int> orignalLvList, List<int> orignalExpList, List<int> itemList, Action winCallback, Action loseCallback)
+    public void Open(bool isWin, List<int> orignalLvList, List<int> orignalExpList, List<int> itemList, Action callback)
     {
         _isWin = isWin;
-        _winCallback = winCallback;
-        _loseCallback = loseCallback;
+        _callback = callback;
         gameObject.SetActive(true);
         WinLabel.SetActive(isWin);
         LoseLabel.SetActive(!isWin);
@@ -73,10 +71,10 @@ public class BattleResultUI : MonoBehaviour
 
     private void SetItemGroup(List<int> itemList)
     {
-        List<KeyValuePair<object, int>> itemPair = new List<KeyValuePair<object, int>>();
+        List<KeyValuePair<int, int>> itemPair = new List<KeyValuePair<int, int>>();
         for (int i = 0; i < itemList.Count; i++)
         {
-            itemPair.Add(new KeyValuePair<object, int>(itemList[i], 0)); //數量設為0是為了不讓 scrollview 顯示數量.實際數量都是1,沒有顯示的必要
+            itemPair.Add(new KeyValuePair<int, int>(itemList[i], 1));
         }
         ScrollView.SetData(new ArrayList(itemPair));
     }
@@ -100,36 +98,41 @@ public class BattleResultUI : MonoBehaviour
         }
         else
         {
-            if (_isWin)
+            //if (_isWin)
+            //{
+            //    if (_winCallback != null)
+            //    {
+            //        _winCallback();
+            //    }
+            //    else
+            //    {
+            //        AudioSystem.Instance.Stop(false);
+            //        MySceneManager.Instance.ChangeScene(MySceneManager.Instance.LastScene, () =>
+            //        {
+            //            ExploreController.Instance.SetFloorFromMemo();
+            //        });
+            //    }
+            //}
+            //else
+            //{
+            //    if (_loseCallback != null)
+            //    {
+            //        _loseCallback();
+            //    }
+            //    else
+            //    {
+            //        AudioSystem.Instance.Stop(false);
+            //        MySceneManager.Instance.ChangeScene(MySceneManager.SceneType.Villiage, () =>
+            //        {
+            //            ItemManager.Instance.PutBagItemIntoWarehouse();
+            //            TeamManager.Instance.RecoverAllMember();
+            //        });
+            //    }
+            //}
+
+            if (_callback != null)
             {
-                if (_winCallback != null)
-                {
-                    _winCallback();
-                }
-                else
-                {
-                    AudioSystem.Instance.Stop(false);
-                    MySceneManager.Instance.ChangeScene(MySceneManager.SceneType.Explore, () =>
-                    {
-                        ExploreController.Instance.SetFloorFromMemo();
-                    });
-                }
-            }
-            else
-            {
-                if (_loseCallback != null)
-                {
-                    _loseCallback();
-                }
-                else
-                {
-                    AudioSystem.Instance.Stop(false);
-                    MySceneManager.Instance.ChangeScene(MySceneManager.SceneType.Villiage, () =>
-                    {
-                        ItemManager.Instance.PutBagItemIntoWarehouse();
-                        TeamManager.Instance.RecoverAllMember();
-                    });
-                }
+                _callback();
             }
         }
     }

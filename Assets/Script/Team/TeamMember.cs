@@ -248,7 +248,7 @@ public class TeamMember
             Armor = _defaultArmor;
         }
 
-        ItemManager.Instance.AddItem(equip, 1, type);
+        ItemManager.Instance.AddEquip(type, equip);
     }
 
     public void SetFoodBuff(ItemEffectData.RootObject data)

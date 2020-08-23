@@ -69,6 +69,7 @@ public class BattleUI : MonoBehaviour
 
         anchorValueBar = ResourceManager.Instance.Spawn(LittleHPBar.gameObject).GetComponent<AnchorValueBar>();
         anchorValueBar.SetValue(character.Info.CurrentHP, character.Info.MaxHP);
+        anchorValueBar.SetHPQueue(character.Info.HPQueue.Count);
         anchorValueBar.SetAnchor(character.ValueBarAnchor);
         _littleHPBarDic.Add(character, anchorValueBar);
         if (character.LiveState == BattleCharacter.LiveStateEnum.Dead)
@@ -171,6 +172,7 @@ public class BattleUI : MonoBehaviour
     {
         _littleHPBarDic[character].gameObject.SetActive(isVisible);
         _littleHPBarDic[character].SetValueTween(character.Info.CurrentHP, character.Info.MaxHP,  null);
+        _littleHPBarDic[character].SetHPQueue(character.Info.HPQueue.Count);
     }
 
     public void SetTurnLabel(int turn)
@@ -178,9 +180,9 @@ public class BattleUI : MonoBehaviour
         TurnLabel.SetLabel("Turn" + turn.ToString());
     }
 
-    public void SetResult(bool isWin, List<int> orignalLvList = null, List<int> orignalExpList = null, List<int> itemList = null, Action winCallback = null, Action loseCallback = null)
+    public void SetResult(bool isWin, Action callback, List<int> orignalLvList = null, List<int> orignalExpList = null, List<int> itemList = null)
     {
-        ResultUI.Open(isWin, orignalLvList, orignalExpList, itemList, winCallback, loseCallback);
+        ResultUI.Open(isWin, orignalLvList, orignalExpList, itemList, callback);
     }
 
     public void SetPower(int power) 

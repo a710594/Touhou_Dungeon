@@ -9,16 +9,19 @@ public class ShopScrollItem : ScrollItem
 
     public override void SetData(object obj)
     {
-        KeyValuePair<object, int> pair = (KeyValuePair<object, int>)obj; //id or Equip, price
-        base.SetData(pair.Key);
+        if (obj is KeyValuePair<int, int>)
+        {
+            KeyValuePair<int, int> pair = (KeyValuePair<int, int>)obj; //id, price
+            base.SetData(pair.Key);
 
-        if (pair.Key is int)
-        {
-            Card.Init((int)pair.Key, pair.Value);
+            Card.Init(pair.Key, pair.Value);
         }
-        else if (pair.Key is Equip)
+        else if(obj is KeyValuePair<Item, int>)
         {
-            Card.Init(((Equip)pair.Key).ID, pair.Value);
+            KeyValuePair<Item, int> pair = (KeyValuePair<Item, int>)obj; //Item, price
+            base.SetData(pair.Key);
+
+            Card.Init(pair.Key.ID, pair.Value);
         }
     }
 }

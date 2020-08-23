@@ -1,4 +1,4 @@
-[{"ID":1,"Image":"Treasure","MinAmount":1,"MaxAmount":1,"Item_1":41003,"Probability_1":1,"Item_2":41004,"Probability_2":1,"Item_3":42002,"Probability_3":1,"Item_4":-20,"Probability_4":7},
-{"ID":2,"Image":"Tree","MinAmount":1,"MaxAmount":3,"Item_1":1003,"Probability_1":1,"Item_2":2001,"Probability_2":1,"Item_3":-10,"Probability_3":1,"Item_4":0,"Probability_4":0},
-{"ID":3,"Image":"Flower","MinAmount":1,"MaxAmount":3,"Item_1":1004,"Probability_1":1,"Item_2":1005,"Probability_2":1,"Item_3":-10,"Probability_3":1,"Item_4":0,"Probability_4":0},
-{"ID":4,"Image":"Mineral","MinAmount":1,"MaxAmount":3,"Item_1":1001,"Probability_1":2,"Item_2":1002,"Probability_2":1,"Item_3":-10,"Probability_3":1,"Item_4":0,"Probability_4":0}]
+[{"ID":1,"Image":"Treasure","MinAmount":1,"MaxAmount":1,"Item_1":1007,"Probability_1":1,"Item_2":-20,"Probability_2":9,"Item_3":0,"Probability_3":0,"Item_4":0,"Probability_4":0},
+{"ID":2,"Image":"Tree","MinAmount":1,"MaxAmount":5,"Item_1":1003,"Probability_1":1,"Item_2":2001,"Probability_2":4,"Item_3":0,"Probability_3":0,"Item_4":0,"Probability_4":0},
+{"ID":3,"Image":"Flower","MinAmount":1,"MaxAmount":5,"Item_1":1004,"Probability_1":1,"Item_2":1005,"Probability_2":1,"Item_3":2004,"Probability_3":3,"Item_4":0,"Probability_4":0},
+{"ID":4,"Image":"Mineral","MinAmount":1,"MaxAmount":5,"Item_1":1001,"Probability_1":2,"Item_2":1002,"Probability_2":1,"Item_3":0,"Probability_3":0,"Item_4":0,"Probability_4":0}]

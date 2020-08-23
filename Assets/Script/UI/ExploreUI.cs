@@ -118,7 +118,7 @@ public class ExploreUI : MonoBehaviour
 
     private void Save() 
     {
-        GameSystem.Instance.SaveMemo();
+        GameSystem.Instance.SaveGame();
     }
 
     private void InteractiveOnClick(ButtonPlus button)
@@ -143,6 +143,8 @@ public class ExploreUI : MonoBehaviour
         {
             InteractiveButtons[i].ClickHandler = InteractiveOnClick;
         }
+
+        SaveButton.interactable = (MySceneManager.Instance.CurrentScene == MySceneManager.SceneType.Explore);
     }
 
     // Start is called before the first frame update

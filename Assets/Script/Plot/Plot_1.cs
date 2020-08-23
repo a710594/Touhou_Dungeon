@@ -18,9 +18,9 @@ public class Plot_1 : Plot //遊戲的第一個事件,對話後進行新手教�
                     plot_2.Start();
                 }, () =>
                 {
+                    AudioSystem.Instance.Stop(false);
                     MySceneManager.Instance.ChangeScene(MySceneManager.SceneType.Logo);
                 });
-                ProgressManager.Instance.SetFlag(0, true);
             });
         });
     }

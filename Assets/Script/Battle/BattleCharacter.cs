@@ -106,6 +106,22 @@ public class BattleCharacter : MonoBehaviour
             Animator.SetBool("IsDying", true);
         }
 
+        for (int i=0; i<Info.SkillList.Count; i++)
+        {
+            if (Info.SkillList[i].Data.CD > 0)
+            {
+                BattleController.Instance.TurnEndHandler += Info.SkillList[i].SetCD;
+            }
+        }
+
+        for (int i = 0; i < Info.SpellCardList.Count; i++)
+        {
+            if (Info.SpellCardList[i].Data.CD > 0)
+            {
+                BattleController.Instance.TurnEndHandler += Info.SpellCardList[i].SetCD;
+            }
+        }
+
         BattleController.Instance.TurnEndHandler += CheckBattleStatus;
     }
 
@@ -266,9 +282,10 @@ public class BattleCharacter : MonoBehaviour
         }
     }
 
-    public void GetSkillRange()
+    public void GetSkillRange(out Vector2Int target, out List<Vector2Int> rangeList)
     {
-        SelectedSkill.GetRange(TargetPosition, this, BattleController.Instance.CharacterList);
+        target = TargetPosition;
+        rangeList = SelectedSkill.GetRange(TargetPosition, this, BattleController.Instance.CharacterList);
     }
 
     public List<Vector2Int> GetDetectRange() //偵查範圍:移動後可用技能擊中目標的範圍
