@@ -270,6 +270,11 @@ public class BattleCharacter : MonoBehaviour
         Info.ActionDoneCompletely();
     }
 
+    public void EscapeFail()
+    {
+        Info.EscapeFail();
+    }
+
     public bool IsInSkillDistance(Vector2Int position)
     {
         if (SelectedSkill != null)

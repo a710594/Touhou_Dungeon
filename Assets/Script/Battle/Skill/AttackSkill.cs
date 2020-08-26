@@ -52,17 +52,17 @@ public class AttackSkill : Skill
         int damage = 0;
         if (hitType == HitType.Critical)
         {
-            damage = CalculateDamage(_user, target.Info, true);
+            damage = CalculateDamage(_user, target.Info, true, true);
         }
         else if (hitType == HitType.Hit)
         {
-            damage = CalculateDamage(_user, target.Info, false);
+            damage = CalculateDamage(_user, target.Info, false, true);
         }
 
         target.SetDamage(damage, hitType, CheckSkillCallback);
     }
 
-    public int CalculateDamage(BattleCharacterInfo executor, BattleCharacterInfo target, bool isCritical)
+    public int CalculateDamage(BattleCharacterInfo executor, BattleCharacterInfo target, bool isCritical, bool isRandom)
     {
         float damage;
         if (_isMagic)
@@ -90,7 +90,11 @@ public class AttackSkill : Skill
         {
             damage = (int)(damage * 2f);
         }
-        damage = (int)(damage * (UnityEngine.Random.Range(100f, 110f) / 100f)); //加上10%的隨機傷害
+
+        if (isRandom)
+        {
+            damage = (int)(damage * (UnityEngine.Random.Range(100f, 110f) / 100f)); //加上10%的隨機傷害
+        }
 
         return Mathf.RoundToInt(damage);
     }

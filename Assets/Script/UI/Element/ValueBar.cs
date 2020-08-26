@@ -7,10 +7,8 @@ using DG.Tweening;
 
 public class ValueBar : MonoBehaviour
 {
-    [SerializeField]
-    private Image _bar;
-    [SerializeField]
-    private Text _label;
+    public Image Bar;
+    public Text Label;
 
     private bool _isTweening = false;
     private int _maxHP;
@@ -20,13 +18,13 @@ public class ValueBar : MonoBehaviour
     {
         if (max != 0)
         {
-            _bar.fillAmount = (float)current / (float)max;
+            Bar.fillAmount = (float)current / (float)max;
         }
         else
         {
-            _bar.fillAmount = 0;
+            Bar.fillAmount = 0;
         }
-        _label.text = current.ToString() + "/" + max.ToString();
+        Label.text = current.ToString() + "/" + max.ToString();
     }
 
     public void SetValueTween(int current, int max, Action callback)
@@ -35,7 +33,7 @@ public class ValueBar : MonoBehaviour
         _maxHP = max;
         if (max != 0)
         {
-            _tweener = _bar.DOFillAmount((float)current / (float)max, 0.5f).OnComplete(() =>
+            _tweener = Bar.DOFillAmount((float)current / (float)max, 0.5f).OnComplete(() =>
             {
                 if (callback != null)
                 {
@@ -46,7 +44,7 @@ public class ValueBar : MonoBehaviour
         }
         else
         {
-            _bar.fillAmount = 0;
+            Bar.fillAmount = 0;
         }
     }
 
@@ -56,8 +54,8 @@ public class ValueBar : MonoBehaviour
         _maxHP = max;
         if (max != 0)
         {
-            _bar.fillAmount = (float)from / (float)max;
-            _tweener = _bar.DOFillAmount((float)to / (float)max, 0.5f).OnComplete(() =>
+            Bar.fillAmount = (float)from / (float)max;
+            _tweener = Bar.DOFillAmount((float)to / (float)max, 0.5f).OnComplete(() =>
             {
                 if (callback != null)
                 {
@@ -68,7 +66,7 @@ public class ValueBar : MonoBehaviour
         }
         else
         {
-            _bar.fillAmount = 0;
+            Bar.fillAmount = 0;
         }
     }
 
@@ -76,7 +74,7 @@ public class ValueBar : MonoBehaviour
     {
         if (_isTweening)
         {
-            _label.text = Mathf.RoundToInt(_maxHP * _bar.fillAmount).ToString() + "/" + _maxHP.ToString();
+            Label.text = Mathf.RoundToInt(_maxHP * Bar.fillAmount).ToString() + "/" + _maxHP.ToString();
         }
     }
 

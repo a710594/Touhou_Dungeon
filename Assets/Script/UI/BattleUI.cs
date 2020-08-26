@@ -17,6 +17,8 @@ public class BattleUI : MonoBehaviour
     public Button IdleButton;
     public Button MoveConfirmButton;
     public Button ReturnActionButton; //返回選擇行動
+    public Button EscapeButton;
+    public Button GiveUpButton;
     public ButtonPlus Screen; //偵測整個畫面的點擊事件
     public Text PowerLabel;
     public Text ActionCountLabel;
@@ -53,9 +55,11 @@ public class BattleUI : MonoBehaviour
         Instance = null;
     }
 
-    public void Init(int power, List<BattleCharacter> characterList)
+    public void Init(int power, List<BattleCharacter> characterList, bool canEscape)
     {
         PowerLabel.text = "Power:" + power.ToString();
+        EscapeButton.gameObject.SetActive(canEscape);
+        GiveUpButton.gameObject.SetActive(canEscape);
         for (int i = 0; i < characterList.Count; i++)
         {
             InitCharacter(characterList[i]);
@@ -114,21 +118,6 @@ public class BattleUI : MonoBehaviour
         }
     }
 
-    //public void SetStatus(BattleCharacter character, string comment, FloatingNumber.Type type, Action callback)
-    //{
-    //    _floatingNumberPoolDic[character].transform.position = Camera.main.WorldToScreenPoint(character.Sprite.transform.position);
-
-    //    _floatingNumberPoolDic[character].Play(comment, type, () =>
-    //    {
-    //    }, () =>
-    //    {
-    //        if (callback != null)
-    //        {
-    //            callback();
-    //        }
-    //    });
-    //}
-
     public void SetSkillScrollViewVisible(bool isVisible)
     {
         SkillScrollView.gameObject.SetActive(isVisible);
@@ -173,6 +162,21 @@ public class BattleUI : MonoBehaviour
         _littleHPBarDic[character].gameObject.SetActive(isVisible);
         _littleHPBarDic[character].SetValueTween(character.Info.CurrentHP, character.Info.MaxHP,  null);
         _littleHPBarDic[character].SetHPQueue(character.Info.HPQueue.Count);
+    }
+
+    public void SetPredictionHP(BattleCharacter character, int damage)
+    {
+        int prediction = character.Info.CurrentHP - damage;
+        if (prediction < 0)
+        {
+            prediction = 0;
+        }
+        _littleHPBarDic[character].SetPrediction(character.Info.CurrentHP, prediction, character.Info.MaxHP);
+    }
+
+    public void StopPredictionHP(BattleCharacter character)
+    {
+        _littleHPBarDic[character].StopPrediction();
     }
 
     public void SetTurnLabel(int turn)
@@ -356,6 +360,19 @@ public class BattleUI : MonoBehaviour
         SkillInfoUI.SetData(skill.Data, skill.Lv);
     }
 
+    private void EscapeOnClick()
+    {
+        BattleController.Instance.ChangeToEscapeState();
+    }
+
+    private void GiveUpOnClick()
+    {
+        ConfirmUI.Open("確定要放棄嗎？\n放棄後會直接回到村莊。", "確定", "取消", ()=> 
+        {
+            BattleController.Instance.GiveUp();
+        }, null);
+    }
+
     private void Awake()
     {
         SetActionGroupVisible(false);
@@ -373,6 +390,8 @@ public class BattleUI : MonoBehaviour
         IdleButton.onClick.AddListener(IdleOnClick);
         MoveConfirmButton.onClick.AddListener(MoveConfirmOnClick);
         ReturnActionButton.onClick.AddListener(ReturnActionOnClick);
+        EscapeButton.onClick.AddListener(EscapeOnClick);
+        GiveUpButton.onClick.AddListener(GiveUpOnClick);
         Screen.ClickHandler = ScreenOnClick;
         Screen.DownHandler = StartDragCamera;
         Screen.PressHandler = OnDragCamera;

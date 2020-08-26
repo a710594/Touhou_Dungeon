@@ -136,7 +136,7 @@ public class BattleController : MachineBehaviour
         ChangeSceneUI.Instance.EndClock(() =>
         {
             BattleUI.Open();
-            BattleUI.Instance.Init(_power, CharacterList);
+            BattleUI.Instance.Init(_power, CharacterList, true);
             ChangeState<TurnStartState>();
         });
     }
@@ -209,7 +209,7 @@ public class BattleController : MachineBehaviour
         ChangeSceneUI.Instance.EndClock(() =>
         {
             BattleUI.Open();
-            BattleUI.Instance.Init(_power, CharacterList);
+            BattleUI.Instance.Init(_power, CharacterList, false);
             ChangeState<TurnStartState>();
         });
     }
@@ -267,7 +267,7 @@ public class BattleController : MachineBehaviour
         {
             SelectedCharacter.SetOutline(true);
             BattleUI.Open();
-            BattleUI.Instance.Init(_power, CharacterList);
+            BattleUI.Instance.Init(_power, CharacterList, true);
             List<BattleCharacter> list = ActionQueueToList(_actionQueue);
             list.Insert(0, SelectedCharacter);
             BattleUI.Instance.InitPriorityQueue(list);
@@ -296,6 +296,7 @@ public class BattleController : MachineBehaviour
         AddState<TurnEndState>();
         AddState<WinState>();
         AddState<LoseState>();
+        AddState<EscapeState>();
 
         SetInitialState<BattleState>();
     }
@@ -325,6 +326,11 @@ public class BattleController : MachineBehaviour
     public void ChangeToSelectSkillState()
     {
         ChangeState<SelectSkillState>();
+    }
+
+    public void ChangeToEscapeState()
+    {
+        ChangeState<EscapeState>();
     }
 
     public void MoveConfirm()
@@ -393,6 +399,11 @@ public class BattleController : MachineBehaviour
         tempList.AddRange(_actionQueue);
         _actionQueue = tempList;
         BattleUI.Instance.InitPriorityQueue(ActionQueueToList(_actionQueue));
+    }
+
+    public void GiveUp()
+    {
+        ChangeState<LoseState>();
     }
 
     private List<BattleCharacter> ActionQueueToList(List<ActionQueueElement> actionQueue)
@@ -767,6 +778,8 @@ public class BattleController : MachineBehaviour
 
     private class ConfirmState : BattleState //玩家確定是否施放技能
     {
+        private List<BattleCharacter> _targetList = new List<BattleCharacter>();
+
         public override void Enter()
         {
             base.Enter();
@@ -785,6 +798,19 @@ public class BattleController : MachineBehaviour
                     TilePainter.Instance.Painting("YellowGrid", 2, rangeList[i]);
                 }
             }
+
+            _targetList.Clear();
+            if (parent.SelectedCharacter.SelectedSkill is AttackSkill)
+            {
+                AttackSkill attackSkill = (AttackSkill)parent.SelectedCharacter.SelectedSkill;
+                _targetList = attackSkill.GetTargetList();
+                int damage;
+                for (int i=0; i< _targetList.Count; i++)
+                {
+                    damage = attackSkill.CalculateDamage(parent.SelectedCharacter.Info, _targetList[i].Info, false, false);
+                    BattleUI.Instance.SetPredictionHP(_targetList[i], damage);
+                }
+            }
         }
 
         public override void ScreenOnClick(Vector2Int position)
@@ -796,6 +822,11 @@ public class BattleController : MachineBehaviour
             else
             {
                 parent.ChangeState<SelectSkillState>();
+            }
+
+            for (int i = 0; i < _targetList.Count; i++)
+            {
+                BattleUI.Instance.StopPredictionHP(_targetList[i]);
             }
         }
 
@@ -985,10 +1016,52 @@ public class BattleController : MachineBehaviour
         {
             base.Enter();
 
-            MySceneManager.Instance.ChangeScene(MySceneManager.SceneType.Explore, () =>
+            bool success = true;
+            int random1;
+            int random2;
+            BattleCharacter character;
+            for (int i=0; i<parent.CharacterList.Count; i++)
             {
-                ExploreController.Instance.SetFloorFromMemo();
-            });
+                character = parent.CharacterList[i];
+                if (character.IsActive && character.LiveState == BattleCharacter.LiveStateEnum.Alive && character.Info.Camp == BattleCharacterInfo.CampEnum.Enemy)
+                {
+                    random1 = UnityEngine.Random.Range(1, parent.SelectedCharacter.Info.AGI + 1);
+                    random2 = UnityEngine.Random.Range(1, character.Info.AGI + 1);
+                    if (random1 < random2)
+                    {
+                        success = false;
+                        break;
+                    }
+                }
+            }
+
+            if (success)
+            {
+                BattleUI.Instance.TipLabel.SetLabel("逃跑成功", false, ()=> 
+                {
+                    AudioSystem.Instance.Stop(false);
+                    MySceneManager.Instance.ChangeScene(MySceneManager.Instance.LastScene, () =>
+                    {
+                        ExploreController.Instance.SetFloorFromMemo();
+                        GameSystem.Instance.AutoSave();
+                    });
+                });
+            }
+            else
+            {
+                parent.SelectedCharacter.EscapeFail();
+                BattleUI.Instance.TipLabel.SetLabel("逃跑失敗", false, ()=> 
+                {
+                    if (parent.SelectedCharacter.Info.ActionCount > 0)
+                    {
+                        parent.ChangeState<SelectActionState>();
+                    }
+                    else
+                    {
+                        parent.ChangeState<SelectCharacterState>();
+                    }
+                });
+            }
         }
     }
 

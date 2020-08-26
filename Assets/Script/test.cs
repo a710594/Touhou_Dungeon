@@ -5,11 +5,11 @@ using UnityEngine.UI;
 
 public class test : MonoBehaviour
 {
-    public FieldEnemyRandom FieldEnemyRandom;
+    public AnchorValueBar AnchorValueBar;
 
     private void Start()
     {
-        FieldEnemyRandom.Init(101, transform.position);
-        FieldEnemyRandom.SetData(GameObject.Find("ExploreCharacter").transform, ExploreController.Instance._pathFindList);
+        AnchorValueBar.SetValue(50, 100);
+        AnchorValueBar.SetPrediction(50, 30, 100);
     }
 }

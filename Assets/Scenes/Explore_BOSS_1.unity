@@ -457,6 +457,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41a705debc6331342af6d2935f0277b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Floor: 6
+  LastFloor: 5
+  NextFloor: 0
   TilemapToPositionList: {fileID: 392474565}
 --- !u!114 &392474565
 MonoBehaviour:

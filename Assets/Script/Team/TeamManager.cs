@@ -46,8 +46,15 @@ public class TeamManager
             }
 
             //temp
+            //MemberList[0].SetEquip(42001);
+            //MemberList[0].SetEquip(41001);
+            //MemberList[1].SetEquip(42001);
+            //MemberList[1].SetEquip(41002);
+            //MemberList[2].SetEquip(42001);
+            //MemberList[2].SetEquip(41002);
+
             MemberList[0].SetEquip(42002);
-            MemberList[0].SetEquip(41003);
+            MemberList[0].SetEquip(41002);
             MemberList[1].SetEquip(42002);
             MemberList[1].SetEquip(41004);
             MemberList[2].SetEquip(42002);

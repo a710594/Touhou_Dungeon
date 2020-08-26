@@ -129,7 +129,7 @@ public class TeamMember
         Lv = lv;
         MaxHP = Mathf.RoundToInt(Data.HP * (1 + ((Lv - 1) * 0.1f)));
         CurrentHP = MaxHP;
-        MaxMP = Mathf.RoundToInt(Data.MP * (1 + ((Lv - 1) * 0.1f)));
+        MaxMP =Data.MP;
         CurrentMP = MaxMP;
         _atk = Mathf.RoundToInt(Data.ATK * (1 + ((Lv - 1) * 0.1f)));
         _def = Mathf.RoundToInt(Data.DEF * (1 + ((Lv - 1) * 0.1f)));
@@ -188,7 +188,7 @@ public class TeamMember
         Exp = exp;
         MaxHP = Mathf.RoundToInt(Data.HP * (1 + ((Lv - 1) * 0.1f)));
         CurrentHP += (MaxHP - originalMaxHP);
-        MaxMP = Mathf.RoundToInt(Data.MP * (1 + ((Lv - 1) * 0.1f)));
+        //MaxMP = Mathf.RoundToInt(Data.MP * (1 + ((Lv - 1) * 0.1f)));
         CurrentMP += (MaxMP - originalMaxMP);
         _atk = Mathf.RoundToInt(Data.ATK * (1 + ((Lv - 1) * 0.1f)));
         _def = Mathf.RoundToInt(Data.DEF * (1 + ((Lv - 1) * 0.1f)));

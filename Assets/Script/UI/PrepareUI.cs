@@ -48,8 +48,8 @@ public class PrepareUI : MonoBehaviour
 
     private void WarehouseIconOnClick(object obj)
     {
-        ItemManager.Instance.MinusItem((int)obj, 1, ItemManager.Type.Warehouse);
-        ItemManager.Instance.AddItem((int)obj, 1, ItemManager.Type.Bag);
+        ItemManager.Instance.MinusItem(((Item)obj).ID, 1, ItemManager.Type.Warehouse);
+        ItemManager.Instance.AddItem(((Item)obj).ID, 1, ItemManager.Type.Bag);
 
         SetData();
     }

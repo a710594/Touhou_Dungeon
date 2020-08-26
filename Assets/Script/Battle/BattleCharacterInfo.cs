@@ -381,7 +381,7 @@ public class BattleCharacterInfo
         Camp = CampEnum.Enemy;
 
         SkillData.RootObject skillData = SkillData.GetData(EnemyData.SkillList[0]);
-        PriorityList.Add(skillData.Priority);
+        PriorityList.Add(100);
     }
 
     public virtual void Init(int id, int lv, int EquipAtk,int EquipMtk, int EquipDef, int EquipMef) //計算機中的玩家
@@ -504,6 +504,11 @@ public class BattleCharacterInfo
     {
         HasUseSkill = true;
         _actionCount = 0;
+    }
+
+    public void EscapeFail()
+    {
+        _actionCount--;
     }
 
     public void RemoveSleep()
