@@ -32,9 +32,9 @@ public class GameSystem : MonoBehaviour
 
     public void AutoSave()
     {
-#if !UNITY_EDITOR
+//#if !UNITY_EDITOR
         SaveGame();
-#endif
+//#endif
     }
 
     public void ClearMemo()

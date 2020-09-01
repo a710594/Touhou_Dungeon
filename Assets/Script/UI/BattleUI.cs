@@ -115,6 +115,11 @@ public class BattleUI : MonoBehaviour
         if (character != null)
         {
             InfoUI.SetData(character);
+            ActionCountLabel.text = "行動次數：" + character.Info.ActionCount.ToString();
+        }
+        else
+        {
+            ActionCountLabel.text = string.Empty;
         }
     }
 

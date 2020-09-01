@@ -9,6 +9,8 @@ public class ConversationUI : MonoBehaviour
 {
     public static ConversationUI Instance;
 
+    public Action<int> Handler;
+
     public Text NameLabel;
     public Typewriter Typewriter;
     public Button NextButton;
@@ -67,23 +69,8 @@ public class ConversationUI : MonoBehaviour
         }
 
         ConversationData.RootObject data = ConversationData.GetData(nextId);
-
-        //if (data.Effect == ConversationData.EffectEnum.None)
-        //{
-        SetData(data);
-        //}
-        //else if (data.Effect == ConversationData.EffectEnum.FadeInFadeOut)
-        //{
-        //    _isClickable = false;
-        //    FadeImage.DOFade(1, 1).OnComplete(() =>
-        //    {
-        //        _isClickable = true;
-        //        NextConversationID(nextId);
-        //        FadeImage.DOFade(0, 1);
-        //    });
-        //}
-
         _data = data;
+        SetData(data);
     }
 
     private void SetData(ConversationData.RootObject data)
@@ -145,6 +132,11 @@ public class ConversationUI : MonoBehaviour
             {
                 CharacterImage[i].transform.DOShakePosition(0.5f, 20);
             }
+        }
+
+        if (Handler != null)
+        {
+            Handler(data.ID);
         }
     }
 

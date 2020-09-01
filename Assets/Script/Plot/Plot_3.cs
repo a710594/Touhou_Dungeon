@@ -12,7 +12,7 @@ public class Plot_3 : Plot
             return;
         }
 
-        ExploreUI.Close();
+        ExploreUI.Instance.SetVisible(false);
         ExploreController.Instance.PlayerPause();
         ExploreController.Instance.Write();
         Camera.main.transform.DOMoveY(12, 3).OnComplete(()=> 
@@ -33,19 +33,37 @@ public class Plot_3 : Plot
                             MySceneManager.Instance.ChangeScene(MySceneManager.Instance.LastScene, () =>
                             {
                                 ExploreController.Instance.SetFloorFromMemo();
+                                ExploreUI.Instance.SetVisible(false);
+                                ConversationUI.Open(9001, false, ()=> 
+                                {
+                                    ExploreUI.Instance.SetVisible(true);
+                                });
                             });
                         }, ()=>
                         {
-                            AudioSystem.Instance.Stop(false);
-                            MySceneManager.Instance.ChangeScene(MySceneManager.SceneType.Villiage, () =>
+                            ConversationUI.Open(8001, false, ()=> 
                             {
-                                ItemManager.Instance.PutBagItemIntoWarehouse();
-                                TeamManager.Instance.RecoverAllMember();
+                                AudioSystem.Instance.Stop(false);
+                                MySceneManager.Instance.ChangeScene(MySceneManager.SceneType.Villiage, () =>
+                                {
+                                    ItemManager.Instance.PutBagItemIntoWarehouse();
+                                    TeamManager.Instance.RecoverAllMember();
+                                });
                             });
                         });
                     });
                 });
             });
+            ConversationUI.Instance.Handler = OnConversationHandler;
         });
+    }
+
+    private void OnConversationHandler(int id)
+    {
+        if (id == 3004)
+        {
+            SpriteRenderer sprite = GameObject.Find("Yukari").GetComponent<SpriteRenderer>();
+            sprite.DOColor(Color.white, 1);        
+        }
     }
 }

@@ -11,6 +11,7 @@ public class VilliageUI : MonoBehaviour
     public Button TeamButton;
     public Button FormationButton;
     public Button WarehouseButton;
+    public Button SaveButton;
     public Button BuyButton;
     public Button SellButton;
     public Button CloseShopGroupButton;
@@ -49,6 +50,11 @@ public class VilliageUI : MonoBehaviour
         BagUI.Open(ItemManager.Type.Warehouse);
     }
 
+    private void SaveOnClick()
+    {
+        GameSystem.Instance.SaveGame();
+    }
+
     private void BuyOnClick()
     {
         ShopUI.Open();
@@ -75,8 +81,12 @@ public class VilliageUI : MonoBehaviour
         TeamButton.onClick.AddListener(TeamOnClick);
         FormationButton.onClick.AddListener(FormationOnClick);
         WarehouseButton.onClick.AddListener(WarehouseOnClick);
+        SaveButton.onClick.AddListener(SaveOnClick);
         BuyButton.onClick.AddListener(BuyOnClick);
         SellButton.onClick.AddListener(SellOnClick);
         CloseShopGroupButton.onClick.AddListener(CloseShopGroupOnClick);
+
+        AudioSystem.Instance.Stop();
+        AudioSystem.Instance.Play("Jinja", true);
     }
 }

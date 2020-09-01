@@ -127,6 +127,11 @@ public class ExploreUI : MonoBehaviour
         ExploreController.Instance.Interactive((Vector2Int)button.Data);
     }
 
+    public void SetVisible(bool isVisible)
+    {
+        gameObject.SetActive(isVisible);
+    }
+
     void Awake()
     {
         Instance = this; //temp

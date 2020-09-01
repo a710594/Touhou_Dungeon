@@ -24,7 +24,7 @@ public class ExploreController
         }
     }
 
-    public int ArriveFloor = 4;
+    public int ArriveFloor = 1;
     public int CurrentFloor
     {
         get
@@ -157,7 +157,10 @@ public class ExploreController
             Write();
         }
 
-        Caretaker.Instance.Save<MapMemo>(_memo);
+        if (_memo != null)
+        {
+            Caretaker.Instance.Save<MapMemo>(_memo);
+        }
     }
 
     public void ChangeFloor(int floor)
@@ -277,8 +280,7 @@ public class ExploreController
         {
             ItemManager.Instance.PutBagItemIntoWarehouse();
             TeamManager.Instance.RecoverAllMember();
-            //FarmManager.Instance.ChangeState();
-            //VilliageController.Instance.SetData();
+            GameSystem.Instance.AutoSave();
         });
     }
 
@@ -323,6 +325,7 @@ public class ExploreController
     {
         //AudioSystem.Instance.Stop(true);
         StopEnemy();
+        _fieldEnemyList.Clear();
         ExploreUI.Instance.StopTipLabel();
 
         ChangeSceneUI.Instance.StartClock(() =>
@@ -340,7 +343,6 @@ public class ExploreController
                     });
                 }, ()=> 
                 {
-                    _fieldEnemyList.Clear();
                     AudioSystem.Instance.Stop(false);
                     MySceneManager.Instance.ChangeScene(MySceneManager.SceneType.Villiage, () =>
                     {

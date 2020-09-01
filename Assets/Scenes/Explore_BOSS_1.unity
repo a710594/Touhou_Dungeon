@@ -179,7 +179,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 12
   m_Sprite: {fileID: 21300000, guid: 49547759a47be29469039a2252604270, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -210,7 +210,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 104352615}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 39ccae25b9a97484c8384b6ed571c5fd, type: 3}
   m_Name: 
@@ -413,19 +413,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 111cb7faed308374bbe5a4e0d12808a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  FieldEnemyRandom: {fileID: 325252868}
---- !u!114 &325252868 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3885497874240513817, guid: e9f5b9658af2d774db44239368ba0121,
-    type: 3}
-  m_PrefabInstance: {fileID: 1384294701}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 325252866}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8ac2b473aec04f5438c8b925087ba5bf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  AnchorValueBar: {fileID: 0}
 --- !u!1 &392474563
 GameObject:
   m_ObjectHideFlags: 0
