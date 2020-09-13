@@ -25,6 +25,7 @@ public class BagUI : MonoBehaviour
     public Button EquipButton;
     public Button DiscardButton;
     public Button UseButton;
+    public GameObject ItemTypeGroup;
     public BagSelectCharacterGroup SelectCharacterGroup;
     public SetAmountGroup SetAmountGroup;
     public EquipComment EquipComment;
@@ -46,7 +47,7 @@ public class BagUI : MonoBehaviour
         Instance.Init(type);
     }
 
-    public static void Open(ItemManager.Type type, TeamMember teamMember, List<Equip> equipList)
+    public static void Open(ItemManager.Type type, TeamMember teamMember, EquipData.TypeEnum equipType)
     {
         ExploreController.Instance.StopEnemy();
         if (Instance == null)
@@ -54,7 +55,7 @@ public class BagUI : MonoBehaviour
             Instance = ResourceManager.Instance.Spawn("BagUI", ResourceManager.Type.UI).GetComponent<BagUI>();
         }
 
-        Instance.Init(type, teamMember, equipList);
+        Instance.Init(type, teamMember, equipType);
     }
 
     public static void Close()
@@ -64,14 +65,15 @@ public class BagUI : MonoBehaviour
         Instance = null;
     }
 
-    private void Init(ItemManager.Type type)
+    private void Init(ItemManager.Type type) //一般背包用
     {
         _managerType = type;
         _selectedMember = null;
 
         MoneyLabel.text = ItemManager.Instance.Money.ToString();
         KeyLabel.text = ItemManager.Instance.KeyAmount.ToString();
-        SetScrollView(ItemData.TypeEnum.All);
+        SetScrollView(ItemData.TypeEnum.All, false);
+        ItemTypeGroup.SetActive(true);
         SetVolume();
         ClearInfo();
 
@@ -81,20 +83,21 @@ public class BagUI : MonoBehaviour
         }
     }
 
-    private void Init(ItemManager.Type type, TeamMember member, List<Equip> equipList)
+    private void Init(ItemManager.Type type, TeamMember member, EquipData.TypeEnum equipType) //換裝備用
     {
         _managerType = type;
         _selectedMember = member;
 
         MoneyLabel.text = ItemManager.Instance.Money.ToString();
         KeyLabel.text = ItemManager.Instance.KeyAmount.ToString();
-        SetScrollView(equipList);
+        SetScrollView(ItemManager.Instance.GetEquipListByType(type, equipType));
+        ItemTypeGroup.SetActive(false);
         SetVolume();
         ClearInfo();
         //SelectCharacterGroup.SetData();
     }
 
-    private void SetScrollView(ItemData.TypeEnum type)
+    private void SetScrollView(ItemData.TypeEnum type, bool isRefresh)
     {
         List<Item> itemList = new List<Item>();
         if (_managerType == ItemManager.Type.Bag)
@@ -105,14 +108,20 @@ public class BagUI : MonoBehaviour
         {
             itemList = ItemManager.Instance.GetItemListByType(ItemManager.Type.Warehouse, type);
         }
-        ScrollView.SetData(new ArrayList(itemList));
-        ScrollView.AddClickHandler(IconOnClick);
+
+        if (isRefresh)
+        {
+            ScrollView.Refresh(new ArrayList(itemList));
+        }
+        else
+        {
+            ScrollView.SetData(new ArrayList(itemList));
+        }
     }
 
     private void SetScrollView(List<Equip> list)
     {
         ScrollView.SetData(new ArrayList(list));
-        ScrollView.AddClickHandler(IconOnClick);
     }
 
     private void SetVolume()
@@ -230,35 +239,35 @@ public class BagUI : MonoBehaviour
 
     private void AllOnClick()
     {
-        SetScrollView(ItemData.TypeEnum.All);
+        SetScrollView(ItemData.TypeEnum.All, false);
         ClearInfo();
         _itemType = ItemData.TypeEnum.All;
     }
 
     private void MaterialOnClick()
     {
-        SetScrollView(ItemData.TypeEnum.Material);
+        SetScrollView(ItemData.TypeEnum.Material, false);
         ClearInfo();
         _itemType = ItemData.TypeEnum.Material;
     }
 
     private void FoodOnClick()
     {
-        SetScrollView(ItemData.TypeEnum.Food);
+        SetScrollView(ItemData.TypeEnum.Food, false);
         ClearInfo();
         _itemType = ItemData.TypeEnum.Food;
     }
 
     private void MedicineOnClick()
     {
-        SetScrollView(ItemData.TypeEnum.Medicine);
+        SetScrollView(ItemData.TypeEnum.Medicine, false);
         ClearInfo();
         _itemType = ItemData.TypeEnum.Medicine;
     }
 
     private void EquipOnClick()
     {
-        SetScrollView(ItemData.TypeEnum.Equip);
+        SetScrollView(ItemData.TypeEnum.Equip, false);
         ClearInfo();
         _itemType = ItemData.TypeEnum.Equip;
     }
@@ -314,7 +323,7 @@ public class BagUI : MonoBehaviour
                 ItemManager.Instance.MinusItem(_selectedItem.ID, amount, _managerType);
             }
             SetVolume();
-            SetScrollView(_itemType);
+            SetScrollView(_itemType, true);
         });
     }
 
@@ -345,7 +354,7 @@ public class BagUI : MonoBehaviour
         //}
 
         SetVolume();
-        SetScrollView(_itemType);
+        SetScrollView(_itemType, false);
     }
 
 
@@ -364,5 +373,6 @@ public class BagUI : MonoBehaviour
         UseButton.onClick.AddListener(UseOnClick);
         DiscardButton.onClick.AddListener(DiscardOnClick);
         SelectCharacterGroup.CharacterOnClickHandler = CharacterOnClick;
+        ScrollView.AddClickHandler(IconOnClick);
     }
 }

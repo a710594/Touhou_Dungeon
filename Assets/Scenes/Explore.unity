@@ -919,6 +919,8 @@ GameObject:
   - component: {fileID: 750792597}
   - component: {fileID: 750792596}
   - component: {fileID: 750792595}
+  - component: {fileID: 750792599}
+  - component: {fileID: 750792598}
   m_Layer: 0
   m_Name: Grid
   m_TagString: Untagged
@@ -975,6 +977,30 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &750792598
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 750792594}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2ca5a0b9e3e6a6d4cb3cc2eb5a7e478b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &750792599
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 750792594}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a852002c903e0c4e9e1812fe6a24473, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &783639566
 GameObject:
   m_ObjectHideFlags: 0
@@ -1037,12 +1063,12 @@ GameObject:
   - component: {fileID: 852577764}
   - component: {fileID: 852577765}
   m_Layer: 0
-  m_Name: Tilemap (4)
+  m_Name: Wall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1839735485 &852577764
 Tilemap:
   m_ObjectHideFlags: 0
@@ -1119,7 +1145,7 @@ TilemapRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 4
+  m_SortingOrder: -1
   m_ChunkSize: {x: 32, y: 32, z: 32}
   m_ChunkCullingBounds: {x: 0, y: 0, z: 0}
   m_MaxChunkCount: 16

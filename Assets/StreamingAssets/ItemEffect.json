@@ -12,4 +12,6 @@
 {"ID":3002,"Name":"回復藥","AddHP":40,"AddMP":0,"HasBuff":0,"ATK":0,"DEF":0,"MTK":0,"MEF":0,"AGI":0,"SEN":0,"BuffComment":null},
 {"ID":3003,"Name":"大回復藥","AddHP":80,"AddMP":0,"HasBuff":0,"ATK":0,"DEF":0,"MTK":0,"MEF":0,"AGI":0,"SEN":0,"BuffComment":null},
 {"ID":3004,"Name":"特大回復藥","AddHP":160,"AddMP":0,"HasBuff":0,"ATK":0,"DEF":0,"MTK":0,"MEF":0,"AGI":0,"SEN":0,"BuffComment":null},
-{"ID":3005,"Name":"終極回復藥","AddHP":320,"AddMP":0,"HasBuff":0,"ATK":0,"DEF":0,"MTK":0,"MEF":0,"AGI":0,"SEN":0,"BuffComment":null}]
+{"ID":3005,"Name":"終極回復藥","AddHP":320,"AddMP":0,"HasBuff":0,"ATK":0,"DEF":0,"MTK":0,"MEF":0,"AGI":0,"SEN":0,"BuffComment":null},
+{"ID":3006,"Name":"MP 藥","AddHP":0,"AddMP":50,"HasBuff":0,"ATK":0,"DEF":0,"MTK":0,"MEF":0,"AGI":0,"SEN":0,"BuffComment":null},
+{"ID":3007,"Name":"大MP 藥","AddHP":0,"AddMP":100,"HasBuff":0,"ATK":0,"DEF":0,"MTK":0,"MEF":0,"AGI":0,"SEN":0,"BuffComment":null}]

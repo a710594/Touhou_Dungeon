@@ -7,15 +7,26 @@ using DG.Tweening;
 
 public class LoadingUI : MonoBehaviour
 {
+    public static LoadingUI Instance;
+
     private static bool _exists;
 
     public Image Image;
+    public Text Label;
 
-    public static LoadingUI Instance;
+    private int _count = 0;
+    private float _startTime = -1;
 
-    public void Open(Action callback) 
+    public void Open(Action callback)
     {
         StartCoroutine(Loading(callback));
+        _startTime = Time.time;
+    }
+
+    public void Close()
+    {
+        Image.gameObject.SetActive(false);
+        _startTime = -1;
     }
 
     public IEnumerator Loading(Action callback)
@@ -25,7 +36,22 @@ public class LoadingUI : MonoBehaviour
         yield return null;
         callback();
 
-        Image.gameObject.SetActive(false);
+        //Image.gameObject.SetActive(false);
+    }
+
+    private void Update()
+    {
+        if (_startTime != -1 && (Time.time - _startTime) > 0.1f)
+        {
+            string text = "Loading.";
+            for (int i=0; i<_count; i++)
+            {
+                text += ".";
+            }
+            Label.text = text;
+            _count = (_count + 1) % 3;
+            _startTime = Time.time;
+        }
     }
 
     void Awake()

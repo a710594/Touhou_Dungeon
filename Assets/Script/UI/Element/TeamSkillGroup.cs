@@ -59,7 +59,6 @@ public class TeamSkillGroup : MonoBehaviour
         {
             SkillScrollView.SetData(new ArrayList(member.SkillDic));
         }
-        SkillScrollView.AddClickHandler(SkillOnClick);
 
         if (MySceneManager.Instance.CurrentScene == MySceneManager.SceneType.Villiage)
         {
@@ -241,5 +240,6 @@ public class TeamSkillGroup : MonoBehaviour
         Clear();
 
         UpgradeButton.onClick.AddListener(UpgradeOnClick);
+        SkillScrollView.AddClickHandler(SkillOnClick);
     }
 }

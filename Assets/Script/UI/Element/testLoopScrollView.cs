@@ -6,15 +6,23 @@ public class testLoopScrollView : MonoBehaviour
 {
     public LoopScrollView ScrollView;
 
+    private List<string> NumberList = new List<string>();
+
     // Start is called before the first frame update
     void Start()
     {
-        List<string> list = new List<string>();
         for (int i=0; i<20; i++)
         {
-            list.Add(i.ToString());
+            NumberList.Add(i.ToString());
         }
-        ScrollView.SetData(new ArrayList(list));
+        ScrollView.SetData(new ArrayList(NumberList));
+        ScrollView.AddClickHandler(ButtonOnClick);
+    }
+
+    private void ButtonOnClick(object obj)
+    {
+        NumberList.Remove((string)obj);
+        ScrollView.Refresh(new ArrayList(NumberList));
     }
 
     // Update is called once per frame

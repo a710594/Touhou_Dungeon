@@ -45,7 +45,6 @@ public class CookUI : MonoBehaviour
         _selectedData = null;
 
         MenuScrollView.SetData(new ArrayList(CookData.GetAllData()));
-        MenuScrollView.AddClickHandler(MenuOnClick);
     }
 
     private void SetData(CookData.RootObject cookData)
@@ -161,5 +160,6 @@ public class CookUI : MonoBehaviour
 
         ProduceButton.ClickHandler = ProduceOnClick;
         CloseButton.onClick.AddListener(Close);
+        MenuScrollView.AddClickHandler(MenuOnClick);
     }
 }

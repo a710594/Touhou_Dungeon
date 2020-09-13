@@ -23,6 +23,7 @@ public class SkillData
         Summon,
         Train,
         Donothing,
+        RecoverMP,
     }
 
     public enum RangeTypeEnum

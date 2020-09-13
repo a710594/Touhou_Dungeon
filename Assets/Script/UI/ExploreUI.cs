@@ -119,6 +119,7 @@ public class ExploreUI : MonoBehaviour
     private void Save() 
     {
         GameSystem.Instance.SaveGame();
+        TipLabel.SetLabel("存檔成功");
     }
 
     private void InteractiveOnClick(ButtonPlus button)

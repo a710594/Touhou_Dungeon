@@ -69,6 +69,8 @@ public class ItemManager
                 AddWarehouseItem(item.ID, item.Amount);
             }
         }
+
+        AddItem(3006, 1, Type.Warehouse);
     }
 
     public void Save()
@@ -221,6 +223,7 @@ public class ItemManager
         _bagEquipDic[equip.Type].Add(equip);
         _bagTypeDic[ItemData.TypeEnum.All].Add(equip);
         _bagTypeDic[ItemData.TypeEnum.Equip].Add(equip);
+        CurrentBagVolume += equip.Volume;
     }
 
     private void AddWarehouseEquip(Equip equip)
@@ -230,7 +233,7 @@ public class ItemManager
         _warehouseTypeDic[ItemData.TypeEnum.Equip].Add(equip);
     }
 
-    public void MinusItem(int id, int amount, Type type) //obj 有可能為 id 或 equip
+    public void MinusItem(int id, int amount, Type type)
     {
         if (type == Type.Bag)
         {
@@ -242,7 +245,7 @@ public class ItemManager
         }
     }
 
-    private void MinusBagItem(int id, int amount) //obj 有可能為 id 或 equip
+    private void MinusBagItem(int id, int amount)
     {
         Item item;
         ItemData.RootObject data = ItemData.GetData(id);

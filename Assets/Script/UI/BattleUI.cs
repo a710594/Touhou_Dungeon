@@ -91,11 +91,13 @@ public class BattleUI : MonoBehaviour
 
         if (isVisible)
         {
-            //ActionCountLabel.text = LanguageData.GetText(10, LanguageSystem.Instance.CurrentLanguage) +  ":" + BattleController.Instance.SelectedCharacter.Info.ActionCount; //行動次數
+            ActionCountLabel.text = LanguageData.GetText(10, LanguageSystem.Instance.CurrentLanguage) +  ":" + BattleController.Instance.SelectedCharacter.Info.ActionCount; //行動次數
+            MoveActionButton.interactable = (BattleController.Instance.SelectedCharacter.Info.CurrentPriority == 100);
             SkillActionButton.interactable = !BattleController.Instance.SelectedCharacter.Info.HasUseSkill;
             SpellCardActionButton.interactable = !BattleController.Instance.SelectedCharacter.Info.HasUseSkill;
             ItemActionButton.interactable = !BattleController.Instance.SelectedCharacter.Info.HasUseSkill;
             UndoButton.interactable = BattleController.Instance.SelectedCharacter.CanUndoMove();
+            SetEscapeButton();
         }
     }
 
@@ -115,11 +117,11 @@ public class BattleUI : MonoBehaviour
         if (character != null)
         {
             InfoUI.SetData(character);
-            ActionCountLabel.text = "行動次數：" + character.Info.ActionCount.ToString();
+            //ActionCountLabel.text = "行動次數：" + character.Info.ActionCount.ToString();
         }
         else
         {
-            ActionCountLabel.text = string.Empty;
+            //ActionCountLabel.text = string.Empty;
         }
     }
 
@@ -133,10 +135,9 @@ public class BattleUI : MonoBehaviour
         }
     }
 
-    public void SetSkillScrollViewData(List<Skill> list)
+    private void SetSkillScrollViewData(List<Skill> list)
     {
         SkillScrollView.SetData(new ArrayList(list));
-        SkillScrollView.AddClickHandler(SkillOnClick);
     }
 
     public void RemoveSelectedSkill() 
@@ -237,9 +238,9 @@ public class BattleUI : MonoBehaviour
         }
     }
 
-    public void InitPriorityQueue(List<BattleCharacter> list)
+    public void InitPriorityQueue(List<BattleCharacter> characterList, List<int> priorityList)
     {
-        PriorityQueue.Init(list);
+        PriorityQueue.Init(characterList, priorityList);
     }
 
     public void ScrollPriorityQueue(BattleCharacter character)
@@ -263,13 +264,25 @@ public class BattleUI : MonoBehaviour
         });
     }
 
-    private void MoveActionOnClick()
+    private void SetEscapeButton()
+    {
+        if (BattleController.Instance.SelectedCharacter.Info.ActionCount == 2)
+        {
+            EscapeButton.GetComponent<Image>().color = Color.white;
+        }
+        else
+        {
+            EscapeButton.GetComponent<Image>().color = Color.gray;
+        }
+    }
+
+    public void MoveActionOnClick()
     {
         BattleController.Instance.ChangeToMoveState();
         SetActionGroupVisible(false);
     }
 
-    private void SkillActionOnClick()
+    public void SkillActionOnClick()
     {
         BattleController.Instance.ChangeToSelectSkillState();
         SetActionGroupVisible(false);
@@ -299,9 +312,10 @@ public class BattleUI : MonoBehaviour
     private void UndoOnClick()
     {
         BattleController.Instance.MoveUndo();
+        SetEscapeButton();
     }
 
-    private void IdleOnClick()
+    public void IdleOnClick()
     {
         BattleController.Instance.SetIdle();
         SetActionGroupVisible(false);
@@ -367,7 +381,14 @@ public class BattleUI : MonoBehaviour
 
     private void EscapeOnClick()
     {
-        BattleController.Instance.ChangeToEscapeState();
+        if (BattleController.Instance.SelectedCharacter.Info.ActionCount == 2)
+        {
+            BattleController.Instance.ChangeToEscapeState();
+        }
+        else
+        {
+            TipLabel.SetLabel("需要有兩個行動次數才能逃跑");
+        }
     }
 
     private void GiveUpOnClick()
@@ -401,5 +422,6 @@ public class BattleUI : MonoBehaviour
         Screen.DownHandler = StartDragCamera;
         Screen.PressHandler = OnDragCamera;
         Screen.UpHandler = EndDragCamera;
+        SkillScrollView.AddClickHandler(SkillOnClick);
     }
 }

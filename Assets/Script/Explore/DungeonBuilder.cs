@@ -2,27 +2,22 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DungeonBuilder
+public class DungeonBuilder : MonoBehaviour
 {
-    private static DungeonBuilder _instance;
-    public static DungeonBuilder Instance
-    {
-        get
-        {
-            if (_instance == null)
-            {
-                _instance = new DungeonBuilder();
-            }
-            return _instance;
-        }
-    }
+    public static DungeonBuilder Instance;
 
+    private int _loadingCount = 0;
     private List<Vector2Int> _mapList = new List<Vector2Int>();
     private List<Vector2Int> _normalRoomMapList = new List<Vector2Int>(); //一般房間的地圖
     private List<Vector2Int> _treasureRoomMapList = new List<Vector2Int>(); //寶藏房間的地圖
     private List<KeyValuePair<Vector2Int, Room>> _wallDirectionDic = new List<KeyValuePair<Vector2Int, Room>>();
 
-    public MapInfo Generate(DungeonData.RootObject data)
+    public void Generate(DungeonData.RootObject data)
+    {
+        StartCoroutine(generate(data));
+    }
+
+    public IEnumerator generate(DungeonData.RootObject data)
     {
         int roomId;
         int random;
@@ -46,6 +41,8 @@ public class DungeonBuilder
         room.SetPosition(Vector2Int.zero);
         SetRoom(room);
         AddWallDirectionList(room);
+
+        yield return null;
 
         //The other room
         for (int i = 0; i < data.RoomAmount - 1; i++)
@@ -77,6 +74,7 @@ public class DungeonBuilder
                     break;
                 }
             }
+            yield return null;
         }
 
         //取得房間以外的空間
@@ -92,6 +90,7 @@ public class DungeonBuilder
                 {
                     outsideList.Add(position);
                 }
+                if (CheckLoadingCount()) yield return null;
             }
         }
 
@@ -103,6 +102,7 @@ public class DungeonBuilder
                 _mapList.Add(position);
             }
         }
+        yield return null;
 
         //Generate path
         Vector2Int fromDoor;
@@ -122,6 +122,7 @@ public class DungeonBuilder
             {
                 i--;
             }
+            yield return null;
         }
 
         //Random path
@@ -141,6 +142,7 @@ public class DungeonBuilder
             {
                 i--;
             }
+            yield return null;
         }
 
         //Treasure Room path
@@ -162,6 +164,7 @@ public class DungeonBuilder
             {
                 doorList.Add(fromDoor);
             }
+            yield return null;
         }
 
         //Grass 
@@ -173,6 +176,7 @@ public class DungeonBuilder
             position = tempList[Random.Range(0, tempList.Count)];
             grassList.Add(position);
             tempList.Remove(position);
+            if (CheckLoadingCount()) yield return null;
         }
 
         int count = 0;
@@ -182,6 +186,7 @@ public class DungeonBuilder
             {
                 grassList.Add(position);
                 count++;
+                if (CheckLoadingCount()) yield return null;
             }
         }
 
@@ -305,7 +310,8 @@ public class DungeonBuilder
             mapInfo.RoomPositionList.Add(roomList[i].PositionList);
         }
 
-        return mapInfo;
+        ExploreController.Instance.SetMapInfo(mapInfo);
+        DungeonPainter.Instance.Paint(mapInfo);
     }
 
     private void AddWallDirectionList(Room room)
@@ -404,5 +410,24 @@ public class DungeonBuilder
                 }
             }
         }
+    }
+
+    private bool CheckLoadingCount()
+    {
+        _loadingCount++;
+        if (_loadingCount == 1000)
+        {
+            _loadingCount = 0;
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    private void Awake()
+    {
+        Instance = this;
     }
 }

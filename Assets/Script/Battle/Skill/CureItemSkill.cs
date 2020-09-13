@@ -37,6 +37,6 @@ public class CureItemSkill : Skill
     {
         base.SetEffect(target);
 
-        target.SetRecover(_value, CheckSkillCallback); //與 CureSkill 不同的地方之一是回復量的計算
+        target.SetRecoverHP(_value, CheckSkillCallback); //與 CureSkill 不同的地方之一是回復量的計算
     }
 }

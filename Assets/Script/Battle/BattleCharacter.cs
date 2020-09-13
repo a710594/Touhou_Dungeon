@@ -567,7 +567,7 @@ public class BattleCharacter : MonoBehaviour
         }
     }
 
-    public void SetRecover(int recover, Action<BattleCharacter> callback)
+    public void SetRecoverHP(int recover, Action<BattleCharacter> callback)
     {
         if (LiveState == BattleCharacter.LiveStateEnum.Dying)
         {
@@ -576,6 +576,18 @@ public class BattleCharacter : MonoBehaviour
         }
 
         Info.CurrentHP += recover;
+        BattleUI.Instance.SetFloatingNumber(this, recover.ToString(), FloatingNumber.Type.Recover, true, () =>
+        {
+            if (callback != null)
+            {
+                callback(this);
+            }
+        });
+    }
+
+    public void SetRecoverMP(int recover, Action<BattleCharacter> callback)
+    {
+        Info.CurrentMP += recover;
         BattleUI.Instance.SetFloatingNumber(this, recover.ToString(), FloatingNumber.Type.Recover, true, () =>
         {
             if (callback != null)

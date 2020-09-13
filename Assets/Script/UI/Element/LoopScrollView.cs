@@ -28,6 +28,7 @@ public class LoopScrollView : MonoBehaviour
     private int _currentIndex = 0;
     private int _gridAmount = 0; //Grid 的數量
     private int _gridElementAmount; //Grid 上物件的數量
+    private int _dataAmount = 0;
     private float _itemLength; //舉例來說,垂直ScrollView的_itemLength是元件的高度
     private float _itemSubLength; //那他的_itemSubLength就是元件的寬度
     private float _upperBound;
@@ -49,7 +50,8 @@ public class LoopScrollView : MonoBehaviour
         {
             Init();
         }
-
+        _dataAmount = list.Count;
+        _currentIndex = _gridAmount;
         if (list.Count == 0)
         {
             for (int i = 0; i < _itemList.Count; i++)
@@ -173,10 +175,54 @@ public class LoopScrollView : MonoBehaviour
         }
 
         _selectedItem = null;
-        _onClickHandler = null;
-        _onDownHandler = null;
-        _onPressHandler = null;
-        _onUpHandler = null;
+        //_onClickHandler = null;
+        //_onDownHandler = null;
+        //_onPressHandler = null;
+        //_onUpHandler = null;
+    }
+
+    public void Refresh(ArrayList list)
+    {
+        int originalDataAmount = _dataAmount;
+        Vector2 position = Content.transform.position;
+        Vector2 localPosition = Content.transform.localPosition;
+        SetData(list);
+        if (Mathf.CeilToInt(originalDataAmount / (float)_gridElementAmount) > _gridAmount - PreparationAmount && Mathf.CeilToInt(list.Count / (float)_gridElementAmount) < Mathf.CeilToInt(originalDataAmount / (float)_gridElementAmount))
+        {
+            if (Direction == Type.Horizontal)
+            {
+                position -= new Vector2((Mathf.Ceil(originalDataAmount / (float)_gridElementAmount) - Mathf.Ceil(list.Count / (float)_gridElementAmount)) * (_itemLength + Spacing.x) / 2, 0);
+            }
+            else
+            {
+                position += new Vector2(0, (Mathf.Ceil(originalDataAmount / (float)_gridElementAmount) - Mathf.Ceil(list.Count / (float)_gridElementAmount)) * (_itemLength + Spacing.y)) / 2;
+            }
+            //else if (list.Count > originalLength)
+            //{
+            //    if (Direction == Type.Horizontal)
+            //    {
+            //        position += new Vector2((originalLength - list.Count) * (_itemLength + Spacing.x) / 2, 0);
+            //    }
+            //    else
+            //    {
+            //        position += new Vector2(0, (originalLength - list.Count) * (_itemLength + Spacing.y)) / 2;
+            //    }
+            //}
+        }
+        else if (Mathf.Ceil(list.Count / (float)_gridElementAmount) > _gridAmount - PreparationAmount && Mathf.Ceil(list.Count / (float)_gridElementAmount) > Mathf.Ceil(originalDataAmount / (float)_gridElementAmount))
+        {
+            if (Direction == Type.Horizontal)
+            {
+                position += new Vector2((Mathf.Ceil(list.Count / (float)_gridElementAmount) - Mathf.Ceil(originalDataAmount / (float)_gridElementAmount)) * (_itemLength + Spacing.x) / 2, 0);
+            }
+            else
+            {
+                position += new Vector2(0, (Mathf.Ceil(list.Count / (float)_gridElementAmount) - Mathf.Ceil(originalDataAmount / (float)_gridElementAmount)) * (_itemLength + Spacing.y)) / 2;
+            }
+        }
+
+        Content.transform.position = position;
+        Debug.Log(Content.transform.localPosition);
     }
 
     public void SetFirstElement(object data) //在 SetData 之後使用
@@ -330,7 +376,7 @@ public class LoopScrollView : MonoBehaviour
         {
             _itemLength = ScrollItem.Background.rectTransform.rect.width;
             _itemSubLength = ScrollItem.Background.rectTransform.rect.height;
-            _gridAmount = (int)Mathf.Ceil(Mask.rectTransform.rect.width / _itemLength) + PreparationAmount;
+            _gridAmount = (int)Mathf.Ceil(Mask.rectTransform.rect.width / (_itemLength + Spacing.x)) + PreparationAmount;
             _gridElementAmount = (int)Mathf.Floor(Mask.rectTransform.rect.height / (_itemSubLength + Spacing.y));
             //itemAmount = ((int)Mathf.Ceil(Mask.rectTransform.rect.width / _itemLength) + PreparationAmount) * _gridElementAmount;
             ScrollView.horizontal = true;
@@ -341,7 +387,7 @@ public class LoopScrollView : MonoBehaviour
         {
             _itemLength = ScrollItem.Background.rectTransform.rect.height;
             _itemSubLength = ScrollItem.Background.rectTransform.rect.width;
-            _gridAmount = (int)Mathf.Ceil(Mask.rectTransform.rect.height / _itemLength) + PreparationAmount;
+            _gridAmount = (int)Mathf.Ceil(Mask.rectTransform.rect.height / (_itemLength + Spacing.y)) + PreparationAmount;
             _gridElementAmount = (int)Mathf.Floor(Mask.rectTransform.rect.width / (_itemSubLength + Spacing.x));
             //itemAmount = ((int)Mathf.Ceil(Mask.rectTransform.rect.height / _itemLength) + PreparationAmount) * _gridElementAmount;
             ScrollView.horizontal = false;
@@ -453,7 +499,6 @@ public class LoopScrollView : MonoBehaviour
                     }
                 }
                 _currentIndex++;
-                Debug.Log(_currentIndex);
             }
 
             if (_currentIndex > _gridList.Count && _gridList[0].transform.position.x - _itemLength / 2 > _lowerBound)

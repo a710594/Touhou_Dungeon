@@ -129,7 +129,11 @@ public class AttackSkill : Skill
         }
         else //迴避率為負,骰爆擊
         {
-            if (misssRate < UnityEngine.Random.Range(0f, 1f) * -1f)
+            if (target.EnemyData != null && target.EnemyData.ID == 7) //新手教學的那隻怪不會被爆擊
+            {
+                return HitType.Hit;
+            }
+            else if (misssRate < UnityEngine.Random.Range(0f, 1f) * -1f)
             {
                 return HitType.Critical;
             }

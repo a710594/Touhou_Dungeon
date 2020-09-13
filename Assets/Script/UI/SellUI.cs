@@ -38,7 +38,7 @@ public class SellUI : MonoBehaviour
     {
         _selectedItem = null;
         MoneyLabel.text = ItemManager.Instance.Money.ToString();
-        SetScrollView(ItemData.TypeEnum.All);
+        SetScrollView(ItemData.TypeEnum.All, false);
     }
 
     private void SetData()
@@ -62,7 +62,7 @@ public class SellUI : MonoBehaviour
         SellButton.gameObject.SetActive(true);
     }
 
-    private void SetScrollView(ItemData.TypeEnum type)
+    private void SetScrollView(ItemData.TypeEnum type, bool isRefresh)
     {
         ItemData.RootObject data;
         List<Item> itemList = ItemManager.Instance.GetItemListByType(ItemManager.Type.Warehouse, type);
@@ -82,8 +82,15 @@ public class SellUI : MonoBehaviour
             data = ItemData.GetData(item.ID);
             sellDic.Add(new KeyValuePair<Item, int> (item, data.Price / 2));
         }
-        ScrollView.SetData(new ArrayList(sellDic));
-        ScrollView.AddClickHandler(MenuOnClick);
+
+        if (isRefresh)
+        {
+            ScrollView.Refresh(new ArrayList(sellDic));
+        }
+        else
+        {
+            ScrollView.SetData(new ArrayList(sellDic));
+        }
     }
 
     private void ClearInfo()
@@ -115,7 +122,7 @@ public class SellUI : MonoBehaviour
             ItemManager.Instance.MinusItem(_selectedItem.ID, amount, ItemManager.Type.Warehouse);
 
             SetData();
-            SetScrollView(ItemData.TypeEnum.All);
+            SetScrollView(ItemData.TypeEnum.All, true);
         }, sellPrice);
     }
 
@@ -129,5 +136,6 @@ public class SellUI : MonoBehaviour
         SellButton.gameObject.SetActive(false);
         SellButton.ClickHandler = SellOnClick;
         CloseButton.onClick.AddListener(Close);
+        ScrollView.AddClickHandler(MenuOnClick);
     }
 }

@@ -122,7 +122,6 @@ public class ShopUI : MonoBehaviour
             itemDic.Add(data.ID, data.Price);
         }
         ScrollView.SetData(new ArrayList(itemDic));
-        ScrollView.AddClickHandler(MenuOnClick);
     }
 
     private void ClearInfo()
@@ -203,5 +202,6 @@ public class ShopUI : MonoBehaviour
         ItemButton.onClick.AddListener(ItemOnClick);
         EquipButton.onClick.AddListener(EquipOnClick);
         CloseButton.onClick.AddListener(Close);
+        ScrollView.AddClickHandler(MenuOnClick);
     }
 }

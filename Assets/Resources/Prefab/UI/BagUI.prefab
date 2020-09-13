@@ -350,6 +350,7 @@ MonoBehaviour:
   EquipButton: {fileID: 2962207749179500905}
   DiscardButton: {fileID: 114625726206856466}
   UseButton: {fileID: 114752608315206632}
+  ItemTypeGroup: {fileID: 4187887553302670460}
   SelectCharacterGroup: {fileID: 3170051722310621809}
   SetAmountGroup: {fileID: 4734027468317078094}
   EquipComment: {fileID: 1421761556108950966}
@@ -6961,6 +6962,7 @@ MonoBehaviour:
   ConfirmButton: {fileID: 5894933412523781383}
   CancelButton: {fileID: 372204809817574210}
   CommentLabel: {fileID: 126064574262596660}
+  PriceLabel: {fileID: 0}
 --- !u!1001 &61583370109020194
 PrefabInstance:
   m_ObjectHideFlags: 0

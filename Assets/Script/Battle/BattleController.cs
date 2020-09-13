@@ -15,8 +15,11 @@ public class BattleController : MachineBehaviour
         None,
     }
 
+    public Action InitHandler;
     public Action TurnStartHandler;
     public Action TurnEndHandler;
+    public Action ShowEndHandler;
+    public Action SelectActionStartHandler;
 
     public static BattleController Instance;
 
@@ -84,6 +87,7 @@ public class BattleController : MachineBehaviour
         {
             member = TeamManager.Instance.MemberList[i];
             character = ResourceManager.Instance.Spawn("BattleCharacter/BattleCharacter", ResourceManager.Type.Other).GetComponent<BattleCharacter>();
+            character.name = member.Data.Animator;
             character.Init(member);
             CharacterList.Add(character);
             _playerList.Add(character);
@@ -136,7 +140,7 @@ public class BattleController : MachineBehaviour
         ChangeSceneUI.Instance.EndClock(() =>
         {
             BattleUI.Open();
-            BattleUI.Instance.Init(_power, CharacterList, true);
+            BattleUI.Instance.Init(_power, CharacterList, battleGroupData.CanEscape);
             ChangeState<TurnStartState>();
         });
     }
@@ -158,6 +162,7 @@ public class BattleController : MachineBehaviour
         {
             member = TeamManager.Instance.MemberList[i];
             character = ResourceManager.Instance.Spawn("BattleCharacter/BattleCharacter", ResourceManager.Type.Other).GetComponent<BattleCharacter>();
+            character.name = member.Data.Animator;
             character.Init(member);
             CharacterList.Add(character);
             _playerList.Add(character);
@@ -210,11 +215,17 @@ public class BattleController : MachineBehaviour
         {
             BattleUI.Open();
             BattleUI.Instance.Init(_power, CharacterList, false);
+
+            if (InitHandler != null)
+            {
+                InitHandler();
+            }
+
             ChangeState<TurnStartState>();
         });
     }
 
-    public void InitFromMemo(Action winCallback = null, Action loseCallback = null)
+    /*public void InitFromMemo(Action winCallback = null, Action loseCallback = null)
     {
         _winCallback = winCallback;
         _loseCallback = loseCallback;
@@ -268,14 +279,14 @@ public class BattleController : MachineBehaviour
             SelectedCharacter.SetOutline(true);
             BattleUI.Open();
             BattleUI.Instance.Init(_power, CharacterList, true);
-            List<BattleCharacter> list = ActionQueueToList(_actionQueue);
+            List<BattleCharacter> list = ActionQueueToCharacterList(_actionQueue);
             list.Insert(0, SelectedCharacter);
             BattleUI.Instance.InitPriorityQueue(list);
             BattleUI.Instance.ScrollPriorityQueue(SelectedCharacter);
             AudioSystem.Instance.Play("Battle", true);
             ChangeState<SelectActionState>();
         });
-    }
+    }*/
 
     public void Save() 
     {
@@ -398,7 +409,7 @@ public class BattleController : MachineBehaviour
         tempList.Add(new ActionQueueElement(character, character.Info.PriorityList[0]));
         tempList.AddRange(_actionQueue);
         _actionQueue = tempList;
-        BattleUI.Instance.InitPriorityQueue(ActionQueueToList(_actionQueue));
+        BattleUI.Instance.InitPriorityQueue(ActionQueueToCharacterList(_actionQueue), ActionQueueToPriorityList(_actionQueue));
     }
 
     public void GiveUp()
@@ -406,12 +417,22 @@ public class BattleController : MachineBehaviour
         ChangeState<LoseState>();
     }
 
-    private List<BattleCharacter> ActionQueueToList(List<ActionQueueElement> actionQueue)
+    private List<BattleCharacter> ActionQueueToCharacterList(List<ActionQueueElement> actionQueue)
     {
         List<BattleCharacter> list = new List<BattleCharacter>();
         for (int i=0; i<actionQueue.Count; i++)
         {
             list.Add(actionQueue[i].Character);
+        }
+        return list;
+    }
+
+    private List<int> ActionQueueToPriorityList(List<ActionQueueElement> actionQueue)
+    {
+        List<int> list = new List<int>();
+        for (int i = 0; i < actionQueue.Count; i++)
+        {
+            list.Add(actionQueue[i].Priority);
         }
         return list;
     }
@@ -537,7 +558,7 @@ public class BattleController : MachineBehaviour
                     return (y.Character.Info.AGI * y.Priority).CompareTo(x.Character.Info.AGI * x.Priority);
                 }
             });
-            BattleUI.Instance.InitPriorityQueue(parent.ActionQueueToList(parent._actionQueue));
+            BattleUI.Instance.InitPriorityQueue(parent.ActionQueueToCharacterList(parent._actionQueue), parent.ActionQueueToPriorityList(parent._actionQueue));
 
             if (parent.TurnStartHandler != null)
             {
@@ -617,6 +638,11 @@ public class BattleController : MachineBehaviour
             BattleUI.Instance.SetActionGroupVisible(true);
             BattleUI.Instance.SetInfo(true, parent.SelectedCharacter);
             parent.Write();
+
+            if (parent.SelectActionStartHandler != null)
+            {
+                parent.SelectActionStartHandler();
+            }
         }
 
         public override void ScreenOnClick(Vector2Int position)
@@ -893,7 +919,14 @@ public class BattleController : MachineBehaviour
                         {
                             if (!parent.SelectedCharacter.Info.IsAI)
                             {
-                                parent.ChangeState<SelectActionState>();
+                                if (parent.SelectedCharacter.Info.CurrentPriority <= 100)
+                                {
+                                    parent.ChangeState<SelectActionState>();
+                                }
+                                else
+                                {
+                                    parent.ChangeState<SelectCharacterState>();
+                                }
                             }
                             else
                             {
@@ -914,6 +947,14 @@ public class BattleController : MachineBehaviour
                         parent.ChangeState<LoseState>();
                     }
                 });
+            }
+        }
+
+        public override void Exit()
+        {
+            if (parent.ShowEndHandler != null)
+            {
+                parent.ShowEndHandler();
             }
         }
     }

@@ -34,18 +34,18 @@ public class TilePainter : MonoBehaviour
         }
     }
 
-    public void Fill(string tileName, int orderInLayer, BoundsInt bounds)
+    public void Fill(string tileName, int orderInLayer, int startX, int startY, int endX, int endY)
     {
-        Vector2Int position = new Vector2Int();
-        for (int i = bounds.xMin; i <= bounds.xMax; i++)
+        BoundsInt bounds = new BoundsInt(startX, startY, 0, endX - startX, endY - startY, 1);
+
+        TileBase tile = GetTile(tileName);
+        TileBase[] tileArray = new TileBase[bounds.size.x * bounds.size.y];
+        for (int index = 0; index < tileArray.Length; index++)
         {
-            for (int j = bounds.yMin; j <= bounds.yMax; j++)
-            {
-                position.x = i;
-                position.y = j;
-                Painting(tileName, orderInLayer, position);
-            }
+            tileArray[index] = tile;
         }
+
+        TileMap[orderInLayer].SetTilesBlock(bounds,  tileArray);
     }
 
     public void Clear(int orderInLayer, Vector2Int position)

@@ -5,12 +5,12 @@ using UnityEngine.UI;
 
 public class PriorityQueue : MonoBehaviour
 {
-    public Image Image;
+    public PriorityQueueElement Element;
 
     private int _index;
-    private List<KeyValuePair<BattleCharacter, Image>> _imageList = new List<KeyValuePair<BattleCharacter, Image>>();
+    private List<KeyValuePair<BattleCharacter, PriorityQueueElement>> _imageList = new List<KeyValuePair<BattleCharacter, PriorityQueueElement>>();
 
-    public void Init(List<BattleCharacter> list)
+    public void Init(List<BattleCharacter> characterList, List<int> priorityList)
     {
         _index = -1;
         for (int i=1; i<_imageList.Count; i++)
@@ -19,27 +19,28 @@ public class PriorityQueue : MonoBehaviour
         }
         _imageList.Clear();
 
-        Image image;
-        for (int i = 0; i < list.Count; i++)
+        PriorityQueueElement element;
+        for (int i = 0; i < characterList.Count; i++)
         {
             if (i > 0)
             {
-                image = Instantiate(Image);
+                element = Instantiate(Element);
             }
             else
             {
-                image = Image;
+                element = Element;
             }
-            image.transform.parent = Image.transform.parent;
-            _imageList.Add(new KeyValuePair<BattleCharacter, Image>(list[i], image));
+            element.transform.SetParent(Element.transform.parent);
+            element.transform.localScale = Vector3.one;
+            _imageList.Add(new KeyValuePair<BattleCharacter, PriorityQueueElement>(characterList[i], element));
 
-            if (list[i].Info.JobData != null)
+            if (characterList[i].Info.JobData != null)
             {
-                image.overrideSprite = Resources.Load<Sprite>("Image/Character/Small/" + list[i].Info.JobData.SmallImage);
+                element.SetData(characterList[i].Info.JobData.SmallImage, priorityList[i]);
             }
-            else if (list[i].Info.EnemyData != null)
+            else if (characterList[i].Info.EnemyData != null)
             {
-                image.overrideSprite = Resources.Load<Sprite>("Image/Character/Small/" + list[i].Info.EnemyData.Image);
+                element.SetData(characterList[i].Info.EnemyData.Image, priorityList[i]);
             }
             _imageList[i].Value.gameObject.SetActive(true);
         }

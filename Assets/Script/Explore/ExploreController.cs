@@ -5,12 +5,6 @@ using UnityEngine;
 
 public class ExploreController
 {
-    public enum InitPlayerPosition
-    {
-        Start,
-        Goal,
-    }
-
     private static ExploreController _instance;
     public static ExploreController Instance
     {
@@ -52,7 +46,7 @@ public class ExploreController
 
     }
 
-    public void GenerateFloor(int id, InitPlayerPosition initPlayerPosition)
+    public void GenerateFloor(int id)
     {
         MySceneManager.SceneType scene;
         DungeonData.RootObject data = DungeonData.GetData(id);
@@ -73,24 +67,14 @@ public class ExploreController
                 if (scene != MySceneManager.SceneType.Explore)
                 {
                     _mapInfo = GameObject.Find("DungeonFromScene").GetComponent<DungeonFromScene>().GetMapInfo();
+                    InitPosition();
+                    SetFloor();
+                    LoadingUI.Instance.Close();
                 }
                 else
                 {
-                    _mapInfo = DungeonBuilder.Instance.Generate(data);
-                    DungeonPainter.Instance.Paint(_mapInfo);
+                    DungeonBuilder.Instance.Generate(data);
                 }
-
-                if (initPlayerPosition == InitPlayerPosition.Start)
-                {
-                    _playerPosition = _mapInfo.Start;
-                    _mapInfo.GuardList.Add(_mapInfo.Goal);
-                }
-                else if (initPlayerPosition == InitPlayerPosition.Goal)
-                {
-                    _playerPosition = _mapInfo.Goal;
-                    _mapInfo.GuardList.Add(_mapInfo.Start);
-                }
-                SetFloor();
             });
         });
         Debug.Log("Generate Floor Complete");
@@ -102,6 +86,12 @@ public class ExploreController
     //    _playerPosition = _mapInfo.Start;
     //    SetFloor();
     //}
+
+    public void SetMapInfo(MapInfo info)
+    {
+        _mapInfo = info;
+        InitPosition();
+    }
 
     public void SetFloor()
     {
@@ -144,9 +134,11 @@ public class ExploreController
         ArriveFloor = _memo.ArriveFloor;
         if (MySceneManager.Instance.CurrentScene == MySceneManager.SceneType.Explore)
         {
-            DungeonPainter.Instance.Paint(_mapInfo);
+            LoadingUI.Instance.Open(()=> 
+            {
+                DungeonPainter.Instance.Paint(_mapInfo);
+            });
         }
-        SetFloor();
         AudioSystem.Instance.Play("Forest");
     }
 
@@ -165,14 +157,7 @@ public class ExploreController
 
     public void ChangeFloor(int floor)
     {
-        if (_mapInfo.Floor < floor)
-        {
-            GenerateFloor(floor, InitPlayerPosition.Start);
-        }
-        else
-        {
-            GenerateFloor(floor, InitPlayerPosition.Goal);
-        }
+        GenerateFloor(floor);
 
         if (floor > ArriveFloor)
         {
@@ -193,7 +178,7 @@ public class ExploreController
                 //不要刪
                 if (newPosition == _mapInfo.Start)
                 {
-                    ExploreUI.Instance.OpenStairsGroup(_mapInfo.LastFloor);
+                    ExploreUI.Instance.OpenStairsGroup(0);
                 }
                 else if (newPosition == _mapInfo.Goal)
                 {
@@ -379,6 +364,12 @@ public class ExploreController
         }
     }
 
+    private void InitPosition()
+    {
+        _playerPosition = _mapInfo.Start;
+        _mapInfo.GuardList.Add(_mapInfo.Goal);
+    }
+
     private Vector2Int GetLegalPosition(List<Vector2Int> positionList = null) //取得合法位置(空地)
     {
         if (positionList == null)
@@ -506,7 +497,7 @@ public class ExploreController
         Vector2Int playerPosition = Vector2Int.RoundToInt(_player.transform.position);
         for (int i = 0; i < _mapInfo.RoomPositionList.Count; i++)
         {
-            for (int j = 0; j < 2; j++) //每個房間生兩隻怪
+            for (int j = 0; j < 1; j++) //每個房間生一隻怪
             {
                 position = GetLegalPosition(_mapInfo.RoomPositionList[i]);
                 if (Vector2.Distance(position, playerPosition) > 10 && AStarAlgor.Instance.GetPath(position, playerPosition, _pathFindList, true) != null) //如果位置不會離玩家太近

@@ -20,6 +20,7 @@ public class BattleGroupData
         public int Enemy_4 { get; set; }
         public int Lv_4 { get; set; }
         public int Exp;
+        public bool CanEscape { get; set; }
 
         public List<int> EnemyList = new List<int>();
         public List<int> LvList = new List<int>();

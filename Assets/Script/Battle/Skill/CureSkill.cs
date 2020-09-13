@@ -40,7 +40,7 @@ public class CureSkill : Skill
     {
         base.SetEffect(target);
 
-        target.SetRecover(CalculateRecover(_user), CheckSkillCallback);
+        target.SetRecoverHP(CalculateRecover(_user), CheckSkillCallback);
     }
 
     public int CalculateRecover(BattleCharacterInfo executor)

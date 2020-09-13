@@ -32,9 +32,9 @@ public class GameSystem : MonoBehaviour
 
     public void AutoSave()
     {
-//#if !UNITY_EDITOR
+#if !UNITY_EDITOR
         SaveGame();
-//#endif
+#endif
     }
 
     public void ClearMemo()
@@ -113,13 +113,13 @@ public class GameSystem : MonoBehaviour
         {
             AudioSystem.Instance.Stop(true);
             AudioSystem.Instance.Play("Forest", true);
-            ExploreController.Instance.GenerateFloor(5, ExploreController.InitPlayerPosition.Start);
+            ExploreController.Instance.GenerateFloor(5);
         }
         if (Input.GetKeyDown(KeyCode.Alpha6))
         {
             AudioSystem.Instance.Stop(true);
             AudioSystem.Instance.Play("Forest", true);
-            ExploreController.Instance.GenerateFloor(6, ExploreController.InitPlayerPosition.Start);
+            ExploreController.Instance.GenerateFloor(6);
         }
     }
 

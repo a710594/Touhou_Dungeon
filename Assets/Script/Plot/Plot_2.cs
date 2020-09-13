@@ -16,7 +16,7 @@ public class Plot_2 : Plot //新手教學戰鬥後的對話,對話結束後到�
             ProgressManager.Instance.Memo.FirstFlag = true;
 
             AudioSystem.Instance.Play("Forest", true);
-            ExploreController.Instance.GenerateFloor(1, ExploreController.InitPlayerPosition.Start);
+            ExploreController.Instance.GenerateFloor(1);
         });
     }
 }

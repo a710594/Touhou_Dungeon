@@ -65,6 +65,10 @@ public class SkillFactory
         {
             skill = new DonothingSkill(skillData, user, lv);
         }
+        else if (skillData.Type == SkillData.TypeEnum.RecoverMP)
+        {
+            skill = new RecoverMPItemSkill(skillData, lv);
+        }
 
         return skill;
     }

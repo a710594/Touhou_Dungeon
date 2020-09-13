@@ -22,7 +22,6 @@ public class SelectDestinationUI : MonoBehaviour
             floorList.Add(i);
         }
         ScrollView.SetData(new ArrayList (floorList));
-        ScrollView.AddClickHandler(FloorOnClick);
     }
 
     private void FloorOnClick(object floor)
@@ -37,6 +36,7 @@ public class SelectDestinationUI : MonoBehaviour
 
     private void Awake()
     {
+        ScrollView.AddClickHandler(FloorOnClick);
         CloseButton.onClick.AddListener(CloseOnClick);
     }
 }

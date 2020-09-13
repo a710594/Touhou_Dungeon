@@ -11,6 +11,7 @@ public class Plot_1 : Plot //遊戲的第一個事件,對話後進行新手教�
         {
             MySceneManager.Instance.ChangeScene(MySceneManager.SceneType.FirstBattle, () =>
             {
+                BattleController.Instance.InitHandler = BattleInit;
                 BattleController.Instance.SpecialInit(() =>
                 {
                     AudioSystem.Instance.Stop(false);
@@ -23,5 +24,20 @@ public class Plot_1 : Plot //遊戲的第一個事件,對話後進行新手教�
                 });
             });
         });
+    }
+
+    private void BattleInit()
+    {
+        GameObject obj;
+        obj = GameObject.Find("Reimu");
+        obj.transform.position = Vector3.one * 100;
+        obj.GetComponent<BattleCharacter>().SetActive(false);
+
+        obj = GameObject.Find("Sanae");
+        obj.transform.position = Vector3.one * 100;
+        obj.GetComponent<BattleCharacter>().SetActive(false);
+
+        BattleTutorialUI.Open();
+        //BattleTutorialUI.Instance.transform.SetSiblingIndex(BattleTutorialUI.Instance.transform.GetSiblingIndex() + 3);
     }
 }

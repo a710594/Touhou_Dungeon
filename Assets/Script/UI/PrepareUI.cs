@@ -41,9 +41,13 @@ public class PrepareUI : MonoBehaviour
     private void SetData()
     {
         WarehouseScrollView.SetData(new ArrayList(ItemManager.Instance.GetItemListByType(ItemManager.Type.Warehouse, ItemData.TypeEnum.All)));
-        WarehouseScrollView.AddClickHandler(WarehouseIconOnClick);
         BagScrollView.SetData(new ArrayList(ItemManager.Instance.GetItemListByType(ItemManager.Type.Bag, ItemData.TypeEnum.All)));
-        BagScrollView.AddClickHandler(BagIconOnClick);
+    }
+
+    private void Refresh()
+    {
+        WarehouseScrollView.Refresh(new ArrayList(ItemManager.Instance.GetItemListByType(ItemManager.Type.Warehouse, ItemData.TypeEnum.All)));
+        BagScrollView.Refresh(new ArrayList(ItemManager.Instance.GetItemListByType(ItemManager.Type.Bag, ItemData.TypeEnum.All)));
     }
 
     private void WarehouseIconOnClick(object obj)
@@ -51,20 +55,21 @@ public class PrepareUI : MonoBehaviour
         ItemManager.Instance.MinusItem(((Item)obj).ID, 1, ItemManager.Type.Warehouse);
         ItemManager.Instance.AddItem(((Item)obj).ID, 1, ItemManager.Type.Bag);
 
-        SetData();
+        Refresh();
     }
 
     private void BagIconOnClick(object obj)
     {
-        if (obj is int && (int)obj == 0) //如果道具為緊急逃脫裝置,則不得移除,因為它是必備的道具
+        Item item = (Item)obj;
+        if (item.ID == 0) //如果道具為緊急逃脫裝置,則不得移除,因為它是必備的道具
         {
             ConfirmUI.Open("必需攜帶緊急逃脫裝置。", "確定", null);
         }
         else
         {
-            ItemManager.Instance.MinusItem((int)obj, 1, ItemManager.Type.Bag);
-            ItemManager.Instance.AddItem((int)obj, 1, ItemManager.Type.Warehouse);
-            SetData();
+            ItemManager.Instance.MinusItem(item.ID, 1, ItemManager.Type.Bag);
+            ItemManager.Instance.AddItem(item.ID, 1, ItemManager.Type.Warehouse);
+            Refresh();
         }
     }
 
@@ -72,7 +77,7 @@ public class PrepareUI : MonoBehaviour
     {
         AudioSystem.Instance.Stop(true);
         AudioSystem.Instance.Play("Forest", true);
-        ExploreController.Instance.GenerateFloor(_targetFloor, ExploreController.InitPlayerPosition.Start);
+        ExploreController.Instance.GenerateFloor(_targetFloor);
     }
 
     private void CloseOnClick()
@@ -85,5 +90,7 @@ public class PrepareUI : MonoBehaviour
     {
         CloseButton.onClick.AddListener(CloseOnClick);
         GoButton.onClick.AddListener(GoOnClick);
+        WarehouseScrollView.AddClickHandler(WarehouseIconOnClick);
+        BagScrollView.AddClickHandler(BagIconOnClick);
     }
 }

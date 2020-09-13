@@ -1470,7 +1470,7 @@ Animator:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1434932020}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: 6062e2056c20f414ebafc5c32a89edbf, type: 2}
   m_CullingMode: 0
@@ -1830,6 +1830,11 @@ PrefabInstance:
       propertyPath: Words.Array.data[0]
       value: 
       objectReference: {fileID: 1434932022}
+    - target: {fileID: 3158468898169417967, guid: 923946682d2057947818dac00ed157c8,
+        type: 3}
+      propertyPath: Label
+      value: 
+      objectReference: {fileID: 1434932022}
     - target: {fileID: 3158468898731932736, guid: 923946682d2057947818dac00ed157c8,
         type: 3}
       propertyPath: m_IsActive
@@ -1839,6 +1844,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 75
+      objectReference: {fileID: 0}
+    - target: {fileID: 3158468899477304166, guid: 923946682d2057947818dac00ed157c8,
+        type: 3}
+      propertyPath: m_Text
+      value: Loading...
+      objectReference: {fileID: 0}
+    - target: {fileID: 3158468899477304166, guid: 923946682d2057947818dac00ed157c8,
+        type: 3}
+      propertyPath: m_Color.a
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 923946682d2057947818dac00ed157c8, type: 3}

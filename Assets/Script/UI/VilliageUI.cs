@@ -17,6 +17,7 @@ public class VilliageUI : MonoBehaviour
     public Button CloseShopGroupButton;
     public GameObject MainGroup;
     public GameObject ShopGroup;
+    public TipLabel TipLabel;
     public SelectDestinationUI SelectDestinationUI;
 
     private void AdventureOnClick()
@@ -53,6 +54,7 @@ public class VilliageUI : MonoBehaviour
     private void SaveOnClick()
     {
         GameSystem.Instance.SaveGame();
+        TipLabel.SetLabel("存檔成功");
     }
 
     private void BuyOnClick()
