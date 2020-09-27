@@ -8,20 +8,20 @@ public class Plot_6 : Plot
 {
     private Timer _timer = new Timer();
 
-    public void Check(int remain, Action callback) //檢查紫還剩幾條血
+    public void Check(int remain) //檢查紫還剩幾條血
     {
         if (remain == 1) //剩一條血時觸發
         {
 
-            Start_1(callback);
+            Start_1();
         }
         else
         {
-            Start_2(callback);
+            Start_2();
         }
     }
 
-    public void Start_1(Action callback) //剩下一條血時,召喚藍和橙
+    public void Start_1() //剩下一條血時,召喚藍和橙
     {
         BattleUI.Instance.SetVisible(false);
         GameObject yukari = GameObject.Find("Yukari");
@@ -47,13 +47,12 @@ public class Plot_6 : Plot
                 _timer.Start(1, ()=> 
                 {
                     BattleUI.Instance.SetVisible(true);
-                    callback();
                 });
             });
         });
     }
 
-    public void Start_2(Action callback) //剩下0條血的時候進行該戰鬥中最後一段對話
+    public void Start_2() //剩下0條血的時候進行該戰鬥中最後一段對話
     {
         BattleUI.Instance.SetVisible(false);
         GameObject yukari = GameObject.Find("Yukari");
@@ -63,7 +62,6 @@ public class Plot_6 : Plot
             ConversationUI.Open(7001, false, () =>
             {
                 BattleUI.Instance.SetVisible(true);
-                callback();
             });
         });
     }

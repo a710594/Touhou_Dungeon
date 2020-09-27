@@ -5,8 +5,6 @@ using UnityEngine;
 
 public class FieldSkill : Skill
 {
-    private Timer _timer = new Timer();
-
     public FieldSkill(SkillData.RootObject data, BattleCharacterInfo user, int lv)
     {
         Data = data;
@@ -16,13 +14,12 @@ public class FieldSkill : Skill
         {
             SkillData.RootObject skillData = SkillData.GetData(Data.SubID);
             _subSkill = SkillFactory.GetNewSkill(skillData, user, lv);
+            _subSkill.SetPartnerSkill(this);
         }
     }
 
-    protected override void UseCallback()
+    public override void SetEffects()
     {
-        base.UseCallback();
-
         SetEffect(null);
     }
 
@@ -37,9 +34,9 @@ public class FieldSkill : Skill
 
         BattleUI.Instance.SetSkillLabel(false);
 
-        _timer.Start(0.5f, ()=> 
+        Timer timer = new Timer(Data.ShowTime / 2f + _floatingNumberTime, ()=> 
         {
-            CheckSkillCallback(target);
+            CheckSubSkill(target);
         });
     }
 

@@ -50,8 +50,6 @@ public class Timer
         {
             if (_onTimeOutHandler != null)
             {
-                _onTimeOutHandler();
-
                 if (_isLoop)
                 {
                     _endTime = Time.realtimeSinceStartup + _time;
@@ -61,6 +59,7 @@ public class Timer
                     _endTime = -1;
                     TimerUpdater.UpdateHandler -= OnUpdate;
                 }
+                _onTimeOutHandler();
             }
         }
     }

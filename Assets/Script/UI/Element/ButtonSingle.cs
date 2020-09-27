@@ -10,6 +10,7 @@ public class ButtonSingle : MonoBehaviour
     {
         GameObject,
         Color,
+        Sprite,
     }
 
     public Action<ButtonSingle> ClickHandler;
@@ -18,6 +19,8 @@ public class ButtonSingle : MonoBehaviour
     public GameObject Select;
     public Color SelectColor;
     public Color NotSelectColor;
+    public Sprite SelectImage;
+    public Sprite NotSelectImage;
     public Button Button;
 
     public void SetSelected(bool isSelected)
@@ -35,6 +38,17 @@ public class ButtonSingle : MonoBehaviour
             else
             {
                 Button.image.color = NotSelectColor;
+            }
+        }
+        else if (Type == TypeEnum.Sprite)
+        {
+            if (isSelected)
+            {
+                Button.image.overrideSprite = SelectImage;
+            }
+            else
+            {
+                Button.image.overrideSprite = NotSelectImage;
             }
         }
     }

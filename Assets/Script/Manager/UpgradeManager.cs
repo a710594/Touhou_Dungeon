@@ -19,43 +19,43 @@ public class UpgradeManager
         }
     }
 
-    public void AddExp(TeamMember member, int getExp)
-    {
-        int originalLv = member.Lv;
-        int originalExp = member.Exp;
-        int tempLv;
-        int needExp;
+    //public void AddExp(TeamMember member, int getExp)
+    //{
+    //    int originalLv = member.Lv;
+    //    int originalExp = member.Exp;
+    //    int tempLv;
+    //    int needExp;
 
-        needExp = NeedExp(originalLv);
-        if (getExp < needExp - originalExp)
-        {
-            member.Lv = originalLv;
-            member.Exp = originalExp + getExp;
-        }
-        else
-        {
-            getExp -= (needExp - originalExp);
-            tempLv = originalLv + 1;
-            needExp = NeedExp(tempLv);
+    //    needExp = NeedExp(originalLv);
+    //    if (getExp < needExp - originalExp)
+    //    {
+    //        member.Lv = originalLv;
+    //        member.Exp = originalExp + getExp;
+    //    }
+    //    else
+    //    {
+    //        getExp -= (needExp - originalExp);
+    //        tempLv = originalLv + 1;
+    //        needExp = NeedExp(tempLv);
 
-            if (needExp > 0)
-            {
-                while (getExp >= needExp)
-                {
-                    getExp -= needExp;
-                    tempLv++;
-                    needExp = NeedExp(tempLv);
-                }
-            }
-            else //已達最大等級
-            {
-                getExp = 0;
-                tempLv = _maxLv;
-            }
+    //        if (needExp > 0)
+    //        {
+    //            while (getExp >= needExp)
+    //            {
+    //                getExp -= needExp;
+    //                tempLv++;
+    //                needExp = NeedExp(tempLv);
+    //            }
+    //        }
+    //        else //已達最大等級
+    //        {
+    //            getExp = 0;
+    //            tempLv = _maxLv;
+    //        }
 
-            member.LvUp(tempLv, getExp);
-        }
-    }
+    //        member.LvUp(tempLv, getExp);
+    //    }
+    //}
 
     public int NeedExp(int lv)
     {

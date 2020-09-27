@@ -14,6 +14,8 @@ public class BattleResultUI : MonoBehaviour
     public LoopScrollView ScrollView;
     public GameObject CharacterGroup;
     public GameObject ItemGroup;
+    public Text LvLabel;
+    public ValueBar ExpBar;
     public CharacterLvCard[] CharacterLvCards;
 
     private Action _callback;
@@ -21,7 +23,7 @@ public class BattleResultUI : MonoBehaviour
     private bool _isWin;
     private Timer _timer = new Timer();
 
-    public void Open(bool isWin, List<int> orignalLvList, List<int> orignalExpList, List<int> itemList, Action callback)
+    public void Open(bool isWin, int orignalLv, int orignalExp, List<int> itemList, Action callback)
     {
         _isWin = isWin;
         _callback = callback;
@@ -39,7 +41,7 @@ public class BattleResultUI : MonoBehaviour
             {
                 CharacterGroup.SetActive(true);
                 NextButton.gameObject.SetActive(true);
-                SetCharacterGroup(orignalLvList, orignalExpList);
+                SetCharacterGroup(orignalLv, orignalExp);
                 SetItemGroup(itemList);
             });
         }
@@ -52,21 +54,40 @@ public class BattleResultUI : MonoBehaviour
         }
     }
 
-    private void SetCharacterGroup(List<int> originalLvList, List<int> originalExpList)
+    private void SetCharacterGroup(int originalLv, int originalExp)
     {
-        List<TeamMember> memberList = TeamManager.Instance.MemberList;
-        for (int i = 0; i < CharacterLvCards.Length; i++)
+        int needExp = TeamManager.Instance.NeedExp(originalLv);
+        int currentLv = TeamManager.Instance.Lv;
+        int currentExp = TeamManager.Instance.Exp;
+
+        LvLabel.text = "Lv." + originalLv.ToString();
+        if (originalLv < currentLv)
         {
-            if (i < memberList.Count)
+            ExpBar.SetValueTween(originalExp, needExp, needExp, () =>
             {
-                CharacterLvCards[i].gameObject.SetActive(true);
-                CharacterLvCards[i].SetData(originalLvList[i], originalExpList[i], memberList[i]);
-            }
-            else
-            {
-                CharacterLvCards[i].gameObject.SetActive(false);
-            }
+                LvLabel.text = "Lv." + (originalLv + 1).ToString();
+                SetCharacterGroup(originalLv + 1, 0);
+            });
         }
+        else
+        {
+            LvLabel.text = "Lv." + currentLv.ToString();
+            ExpBar.SetValueTween(originalExp, currentExp, needExp, null);
+        }
+
+        //List<TeamMember> memberList = TeamManager.Instance.MemberList;
+        //for (int i = 0; i < CharacterLvCards.Length; i++)
+        //{
+        //    if (i < memberList.Count)
+        //    {
+        //        CharacterLvCards[i].gameObject.SetActive(true);
+        //        CharacterLvCards[i].SetData(originalLvList[i], originalExpList[i], memberList[i]);
+        //    }
+        //    else
+        //    {
+        //        CharacterLvCards[i].gameObject.SetActive(false);
+        //    }
+        //}
     }
 
     private void SetItemGroup(List<int> itemList)

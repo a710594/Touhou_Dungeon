@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class TeamMemberMemo
 {
-    public int Lv;
-    public int Exp;
     public int MaxHP;
     public int CurrentHP;
     public int MaxMP;
@@ -29,8 +27,6 @@ public class TeamMemberMemo
 
     public TeamMemberMemo(TeamMember member) 
     {
-        Lv = member.Lv;
-        Exp = member.Exp;
         MaxHP = member.MaxHP;
         CurrentHP = member.CurrentHP;
         MaxMP = member.MaxMP;

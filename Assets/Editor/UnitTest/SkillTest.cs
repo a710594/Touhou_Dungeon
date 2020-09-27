@@ -16,7 +16,7 @@ public class SkillTest
         BattleCharacterInfo Info = new BattleCharacterInfo();
         TeamMember teamMember = new TeamMember();
         teamMember.Init(1, 1);
-        Info.Init(teamMember);
+        Info.Init(teamMember, 1);
         Info.SetBuff(1, 1);
         Assert.AreEqual(27, Info.DEF);
     }
@@ -33,19 +33,19 @@ public class SkillTest
         BattleCharacterInfo Info = new BattleCharacterInfo();
         TeamMember teamMember = new TeamMember();
         teamMember.Init(3, 1);
-        Info.Init(teamMember);
+        Info.Init(teamMember, 1);
         Debug.Log(Info.MEF + " " + cureSkill.Data.ValueList[0]);
         Assert.AreEqual(18, cureSkill.CalculateRecover(Info));
     }
 
-    [Test]
-    public void TestLvUp()
-    {
-        TeamMember teamMember = new TeamMember();
-        teamMember.Init(1, 1);
-        UpgradeManager.Instance.AddExp(teamMember, 15);
-        Assert.AreEqual(3, teamMember.Lv);
-    }
+    //[Test]
+    //public void TestLvUp()
+    //{
+    //    TeamMember teamMember = new TeamMember();
+    //    teamMember.Init(1, 1);
+    //    UpgradeManager.Instance.AddExp(teamMember, 15);
+    //    Assert.AreEqual(3, teamMember.Lv);
+    //}
 
     [Test]
     public void TestAddMoney()

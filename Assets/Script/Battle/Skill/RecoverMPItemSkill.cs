@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -13,13 +14,12 @@ public class RecoverMPItemSkill : Skill
         {
             SkillData.RootObject skillData = SkillData.GetData(Data.SubID);
             _subSkill = SkillFactory.GetNewSkill(skillData, null, lv);
+            _subSkill.SetPartnerSkill(this);
         }
     }
 
-    protected override void UseCallback()
+    public override void SetEffects()
     {
-        base.UseCallback();
-
         for (int i = 0; i < _targetList.Count; i++)
         {
             SetEffect(_targetList[i]);
@@ -36,6 +36,15 @@ public class RecoverMPItemSkill : Skill
     {
         base.SetEffect(target);
 
-        target.SetRecoverMP(_value, CheckSkillCallback);
+        Timer timer1 = new Timer(Data.ShowTime / 2f, () =>
+        {
+            target.SetRecoverMP(_value);
+            BattleUI.Instance.SetFloatingNumber(target, _value.ToString(), FloatingNumber.Type.Recover);
+        });
+
+        Timer timer2 = new Timer(_floatingNumberTime + Data.ShowTime / 2f, () =>
+        {
+            CheckSubSkill(target);
+        });
     }
 }

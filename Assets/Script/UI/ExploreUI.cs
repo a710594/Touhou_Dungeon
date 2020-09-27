@@ -151,6 +151,8 @@ public class ExploreUI : MonoBehaviour
         }
 
         SaveButton.interactable = (MySceneManager.Instance.CurrentScene == MySceneManager.SceneType.Explore);
+
+        StairsGroup.gameObject.SetActive(false);
     }
 
     // Start is called before the first frame update

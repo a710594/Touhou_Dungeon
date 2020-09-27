@@ -11,13 +11,20 @@ public class SellUI : MonoBehaviour
     public Text NameLabel;
     public Text AmountLabel;
     public Text CommentLabel;
+    public Image Icon;
     public Button CloseButton;
+    public Button AllButton;
+    public Button MaterialButton;
+    public Button FoodButton;
+    public Button MedicineButton;
+    public Button EquipButton;
     public ButtonPlus SellButton;
     public LoopScrollView ScrollView;
     public SetAmountGroup SetAmountGroup;
     public EquipComment EquipComment;
 
     private Item _selectedItem = null;
+    private ItemData.TypeEnum _itemType = ItemData.TypeEnum.All;
 
     public static void Open()
     {
@@ -50,6 +57,8 @@ public class SellUI : MonoBehaviour
         NameLabel.text = data.GetName();
         AmountLabel.text = "庫存：" + ItemManager.Instance.GetItemAmount(data.ID, ItemManager.Type.Warehouse);
         CommentLabel.text = data.GetComment();
+        Icon.gameObject.SetActive(true);
+        Icon.overrideSprite = Resources.Load<Sprite>("Image/Item/" + data.Icon);
         if (data.Type == ItemData.TypeEnum.Equip)
         {
             EquipComment.gameObject.SetActive(true);
@@ -100,6 +109,7 @@ public class SellUI : MonoBehaviour
         AmountLabel.text = "";
         EquipComment.gameObject.SetActive(false);
         SellButton.gameObject.SetActive(false);
+        Icon.gameObject.SetActive(false);
     }
 
     private void MenuOnClick(object obj)
@@ -122,8 +132,43 @@ public class SellUI : MonoBehaviour
             ItemManager.Instance.MinusItem(_selectedItem.ID, amount, ItemManager.Type.Warehouse);
 
             SetData();
-            SetScrollView(ItemData.TypeEnum.All, true);
+            SetScrollView(_itemType, true);
         }, sellPrice);
+    }
+
+    private void AllOnClick()
+    {
+        SetScrollView(ItemData.TypeEnum.All, false);
+        ClearInfo();
+        _itemType = ItemData.TypeEnum.All;
+    }
+
+    private void MaterialOnClick()
+    {
+        SetScrollView(ItemData.TypeEnum.Material, false);
+        ClearInfo();
+        _itemType = ItemData.TypeEnum.Material;
+    }
+
+    private void FoodOnClick()
+    {
+        SetScrollView(ItemData.TypeEnum.Food, false);
+        ClearInfo();
+        _itemType = ItemData.TypeEnum.Food;
+    }
+
+    private void MedicineOnClick()
+    {
+        SetScrollView(ItemData.TypeEnum.Medicine, false);
+        ClearInfo();
+        _itemType = ItemData.TypeEnum.Medicine;
+    }
+
+    private void EquipOnClick()
+    {
+        SetScrollView(ItemData.TypeEnum.Equip, false);
+        ClearInfo();
+        _itemType = ItemData.TypeEnum.Equip;
     }
 
     void Awake()
@@ -136,6 +181,11 @@ public class SellUI : MonoBehaviour
         SellButton.gameObject.SetActive(false);
         SellButton.ClickHandler = SellOnClick;
         CloseButton.onClick.AddListener(Close);
+        AllButton.onClick.AddListener(AllOnClick);
+        MaterialButton.onClick.AddListener(MaterialOnClick);
+        FoodButton.onClick.AddListener(FoodOnClick);
+        MedicineButton.onClick.AddListener(MedicineOnClick);
+        EquipButton.onClick.AddListener(EquipOnClick);
         ScrollView.AddClickHandler(MenuOnClick);
     }
 }

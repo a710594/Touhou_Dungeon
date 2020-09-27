@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -14,13 +15,12 @@ public class CureLeastHPSkill : Skill
         {
             SkillData.RootObject skillData = SkillData.GetData(Data.SubID);
             _subSkill = SkillFactory.GetNewSkill(skillData, user, lv);
+            _subSkill.SetPartnerSkill(this);
         }
     }
 
-    protected override void UseCallback()
+    public override void SetEffects()
     {
-        base.UseCallback();
-
         for (int i = 0; i < _targetList.Count; i++)
         {
             SetEffect(_targetList[i]);
@@ -50,7 +50,19 @@ public class CureLeastHPSkill : Skill
                 minHP = target.Info.CurrentHP;
             }
         }
-        target.SetRecoverHP(CalculateRecover(_user), CheckSkillCallback);
+
+        int recover = CalculateRecover(_user);
+        Timer timer1 = new Timer(Data.ShowTime / 2f, () =>
+        {
+            target.SetRecoverHP(recover);
+            BattleUI.Instance.SetFloatingNumber(target, recover.ToString(), FloatingNumber.Type.Recover);
+            BattleUI.Instance.SetLittleHPBar(target, true);
+        });
+
+        Timer timer2 = new Timer(Data.ShowTime / 2f + _floatingNumberTime, () =>
+        {
+            CheckSubSkill(target);
+        });
     }
 
     public int CalculateRecover(BattleCharacterInfo executor)

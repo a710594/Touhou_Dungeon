@@ -70,7 +70,7 @@ public class ItemManager
             }
         }
 
-        AddItem(3006, 1, Type.Warehouse);
+        //AddItem(3006, 1, Type.Warehouse);
     }
 
     public void Save()

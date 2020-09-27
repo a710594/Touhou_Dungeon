@@ -70,6 +70,29 @@ public class ValueBar : MonoBehaviour
         }
     }
 
+    public void MinusValueTween(int minus, int max, Action callback)
+    {
+        _isTweening = true;
+        _maxHP = max;
+        int current = Mathf.RoundToInt(max * Bar.fillAmount);
+        current -= minus;
+        if (max != 0)
+        {
+            _tweener = Bar.DOFillAmount((float)current / (float)max, 0.5f).OnComplete(() =>
+            {
+                if (callback != null)
+                {
+                    callback();
+                }
+            });
+            _tweener.SetUpdate(true);
+        }
+        else
+        {
+            Bar.fillAmount = 0;
+        }
+    }
+
     protected virtual void UpdateData() 
     {
         if (_isTweening)

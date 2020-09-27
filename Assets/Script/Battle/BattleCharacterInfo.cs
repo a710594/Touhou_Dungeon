@@ -206,11 +206,11 @@ public class BattleCharacterInfo
     public List<Skill> SkillList = new List<Skill>();
     public List<Skill> SpellCardList = new List<Skill>();
 
-    public void Init(TeamMember member) //for player
+    public void Init(TeamMember member, int lv) //for player
     {
         IsAI = false;
         IsTeamMember = true;
-        Lv = member.Lv;
+        Lv = lv;
         Name = member.Data.GetName();
         MaxHP = member.MaxHP;
         CurrentHP = member.CurrentHP;

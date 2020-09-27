@@ -14,13 +14,12 @@ public class CureItemSkill : Skill
         {
             SkillData.RootObject skillData = SkillData.GetData(Data.SubID);
             _subSkill = SkillFactory.GetNewSkill(skillData, null, lv);
+            _subSkill.SetPartnerSkill(this);
         }
     }
 
-    protected override void UseCallback()
+    public override void SetEffects()
     {
-        base.UseCallback();
-
         for (int i = 0; i < _targetList.Count; i++)
         {
             SetEffect(_targetList[i]);
@@ -37,6 +36,17 @@ public class CureItemSkill : Skill
     {
         base.SetEffect(target);
 
-        target.SetRecoverHP(_value, CheckSkillCallback); //與 CureSkill 不同的地方之一是回復量的計算
+        Timer timer1 = new Timer(Data.ShowTime / 2f, () =>
+        {
+            target.SetRecoverHP(_value); //與 CureSkill 不同的地方之一是回復量的計算
+
+            BattleUI.Instance.SetFloatingNumber(target, _value.ToString(), FloatingNumber.Type.Recover);
+            BattleUI.Instance.SetLittleHPBar(target, true);
+        });
+
+        Timer timer2 = new Timer(Data.ShowTime / 2f + _floatingNumberTime, () =>
+        {
+            CheckSubSkill(target);
+        });
     }
 }

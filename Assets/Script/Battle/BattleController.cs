@@ -88,7 +88,7 @@ public class BattleController : MachineBehaviour
             member = TeamManager.Instance.MemberList[i];
             character = ResourceManager.Instance.Spawn("BattleCharacter/BattleCharacter", ResourceManager.Type.Other).GetComponent<BattleCharacter>();
             character.name = member.Data.Animator;
-            character.Init(member);
+            character.Init(member, TeamManager.Instance.Lv);
             CharacterList.Add(character);
             _playerList.Add(character);
             character.SetPosition((Vector2)(member.Formation + BattleFieldManager.Instance.Center));
@@ -163,7 +163,7 @@ public class BattleController : MachineBehaviour
             member = TeamManager.Instance.MemberList[i];
             character = ResourceManager.Instance.Spawn("BattleCharacter/BattleCharacter", ResourceManager.Type.Other).GetComponent<BattleCharacter>();
             character.name = member.Data.Animator;
-            character.Init(member);
+            character.Init(member, TeamManager.Instance.Lv);
             CharacterList.Add(character);
             _playerList.Add(character);
             character.SetPosition((Vector2)(member.Formation + BattleFieldManager.Instance.Center));
@@ -525,8 +525,6 @@ public class BattleController : MachineBehaviour
         {
             base.Enter();
 
-            BattleUI.Instance.SetTurnLabel(parent.Turn);
-
             parent._actionQueue.Clear();
             for (int i = 0; i < parent.CharacterList.Count; i++)
             {
@@ -558,19 +556,25 @@ public class BattleController : MachineBehaviour
                     return (y.Character.Info.AGI * y.Priority).CompareTo(x.Character.Info.AGI * x.Priority);
                 }
             });
-            BattleUI.Instance.InitPriorityQueue(parent.ActionQueueToCharacterList(parent._actionQueue), parent.ActionQueueToPriorityList(parent._actionQueue));
 
-            if (parent.TurnStartHandler != null)
+            BattleUI.Instance.SetTurnLabel(parent.Turn, ()=> 
             {
-                parent.TurnStartHandler();
-            }
+                BattleUI.Instance.InitPriorityQueue(parent.ActionQueueToCharacterList(parent._actionQueue), parent.ActionQueueToPriorityList(parent._actionQueue));
 
-            parent.ChangeState<SelectCharacterState>();
+                if (parent.TurnStartHandler != null)
+                {
+                    parent.TurnStartHandler();
+                }
+
+                parent.ChangeState<SelectCharacterState>();
+            });
         }
     }
 
     private class SelectCharacterState : BattleState //依照角色敏捷值來決定行動的先後順序
     {
+        private Timer _timer = new Timer();
+
         public override void Enter()
         {
             base.Enter();
@@ -610,7 +614,8 @@ public class BattleController : MachineBehaviour
                         }
                         else
                         {
-                            BattleUI.Instance.SetFloatingNumber(character, status.Message, FloatingNumber.Type.Other, false, () =>
+                            BattleUI.Instance.SetFloatingNumber(character, status.Message, FloatingNumber.Type.Other);
+                            _timer.Start(0.5f, ()=> 
                             {
                                 parent.ChangeState<SelectCharacterState>();
                             });
@@ -961,6 +966,7 @@ public class BattleController : MachineBehaviour
 
     private class TurnEndState : BattleState //回合結束,做異常狀態傷害等判定
     {
+        private Timer _timer = new Timer();
         private Queue<BattleCharacter> _poisonQueue = new Queue<BattleCharacter>();
 
         public override void Enter()
@@ -969,7 +975,7 @@ public class BattleController : MachineBehaviour
 
             for (int i = 0; i < parent.CharacterList.Count; i++)
             {
-                if (parent.CharacterList[i].LiveState == BattleCharacter.LiveStateEnum.Alive && parent.CharacterList[i].Info.IsPoisoning)
+                if (parent.CharacterList[i].LiveState != BattleCharacter.LiveStateEnum.Dead && parent.CharacterList[i].Info.IsPoisoning)
                 {
                     _poisonQueue.Enqueue(parent.CharacterList[i]);
                 }
@@ -989,7 +995,8 @@ public class BattleController : MachineBehaviour
                 BattleCharacter character = _poisonQueue.Dequeue();
                 CameraController.Instance.SetParent(character.Sprite.transform, true, () =>
                 {
-                    character.SetPoisonDamage(SetPoison);
+                    character.SetPoisonDamage();
+                    _timer.Start(0.5f, SetPoison);
                 });
             }
             else
@@ -1026,10 +1033,10 @@ public class BattleController : MachineBehaviour
 
             ItemManager.Instance.AddItem(parent._dropItemList, ItemManager.Type.Bag);
             TeamManager.Instance.Refresh(parent._power, parent._playerList);
-            List<int> orignalLvList = TeamManager.Instance.GetLvList();
-            List<int> orignalExpList = TeamManager.Instance.GetExpList();
+            int orignalLv = TeamManager.Instance.Lv;
+            int orignalExp = TeamManager.Instance.Exp;
             TeamManager.Instance.AddExp(parent._exp);
-            BattleUI.Instance.SetResult(true, parent._winCallback, orignalLvList, orignalExpList, parent._dropItemList);
+            BattleUI.Instance.SetResult(true, parent._winCallback, orignalLv, orignalExp, parent._dropItemList);
         }
 
         public override void ScreenOnClick(Vector2Int position) { }

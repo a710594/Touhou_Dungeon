@@ -7,8 +7,6 @@ public class TeamMember
 {
     private static readonly int _maxSkillLv = 5;
 
-    public int Lv;
-    public int Exp;
     public int MaxHP;
 
     private int _currentHP;
@@ -126,17 +124,16 @@ public class TeamMember
     public void Init(int jobId, int lv = 1)
     {
         Data = JobData.GetData(jobId);
-        Lv = lv;
-        MaxHP = Mathf.RoundToInt(Data.HP * (1 + ((Lv - 1) * 0.1f)));
+        MaxHP = Mathf.RoundToInt(Data.HP * (1 + ((lv - 1) * 0.1f)));
         CurrentHP = MaxHP;
         MaxMP =Data.MP;
         CurrentMP = MaxMP;
-        _atk = Mathf.RoundToInt(Data.ATK * (1 + ((Lv - 1) * 0.1f)));
-        _def = Mathf.RoundToInt(Data.DEF * (1 + ((Lv - 1) * 0.1f)));
-        _mtk = Mathf.RoundToInt(Data.MTK * (1 + ((Lv - 1) * 0.1f)));
-        _mef= Mathf.RoundToInt(Data.MEF * (1 + ((Lv - 1) * 0.1f)));
-        _agi = Mathf.RoundToInt(Data.AGI * (1 + ((Lv - 1) * 0.1f)));
-        _sen = Mathf.RoundToInt(Data.SEN * (1 + ((Lv - 1) * 0.1f)));
+        _atk = Mathf.RoundToInt(Data.ATK * (1 + ((lv - 1) * 0.1f)));
+        _def = Mathf.RoundToInt(Data.DEF * (1 + ((lv - 1) * 0.1f)));
+        _mtk = Mathf.RoundToInt(Data.MTK * (1 + ((lv - 1) * 0.1f)));
+        _mef= Mathf.RoundToInt(Data.MEF * (1 + ((lv - 1) * 0.1f)));
+        _agi = Mathf.RoundToInt(Data.AGI * (1 + ((lv - 1) * 0.1f)));
+        _sen = Mathf.RoundToInt(Data.SEN * (1 + ((lv - 1) * 0.1f)));
         MOV = Data.MOV;
         //SkillList = Data.GetUnlockSkill(Lv);
         for (int i=0; i<Data.SkillList.Count; i++)
@@ -152,8 +149,6 @@ public class TeamMember
     public void Init(TeamMemberMemo memo) 
     {
         Data = JobData.GetData(memo.DataId);
-        Lv = memo.Lv;
-        Exp = memo.Exp;
         MaxHP = memo.MaxHP;
         CurrentHP = memo.CurrentHP;
         MaxMP = memo.MaxMP;
@@ -184,18 +179,16 @@ public class TeamMember
         int originalMaxHP = MaxHP;
         int originalMaxMP = MaxMP;
 
-        Lv = lv;
-        Exp = exp;
-        MaxHP = Mathf.RoundToInt(Data.HP * (1 + ((Lv - 1) * 0.1f)));
+        MaxHP = Mathf.RoundToInt(Data.HP * (1 + ((lv - 1) * 0.1f)));
         CurrentHP += (MaxHP - originalMaxHP);
         //MaxMP = Mathf.RoundToInt(Data.MP * (1 + ((Lv - 1) * 0.1f)));
         CurrentMP += (MaxMP - originalMaxMP);
-        _atk = Mathf.RoundToInt(Data.ATK * (1 + ((Lv - 1) * 0.1f)));
-        _def = Mathf.RoundToInt(Data.DEF * (1 + ((Lv - 1) * 0.1f)));
-        _mtk = Mathf.RoundToInt(Data.MTK * (1 + ((Lv - 1) * 0.1f)));
-        _mef = Mathf.RoundToInt(Data.MEF * (1 + ((Lv - 1) * 0.1f)));
-        _agi = Mathf.RoundToInt(Data.AGI * (1 + ((Lv - 1) * 0.1f)));
-        _sen = Mathf.RoundToInt(Data.SEN * (1 + ((Lv - 1) * 0.1f)));
+        _atk = Mathf.RoundToInt(Data.ATK * (1 + ((lv - 1) * 0.1f)));
+        _def = Mathf.RoundToInt(Data.DEF * (1 + ((lv - 1) * 0.1f)));
+        _mtk = Mathf.RoundToInt(Data.MTK * (1 + ((lv - 1) * 0.1f)));
+        _mef = Mathf.RoundToInt(Data.MEF * (1 + ((lv - 1) * 0.1f)));
+        _agi = Mathf.RoundToInt(Data.AGI * (1 + ((lv - 1) * 0.1f)));
+        _sen = Mathf.RoundToInt(Data.SEN * (1 + ((lv - 1) * 0.1f)));
 
         //SkillDic = Data.GetUnlockSkill(Lv);
     }

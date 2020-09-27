@@ -23,13 +23,13 @@ public class BattleUI : MonoBehaviour
     public Text PowerLabel;
     public Text ActionCountLabel;
     public Text SkillLabel;
+    public Text TurnLabel;
     public AnchorValueBar LittleHPBar;
     public FloatingNumberPool FloatingNumberPool;
     public BattleInfoUI InfoUI;
     public BattleSkillUI SkillInfoUI;
     public BattleFieldUI BattleFieldUI;
     public TipLabel TipLabel;
-    public TipLabel TurnLabel;
     public LoopScrollView SkillScrollView;
     public GameObject PowerPoint;
     public GameObject ActionGroup;
@@ -145,28 +145,16 @@ public class BattleUI : MonoBehaviour
         SkillScrollView.RemoveSelectedItem();
     }
 
-    public void SetFloatingNumber(BattleCharacter character, string text, FloatingNumber.Type type, bool setHPBar, Action callback)
+    public void SetFloatingNumber(BattleCharacter character, string text, FloatingNumber.Type type)
     {
         _floatingNumberPoolDic[character].transform.position = Camera.main.WorldToScreenPoint(character.Sprite.transform.position);
-        _floatingNumberPoolDic[character].Play(text, type, () =>
-        {
-            if (setHPBar)
-            {
-                SetLittleHPBar(character, true);
-            }
-        }, () =>
-        {
-            if (callback != null)
-            {
-                callback();
-            }
-        });
+        _floatingNumberPoolDic[character].Play(text, type);
     }
 
     public void SetLittleHPBar(BattleCharacter character, bool isVisible)
     {
         _littleHPBarDic[character].gameObject.SetActive(isVisible);
-        _littleHPBarDic[character].SetValueTween(character.Info.CurrentHP, character.Info.MaxHP,  null);
+        _littleHPBarDic[character].SetValueTween(character.Info.CurrentHP, character.Info.MaxHP, null);
         _littleHPBarDic[character].SetHPQueue(character.Info.HPQueue.Count);
     }
 
@@ -185,14 +173,31 @@ public class BattleUI : MonoBehaviour
         _littleHPBarDic[character].StopPrediction();
     }
 
-    public void SetTurnLabel(int turn)
+    public void SetTurnLabel(int turn, Action callback)
     {
-        TurnLabel.SetLabel("Turn" + turn.ToString());
+        SetInfo(false);
+        TurnLabel.transform.parent.parent.gameObject.SetActive(true);
+        TurnLabel.text = "Turn" + turn.ToString();
+        TurnLabel.transform.parent.localPosition = Vector3.right * 1280;
+        TurnLabel.transform.parent.DOLocalMoveX(0, 0.5f).SetEase(Ease.OutCubic).OnComplete(() =>
+        {
+            _timer.Start(1f, () =>
+            {
+                TurnLabel.transform.parent.DOLocalMoveX(-1280, 0.25f).SetEase(Ease.Linear).OnComplete(() =>
+                {
+                    TurnLabel.transform.parent.parent.gameObject.SetActive(false);
+                    if (callback != null)
+                    {
+                        callback();
+                    }
+                });
+            });
+        });
     }
 
-    public void SetResult(bool isWin, Action callback, List<int> orignalLvList = null, List<int> orignalExpList = null, List<int> itemList = null)
+    public void SetResult(bool isWin, Action callback, int orignalLv = 0, int orignalExp = 0, List<int> itemList = null)
     {
-        ResultUI.Open(isWin, orignalLvList, orignalExpList, itemList, callback);
+        ResultUI.Open(isWin, orignalLv, orignalExp, itemList, callback);
     }
 
     public void SetPower(int power) 

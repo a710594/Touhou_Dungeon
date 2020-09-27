@@ -6,6 +6,8 @@ using DG.Tweening;
 
 public class Skill
 {
+    protected static float _floatingNumberTime = 0.25f;
+
     public enum HitType
     {
         Miss,
@@ -25,6 +27,7 @@ public class Skill
     protected Vector3 _targetPosition;
     protected Action _skillCallback;
     protected Skill _subSkill;
+    protected Skill _partnerSkill;
     protected BattleCharacterInfo _user;
     protected List<Vector2Int> _skillDistanceList = new List<Vector2Int>();
     protected List<Vector2Int> _skillRangeList = new List<Vector2Int>();
@@ -41,7 +44,13 @@ public class Skill
         {
             SkillData.RootObject skillData = SkillData.GetData(Data.SubID);
             _subSkill = SkillFactory.GetNewSkill(skillData, user, lv);
+            _subSkill.SetPartnerSkill(this);
         }
+    }
+
+    public void SetPartnerSkill(Skill skill)
+    {
+        _partnerSkill = skill;
     }
 
     public bool IsSpellCard
@@ -183,11 +192,6 @@ public class Skill
         {
             CurrentCD = Data.CD + 1; //要加一是因為本回合不減CD
         }
-        InitSkillCallbackCount();
-        if (_subSkill != null)
-        {
-            _subSkill.InitSkillCallbackCount();
-        }
         _skillCallback = callback;
         GetTargetList();
 
@@ -205,17 +209,13 @@ public class Skill
 
             BattleUI.Instance.ShowSpellCard(Data.GetName(), largeImage, ()=> 
             {
-                CameraMove(UseCallback);
+                CameraMove();
             });
         }
         else
         {
             BattleUI.Instance.SetSkillLabel(true, Data.GetName());
-
-            Camera.main.transform.DOMove(_targetPosition + Vector3.up, Vector2.Distance(_user.Position, _targetPosition) / 4f).OnComplete(() =>
-            {
-                CameraMove(UseCallback);
-            });
+            CameraMove();
         }
 
         if (ItemID != 0)
@@ -224,14 +224,29 @@ public class Skill
         }
     }
 
-    public void InitSkillCallbackCount()
+    public bool CheckSkillCallbackCount()
     {
-        _skillCallBackCount = 0;
-        if (_subSkill != null)
+        //這幾種技能的目標比較特殊,不走一般計算目標數的流程
+        if (Data.Type == SkillData.TypeEnum.Field || Data.Type == SkillData.TypeEnum.CureLeastHP || Data.Type == SkillData.TypeEnum.Summon)
         {
-            _subSkill.InitSkillCallbackCount();
+            return true;
+        }
+        else
+        {
+            _skillCallBackCount++;
+            if (_skillCallBackCount == _targetCount)
+            {
+                _skillCallBackCount = 0;
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
+
+    public virtual void SetEffects() { }
 
     protected HitType hitType;
     public virtual void SetEffect(BattleCharacter target)
@@ -279,26 +294,7 @@ public class Skill
         }
     }
 
-    protected virtual void UseCallback() //Use 之後會呼叫的方法
-    {
-        if (_targetList.Count > 0 && _user.Camp == BattleCharacterInfo.CampEnum.Partner && !IsSpellCard)
-        {
-            BattleController.Instance.AddPower(_targetList.Count * Data.AddPower);
-            BattleUI.Instance.DropPowerPoint(_targetList);
-        }
-
-        if (Data.ParticleName != "x")
-        {
-            GameObject particle;
-            for (int i = 0; i < _skillRangeList.Count; i++)
-            {
-                particle = ResourceManager.Instance.Spawn("Particle/" + Data.ParticleName, ResourceManager.Type.Other);
-                particle.transform.position = _skillRangeList[i] + Vector2.up; // + Vector2.up 是為了調整特效生成的位置
-            }
-        }
-    }
-
-    protected void CheckSkillCallback(BattleCharacter target)
+    protected void CheckSubSkill(BattleCharacter target)
     {
         if (_subSkill != null)
         {
@@ -312,6 +308,7 @@ public class Skill
             {
                 _subSkill.SetEffect(target);
             }
+            CheckSkillCallbackCount();
         }
         else
         {
@@ -321,20 +318,21 @@ public class Skill
 
     protected void OnSkillEnd()
     {
-        //這幾種技能的目標比較特殊,不走一般計算目標數的流程
-        if (Data.Type == SkillData.TypeEnum.Field || Data.Type == SkillData.TypeEnum.CureLeastHP || Data.Type == SkillData.TypeEnum.Summon)
+        if (CheckSkillCallbackCount())
         {
-            BattleUI.Instance.SetSkillLabel(false);
-            _skillCallback();
-        }
-        else
-        {
-            _skillCallBackCount++;
-            if (_skillCallBackCount == _targetCount && _skillCallback != null)
+            float totalShowTime = Data.ShowTime;
+            Skill skill = this;
+            while (skill._partnerSkill!= null)
+            {
+                skill = skill._partnerSkill;
+                totalShowTime += skill.Data.ShowTime;
+            }
+
+            Timer timer = new Timer(totalShowTime / 2f, ()=> 
             {
                 BattleUI.Instance.SetSkillLabel(false);
                 _skillCallback();
-            }
+            });
         }
     }
 
@@ -404,20 +402,74 @@ public class Skill
         _skillCallback = callback;
     }
 
-    private void CameraMove(Action callback)
+    private void CameraMove()
     {
         float distance = Vector2.Distance(_user.Position, _targetPosition);
 
         if (distance > 1)
         {
-            Camera.main.transform.DOMove(_targetPosition + Vector3.up, 0.5f).SetEase(Ease.Linear).OnComplete(() =>
+            Camera.main.transform.DOMove(_targetPosition + Vector3.up, Vector2.Distance(_user.Position, _targetPosition) / 4f).OnComplete(() =>
             {
-                callback();
+                ShowAnimation();
+                SetEffects();
             });
         }
         else
         {
-            callback();
+            ShowAnimation();
+            SetEffects();
+        }
+    }
+
+    protected virtual void ShowAnimation()
+    {
+        if (Data.ParticleName != "x")
+        {
+            GameObject particle;
+            //for (int i = 0; i < _skillRangeList.Count; i++)
+            //{
+            //    particle = ResourceManager.Instance.Spawn("Particle/" + Data.ParticleName, ResourceManager.Type.Other);
+            //    particle.transform.position = _skillRangeList[i] + Vector2.up; // + Vector2.up 是為了調整特效生成的位置
+            //}
+            particle = ResourceManager.Instance.Spawn("Particle/" + Data.ParticleName, ResourceManager.Type.Other);
+            particle.transform.position = ((Vector2)_targetPosition) + Vector2.up; // + Vector2.up 是為了調整特效生成的位置
+
+            SpriteRenderer sprite = particle.GetComponent<SpriteRenderer>();
+            if (sprite != null)
+            {
+                if (Data.RangeType == SkillData.RangeTypeEnum.Point || Data.RangeType == SkillData.RangeTypeEnum.Circle)
+                {
+                    if (_user.Position.x < _targetPosition.x)
+                    {
+                        sprite.flipX = true;
+                    }
+                }
+                else if (Data.RangeType == SkillData.RangeTypeEnum.Rectangle)
+                {
+                    if (_user.Position - (Vector2)_targetPosition == Vector2.left)
+                    {
+                        sprite.flipX = true;
+                    }
+                    else if (_user.Position - (Vector2)_targetPosition == Vector2.up)
+                    {
+                        sprite.transform.rotation = Quaternion.Euler(0, 0, 90);
+                    }
+                    else if (_user.Position - (Vector2)_targetPosition == Vector2.down)
+                    {
+                        sprite.transform.rotation = Quaternion.Euler(0, 0, 270);
+                    }
+                }
+            }
+        }
+
+        if (_targetList.Count > 0 && _user.Camp == BattleCharacterInfo.CampEnum.Partner && !IsSpellCard)
+        {
+            BattleController.Instance.AddPower(_targetList.Count * Data.AddPower);
+            Timer timer = new Timer();
+            timer.Start(Data.ShowTime, ()=> 
+            {
+                BattleUI.Instance.DropPowerPoint(_targetList);
+            });
         }
     }
 }

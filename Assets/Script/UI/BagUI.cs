@@ -167,7 +167,7 @@ public class BagUI : MonoBehaviour
             EquipComment.gameObject.SetActive(true);
             VolumeLabel.text = "體積：" + _selectedEquip.Volume;
             ItemImage.gameObject.SetActive(true);
-            ItemImage.overrideSprite = Resources.Load<Sprite>("Image/" + _selectedEquip.Icon);
+            ItemImage.overrideSprite = Resources.Load<Sprite>("Image/Item/" + _selectedEquip.Icon);
 
             if (_managerType == ItemManager.Type.Bag && _selectedMember == null)
             {
@@ -196,7 +196,7 @@ public class BagUI : MonoBehaviour
             EquipComment.gameObject.SetActive(false);
             VolumeLabel.text = "體積：" + _selectedItem.Volume;
             ItemImage.gameObject.SetActive(true);
-            ItemImage.overrideSprite = Resources.Load<Sprite>("Image/" + _selectedItem.Icon);
+            ItemImage.overrideSprite = Resources.Load<Sprite>("Image/Item/" + _selectedItem.Icon);
 
             if (_managerType == ItemManager.Type.Bag)
             {
@@ -214,7 +214,8 @@ public class BagUI : MonoBehaviour
                 DiscardButton.gameObject.SetActive(false);
             }
 
-            if (_selectedItem.Type == ItemData.TypeEnum.Food || _selectedItem.Type == ItemData.TypeEnum.Medicine || _selectedItem.Type == ItemData.TypeEnum.GoHome)
+            if (_managerType == ItemManager.Type.Bag &&
+                (_selectedItem.Type == ItemData.TypeEnum.Food || _selectedItem.Type == ItemData.TypeEnum.Medicine || _selectedItem.Type == ItemData.TypeEnum.GoHome))
             {
                 UseButton.gameObject.SetActive(true);
             }

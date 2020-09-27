@@ -14,13 +14,13 @@ public class EquipComment : MonoBehaviour
     {
         EquipData.RootObject data = EquipData.GetData(id);
 
-        ATKLabel.text = "攻擊：" + data.ATK.ToString();
-        ATKLabel.gameObject.SetActive(data.ATK !=0);
-        DEFLabel.text = "防禦：" + data.DEF.ToString();
-        DEFLabel.gameObject.SetActive(data.DEF != 0);
-        MTKLabel.text = "魔攻：" + data.MTK.ToString();
-        MTKLabel.gameObject.SetActive(data.MTK != 0);
-        MEFLabel.text = "魔防：" + data.MEF.ToString();
-        MEFLabel.gameObject.SetActive(data.MEF != 0);
+        ATKLabel.text = data.ATK.ToString();
+        ATKLabel.transform.parent.gameObject.SetActive(data.ATK !=0);
+        DEFLabel.text = data.DEF.ToString();
+        DEFLabel.transform.parent.gameObject.SetActive(data.DEF != 0);
+        MTKLabel.text = data.MTK.ToString();
+        MTKLabel.transform.parent.gameObject.SetActive(data.MTK != 0);
+        MEFLabel.text = data.MEF.ToString();
+        MEFLabel.transform.parent.gameObject.SetActive(data.MEF != 0);
     }
 }

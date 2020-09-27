@@ -9,15 +9,11 @@ public class FloatingNumberPool : MonoBehaviour
     {
         public string Text;
         public FloatingNumber.Type Type;
-        public Action BeforeCallback; //跳數字的同時會發生的事件
-        public Action AfterCallback; //數字消失時會發生的事件
 
-        public FloatingNumberData(string text, FloatingNumber.Type type, Action beforeCallback, Action afterCallback)
+        public FloatingNumberData(string text, FloatingNumber.Type type)
         {
             Text = text;
             Type = type;
-            BeforeCallback = beforeCallback;
-            AfterCallback = afterCallback;
         }
     }
 
@@ -27,31 +23,29 @@ public class FloatingNumberPool : MonoBehaviour
     public float Duration; //顯示幾秒
 
     private bool _isLock = false;
-    private Transform _anchor;
 
     private Queue<FloatingNumber> _poolQueue = new Queue<FloatingNumber>();
-    private Queue<string> _textQueue = new Queue<string>();
     private Queue<FloatingNumberData> _dataQueue = new Queue<FloatingNumberData>();
 
     public void SetAnchor(Transform anchor)
     {
-        //_anchor = anchor;
         transform.SetParent(anchor);
         transform.localPosition = Vector3.zero;
     }
 
-    public void Play(string text, FloatingNumber.Type type, Action beforeCallback, Action afterCallBack) //beforeCallback:跳數字的同時會發生的事件 afterCallBack:數字消失時會發生的事件
+    public void Play(string text, FloatingNumber.Type type/*, Action beforeCallback, Action afterCallBack*/) //beforeCallback:跳數字的同時會發生的事件 afterCallBack:數字消失時會發生的事件
     {
         if (!_isLock)
         {
             _isLock = true;
+            Debug.Log("dequeue");
             FloatingNumber floatingNumber = _poolQueue.Dequeue();
             floatingNumber.Play(text, type);
 
-            if (beforeCallback != null)
-            {
-                beforeCallback();
-            }
+            //if (beforeCallback != null)
+            //{
+            //    beforeCallback();
+            //}
 
             Timer unlockTimer = new Timer(CycleTime, () => //顯示下一個數字
             {
@@ -59,23 +53,24 @@ public class FloatingNumberPool : MonoBehaviour
                 if (_dataQueue.Count > 0)
                 {
                     FloatingNumberData data = _dataQueue.Dequeue();
-                    Play(data.Text, data.Type, data.BeforeCallback, data.AfterCallback);
+                    Play(data.Text, data.Type/*, data.BeforeCallback, data.AfterCallback*/);
                 }
             });
 
             Timer recycleTimer = new Timer(Duration, () => //當前的數字消失
             {
+                Debug.Log("enqueue");
                 _poolQueue.Enqueue(floatingNumber);
 
-                if (afterCallBack != null)
-                {
-                    afterCallBack();
-                }
+                //if (afterCallBack != null)
+                //{
+                //    afterCallBack();
+                //}
             });
         }
         else
         {
-            FloatingNumberData data = new FloatingNumberData(text, type, beforeCallback, afterCallBack);
+            FloatingNumberData data = new FloatingNumberData(text, type);
             _dataQueue.Enqueue(data);
         }
     }
@@ -85,7 +80,7 @@ public class FloatingNumberPool : MonoBehaviour
         FloatingNumber.SetValue(Height, Duration);
         _poolQueue.Enqueue(FloatingNumber);
 
-        int amount = (int)Math.Ceiling(Duration / CycleTime) - 1;
+        int amount = (int)Math.Ceiling(Duration / CycleTime);
         FloatingNumber clone;
         for (int i=0; i<amount; i++)
         {
@@ -99,9 +94,5 @@ public class FloatingNumberPool : MonoBehaviour
 
     void Update()
     {
-        if (_anchor != null)
-        {
-            this.transform.position = Camera.main.WorldToScreenPoint(_anchor.position);
-        }
     }
 }

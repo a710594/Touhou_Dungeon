@@ -20,8 +20,8 @@ public class BattleCharacter : MonoBehaviour
         Dead,
     }
 
-    public Action<Action> OnDeathHandler;
-    public Action<int, Action> OnHPDequeueHandler;
+    public Action OnDeathHandler;
+    public Action<int> OnHPDequeueHandler;
 
     public Vector2Int TargetPosition = new Vector2Int();
     public SpriteRenderer Sprite;
@@ -71,9 +71,9 @@ public class BattleCharacter : MonoBehaviour
     private List<Vector2Int> _detectRangeList = new List<Vector2Int>();
 
 
-    public void Init(TeamMember member)
+    public void Init(TeamMember member, int lv)
     {
-        Info.Init(member);
+        Info.Init(member, lv);
         Init(member.Data);
     }
     public void Init(BattleCharacterMemo memo)
@@ -372,83 +372,9 @@ public class BattleCharacter : MonoBehaviour
         }
     }
 
-    public virtual void SetDamage(int damage, Skill.HitType hitType, Action<BattleCharacter> callback)
+    public virtual void SetDamage(int damage)
     {
         Info.CurrentHP -= damage;
-
-        string text = "";
-        FloatingNumber.Type floatingNumberType = FloatingNumber.Type.Other;
-        if (hitType == Skill.HitType.Critical)
-        {
-            floatingNumberType = FloatingNumber.Type.Critical;
-            text = damage.ToString();
-        }
-        else if (hitType == Skill.HitType.Hit)
-        {
-            floatingNumberType = FloatingNumber.Type.Damage;
-            text = damage.ToString();
-        }
-        else if (hitType == Skill.HitType.Miss)
-        {
-            floatingNumberType = FloatingNumber.Type.Miss;
-            text = "Miss";
-        }
-        else if (hitType == Skill.HitType.NoDamage)
-        {
-            floatingNumberType = FloatingNumber.Type.Miss;
-            text = "NoDamage";
-        }
-
-        BattleUI.Instance.SetFloatingNumber(this, text, floatingNumberType, true, () =>
-        {
-            if (Info.CurrentHP <= 0)
-            {
-                if (LiveState == BattleCharacter.LiveStateEnum.Dying)
-                {
-                    SetDying(() =>
-                    {
-                        if (callback != null)
-                        {
-                            callback(this);
-                        }
-                    });
-                }
-                else
-                {
-                    if (Info.HPQueue.Count > 0)
-                    {
-                        Info.HPDequeue();
-                        BattleUI.Instance.SetLittleHPBar(this, true);
-
-                        if (OnHPDequeueHandler != null)
-                        {
-                            OnHPDequeueHandler(Info.HPQueue.Count, () =>
-                            {
-                                callback(this);
-                            });
-                        }
-                        else
-                        {
-                            callback(this);
-                        }
-                    }
-                    else
-                    {
-                        SetDeath(() =>
-                        {
-                            callback(this);
-                        });
-                    }
-                }
-            }
-            else
-            {
-                if (callback != null)
-                {
-                    callback(this);
-                }
-            }
-        });
 
         if (Info.IsSleeping)
         {
@@ -459,115 +385,33 @@ public class BattleCharacter : MonoBehaviour
 
     public void SetPoison(Poison poison, int damage, Skill.HitType hitType, Action<BattleCharacter> callback)
     {
-        if (hitType != Skill.HitType.Miss)
-        {
-            Info.SetPoison(poison, damage);
-
-            BattleUI.Instance.SetFloatingNumber(this, poison.Data.Message, FloatingNumber.Type.Other, false, () =>
-            {
-                callback(this);
-            });
-        }
-        else
-        {
-            BattleUI.Instance.SetFloatingNumber(this, "Miss", FloatingNumber.Type.Miss, false, () =>
-            {
-                callback(this);
-            });
-        }
+        Info.SetPoison(poison, damage);
     }
 
-    public virtual void SetPoisonDamage(Action callback) //回合結束時計算毒傷害
+    public virtual void SetPoisonDamage() //回合結束時計算毒傷害
     {
-        int callbackCount = 0;
         List<int> damageList = Info.GetPoisonDamageList();
         for(int i=0; i< damageList.Count; i++)
         {
             Info.CurrentHP -= damageList[i];
 
-            BattleUI.Instance.SetFloatingNumber(this, damageList[i].ToString(), FloatingNumber.Type.Poison, true, () =>
-            {
-                callbackCount++;
-                if (Info.CurrentHP <= 0)
-                {
-                    if (LiveState == LiveStateEnum.Dying)
-                    {
-                        SetDying(callback);
-                    }
-                    else
-                    {
-                        if (Info.HPQueue.Count > 0)
-                        {
-                            Info.HPDequeue();
-                            BattleUI.Instance.SetLittleHPBar(this, true);
-
-                            if (OnHPDequeueHandler != null)
-                            {
-                                OnHPDequeueHandler(Info.HPQueue.Count, callback);
-                            }
-                            else
-                            {
-                                callback();
-                            }
-                        }
-                        else
-                        {
-                            SetDeath(callback);
-                        }
-                    }
-                }
-                else
-                {
-                    if (callbackCount == damageList.Count && callback != null)
-                    {
-                        callback();
-                    }
-                }
-            });
+            BattleUI.Instance.SetFloatingNumber(this, damageList[i].ToString(), FloatingNumber.Type.Poison);
+            BattleUI.Instance.SetLittleHPBar(this, true);
         }
+        CheckLiveState();
     }
 
-    public void SetParalysis(int id, int lv, Skill.HitType hitType, Action<BattleCharacter> callback)
+    public void SetParalysis(int id, int lv)
     {
-        if (hitType != Skill.HitType.Miss)
-        {
-            Info.SetParalysis(id, lv);
-
-            BattleUI.Instance.SetFloatingNumber(this, BattleStatusData.GetData(id).Message, FloatingNumber.Type.Other, false, () =>
-            {
-                callback(this);
-            });
-        }
-        else
-        {
-            BattleUI.Instance.SetFloatingNumber(this, "Miss", FloatingNumber.Type.Miss, false, () =>
-            {
-                callback(this);
-            });
-        }
+        Info.SetParalysis(id, lv);
     }
 
-    public void SetStriking(int id, Skill.HitType hitType, Action<BattleCharacter> callback)
+    public void SetStriking(int id)
     {
-        if (hitType != Skill.HitType.Miss)
-        {
-            Info.SetStriking(id);
-
-            BattleUI.Instance.SetFloatingNumber(this, BattleStatusData.GetData(id).Message, FloatingNumber.Type.Other, false, () =>
-            {
-                callback(this);
-            });
-        }
-        else
-        {
-            BattleUI.Instance.SetFloatingNumber(this, "Miss", FloatingNumber.Type.Miss, false, () =>
-            {
-                callback(this);
-            });
-        }
+        Info.SetStriking(id);
     }
 
-    public void SetRecoverHP(int recover, Action<BattleCharacter> callback)
+    public void SetRecoverHP(int recover)
     {
         if (LiveState == BattleCharacter.LiveStateEnum.Dying)
         {
@@ -576,58 +420,21 @@ public class BattleCharacter : MonoBehaviour
         }
 
         Info.CurrentHP += recover;
-        BattleUI.Instance.SetFloatingNumber(this, recover.ToString(), FloatingNumber.Type.Recover, true, () =>
-        {
-            if (callback != null)
-            {
-                callback(this);
-            }
-        });
     }
 
-    public void SetRecoverMP(int recover, Action<BattleCharacter> callback)
+    public void SetRecoverMP(int recover)
     {
         Info.CurrentMP += recover;
-        BattleUI.Instance.SetFloatingNumber(this, recover.ToString(), FloatingNumber.Type.Recover, true, () =>
-        {
-            if (callback != null)
-            {
-                callback(this);
-            }
-        });
     }
 
-    public void ClearAbnormal(Action<BattleCharacter> callback)
+    public void ClearAbnormal()
     {
         Info.ClearAbnormal();
-
-        BattleUI.Instance.SetFloatingNumber(this, "解除異常狀態", FloatingNumber.Type.Other, false, () =>
-        {
-            if (callback != null)
-            {
-                callback(this);
-            }
-        });
     }
 
-    public void SetBuff(int id, int lv, Skill.HitType hitType, Action<BattleCharacter> callback)
+    public void SetBuff(int id, int lv)
     {
-        if (hitType != Skill.HitType.Miss)
-        {
-            Info.SetBuff(id, lv);
-
-            BattleUI.Instance.SetFloatingNumber(this, BattleStatusData.GetData(id).Message, FloatingNumber.Type.Other, false, () =>
-            {
-                callback(this);
-            });
-        }
-        else
-        {
-            BattleUI.Instance.SetFloatingNumber(this, "Miss", FloatingNumber.Type.Miss, false, () =>
-            {
-                callback(this);
-            });
-        }
+        Info.SetBuff(id, lv);
     }
 
     public void SetOutline(bool show)
@@ -651,7 +458,40 @@ public class BattleCharacter : MonoBehaviour
         Info.IsActive = isActive;
     }
 
-    private void SetDeath(Action callback)
+    public void CheckLiveState()
+    {
+        if (Info.CurrentHP <= 0)
+        {
+            if (LiveState == BattleCharacter.LiveStateEnum.Dying)
+            {
+                SetDying();
+            }
+            else
+            {
+                if (Info.HPQueue.Count > 0)
+                {
+                    HPDequeue();
+                }
+                else
+                {
+                    SetDeath();
+                }
+            }
+        }
+    }
+
+    public void HPDequeue()
+    {
+        Info.HPDequeue();
+        BattleUI.Instance.SetLittleHPBar(this, true);
+
+        if (OnHPDequeueHandler != null)
+        {
+            OnHPDequeueHandler(Info.HPQueue.Count);
+        }
+    }
+
+    public void SetDeath()
     {
         Sprite.DOFade(0, 0.5f).OnComplete(() =>
         {
@@ -659,23 +499,15 @@ public class BattleCharacter : MonoBehaviour
 
             if (OnDeathHandler != null)
             {
-                OnDeathHandler(callback);
-            }
-            else
-            {
-                callback();
+                OnDeathHandler();
             }
         });
     }
 
-    private void SetDying(Action callback)
+    public void SetDying()
     {
         GrayScale.SetScale(0);
         Animator.SetBool("IsDying", true);
-        if (callback != null)
-        {
-            callback();
-        }
     }
 
     private IEnumerator Move(Queue<Vector2Int> path, Action callback)

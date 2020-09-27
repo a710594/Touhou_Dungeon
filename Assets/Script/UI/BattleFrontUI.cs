@@ -37,7 +37,7 @@ public class BattleFrontUI : MonoBehaviour
         {
             _timer.Start(1f, () =>
             {
-                SpellCardGroup.transform.DOLocalMoveX(-1280, 0.5f).SetEase(Ease.OutCubic).OnComplete(() =>
+                SpellCardGroup.transform.DOLocalMoveX(-1280, 0.25f).SetEase(Ease.Linear).OnComplete(() =>
                 {
                     Mask.SetActive(false);
                     NameLabel.gameObject.SetActive(false);

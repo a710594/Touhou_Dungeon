@@ -11,7 +11,7 @@ public class Train : MonoBehaviour
     void Start()
     {
         transform.position = new Vector3(transform.position.x + Sprite.size.x / 2 + 0.5f, transform.position.y, transform.position.z);
-        transform.DOMoveX(BattleFieldManager.Instance.MapBound.xMin - Sprite.size.x / 2 - 0.5f, 0.5f).SetEase(Ease.Linear).OnComplete(()=> 
+        transform.DOMoveX(BattleFieldManager.Instance.MapBound.xMin - Sprite.size.x / 2 - 0.5f, 1).SetEase(Ease.Linear).OnComplete(()=> 
         {
             Destroy(gameObject);
         });

@@ -96,6 +96,10 @@ public class LoopScrollView : MonoBehaviour
         {
             isShort = _itemLength * _dataList.Count + Spacing.x * (_dataList.Count - 1) < Mask.rectTransform.rect.width;
             ScrollView.enabled = !isShort;
+            if (ScrollView.horizontalScrollbar != null)
+            {
+                ScrollView.horizontalScrollbar.gameObject.SetActive(!isShort);
+            }
             if (isShort)
             {
                 Content.rectTransform.sizeDelta = new Vector2(_itemLength * (_gridAmount - PreparationAmount) + Spacing.x * ((_gridAmount - PreparationAmount) - 1), _itemSubLength * _gridElementAmount + Spacing.y * (_gridElementAmount - 1));
@@ -134,6 +138,10 @@ public class LoopScrollView : MonoBehaviour
         {
             isShort = _itemLength * _dataList.Count + Spacing.y * (_dataList.Count - 1) < Mask.rectTransform.rect.height;
             ScrollView.enabled = !isShort;
+            if (ScrollView.verticalScrollbar != null)
+            {
+                ScrollView.verticalScrollbar.gameObject.SetActive(!isShort);
+            }
             if (isShort)
             {
                 Content.rectTransform.sizeDelta = new Vector2(_itemSubLength * _gridElementAmount + Spacing.x * (_gridElementAmount - 1), _itemLength * (_gridAmount - PreparationAmount) + Spacing.y * (_gridAmount - PreparationAmount - 1));
@@ -197,32 +205,21 @@ public class LoopScrollView : MonoBehaviour
             {
                 position += new Vector2(0, (Mathf.Ceil(originalDataAmount / (float)_gridElementAmount) - Mathf.Ceil(list.Count / (float)_gridElementAmount)) * (_itemLength + Spacing.y)) / 2;
             }
-            //else if (list.Count > originalLength)
-            //{
-            //    if (Direction == Type.Horizontal)
-            //    {
-            //        position += new Vector2((originalLength - list.Count) * (_itemLength + Spacing.x) / 2, 0);
-            //    }
-            //    else
-            //    {
-            //        position += new Vector2(0, (originalLength - list.Count) * (_itemLength + Spacing.y)) / 2;
-            //    }
-            //}
+            Content.transform.position = position;
         }
-        else if (Mathf.Ceil(list.Count / (float)_gridElementAmount) > _gridAmount - PreparationAmount && Mathf.Ceil(list.Count / (float)_gridElementAmount) > Mathf.Ceil(originalDataAmount / (float)_gridElementAmount))
-        {
-            if (Direction == Type.Horizontal)
-            {
-                position += new Vector2((Mathf.Ceil(list.Count / (float)_gridElementAmount) - Mathf.Ceil(originalDataAmount / (float)_gridElementAmount)) * (_itemLength + Spacing.x) / 2, 0);
-            }
-            else
-            {
-                position += new Vector2(0, (Mathf.Ceil(list.Count / (float)_gridElementAmount) - Mathf.Ceil(originalDataAmount / (float)_gridElementAmount)) * (_itemLength + Spacing.y)) / 2;
-            }
-        }
+        //else if (Mathf.Ceil(list.Count / (float)_gridElementAmount) > _gridAmount - PreparationAmount && Mathf.Ceil(list.Count / (float)_gridElementAmount) > Mathf.Ceil(originalDataAmount / (float)_gridElementAmount))
+        //{
+        //    if (Direction == Type.Horizontal)
+        //    {
+        //        position += new Vector2((Mathf.Ceil(list.Count / (float)_gridElementAmount) - Mathf.Ceil(originalDataAmount / (float)_gridElementAmount)) * (_itemLength + Spacing.x) / 2, 0);
+        //    }
+        //    else
+        //    {
+        //        position += new Vector2(0, (Mathf.Ceil(list.Count / (float)_gridElementAmount) - Mathf.Ceil(originalDataAmount / (float)_gridElementAmount)) * (_itemLength + Spacing.y)) / 2;
+        //    }
+        //}
 
-        Content.transform.position = position;
-        Debug.Log(Content.transform.localPosition);
+        //Content.transform.position = position;
     }
 
     public void SetFirstElement(object data) //在 SetData 之後使用

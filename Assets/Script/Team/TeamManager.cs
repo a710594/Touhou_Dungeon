@@ -26,6 +26,8 @@ public class TeamManager
     }
     private int _power;
 
+    public int Lv;
+    public int Exp;
     public List<TeamMember> MemberList = new List<TeamMember>();
 
     public void Init()
@@ -34,6 +36,10 @@ public class TeamManager
 
         if (memo == null)
         {
+
+            Lv = 1;
+            Exp = 0;
+
             TeamScriptableObject data = Resources.Load<TeamScriptableObject>("ScriptableObject/TeamScriptableObject");
 
             TeamMember member;
@@ -62,6 +68,8 @@ public class TeamManager
         }
         else
         {
+            Lv = memo.Lv;
+            Exp = memo.Exp;
             _power = memo.Power;
             TeamMember member;
             for (int i = 0; i < memo.MemberList.Count; i++)
@@ -71,11 +79,14 @@ public class TeamManager
                 MemberList.Add(member);
             }
         }
+        _power = 50;
     }
 
     public void Save() 
     {
         TeamMemo memo = new TeamMemo();
+        memo.Lv = Lv;
+        memo.Exp = Exp;
         memo.Power = _power;
         memo.MemberList = new List<TeamMemberMemo>();
         for (int i=0; i<MemberList.Count; i++) 
@@ -96,32 +107,47 @@ public class TeamManager
         }
     }
 
-    public void AddExp(int exp)
+    public void AddExp(int addExp)
     {
-        for (int i = 0; i < MemberList.Count; i++)
-        {
-            UpgradeManager.Instance.AddExp(MemberList[i], exp);
-        }
-    }
+        int originalLv = Lv;
+        int originalExp = Exp;
+        int tempLv;
+        int needExp;
 
-    public List<int> GetLvList()
-    {
-        List<int> lvList = new List<int>();
-        for (int i=0; i<MemberList.Count; i++)
+        needExp = NeedExp(originalLv);
+        if (addExp < needExp - originalExp)
         {
-            lvList.Add(MemberList[i].Lv);
+            Lv = originalLv;
+            Exp = originalExp + addExp;
         }
-        return lvList;
-    }
+        else
+        {
+            addExp -= (needExp - originalExp);
+            tempLv = originalLv + 1;
+            needExp = NeedExp(tempLv);
 
-    public List<int> GetExpList()
-    {
-        List<int> expList = new List<int>();
-        for (int i = 0; i < MemberList.Count; i++)
-        {
-            expList.Add(MemberList[i].Exp);
+            if (needExp > 0)
+            {
+                while (addExp >= needExp)
+                {
+                    addExp -= needExp;
+                    tempLv++;
+                    needExp = NeedExp(tempLv);
+                }
+            }
+            else //已達最大等級
+            {
+                addExp = 0;
+                tempLv = _maxLv;
+            }
+
+            Lv = tempLv;
+            Exp = addExp;
+            for (int i = 0; i < MemberList.Count; i++)
+            {
+                MemberList[i].LvUp(tempLv, addExp);
+            }
         }
-        return expList;
     }
 
     public void RecoverAllMember() 
@@ -131,6 +157,19 @@ public class TeamManager
         {
             MemberList[i].RecoverCompletelyHP();
             MemberList[i].RecoverCompletelyMP();
+        }
+    }
+
+    private static readonly int _maxLv = 99;
+    public int NeedExp(int lv)
+    {
+        if (lv < _maxLv)
+        {
+            return (int)Mathf.Pow(lv + 1, 2);
+        }
+        else
+        {
+            return 0;
         }
     }
 }

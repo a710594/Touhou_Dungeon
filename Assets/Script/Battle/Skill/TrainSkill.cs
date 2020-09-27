@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -14,6 +15,7 @@ public class TrainSkill : AttackSkill
         {
             SkillData.RootObject skillData = SkillData.GetData(Data.SubID);
             _subSkill = SkillFactory.GetNewSkill(skillData, user, lv);
+            _subSkill.SetPartnerSkill(this);
         }
     }
 
@@ -36,12 +38,8 @@ public class TrainSkill : AttackSkill
         return _skillRangeList;
     }
 
-    protected override void UseCallback()
+    public override void SetEffects()
     {
-
-        GameObject particle = ResourceManager.Instance.Spawn("Particle/" + Data.ParticleName, ResourceManager.Type.Other);
-        particle.transform.position = _skillRangeList[_skillRangeList.Count - 1] + Vector2.up; // + Vector2.up 是為了調整特效生成的位置
-
         for (int i = 0; i < _targetList.Count; i++)
         {
             SetEffect(_targetList[i]);
@@ -52,5 +50,11 @@ public class TrainSkill : AttackSkill
             BattleUI.Instance.SetSkillLabel(false);
             _skillCallback();
         }
+    }
+
+    protected override void ShowAnimation()
+    {
+        GameObject particle = ResourceManager.Instance.Spawn("Particle/" + Data.ParticleName, ResourceManager.Type.Other);
+        particle.transform.position = _skillRangeList[_skillRangeList.Count - 1] + Vector2.up; // + Vector2.up 是為了調整特效生成的位置
     }
 }

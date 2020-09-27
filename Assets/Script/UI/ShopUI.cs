@@ -15,6 +15,7 @@ public class ShopUI : MonoBehaviour
     public Button EquipButton;
     public Button CloseButton;
     public ButtonPlus BuyButton;
+    public Image Icon;
     public TipLabel TipLabel;
     public LoopScrollView ScrollView;
     public SetAmountGroup SetAmountGroup;
@@ -54,6 +55,8 @@ public class ShopUI : MonoBehaviour
         NameLabel.text = _selectedData.GetName();
         AmountLabel.text = "庫存：" + ItemManager.Instance.GetItemAmount(_selectedData.ID, ItemManager.Type.Warehouse);
         CommentLabel.text = _selectedData.GetComment();
+        Icon.gameObject.SetActive(true);
+        Icon.overrideSprite = Resources.Load<Sprite>("Image/Item/" + _selectedData.Icon);
         if (_selectedData.Type == ItemData.TypeEnum.Equip)
         {
             EquipComment.gameObject.SetActive(true);

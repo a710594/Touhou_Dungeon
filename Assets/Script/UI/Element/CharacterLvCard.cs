@@ -15,8 +15,8 @@ public class CharacterLvCard : MonoBehaviour
 
     public void SetData(int originalLv, int originalExp, TeamMember member)
     {
-        _currentLv = member.Lv;
-        _currentExp = member.Exp;
+        //_currentLv = member.Lv;
+        //_currentExp = member.Exp;
 
         NameLabel.text = member.Data.GetName();
         Image.overrideSprite = Resources.Load<Sprite>("Image/Character/Small/" + member.Data.SmallImage);

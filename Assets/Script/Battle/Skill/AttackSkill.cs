@@ -20,6 +20,7 @@ public class AttackSkill : Skill
         {
             SkillData.RootObject skillData = SkillData.GetData(Data.SubID);
             _subSkill = SkillFactory.GetNewSkill(skillData, user, lv);
+            _subSkill.SetPartnerSkill(this);
         }
     }
 
@@ -29,10 +30,8 @@ public class AttackSkill : Skill
         _isMagic = isMagic;
     }
 
-    protected override void UseCallback()
+    public override void SetEffects()
     {
-        base.UseCallback();
-
         for (int i = 0; i < _targetList.Count; i++)
         {
             SetEffect(_targetList[i]);
@@ -59,7 +58,41 @@ public class AttackSkill : Skill
             damage = CalculateDamage(_user, target.Info, false, true);
         }
 
-        target.SetDamage(damage, hitType, CheckSkillCallback);
+        string text = "";
+        FloatingNumber.Type floatingNumberType = FloatingNumber.Type.Other;
+        if (hitType == Skill.HitType.Critical)
+        {
+            floatingNumberType = FloatingNumber.Type.Critical;
+            text = damage.ToString();
+        }
+        else if (hitType == Skill.HitType.Hit)
+        {
+            floatingNumberType = FloatingNumber.Type.Damage;
+            text = damage.ToString();
+        }
+        else if (hitType == Skill.HitType.Miss)
+        {
+            floatingNumberType = FloatingNumber.Type.Miss;
+            text = "Miss";
+        }
+        else if (hitType == Skill.HitType.NoDamage)
+        {
+            floatingNumberType = FloatingNumber.Type.Miss;
+            text = "NoDamage";
+        }
+
+        Timer timer1 = new Timer(Data.ShowTime / 2f, ()=> 
+        {
+            target.SetDamage(damage);
+            BattleUI.Instance.SetFloatingNumber(target, text, floatingNumberType);
+            BattleUI.Instance.SetLittleHPBar(target, true);
+        });
+
+        Timer timer2 = new Timer(Data.ShowTime / 2f + _floatingNumberTime, () =>
+        {
+            target.CheckLiveState();
+            CheckSubSkill(target);
+        });
     }
 
     public int CalculateDamage(BattleCharacterInfo executor, BattleCharacterInfo target, bool isCritical, bool isRandom)

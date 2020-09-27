@@ -25,10 +25,10 @@ public class TeamCharacterGroup : MonoBehaviour
     public void SetData(TeamMember member)
     {
         CharacterNameLabel.text = member.Data.GetName();
-        LvLabel.text = "Lv." + member.Lv.ToString();
+        LvLabel.text = "Lv." + TeamManager.Instance.Lv.ToString();
         HPBar.SetValue(member.CurrentHP, member.MaxHP);
         MPBar.SetValue(member.CurrentMP, member.MaxMP);
-        EXPBar.SetValue(member.Exp, UpgradeManager.Instance.NeedExp(member.Lv));
+        EXPBar.SetValue(TeamManager.Instance.Exp, TeamManager.Instance.NeedExp(TeamManager.Instance.Lv));
         ATKLabel.Label.text = "力量：" + member.ATK.ToString();
         DEFLabel.Label.text = "體質：" + member.DEF.ToString();
         MTKLabel.Label.text = "智力：" + member.MTK.ToString();

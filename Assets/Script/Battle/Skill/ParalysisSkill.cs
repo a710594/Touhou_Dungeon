@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -13,13 +14,12 @@ public class ParalysisSkill : Skill
         {
             SkillData.RootObject skillData = SkillData.GetData(Data.SubID);
             _subSkill = SkillFactory.GetNewSkill(skillData, user, lv);
+            _subSkill.SetPartnerSkill(this);
         }
     }
 
-    protected override void UseCallback()
+    public override void SetEffects()
     {
-        base.UseCallback();
-
         for (int i = 0; i < _targetList.Count; i++)
         {
             SetEffect(_targetList[i]);
@@ -36,6 +36,23 @@ public class ParalysisSkill : Skill
     {
         base.SetEffect(target);
 
-        target.SetParalysis(Data.StatusID, Lv, hitType, CheckSkillCallback);
+        Timer timer1 = new Timer(Data.ShowTime / 2f, () =>
+        {
+            if (hitType != HitType.Miss)
+            {
+                target.SetParalysis(Data.StatusID, Lv);
+
+                BattleUI.Instance.SetFloatingNumber(target, BattleStatusData.GetData(Data.StatusID).Message, FloatingNumber.Type.Other);
+            }
+            else
+            {
+                BattleUI.Instance.SetFloatingNumber(target, "Miss", FloatingNumber.Type.Miss);
+            }
+        });
+
+        Timer timer2 = new Timer(_floatingNumberTime + Data.ShowTime / 2f, () =>
+        {
+            CheckSubSkill(target);
+        });
     }
 }

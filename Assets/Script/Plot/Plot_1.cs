@@ -37,7 +37,12 @@ public class Plot_1 : Plot //遊戲的第一個事件,對話後進行新手教�
         obj.transform.position = Vector3.one * 100;
         obj.GetComponent<BattleCharacter>().SetActive(false);
 
+        BattleController.Instance.TurnStartHandler += OpenBattleTutorialUI;
+    }
+
+    private void OpenBattleTutorialUI()
+    {
         BattleTutorialUI.Open();
-        //BattleTutorialUI.Instance.transform.SetSiblingIndex(BattleTutorialUI.Instance.transform.GetSiblingIndex() + 3);
+        BattleController.Instance.TurnStartHandler -= OpenBattleTutorialUI;
     }
 }

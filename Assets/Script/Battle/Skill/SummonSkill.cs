@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -13,13 +14,12 @@ public class SummonSkill : Skill
         {
             SkillData.RootObject skillData = SkillData.GetData(Data.SubID);
             _subSkill = SkillFactory.GetNewSkill(skillData, user, lv);
+            _subSkill.SetPartnerSkill(this);
         }
     }
 
-    protected override void UseCallback()
+    public override void SetEffects()
     {
-        base.UseCallback();
-
         SetEffect(null);
     }
 
@@ -27,16 +27,23 @@ public class SummonSkill : Skill
     {
         base.SetEffect(target);
 
-        BattleCharacter character;
-        for (int i = 0; i < _skillRangeList.Count; i++)
+        Timer timer1 = new Timer(Data.ShowTime / 2f, () =>
         {
-            character = ResourceManager.Instance.Spawn("BattleCharacter/BattleCharacter", ResourceManager.Type.Other).GetComponent<BattleCharacter>();
-            character.Init(Data.Summon, _user.Lv);
-            character.SetPosition(_skillRangeList[i]);
-            BattleController.Instance.AddCharacer(character);
-        }
+            BattleCharacter character;
+            for (int i = 0; i < _skillRangeList.Count; i++)
+            {
+                character = ResourceManager.Instance.Spawn("BattleCharacter/BattleCharacter", ResourceManager.Type.Other).GetComponent<BattleCharacter>();
+                character.Init(Data.Summon, _user.Lv);
+                character.SetPosition(_skillRangeList[i]);
+                BattleController.Instance.AddCharacer(character);
+            }
 
-        BattleUI.Instance.SetSkillLabel(false);
-        CheckSkillCallback(target);
+            BattleUI.Instance.SetSkillLabel(false);
+        });
+
+        Timer timer2 = new Timer(_floatingNumberTime + Data.ShowTime / 2f, () =>
+        {
+            CheckSubSkill(target);
+        });
     }
 }
