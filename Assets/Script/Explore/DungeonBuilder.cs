@@ -237,12 +237,18 @@ public class DungeonBuilder : MonoBehaviour
         }
 
         //explore point
-        Dictionary<Vector2Int, int> exploreEventDic = new Dictionary<Vector2Int, int>();
-        int explorePointAmount = Random.Range(data.MinEventPoint, data.MaxEventPoint + 1);
-        for (int i = 0; i < explorePointAmount; i++)
+        Dictionary<Vector2Int, Event> exploreEventDic = new Dictionary<Vector2Int, Event>();
+        
+        //賽錢箱會有一個
+        position = spaceList[Random.Range(0, spaceList.Count)];
+        exploreEventDic.Add(position, new RecoverEvent1());
+        spaceList.Remove(position);
+
+        //傳送點有 房間數量/2 個
+        for (int i = 0; i < data.RoomAmount / 2; i++)
         {
             position = spaceList[Random.Range(0, spaceList.Count)];
-            exploreEventDic.Add(position, data.GetRandomEventID());
+            exploreEventDic.Add(position, new TeleportEvent1());
             spaceList.Remove(position);
         }
 
@@ -287,16 +293,13 @@ public class DungeonBuilder : MonoBehaviour
         }
 
         MapInfo mapInfo = new MapInfo();
-        mapInfo.Floor = data.ID;
+        mapInfo.ID = data.ID;
+        mapInfo.Group = data.Group;
         mapInfo.LastFloor = data.LastFloor;
         mapInfo.NextFloor = data.NextFloor;
         mapInfo.MapBound = Utility.GetMapBounds(_mapList);
         mapInfo.Start = start;
         mapInfo.Goal = goal;
-        mapInfo.GroundTile = data.GroundTile;
-        mapInfo.DoorTile = data.DoorTile;
-        mapInfo.GrassTile = data.GrassTile;
-        mapInfo.WallTile = data.WallTile;
         mapInfo.MapList = _mapList;
         mapInfo.GrassList = grassList;
         mapInfo.KeyList = keyList;

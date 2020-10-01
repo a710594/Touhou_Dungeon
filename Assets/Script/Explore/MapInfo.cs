@@ -5,17 +5,13 @@ using UnityEngine;
 //DungeonBuilder 到 ExploreController 的中間資料
 public class MapInfo
 {
-    public int Floor;
+    public int Group;
+    public int ID;
     public int LastFloor;
     public int NextFloor;
     public BoundsInt MapBound;
     public Vector2Int Start;
     public Vector2Int Goal;
-    //public DungeonData.RootObject DungeonData;
-    public string GroundTile;
-    public string DoorTile;
-    public string GrassTile;
-    public string WallTile;
     public List<Vector2Int> MapList = new List<Vector2Int>();
     public List<Vector2Int> GrassList = new List<Vector2Int>();
     public List<Vector2Int> KeyList = new List<Vector2Int>();
@@ -25,7 +21,7 @@ public class MapInfo
     public List<Vector2Int> GuardList = new List<Vector2Int>(); //守衛型敵人的位置,遇到該敵人後會 remove
     public List<List<Vector2Int>> RoomPositionList = new List<List<Vector2Int>>(); //各個房間的空間座標,生怪的時候用的
     public Dictionary<Vector2Int, int> MoneyDic = new Dictionary<Vector2Int, int>();
-    public Dictionary<Vector2Int, int> ExploreEventDic = new Dictionary<Vector2Int, int>();
+    public Dictionary<Vector2Int, Event> ExploreEventDic = new Dictionary<Vector2Int, Event>();
     public Dictionary<Vector2Int, Treasure> TreasureDic = new Dictionary<Vector2Int, Treasure>();
 
 
@@ -33,16 +29,13 @@ public class MapInfo
 
     public MapInfo(MapMemo memo)
     {
-        Floor = memo.ID;
-        LastFloor = memo.LastFloor;
-        NextFloor = memo.NextFloor;
+        ID = memo.ID;
+        DungeonData.RootObject dungeonData = DungeonData.GetData(ID);
+        LastFloor = dungeonData.LastFloor;
+        NextFloor = dungeonData.NextFloor;
         MapBound = memo.MapBound;
         Start = memo.Start;
         Goal = memo.Goal;
-        GroundTile = memo.GroundTile;
-        DoorTile = memo.DoorTile;
-        GrassTile = memo.GrassTile;
-        WallTile = memo.WallTile;
         MapList = Utility.StringToVector2Int(memo.MapList);
         GrassList = Utility.StringToVector2Int(memo.GrassList);
         KeyList = Utility.StringToVector2Int(memo.KeyList);
@@ -61,9 +54,18 @@ public class MapInfo
             MoneyDic.Add(Utility.StringToVector2Int(item.Key), item.Value);
         }
 
-        foreach (KeyValuePair<string, int> item in memo.ExploreEventDic)
+        foreach (KeyValuePair<string, Event.TypeEnum> item in memo.ExploreEventDic)
         {
-            ExploreEventDic.Add(Utility.StringToVector2Int(item.Key), item.Value);
+            Event @event = null;
+            if (item.Value == Event.TypeEnum.Recover)
+            {
+                @event = new RecoverEvent1();
+            }
+            else if(item.Value == Event.TypeEnum.Telepoet)
+            {
+                @event = new TeleportEvent1();
+            }
+            ExploreEventDic.Add(Utility.StringToVector2Int(item.Key), @event);
         }
 
         foreach (KeyValuePair<string, Treasure> item in memo.TreasureDic)

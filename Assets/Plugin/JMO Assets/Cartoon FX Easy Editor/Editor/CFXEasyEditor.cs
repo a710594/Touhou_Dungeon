@@ -599,13 +599,13 @@ public class CFXEasyEditor : EditorWindow
 		GUILayout.Space(8);
 		
 		//Resize window
-		if(foldoutChanged && Event.current.type == EventType.Repaint)
+		if(foldoutChanged && UnityEngine.Event.current.type == EventType.Repaint)
 		{
-			foldoutChanged = false;
-			
-			Rect r = GUILayoutUtility.GetLastRect();
-			this.minSize = new Vector2(300,r.y + 8);
-			this.maxSize = new Vector2(300,r.y + 8);
+            foldoutChanged = false;
+
+            Rect r = GUILayoutUtility.GetLastRect();
+			this.minSize = new Vector2(300, r.y + 8);
+			this.maxSize = new Vector2(300, r.y + 8);
 		}
 	}
 
@@ -1568,12 +1568,12 @@ public class CFXEasyEditor : EditorWindow
 	{
 		Rect position = GUILayoutUtility.GetRect(0f, float.MaxValue, height, height, LineStyle);
 
-		if(Event.current.type == EventType.Repaint)
+		if(UnityEngine.Event.current.type == EventType.Repaint)
 		{
-			Color orgColor = GUI.color;
-			GUI.color = orgColor * color;
-			LineStyle.Draw(position, false, false, false, false);
-			GUI.color = orgColor;
+            Color orgColor = GUI.color;
+            GUI.color = orgColor * color;
+            LineStyle.Draw(position, false, false, false, false);
+            GUI.color = orgColor;
 		}
 	}
 

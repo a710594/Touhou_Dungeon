@@ -65,11 +65,12 @@ public class GameSystem : MonoBehaviour
         RoomData.Load();
         TreasureData.Load();
         DungeonBattleGroupData.Load();
-        EventData.Load();
+        //EventData.Load();
         //EventOptionData.Load();
         CookData.Load();
         ConversationData.Load();
         ShopData.Load();
+        DungeonGroupData.Load();
 
         yield return new WaitForEndOfFrame();
 
