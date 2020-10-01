@@ -261,6 +261,7 @@ public class DungeonBuilder : MonoBehaviour
             tempList.Remove(position);
             i--;
         }
+        grassList.Remove(start);
 
         //終點
         Vector2Int goal = new Vector2Int();
@@ -272,6 +273,7 @@ public class DungeonBuilder : MonoBehaviour
                 goalRoom = roomList[i];
             }
         }
+        grassList.Remove(goal);
 
         tempList = new List<Vector2Int>(goalRoom.PositionList);
         for (int i = 0; i < tempList.Count; i++)

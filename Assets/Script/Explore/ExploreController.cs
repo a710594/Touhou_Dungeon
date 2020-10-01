@@ -201,7 +201,7 @@ public class ExploreController
         if (_mapInfo.TreasureDic.ContainsKey(position))
         {
             ItemManager.Instance.AddItem(_mapInfo.TreasureDic[position].ItemList, ItemManager.Type.Bag);
-            TilePainter.Instance.Clear(2, position);
+            TilePainter.Instance.Clear(1, position);
             ItemConfirmUI.Open(_mapInfo.TreasureDic[position].ItemList);
             _mapInfo.TreasureDic.Remove(position);
             _pathFindList.Add(position);
@@ -219,7 +219,7 @@ public class ExploreController
         {
             if (ItemManager.Instance.UseKey())
             {
-                TilePainter.Instance.Clear(2, position);
+                TilePainter.Instance.Clear(1, position);
                 _mapInfo.DoorList.Remove(position);
                 _pathFindList.Add(position);
                 SetVisibleRange(false);
@@ -239,7 +239,7 @@ public class ExploreController
                 _player.UnlockStop();
                 if (!isDonothing)
                 {
-                    TilePainter.Instance.Clear(2, position);
+                    TilePainter.Instance.Clear(1, position);
                     _mapInfo.ExploreEventDic.Remove(position);
                     _pathFindList.Add(position);
                     SetInteractive(Vector2Int.RoundToInt(_player.transform.position));
@@ -407,7 +407,7 @@ public class ExploreController
         if (_mapInfo.KeyList.Contains(position))
         {
             ItemManager.Instance.AddKey();
-            TilePainter.Instance.Clear(2, position);
+            TilePainter.Instance.Clear(1, position);
             _mapInfo.KeyList.Remove(position);
             ExploreUI.Instance.TipLabel.SetLabel("得到了一把鑰匙");
         }
