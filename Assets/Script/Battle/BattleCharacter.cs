@@ -496,6 +496,7 @@ public class BattleCharacter : MonoBehaviour
         Sprite.DOFade(0, 0.5f).OnComplete(() =>
         {
             BattleUI.Instance.SetLittleHPBar(this, false);
+            BattleUI.Instance.ScrollPriorityQueue(this);
 
             if (OnDeathHandler != null)
             {

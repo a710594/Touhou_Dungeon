@@ -1,5 +1,0 @@
-[{"ID":1,"Type_1":0,"Value_1":0,"Comment_1_Chinese":"你離開了","Type_2":-1,"Value_2":0,"Comment_2_Chinese":""},
-{"ID":2,"Type_1":1,"Value_1":50,"Comment_1_Chinese":"你回復了一半的 HP！","Type_2":2,"Value_2":50,"Comment_2_Chinese":"你回復了一半的 MP！"},
-{"ID":3,"Type_1":3,"Value_1":100,"Comment_1_Chinese":"你回復了全部的 HP 和 MP ！","Type_2":-1,"Value_2":0,"Comment_2_Chinese":""},
-{"ID":4,"Type_1":4,"Value_1":0,"Comment_1_Chinese":"你踏進了境界的縫隙，被傳送到了另一個地方！","Type_2":-1,"Value_2":0,"Comment_2_Chinese":""},
-{"ID":5,"Type_1":5,"Value_1":1000,"Comment_1_Chinese":"你得到了1000塊錢！","Type_2":6,"Value_2":1,"Comment_2_Chinese":"哎呀！"}]

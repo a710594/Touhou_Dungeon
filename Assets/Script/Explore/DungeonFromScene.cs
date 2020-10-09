@@ -13,7 +13,7 @@ public class DungeonFromScene : MonoBehaviour
     {
         MapInfo mapInfo = new MapInfo();
 
-        mapInfo.Floor = Floor;
+        mapInfo.ID = Floor;
         mapInfo.LastFloor = LastFloor;
         mapInfo.NextFloor = NextFloor;
         mapInfo.MapList = TilemapToPositionList.GetPositionList(0);

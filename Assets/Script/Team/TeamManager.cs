@@ -34,10 +34,10 @@ public class TeamManager
     {
         TeamMemo memo = Caretaker.Instance.Load<TeamMemo>();
 
-        if (memo == null)
-        {
+        //if (memo == null)
+        //{
 
-            Lv = 1;
+            Lv = 7;
             Exp = 0;
 
             TeamScriptableObject data = Resources.Load<TeamScriptableObject>("ScriptableObject/TeamScriptableObject");
@@ -46,39 +46,41 @@ public class TeamManager
             for (int i = 0; i < data.MemberList.Count; i++)
             {
                 member = new TeamMember();
-                member.Init(data.MemberList[i], 1);
+                member.Init(data.MemberList[i], Lv);
                 member.Formation = data.PositionList[i];
                 MemberList.Add(member);
             }
 
             //temp
-            MemberList[0].SetEquip(42001);
-            MemberList[0].SetEquip(41001);
-            MemberList[1].SetEquip(42001);
-            MemberList[1].SetEquip(41002);
-            MemberList[2].SetEquip(42001);
-            MemberList[2].SetEquip(41002);
+            //MemberList[0].SetEquip(42001);
+            //MemberList[0].SetEquip(41001);
+            //MemberList[1].SetEquip(42001);
+            //MemberList[1].SetEquip(41002);
+            //MemberList[2].SetEquip(42001);
+            //MemberList[2].SetEquip(41002);
 
-            //MemberList[0].SetEquip(42002);
-            //MemberList[0].SetEquip(41002);
-            //MemberList[1].SetEquip(42002);
-            //MemberList[1].SetEquip(41004);
-            //MemberList[2].SetEquip(42002);
-            //MemberList[2].SetEquip(41004);
-        }
-        else
-        {
-            Lv = memo.Lv;
-            Exp = memo.Exp;
-            _power = memo.Power;
-            TeamMember member;
-            for (int i = 0; i < memo.MemberList.Count; i++)
-            {
-                member = new TeamMember();
-                member.Init(memo.MemberList[i]);
-                MemberList.Add(member);
-            }
-        }
+            MemberList[0].SetEquip(42002);
+            MemberList[0].SetEquip(41003);
+            MemberList[1].SetEquip(42002);
+            MemberList[1].SetEquip(41004);
+            MemberList[2].SetEquip(42002);
+            MemberList[2].SetEquip(41004);
+            MemberList[3].SetEquip(42002);
+            MemberList[3].SetEquip(41003);
+        //}
+        //else
+        //{
+        //    Lv = memo.Lv;
+        //    Exp = memo.Exp;
+        //    _power = memo.Power;
+        //    TeamMember member;
+        //    for (int i = 0; i < memo.MemberList.Count; i++)
+        //    {
+        //        member = new TeamMember();
+        //        member.Init(memo.MemberList[i]);
+        //        MemberList.Add(member);
+        //    }
+        //}
         _power = 50;
     }
 

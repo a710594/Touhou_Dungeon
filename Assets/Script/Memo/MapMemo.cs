@@ -6,16 +6,10 @@ public class MapMemo
 {
     public int ArriveFloor; //最多到達第幾樓
     public int ID;
-    public int LastFloor;
-    public int NextFloor;
     public BoundsInt MapBound;
     public Vector2Int Start;
     public Vector2Int Goal;
     public Vector2 PlayerPosition; //玩家的位置
-    public string GroundTile;
-    public string DoorTile;
-    public string GrassTile;
-    public string WallTile;
     public List<string> MapList;
     public List<string> GrassList;
     public List<string> KeyList;
@@ -25,7 +19,7 @@ public class MapMemo
     public List<string> GuardList = new List<string>(); //守衛型敵人的位置,遇到該敵人後會 remove
     public List<List<string>> RoomPositionList = new List<List<string>>();
     public Dictionary<string, int> MoneyDic = new Dictionary<string, int>();
-    public Dictionary<string, int> ExploreEventDic = new Dictionary<string, int>();
+    public Dictionary<string, Event.TypeEnum> ExploreEventDic = new Dictionary<string, Event.TypeEnum>();
     public Dictionary<string, Treasure> TreasureDic = new Dictionary<string, Treasure>();
 
     public MapMemo() { }
@@ -33,17 +27,11 @@ public class MapMemo
     public MapMemo(int arriveFloor, MapInfo info, Vector2 playerPosition)
     {
         ArriveFloor = arriveFloor;
-        ID = info.Floor;
-        LastFloor = info.LastFloor;
-        NextFloor = info.NextFloor;
+        ID = info.ID;
         MapBound = info.MapBound;
         Start = info.Start;
         Goal = info.Goal;
         PlayerPosition = playerPosition;
-        GroundTile = info.GroundTile;
-        DoorTile = info.DoorTile;
-        GrassTile = info.GrassTile;
-        WallTile = info.WallTile;
         MapList = Utility.Vector2IntToString(info.MapList);
         GrassList = Utility.Vector2IntToString(info.GrassList);
         KeyList = Utility.Vector2IntToString(info.KeyList);
@@ -62,9 +50,9 @@ public class MapMemo
             MoneyDic.Add(Utility.Vector2IntToString(item.Key), item.Value);
         }
 
-        foreach (KeyValuePair<Vector2Int, int> item in info.ExploreEventDic)
+        foreach (KeyValuePair<Vector2Int, Event> item in info.ExploreEventDic)
         {
-            ExploreEventDic.Add(Utility.Vector2IntToString(item.Key), item.Value);
+            ExploreEventDic.Add(Utility.Vector2IntToString(item.Key), item.Value.Type);
         }
 
         foreach (KeyValuePair<Vector2Int, Treasure> item in info.TreasureDic)

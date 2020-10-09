@@ -9,8 +9,17 @@ public class FloorScrollItem : ScrollItem
 
     public override void SetData(object obj)
     {
-        base.SetData(obj);
-        int floor = (int)_data;
-        Label.text = floor + "樓";
+        if (obj is DungeonGroupData.RootObject)
+        {
+            DungeonGroupData.RootObject data = (DungeonGroupData.RootObject)obj;
+            base.SetData(data.ID);
+            Label.text = data.Name;
+        }
+        else if (obj is DungeonData.RootObject)
+        {
+            DungeonData.RootObject data = (DungeonData.RootObject)obj;
+            base.SetData(data.ID);
+            Label.text = data.FloorName;
+        }
     }
 }

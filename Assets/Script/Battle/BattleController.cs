@@ -525,6 +525,7 @@ public class BattleController : MachineBehaviour
         {
             base.Enter();
 
+            parent.SelectedCharacter = null;
             parent._actionQueue.Clear();
             for (int i = 0; i < parent.CharacterList.Count; i++)
             {

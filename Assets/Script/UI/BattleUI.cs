@@ -176,6 +176,7 @@ public class BattleUI : MonoBehaviour
     public void SetTurnLabel(int turn, Action callback)
     {
         SetInfo(false);
+        PriorityQueue.transform.parent.gameObject.SetActive(false);
         TurnLabel.transform.parent.parent.gameObject.SetActive(true);
         TurnLabel.text = "Turn" + turn.ToString();
         TurnLabel.transform.parent.localPosition = Vector3.right * 1280;
@@ -245,6 +246,7 @@ public class BattleUI : MonoBehaviour
 
     public void InitPriorityQueue(List<BattleCharacter> characterList, List<int> priorityList)
     {
+        PriorityQueue.transform.parent.gameObject.SetActive(true);
         PriorityQueue.Init(characterList, priorityList);
     }
 

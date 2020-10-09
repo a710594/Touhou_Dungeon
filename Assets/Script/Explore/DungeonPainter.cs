@@ -15,25 +15,26 @@ public class DungeonPainter : MonoBehaviour
 
     private IEnumerator paint(MapInfo info)
     {
+        DungeonGroupData.RootObject data = DungeonGroupData.GetData(info.Group);
         TilePainter.Instance.ClearAll();
 
         //ground
         for (int i=0; i<info.MapList.Count; i++)
         {
-            TilePainter.Instance.Painting(info.GroundTile, 0, info.MapList[i]);
+            TilePainter.Instance.Painting(data.GroundTile, 0, info.MapList[i]);
             if (CheckLoadingCount()) yield return null;
         }
 
         //door
         for (int i=0; i<info.DoorList.Count; i++)
         {
-            TilePainter.Instance.Painting(info.DoorTile, 1, info.DoorList[i]);
+            TilePainter.Instance.Painting(data.DoorTile, 1, info.DoorList[i]);
         }
 
         //grass
         for (int i = 0; i < info.GrassList.Count; i++)
         {
-            TilePainter.Instance.Painting(info.GrassTile, 0, info.GrassList[i]);
+            TilePainter.Instance.Painting(data.GrassTile, 0, info.GrassList[i]);
             if (CheckLoadingCount()) yield return null;
         }
 
@@ -50,9 +51,9 @@ public class DungeonPainter : MonoBehaviour
         }
 
         //explore point
-        foreach (KeyValuePair<Vector2Int, int> item in info.ExploreEventDic)
+        foreach (KeyValuePair<Vector2Int, Event> item in info.ExploreEventDic)
         {
-            TilePainter.Instance.Painting(EventData.GetData(item.Value).Tile, 1, item.Key);
+            TilePainter.Instance.Painting(item.Value.Tile, 1, item.Key);
         }
 
         //起點
@@ -63,7 +64,7 @@ public class DungeonPainter : MonoBehaviour
 
         //Layer 2 是保留給角色的,Mist 蓋在角色上
         TilePainter.Instance.Fill("Mist", 3, info.MapBound.xMin - 15, info.MapBound.yMin - 15, info.MapBound.xMin + info.MapBound.size.x + 15, info.MapBound.yMin + info.MapBound.size.y + 15);
-        TilePainter.Instance.Fill("Wall", 4, info.MapBound.xMin - 15, info.MapBound.yMin - 15, info.MapBound.xMin + info.MapBound.size.x + 15, info.MapBound.yMin + info.MapBound.size.y + 15);
+        TilePainter.Instance.Fill(data.WallTile, 4, info.MapBound.xMin - 15, info.MapBound.yMin - 15, info.MapBound.xMin + info.MapBound.size.x + 15, info.MapBound.yMin + info.MapBound.size.y + 15);
 
         for (int i=0; i<info.ExploredList.Count; i++)
         {

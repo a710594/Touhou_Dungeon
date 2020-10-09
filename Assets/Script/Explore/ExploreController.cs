@@ -23,7 +23,7 @@ public class ExploreController
     {
         get
         {
-            return _mapInfo.Floor;
+            return _mapInfo.ID;
         }
     }
 
@@ -42,6 +42,7 @@ public class ExploreController
         if (memo != null)
         {
             ArriveFloor = memo.ArriveFloor;
+            ArriveFloor = 7; // temp
         }
 
     }
@@ -98,7 +99,7 @@ public class ExploreController
         _player = GameObject.Find("ExploreCharacter").GetComponent<ExploreCharacter>();
         _player.transform.position = _playerPosition;
         ExploreUI.Open();
-        ExploreUI.Instance.InitLittleMap(_mapInfo.Floor, Vector2Int.RoundToInt(_player.transform.position), _mapInfo.Start, _mapInfo.Goal, _mapInfo.MapBound, _mapInfo.MapList);
+        ExploreUI.Instance.InitLittleMap(_mapInfo.ID, Vector2Int.RoundToInt(_player.transform.position), _mapInfo.Start, _mapInfo.Goal, _mapInfo.MapBound, _mapInfo.MapList);
         SetVisibleRange(true);
         ExploreUI.Instance.RefreshLittleMap(Vector2Int.RoundToInt(_player.transform.position), _mapInfo.ExploredList, _mapInfo.ExploredWallList);
         SetInteractive(Vector2Int.RoundToInt(_player.transform.position));
@@ -112,7 +113,7 @@ public class ExploreController
         {
             _pathFindList.Remove(_mapInfo.DoorList[i]);
         }
-        foreach (KeyValuePair<Vector2Int, int> item in _mapInfo.ExploreEventDic)
+        foreach (KeyValuePair<Vector2Int, Event> item in _mapInfo.ExploreEventDic)
         {
             _pathFindList.Remove(item.Key);
         }
@@ -237,20 +238,21 @@ public class ExploreController
             EventUI.Open(_mapInfo.ExploreEventDic[position], (isDonothing) =>
             {
                 _player.UnlockStop();
+                ContinueEnemy();
                 if (!isDonothing)
                 {
                     TilePainter.Instance.Clear(1, position);
                     _mapInfo.ExploreEventDic.Remove(position);
                     _pathFindList.Add(position);
-                    SetInteractive(Vector2Int.RoundToInt(_player.transform.position));
                 }
+                SetInteractive(Vector2Int.RoundToInt(_player.transform.position));
             });
         }
     }
 
     public void ForceEnterBattle() //事件或測試時使用
     {
-        DungeonBattleGroupData.RootObject data = DungeonBattleGroupData.GetData(_mapInfo.Floor);
+        DungeonData.RootObject data = DungeonData.GetData(_mapInfo.ID);
         EnterBattle(BattleGroupData.GetData(data.GetRandomBattleGroup()));
     }
 
@@ -318,7 +320,7 @@ public class ExploreController
             AudioSystem.Instance.Stop(true);
             MySceneManager.Instance.ChangeScene(MySceneManager.SceneType.Battle, () =>
             {
-                BattleController.Instance.Init(1, data, ()=> 
+                BattleController.Instance.Init(_mapInfo.Group, data, ()=> 
                 {
                     AudioSystem.Instance.Stop(false);
                     MySceneManager.Instance.ChangeScene(MySceneManager.Instance.LastScene, () =>
@@ -491,7 +493,7 @@ public class ExploreController
 
         _fieldEnemyList.Clear();
         FieldEnemy enemy;
-        DungeonBattleGroupData.RootObject data;
+        DungeonData.RootObject data;
 
         Vector2Int position;
         Vector2Int playerPosition = Vector2Int.RoundToInt(_player.transform.position);
@@ -504,7 +506,7 @@ public class ExploreController
                 {
                     enemy = ResourceManager.Instance.Spawn("FieldEnemy/FieldEnemyRandom", ResourceManager.Type.Other).GetComponent<FieldEnemy>();
                     enemy.OnPlayerEnterHandler += EnterBattle;
-                    data = DungeonBattleGroupData.GetData(_mapInfo.Floor);
+                    data = DungeonData.GetData(_mapInfo.ID);
                     enemy.Init(data.GetRandomBattleGroup(), position);
                     _fieldEnemyList.Add(enemy);
 
@@ -516,7 +518,7 @@ public class ExploreController
             }
         }
 
-        data = DungeonBattleGroupData.GetData(_mapInfo.Floor);
+        data = DungeonData.GetData(_mapInfo.ID);
         if (data != null)
         {
             for (int i = 0; i < _mapInfo.GuardList.Count; i++)

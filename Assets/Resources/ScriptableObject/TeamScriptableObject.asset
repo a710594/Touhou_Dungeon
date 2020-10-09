@@ -12,8 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 453376bb22641644089211ab67085c0c, type: 3}
   m_Name: TeamScriptableObject
   m_EditorClassIdentifier: 
-  MemberList: 010000000200000003000000
+  MemberList: 01000000020000000300000004000000
   PositionList:
   - {x: 0, y: 0}
   - {x: 1, y: 0}
   - {x: -1, y: 0}
+  - {x: 0, y: 1}

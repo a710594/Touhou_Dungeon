@@ -48,20 +48,37 @@ public class PriorityQueue : MonoBehaviour
 
     public void Scroll(BattleCharacter character)
     {
-        if (_index > -1) //第一個角色行動時不捲動
+        //if (_index > -1) //第一個角色行動時不捲動
+        //{
+        //    _imageList[_index].Value.gameObject.SetActive(false);
+        //    if (character.Info.ActionCount == 0)
+        //    {
+        //        for (int i=_index; i<_imageList.Count; i++)
+        //        {
+        //            if (GameObject.ReferenceEquals(character, _imageList[i].Key))
+        //            {
+        //                _imageList[i].Value.gameObject.SetActive(false);
+        //            }
+        //        }
+        //    }
+        //}
+        //_index++;
+
+        for (int i = 0; i < _imageList.Count; i++)
         {
-            _imageList[_index].Value.gameObject.SetActive(false);
-            if (character.Info.ActionCount == 0)
+            if (!_imageList[i].Value.isActiveAndEnabled)
             {
-                for (int i=_index; i<_imageList.Count; i++)
+                continue;
+            }
+            if (GameObject.ReferenceEquals(character, _imageList[i].Key))
+            {
+                _imageList[i].Value.gameObject.SetActive(false);
+
+                if (character.Info.ActionCount > 0 && character.LiveState == BattleCharacter.LiveStateEnum.Alive)
                 {
-                    if (GameObject.ReferenceEquals(character, _imageList[i].Key))
-                    {
-                        _imageList[i].Value.gameObject.SetActive(false);
-                    }
+                    break;
                 }
             }
         }
-        _index++;
     }
 }
