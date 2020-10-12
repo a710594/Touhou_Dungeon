@@ -38,6 +38,14 @@ public class ExploreUI : MonoBehaviour
         Destroy(Instance.gameObject);
     }
 
+    public static void SetCanMove()
+    {
+        if (Instance != null)
+        {
+            Instance._canMove = true;
+        }
+    }
+
     public void InitLittleMap(int floor, Vector2Int playerPosition, Vector2Int startPosition, Vector2Int goalPosition, BoundsInt mapBound, List<Vector2Int> mapList)
     {
         MapUI.Init(floor, playerPosition, startPosition, goalPosition, mapBound, mapList);
@@ -86,33 +94,39 @@ public class ExploreUI : MonoBehaviour
 
     private void OpenMapGroup()
     {
+        _canMove = false;
         MapUI.SetBigMapGroupVisible(true);
         ExploreController.Instance.StopEnemy(); 
     }
 
     private void CloseMapGroup()
     {
+        _canMove = true;
         MapUI.SetBigMapGroupVisible(false);
         ExploreController.Instance.ContinueEnemy();
     }
 
     private void OpenBag()
     {
+        _canMove = false;
         BagUI.Open(ItemManager.Type.Bag);
     }
 
     private void OpenTeam()
     {
+        _canMove = false;
         TeamUI.Open();
     }
 
     private void OpenFormation() 
     {
+        _canMove = false;
         FormationUI.Open();
     }
 
     private void OpenCook()
     {
+        _canMove = false;
         CookUI.Open(ItemManager.Type.Bag);
     }
 

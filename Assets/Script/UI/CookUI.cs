@@ -34,6 +34,7 @@ public class CookUI : MonoBehaviour
     public void Close()
     {
         ExploreController.Instance.ContinueEnemy();
+        ExploreUI.SetCanMove();
         TipLabel.Stop();
         Destroy(Instance.gameObject);
         Instance = null;

@@ -23,10 +23,6 @@ public class GameSystem : MonoBehaviour
             TeamManager.Instance.Save();
             ProgressManager.Instance.Save();
             ExploreController.Instance.Save();
-            if (BattleController.Instance != null) //現在在戰鬥中
-            {
-                BattleController.Instance.Save();
-            }
         }
     }
 
@@ -44,7 +40,6 @@ public class GameSystem : MonoBehaviour
         Caretaker.Instance.ClearData<TeamMemo>();
         Caretaker.Instance.ClearData<ProgressMemo>();
         Caretaker.Instance.ClearData<MapMemo>();
-        Caretaker.Instance.ClearData<BattleMemo>();
     }
 
     // Start is called before the first frame update
@@ -64,13 +59,11 @@ public class GameSystem : MonoBehaviour
         DungeonData.Load();
         RoomData.Load();
         TreasureData.Load();
-        //DungeonBattleGroupData.Load();
-        //EventData.Load();
-        //EventOptionData.Load();
         CookData.Load();
         ConversationData.Load();
         ShopData.Load();
         DungeonGroupData.Load();
+        ExpData.Load();
 
         yield return new WaitForEndOfFrame();
 

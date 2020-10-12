@@ -210,7 +210,7 @@ MonoBehaviour:
   PreparationAmount: 2
   Spacing: {x: 20, y: 20}
   Direction: 1
-  ShowSelected: 1
+  ShowSelected: 0
 --- !u!1 &1094949799825358434
 GameObject:
   m_ObjectHideFlags: 0

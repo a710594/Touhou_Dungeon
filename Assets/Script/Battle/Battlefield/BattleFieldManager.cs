@@ -30,16 +30,6 @@ public class BattleFieldManager
         MapBound = Utility.GetMapBounds(new List<Vector2Int>(MapDic.Keys));
     }
 
-    public void Init(BattleMemo memo)
-    {
-        MapBound = memo.MapBound;
-        MapDic = new Dictionary<Vector2Int, BattleField>();
-        foreach (KeyValuePair<string, BattleField> item in memo.MapDic)
-        {
-            MapDic.Add(Utility.StringToVector2Int(item.Key), item.Value);
-        }
-    }
-
     public List<Vector2Int> GetPath(Vector2 from, Vector2 to, BattleCharacterInfo.CampEnum camp) //camp:尋路的人是我方還是敵方
     {
         //Refresh(from, to, true);

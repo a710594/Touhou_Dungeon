@@ -37,7 +37,7 @@ public class TeamManager
         //if (memo == null)
         //{
 
-            Lv = 7;
+            Lv = 8;
             Exp = 0;
 
             TeamScriptableObject data = Resources.Load<TeamScriptableObject>("ScriptableObject/TeamScriptableObject");
@@ -167,7 +167,7 @@ public class TeamManager
     {
         if (lv < _maxLv)
         {
-            return (int)Mathf.Pow(lv + 1, 2);
+            return ExpData.NeedExp(lv - 1);
         }
         else
         {

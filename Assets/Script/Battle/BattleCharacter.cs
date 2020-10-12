@@ -37,6 +37,8 @@ public class BattleCharacter : MonoBehaviour
     public int EnemyId;
     public int Lv;
 
+    private int _getDamage = 0; //該回合累積的傷害
+
     public LiveStateEnum LiveState
     {
         get
@@ -75,19 +77,6 @@ public class BattleCharacter : MonoBehaviour
     {
         Info.Init(member, lv);
         Init(member.Data);
-    }
-    public void Init(BattleCharacterMemo memo)
-    {
-        Info.Init(memo);
-        if (!Info.IsTeamMember)
-        {
-            Init(memo.EnemyID, memo.Lv);
-            Info.CurrentHP = memo.CurrentHP;
-        }
-        else
-        {
-            Init(JobData.GetData(memo.JobID));
-        }
     }
 
     private void Init(JobData.RootObject data)
@@ -224,6 +213,12 @@ public class BattleCharacter : MonoBehaviour
     public void InitActionCount()
     {
         Info.InitActionCount();
+    }
+
+    public void InitGetDamage()
+    {
+        Info.LastTurnGetDamage = _getDamage;
+        _getDamage = 0;
     }
 
     public void SetPosition(Vector2 position)
@@ -375,6 +370,7 @@ public class BattleCharacter : MonoBehaviour
     public virtual void SetDamage(int damage)
     {
         Info.CurrentHP -= damage;
+        _getDamage += damage;
 
         if (Info.IsSleeping)
         {
@@ -445,11 +441,6 @@ public class BattleCharacter : MonoBehaviour
     public void StartAI(Action callback)
     {
         AI.StartAI(callback);
-    }
-
-    public void SetCurrentPriority(int priority)
-    {
-        Info.SetCurrentPriority(priority);
     }
 
     public void SetActive(bool isActive)

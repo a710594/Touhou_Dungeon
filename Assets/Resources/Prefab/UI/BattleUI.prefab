@@ -686,7 +686,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\nBuff \u6548\u679C\uFF1A"
+  m_Text: "\n\u7279\u6B8A\u6548\u679C\uFF1A"
 --- !u!1 &587183032870386821
 GameObject:
   m_ObjectHideFlags: 0

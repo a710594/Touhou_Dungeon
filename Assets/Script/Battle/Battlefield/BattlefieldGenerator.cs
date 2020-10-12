@@ -132,21 +132,6 @@ public class BattlefieldGenerator
         BattleFieldManager.Instance.Init(center, enemyPositionList, mapDic);
     }
 
-    public void Generate(BattleMemo memo) 
-    {
-        foreach (KeyValuePair<string, BattleField> item in memo.MapDic)
-        {
-            TilePainter.Instance.Painting(item.Value.TileName, 0, Utility.StringToVector2Int(item.Key));
-            if (item.Value.Status != null)
-            {
-                BattleController.Instance.TurnEndHandler += item.Value.CheckRemainTurn;
-                TilePainter.Instance.Painting(item.Value.BuffTileName, 1, Utility.StringToVector2Int(item.Key));
-            }
-        }
-
-        BattleFieldManager.Instance.Init(memo);
-    }
-
     public void GenerateFromTilemap(int id)
     {
         BattlefieldData.RootObject battlefieldData = BattlefieldData.GetData(id);

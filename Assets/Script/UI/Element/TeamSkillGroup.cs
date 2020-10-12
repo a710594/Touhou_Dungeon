@@ -10,6 +10,7 @@ public class TeamSkillGroup : MonoBehaviour
     public Text NameLabel;
     public Text LvLabel;
     public Text DamageLabel;
+    public Text HitRateLabel;
     public Text TargetLabel;
     public Text PriorityLabel;
     public Text MPLabel;
@@ -77,9 +78,9 @@ public class TeamSkillGroup : MonoBehaviour
         _currentItemAmount = ItemManager.Instance.GetItemAmount(_bookId, _itemManagerType);
         NameLabel.text = data.GetName();
         LvLabel.text = "Lv." + lv;
+        HitRateLabel.text = "命中："+data.HitRate+"%";
         MPLabel.text = "MP：" + data.MP;
         CDLabel.text = "冷卻：" + data.CD;
-        PriorityLabel.text = "行動速度：" + data.Priority;
         AddPowerLabel.text = "增加 Power：" + data.AddPower;
         NeedPowerLabel.text = "需要 Power：" + data.NeedPower;
         CommentLabel.text = data.GetComment();

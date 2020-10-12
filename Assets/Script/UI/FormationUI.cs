@@ -27,6 +27,7 @@ public class FormationUI : MonoBehaviour
     public static void Close()
     {
         ExploreController.Instance.ContinueEnemy();
+        ExploreUI.SetCanMove();
         Destroy(Instance.gameObject);
         Instance = null;
     }
@@ -50,18 +51,52 @@ public class FormationUI : MonoBehaviour
         }
     }
 
-    private void ButtonOnClick(MemberPositionButton button)
-    {
-        TeamMember temp;
+    //private void ButtonOnClick(MemberPositionButton button)
+    //{
+    //    TeamMember temp;
 
-        if (_selectButton_1 == null)
+    //    if (_selectButton_1 == null)
+    //    {
+    //        _selectButton_1 = button;
+    //    }
+    //    else
+    //    {
+    //        _selectButton_2 = button;
+    //        temp = _selectButton_2.Member;
+    //        _selectButton_2.SetData(_selectButton_1.Member);
+    //        _selectButton_1.SetData(temp);
+    //        if (_selectButton_1.Member != null)
+    //        {
+    //            _selectButton_1.Member.Formation = _selectButton_1.MemberPosition;
+    //        }
+    //        if (_selectButton_2.Member != null)
+    //        {
+    //            _selectButton_2.Member.Formation = _selectButton_2.MemberPosition;
+    //        }
+    //        _selectButton_1 = null;
+    //        _selectButton_2 = null;
+    //    }
+    //}
+
+    private void ButtonOnDown(MemberPositionButton button)
+    {
+        _selectButton_1 = button;
+    }
+
+    private void ButtonOnUp(MemberPositionButton button)
+    {
+        if (_selectButton_1 != null)
         {
-            _selectButton_1 = button;
-        }
-        else
-        {
-            _selectButton_2 = button;
-            temp = _selectButton_2.Member;
+            _selectButton_2 = MemberPositionButton[0];
+            for (int i = 1; i < MemberPositionButton.Length; i++)
+            {
+                if (Vector2.Distance(MemberPositionButton[i].transform.position, Input.mousePosition) < Vector2.Distance(_selectButton_2.transform.position, Input.mousePosition))
+                {
+                    _selectButton_2 = MemberPositionButton[i];
+                }
+            }
+
+            TeamMember temp = _selectButton_2.Member;
             _selectButton_2.SetData(_selectButton_1.Member);
             _selectButton_1.SetData(temp);
             if (_selectButton_1.Member != null)
@@ -88,7 +123,9 @@ public class FormationUI : MonoBehaviour
 
         for (int i = 0; i < MemberPositionButton.Length; i++)
         {
-            MemberPositionButton[i].OnClickHandler = ButtonOnClick;
+            //MemberPositionButton[i].OnClickHandler = ButtonOnClick;
+            MemberPositionButton[i].OnDownHandler = ButtonOnDown;
+            MemberPositionButton[i].OnUpHandler = ButtonOnUp;
         }
     }
 }

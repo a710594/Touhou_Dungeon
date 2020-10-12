@@ -10,7 +10,7 @@ public class PriorityQueue : MonoBehaviour
     private int _index;
     private List<KeyValuePair<BattleCharacter, PriorityQueueElement>> _imageList = new List<KeyValuePair<BattleCharacter, PriorityQueueElement>>();
 
-    public void Init(List<BattleCharacter> characterList, List<int> priorityList)
+    public void Init(List<BattleCharacter> characterList)
     {
         _index = -1;
         for (int i=1; i<_imageList.Count; i++)
@@ -36,11 +36,11 @@ public class PriorityQueue : MonoBehaviour
 
             if (characterList[i].Info.JobData != null)
             {
-                element.SetData(characterList[i].Info.JobData.SmallImage, priorityList[i]);
+                element.SetData(characterList[i].Info.JobData.SmallImage);
             }
             else if (characterList[i].Info.EnemyData != null)
             {
-                element.SetData(characterList[i].Info.EnemyData.Image, priorityList[i]);
+                element.SetData(characterList[i].Info.EnemyData.Image);
             }
             _imageList[i].Value.gameObject.SetActive(true);
         }

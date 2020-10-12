@@ -66,6 +66,18 @@ public class CameraController : MonoBehaviour
         ViewDrag.EndDrag();
     }
 
+    public void CameraMove(Vector2Int direction)
+    {
+        int layerMask = 1 << LayerMask.NameToLayer("Camera");
+        layerMask = ~layerMask;
+        Debug.Log(LayerMask.NameToLayer("Camera"));
+        RaycastHit2D hit = Physics2D.Raycast(Camera.main.transform.position, (Vector2)direction, 0.6f, layerMask);
+        if (hit.collider == null)
+        {
+            Camera.main.transform.position += new Vector3(direction.x, direction.y, 0) * Time.deltaTime * 5f;
+        }
+    }
+
     void Awake()
     {
         _originalZ = transform.position.z;

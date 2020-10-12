@@ -91,12 +91,12 @@ public class BattleUI : MonoBehaviour
 
         if (isVisible)
         {
-            ActionCountLabel.text = LanguageData.GetText(10, LanguageSystem.Instance.CurrentLanguage) +  ":" + BattleController.Instance.SelectedCharacter.Info.ActionCount; //行動次數
-            MoveActionButton.interactable = (BattleController.Instance.SelectedCharacter.Info.CurrentPriority == 100);
-            SkillActionButton.interactable = !BattleController.Instance.SelectedCharacter.Info.HasUseSkill;
-            SpellCardActionButton.interactable = !BattleController.Instance.SelectedCharacter.Info.HasUseSkill;
-            ItemActionButton.interactable = !BattleController.Instance.SelectedCharacter.Info.HasUseSkill;
-            UndoButton.interactable = BattleController.Instance.SelectedCharacter.CanUndoMove();
+            BattleCharacter character = BattleController.Instance.SelectedCharacter;
+            ActionCountLabel.text = LanguageData.GetText(10, LanguageSystem.Instance.CurrentLanguage) +  ":" + character.Info.ActionCount; //行動次數
+            SkillActionButton.interactable = !character.Info.HasUseSkill;
+            SpellCardActionButton.interactable = !character.Info.HasUseSkill;
+            ItemActionButton.interactable = !character.Info.HasUseSkill;
+            UndoButton.interactable = character.CanUndoMove();
             SetEscapeButton();
         }
     }
@@ -244,10 +244,10 @@ public class BattleUI : MonoBehaviour
         }
     }
 
-    public void InitPriorityQueue(List<BattleCharacter> characterList, List<int> priorityList)
+    public void InitPriorityQueue(List<BattleCharacter> characterList)
     {
         PriorityQueue.transform.parent.gameObject.SetActive(true);
-        PriorityQueue.Init(characterList, priorityList);
+        PriorityQueue.Init(characterList);
     }
 
     public void ScrollPriorityQueue(BattleCharacter character)
@@ -404,6 +404,26 @@ public class BattleUI : MonoBehaviour
         {
             BattleController.Instance.GiveUp();
         }, null);
+    }
+
+    private void Update()
+    {
+        if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A))
+        {
+            CameraController.Instance.CameraMove(Vector2Int.left);
+        }
+        else if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D))
+        {
+            CameraController.Instance.CameraMove(Vector2Int.right);
+        }
+        else if (Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.W))
+        {
+            CameraController.Instance.CameraMove(Vector2Int.up);
+        }
+        else if (Input.GetKey(KeyCode.DownArrow) || Input.GetKey(KeyCode.S))
+        {
+            CameraController.Instance.CameraMove(Vector2Int.down);
+        }
     }
 
     private void Awake()

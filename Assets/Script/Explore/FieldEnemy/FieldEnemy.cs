@@ -32,7 +32,7 @@ public class FieldEnemy : MonoBehaviour
     {
         _data = BattleGroupData.GetData(battleGroupId);
         Animator.runtimeAnimatorController = Resources.Load<RuntimeAnimatorController>("Animator/" + _data.Animator);
-        _cycleTime = _data.MoveCycleTime / 10f;
+        _cycleTime = 0.5f;
         transform.position = position;
         _timer.Start(_cycleTime, Move, true);
     }

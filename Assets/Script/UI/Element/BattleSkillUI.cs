@@ -25,7 +25,6 @@ public class BattleSkillUI : MonoBehaviour
         LvLabel.text = "Lv." + lv;
         MPLabel.text = "MP：" + data.MP;
         CDLabel.text = "冷卻：" + data.CD;
-        PriorityLabel.text = "行動速度：" + data.Priority;
         AddPowerLabel.text = "增加 Power：" + data.AddPower;
         NeedPowerLabel.text = "需要 Power：" + data.NeedPower;
         CommentLabel.text = data.GetComment();

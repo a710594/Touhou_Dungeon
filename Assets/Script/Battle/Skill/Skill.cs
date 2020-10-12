@@ -87,16 +87,6 @@ public class Skill
             notUseReason = "Power 不足";
             return false;
         }
-        else if (Data.Priority < _user.CurrentPriority)
-        {
-            notUseReason = "還沒到可使用該技能的時機";
-            return false;
-        }
-        //else if (Data.Priority > _user.CurrentPriority)
-        //{
-        //    notUseReason = "已經過了可使用該技能的時機";
-        //    return false;
-        //}
 
         return true;
     }

@@ -36,6 +36,11 @@ public class StrikingSkill : Skill
     {
         base.SetEffect(target);
 
+        if (Data.Target == SkillData.TargetType.Us) //目標為我方則必中
+        {
+            hitType = HitType.Hit;
+        }
+
         Timer timer1 = new Timer(Data.ShowTime / 2f, () =>
         {
             if (hitType != Skill.HitType.Miss)

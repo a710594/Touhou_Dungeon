@@ -10,7 +10,6 @@ public class BattleGroupData
     {
         public int ID { get; set; }
         public string Animator { get; set; }
-        public int MoveCycleTime { get; set; }
         public int Enemy_1 { get; set; }
         public int Lv_1 { get; set; }
         public int Enemy_2 { get; set; }

@@ -24,6 +24,7 @@ public class SkillData
         Train,
         Donothing,
         RecoverMP,
+        RageAttackSkill,
     }
 
     public enum RangeTypeEnum
@@ -61,7 +62,6 @@ public class SkillData
         public bool IsMagic { get; set; }
         public int MP { get; set; }
         public int CD { get; set; }
-        public int Priority { get; set; }
         public int StatusID { get; set; }
         public int AddPower { get; set; }
         public int NeedPower { get; set; }

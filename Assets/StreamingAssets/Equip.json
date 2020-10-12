@@ -1,6 +1,6 @@
-[{"ID":41001,"Name":"木劍","Type":1,"ATK":5,"DEF":0,"MTK":1,"MEF":0},
-{"ID":41002,"Name":"木杖","Type":1,"ATK":1,"DEF":0,"MTK":5,"MEF":0},
-{"ID":41003,"Name":"鐵劍","Type":1,"ATK":8,"DEF":0,"MTK":1,"MEF":0},
-{"ID":41004,"Name":"花蕊木杖","Type":1,"ATK":1,"DEF":0,"MTK":8,"MEF":0},
-{"ID":42001,"Name":"襯衫","Type":2,"ATK":0,"DEF":3,"MTK":0,"MEF":3},
-{"ID":42002,"Name":"皮甲","Type":2,"ATK":0,"DEF":5,"MTK":0,"MEF":5}]
+[{"ID":41001,"Name":"木劍","Type":1,"ATK":10,"DEF":0,"MTK":0,"MEF":0},
+{"ID":41002,"Name":"木杖","Type":1,"ATK":0,"DEF":0,"MTK":10,"MEF":0},
+{"ID":41003,"Name":"鐵劍","Type":1,"ATK":15,"DEF":0,"MTK":0,"MEF":0},
+{"ID":41004,"Name":"花苞木杖","Type":1,"ATK":0,"DEF":0,"MTK":15,"MEF":0},
+{"ID":42001,"Name":"襯衫","Type":2,"ATK":0,"DEF":10,"MTK":0,"MEF":10},
+{"ID":42002,"Name":"皮甲","Type":2,"ATK":0,"DEF":15,"MTK":0,"MEF":15}]

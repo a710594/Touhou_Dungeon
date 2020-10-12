@@ -69,6 +69,10 @@ public class SkillFactory
         {
             skill = new RecoverMPItemSkill(skillData, lv);
         }
+        else if (skillData.Type == SkillData.TypeEnum.RageAttackSkill)
+        {
+            skill = new RageAttackSkill(skillData, user, lv);
+        }
 
         return skill;
     }

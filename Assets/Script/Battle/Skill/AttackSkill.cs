@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class AttackSkill : Skill
 {
-    private bool _isMagic;
+    protected bool _isMagic;
 
     public AttackSkill() { }
 
@@ -95,7 +95,7 @@ public class AttackSkill : Skill
         });
     }
 
-    public int CalculateDamage(BattleCharacterInfo executor, BattleCharacterInfo target, bool isCritical, bool isRandom)
+    public virtual int CalculateDamage(BattleCharacterInfo executor, BattleCharacterInfo target, bool isCritical, bool isRandom)
     {
         float damage;
         if (_isMagic)
@@ -166,14 +166,26 @@ public class AttackSkill : Skill
             {
                 return HitType.Hit;
             }
-            else if (misssRate < UnityEngine.Random.Range(0f, 1f) * -1f)
-            {
-                return HitType.Critical;
-            }
             else
             {
-                return HitType.Hit;
+                float criticalRate = (_user.SEN - 10) * (Data.HitRate / 100f) *0.02f;
+                if (criticalRate > UnityEngine.Random.Range(0f, 1f))
+                {
+                    return HitType.Critical;
+                }
+                else
+                {
+                    return HitType.Hit;
+                }
             }
+            //else if (misssRate < UnityEngine.Random.Range(0f, 1f) * -1f)
+            //{
+            //    return HitType.Critical;
+            //}
+            //else
+            //{
+            //    return HitType.Hit;
+            //}
         }
     }
 }

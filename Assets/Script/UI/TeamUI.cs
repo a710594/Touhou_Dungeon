@@ -43,6 +43,7 @@ public class TeamUI : MonoBehaviour
     public static void Close()
     {
         ExploreController.Instance.ContinueEnemy();
+        ExploreUI.SetCanMove();
         Destroy(Instance.gameObject);
         Instance = null;
     }

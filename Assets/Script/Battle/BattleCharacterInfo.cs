@@ -186,7 +186,6 @@ public class BattleCharacterInfo
     public bool HasUseSkill = false;
     public bool IsActive = true; //對 NPC 而言,代表是否會行動.對 PC 而言則必為 true
     public int Lv;
-    public int CurrentPriority;
     public string Name;
     public Vector2 Position = new Vector2();
     public CampEnum Camp;
@@ -202,9 +201,10 @@ public class BattleCharacterInfo
     public Dictionary<int, int> ParalysisDic = new Dictionary<int, int>(); //id, Probability
     public Dictionary<int, int> PoisonDic = new Dictionary<int, int>(); //id, damage
 
-    public List<int> PriorityList = new List<int>(); //技能中有的優先值
     public List<Skill> SkillList = new List<Skill>();
     public List<Skill> SpellCardList = new List<Skill>();
+
+    public int LastTurnGetDamage = 0; //上回合累積的傷害
 
     public void Init(TeamMember member, int lv) //for player
     {
@@ -242,15 +242,11 @@ public class BattleCharacterInfo
             id = item.Key;
             skillData = SkillData.GetData(id);
             skill = SkillFactory.GetNewSkill(skillData, this, item.Value);
-            //if (skillData.CD > 0 && BattleController.Instance != null)
-            //{
-            //    BattleController.Instance.TurnEndHandler += skill.SetCD;
-            //}
 
-            if (!PriorityList.Contains(skill.Data.Priority))
-            {
-                PriorityList.Add(skill.Data.Priority);
-            }
+            //if (!PriorityList.Contains(skill.Data.Priority))
+            //{
+            //    PriorityList.Add(skill.Data.Priority);
+            //}
 
             SkillList.Add(skill);
         }
@@ -260,97 +256,11 @@ public class BattleCharacterInfo
             id = item.Key;
             skillData = SkillData.GetData(id);
             skill = SkillFactory.GetNewSkill(skillData, this, item.Value);
-            //if (skillData.CD > 0 && BattleController.Instance != null)
+
+            //if (!PriorityList.Contains(skill.Data.Priority))
             //{
-            //    BattleController.Instance.TurnEndHandler += skill.SetCD;
+            //    PriorityList.Add(skill.Data.Priority);
             //}
-
-            if (!PriorityList.Contains(skill.Data.Priority))
-            {
-                PriorityList.Add(skill.Data.Priority);
-            }
-
-            SpellCardList.Add(skill);
-        }
-    }
-
-    public void Init(BattleCharacterMemo memo)
-    {
-        IsActive = memo.IsActive;
-        IsAI = memo.IsAI;
-        IsTeamMember = memo.IsTeamMember;
-        Lv = memo.Lv;
-        HPQueue = memo.HPQueue;
-        MaxHP = memo.MaxHP;
-        CurrentHP = memo.CurrentHP;
-        MaxMP = memo.MaxMP;
-        CurrentMP = memo.CurrentMP;
-        _atk = memo.ATK;
-        _def = memo.DEF;
-        _mtk = memo.MTK;
-        _mef = memo.MEF;
-        _agi = memo.AGI;
-        _sen = memo.SEN;
-        _mov = memo.MOV;
-        EquipATK = memo.EquipATK;
-        EquipDEF = memo.EquipDEF;
-        EquipMTK = memo.EquipMTK;
-        EquipMEF = memo.EquipMEF;
-        _actionCount = memo.ActionCount;
-        HasUseSkill = memo.HasUseSkill;
-        Camp = (CampEnum)memo.Camp;
-        CurrentPriority = memo.CurrentPriority;
-        FoodBuff = memo.FoodBuff;
-        if (memo.JobID != 0)
-        {
-            JobData = global::JobData.GetData(memo.JobID);
-            Name = JobData.GetName();
-        }
-        else if (memo.EnemyID != 0)
-        {
-            EnemyData = global::EnemyData.GetData(memo.EnemyID);
-        }
-
-        StatusDic = memo.StatusDic;
-        SleepingId = memo.SleepingId;
-        StrikingId = memo.StrikingId;
-        ParalysisDic = memo.ParalysisDic;
-        PoisonDic = memo.PoisonDic;
-
-        SkillData.RootObject skillData;
-        Skill skill;
-        for (int i = 0; i < memo.SkillList.Count; i++)
-        {
-            skillData = SkillData.GetData(memo.SkillList[i]);
-            skill = SkillFactory.GetNewSkill(skillData, this, memo.SkillLvList[i]);
-            skill.CurrentCD = memo.SkillCdList[i];
-            if (skillData.CD > 0)
-            {
-                BattleController.Instance.TurnEndHandler += skill.SetCD;
-            }
-
-            if (!PriorityList.Contains(skill.Data.Priority))
-            {
-                PriorityList.Add(skill.Data.Priority);
-            }
-
-            SkillList.Add(skill);
-        }
-
-        for (int i = 0; i < memo.SpellCardList.Count; i++)
-        {
-            skillData = SkillData.GetData(memo.SpellCardList[i]);
-            skill = SkillFactory.GetNewSkill(skillData, this, memo.SpellCardLvList[i]);
-            skill.CurrentCD = memo.SpellCardCdList[i];
-            if (skillData.CD > 0)
-            {
-                BattleController.Instance.TurnEndHandler += skill.SetCD;
-            }
-
-            if (!PriorityList.Contains(skill.Data.Priority))
-            {
-                PriorityList.Add(skill.Data.Priority);
-            }
 
             SpellCardList.Add(skill);
         }
@@ -381,7 +291,6 @@ public class BattleCharacterInfo
         Camp = CampEnum.Enemy;
 
         SkillData.RootObject skillData = SkillData.GetData(EnemyData.SkillList[0]);
-        PriorityList.Add(100);
     }
 
     public virtual void Init(int id, int lv, int EquipAtk,int EquipMtk, int EquipDef, int EquipMef) //計算機中的玩家
@@ -411,10 +320,6 @@ public class BattleCharacterInfo
         for (int i = 0; i < JobData.SkillList.Count; i++)
         {
             skillData = SkillData.GetData(JobData.SkillList[i]);
-            if (!PriorityList.Contains(skillData.Priority))
-            {
-                PriorityList.Add(skillData.Priority);
-            }
         }
     }
 
@@ -633,11 +538,6 @@ public class BattleCharacterInfo
             buff = new Buff(BattleStatusData.TypeEnum.MEF, mefBuff);
             StatusDic.Add(3, buff);
         }
-    }
-
-    public void SetCurrentPriority(int priority)
-    {
-        CurrentPriority = priority;
     }
 
     private float GetBuff(BattleStatusData.TypeEnum valueType)

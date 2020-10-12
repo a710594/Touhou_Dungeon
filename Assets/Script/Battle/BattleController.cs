@@ -45,28 +45,12 @@ public class BattleController : MachineBehaviour
     }
     private int _power = 0;
 
-    private class ActionQueueElement
-    {
-        public ActionQueueElement() { }
-
-        public ActionQueueElement(BattleCharacter character, int priority)
-        {
-            Character = character;
-            Priority = priority;
-        }
-
-        public BattleCharacter Character;
-        public int Priority;
-    }
-
     private Action _winCallback;
     private Action _loseCallback;
 
     private int _exp;
-    private BattleMemo _memo = new BattleMemo();
     private List<int> _dropItemList = new List<int>();
-    //private List<BattleCharacter> _actionQueue = new List<BattleCharacter>();
-    private List<ActionQueueElement> _actionQueue = new List<ActionQueueElement>();
+    private List<BattleCharacter> _actionQueue = new List<BattleCharacter>();
     private List<BattleCharacter> _playerList = new List<BattleCharacter>(); //戰鬥結束時需要的友方資料
 
     public void Init(int battlefieldId, BattleGroupData.RootObject battleGroupData, Action winCallback, Action loseCallback)
@@ -225,74 +209,6 @@ public class BattleController : MachineBehaviour
         });
     }
 
-    /*public void InitFromMemo(Action winCallback = null, Action loseCallback = null)
-    {
-        _winCallback = winCallback;
-        _loseCallback = loseCallback;
-
-        BattleMemo memo = Caretaker.Instance.Load<BattleMemo>();
-        BattlefieldGenerator.Instance.Generate(memo);
-
-        Turn = memo.Turn;
-        _power = memo.Power;
-        _exp = memo.Exp;
-        for (int i=0; i<memo.QueueLength; i++)
-        {
-            _actionQueue.Add(new ActionQueueElement());
-        }
-        _dropItemList = memo.DropItemList;
-        CharacterList.Clear();
-
-        BattleCharacter character;
-
-        for (int i = 0; i < memo.CharacterList.Count; i++)
-        {
-            character = ResourceManager.Instance.Spawn("BattleCharacter/BattleCharacter", ResourceManager.Type.Other).GetComponent<BattleCharacter>();
-            character.Init(memo.CharacterList[i]);
-            character.SetPosition(memo.CharacterList[i].Position);
-
-            CharacterList.Add(character);
-            if (character.Info.IsTeamMember)
-            {
-                _playerList.Add(character);
-            }
-
-            for (int j=0; j<memo.CharacterList[i].QueueIndexList.Count; j++)
-            {
-                _actionQueue[memo.CharacterList[i].QueueIndexList[j]] = new ActionQueueElement(character, memo.CharacterList[i].PriorityList[j]);
-            }
-
-            if (memo.CharacterList[i].IsSelected)
-            {
-                SelectedCharacter = character;
-            }
-
-            if (character.LiveState == BattleCharacter.LiveStateEnum.Dead)
-            {
-                character.Sprite.color = Color.clear;
-            }
-        }
-
-        Camera.main.transform.position = new Vector3(SelectedCharacter.Sprite.transform.position.x, SelectedCharacter.Sprite.transform.position.y, Camera.main.transform.position.z);
-        CameraController.Instance.SetParent(SelectedCharacter.Sprite.transform, true, () =>
-        {
-            SelectedCharacter.SetOutline(true);
-            BattleUI.Open();
-            BattleUI.Instance.Init(_power, CharacterList, true);
-            List<BattleCharacter> list = ActionQueueToCharacterList(_actionQueue);
-            list.Insert(0, SelectedCharacter);
-            BattleUI.Instance.InitPriorityQueue(list);
-            BattleUI.Instance.ScrollPriorityQueue(SelectedCharacter);
-            AudioSystem.Instance.Play("Battle", true);
-            ChangeState<SelectActionState>();
-        });
-    }*/
-
-    public void Save() 
-    {
-        Caretaker.Instance.Save<BattleMemo>(_memo);
-    }
-
     public override void AddStates()
     {
         AddState<BattleState>(); //空白的state,初始化用
@@ -402,39 +318,21 @@ public class BattleController : MachineBehaviour
     public void AddCharacer(BattleCharacter character)
     {
         character.InitActionCount();
+        character.InitGetDamage();
         CharacterList.Add(character);
         BattleUI.Instance.InitCharacter(character);
 
-        List<ActionQueueElement> tempList = new List<ActionQueueElement>();
-        tempList.Add(new ActionQueueElement(character, character.Info.PriorityList[0]));
-        tempList.AddRange(_actionQueue);
-        _actionQueue = tempList;
-        BattleUI.Instance.InitPriorityQueue(ActionQueueToCharacterList(_actionQueue), ActionQueueToPriorityList(_actionQueue));
+        //List<ActionQueueElement> tempList = new List<ActionQueueElement>();
+        //tempList.Add(new ActionQueueElement(character));
+        //tempList.AddRange(_actionQueue);
+        //_actionQueue = tempList;
+        _actionQueue.Insert(0, character);
+        BattleUI.Instance.InitPriorityQueue(new List<BattleCharacter>(_actionQueue));
     }
 
     public void GiveUp()
     {
         ChangeState<LoseState>();
-    }
-
-    private List<BattleCharacter> ActionQueueToCharacterList(List<ActionQueueElement> actionQueue)
-    {
-        List<BattleCharacter> list = new List<BattleCharacter>();
-        for (int i=0; i<actionQueue.Count; i++)
-        {
-            list.Add(actionQueue[i].Character);
-        }
-        return list;
-    }
-
-    private List<int> ActionQueueToPriorityList(List<ActionQueueElement> actionQueue)
-    {
-        List<int> list = new List<int>();
-        for (int i = 0; i < actionQueue.Count; i++)
-        {
-            list.Add(actionQueue[i].Priority);
-        }
-        return list;
     }
 
     private ResultType CheckResult()
@@ -471,39 +369,6 @@ public class BattleController : MachineBehaviour
         }
     }
 
-    private void Write()
-    {
-        _memo.MapBound = BattleFieldManager.Instance.MapBound;
-        _memo.MapDic = new Dictionary<string, BattleField>();
-        foreach (KeyValuePair<Vector2Int, BattleField> item in BattleFieldManager.Instance.MapDic)
-        {
-            _memo.MapDic.Add(Utility.Vector2IntToString(item.Key), item.Value);
-        }
-
-        _memo.Turn = Turn;
-        _memo.Power = Power;
-        _memo.Exp = _exp;
-        _memo.QueueLength = _actionQueue.Count;
-        _memo.DropItemList = _dropItemList;
-
-        _memo.CharacterList.Clear();
-        for (int i = 0; i < CharacterList.Count; i++)
-        {
-            CharacterList[i].SetPosition(CharacterList[i].transform.position);
-            _memo.CharacterList.Add(new BattleCharacterMemo(CharacterList[i].Info));
-            _memo.CharacterList[_memo.CharacterList.Count - 1].IsSelected = GameObject.ReferenceEquals(CharacterList[i], SelectedCharacter);
-            for (int j = 0; j < _actionQueue.Count; j++)
-            {
-                if (GameObject.ReferenceEquals(CharacterList[i], _actionQueue[j].Character))
-                {
-                    //_memo.CharacterList[_memo.CharacterList.Count - 1].QueueIndex = j;
-                    _memo.CharacterList[_memo.CharacterList.Count - 1].QueueIndexList.Add(j);
-                    _memo.CharacterList[_memo.CharacterList.Count - 1].PriorityList.Add(_actionQueue[j].Priority);
-                }
-            }
-        }
-    }
-
     //
     //State
     //
@@ -532,18 +397,16 @@ public class BattleController : MachineBehaviour
                 if (parent.CharacterList[i].LiveState == BattleCharacter.LiveStateEnum.Alive && parent.CharacterList[i].IsActive)
                 {
                     parent.CharacterList[i].InitActionCount();
-                    for (int j = 0; j < parent.CharacterList[i].Info.PriorityList.Count; j++)
-                    {
-                        parent._actionQueue.Add(new ActionQueueElement(parent.CharacterList[i], parent.CharacterList[i].Info.PriorityList[j]));
-                    }
+                    parent.CharacterList[i].InitGetDamage();
+                    parent._actionQueue.Add(parent.CharacterList[i]);
                 }
             }
 
             parent._actionQueue.Sort((x, y) =>
             {
-                if (x.Character.Info.AGI * x.Priority == y.Character.Info.AGI * y.Priority) //比較角色的敏捷 * 技能優先值
+                if (x.Info.AGI == y.Info.AGI) //比較角色的敏捷 * 技能優先值
                 {
-                    if (x.Character.Info.Camp == BattleCharacterInfo.CampEnum.Enemy && y.Character.Info.Camp == BattleCharacterInfo.CampEnum.Partner) //若相同,則玩家優先
+                    if (x.Info.Camp == BattleCharacterInfo.CampEnum.Enemy && y.Info.Camp == BattleCharacterInfo.CampEnum.Partner) //若相同,則玩家優先
                     {
                         return 1;
                     }
@@ -554,13 +417,13 @@ public class BattleController : MachineBehaviour
                 }
                 else
                 {
-                    return (y.Character.Info.AGI * y.Priority).CompareTo(x.Character.Info.AGI * x.Priority);
+                    return (y.Info.AGI).CompareTo(x.Info.AGI);
                 }
             });
 
             BattleUI.Instance.SetTurnLabel(parent.Turn, ()=> 
             {
-                BattleUI.Instance.InitPriorityQueue(parent.ActionQueueToCharacterList(parent._actionQueue), parent.ActionQueueToPriorityList(parent._actionQueue));
+                BattleUI.Instance.InitPriorityQueue(new List<BattleCharacter>(parent._actionQueue));
 
                 if (parent.TurnStartHandler != null)
                 {
@@ -584,8 +447,7 @@ public class BattleController : MachineBehaviour
             {
                 BattleUI.Instance.ScrollPriorityQueue(parent.SelectedCharacter);
 
-                BattleCharacter character = parent._actionQueue[0].Character;
-                character.SetCurrentPriority(parent._actionQueue[0].Priority);
+                BattleCharacter character = parent._actionQueue[0];
                 parent._actionQueue.RemoveAt(0);
                 if (character.LiveState == BattleCharacter.LiveStateEnum.Alive && character.Info.ActionCount > 0)
                 {
@@ -643,7 +505,6 @@ public class BattleController : MachineBehaviour
 
             BattleUI.Instance.SetActionGroupVisible(true);
             BattleUI.Instance.SetInfo(true, parent.SelectedCharacter);
-            parent.Write();
 
             if (parent.SelectActionStartHandler != null)
             {
@@ -925,14 +786,7 @@ public class BattleController : MachineBehaviour
                         {
                             if (!parent.SelectedCharacter.Info.IsAI)
                             {
-                                if (parent.SelectedCharacter.Info.CurrentPriority <= 100)
-                                {
-                                    parent.ChangeState<SelectActionState>();
-                                }
-                                else
-                                {
-                                    parent.ChangeState<SelectCharacterState>();
-                                }
+                                parent.ChangeState<SelectActionState>();
                             }
                             else
                             {
