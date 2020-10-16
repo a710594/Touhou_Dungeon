@@ -36,7 +36,7 @@ public class DungeonBuilder : MonoBehaviour
         //First Room
         roomId = data.RoomList[0];
         room = RoomData.GetRoomClassByID(roomId);
-        room.SetData(RoomData.GetData(roomId));
+        room.SetData(RoomData.GetData(roomId), data);
         roomList.Add(room);
         room.SetPosition(Vector2Int.zero);
         SetRoom(room);
@@ -49,7 +49,7 @@ public class DungeonBuilder : MonoBehaviour
         {
             roomId = data.GetRandomRoomID();
             room = RoomData.GetRoomClassByID(roomId);
-            room.SetData(RoomData.GetData(roomId));
+            room.SetData(RoomData.GetData(roomId), data);
             if (room is TreasureRoom)
             {
                 treasureRoomList.Add(room);
@@ -297,7 +297,6 @@ public class DungeonBuilder : MonoBehaviour
         MapInfo mapInfo = new MapInfo();
         mapInfo.ID = data.ID;
         mapInfo.Group = data.Group;
-        mapInfo.LastFloor = data.LastFloor;
         mapInfo.NextFloor = data.NextFloor;
         mapInfo.MapBound = Utility.GetMapBounds(_mapList);
         mapInfo.Start = start;

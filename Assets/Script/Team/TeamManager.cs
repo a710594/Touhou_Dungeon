@@ -34,22 +34,21 @@ public class TeamManager
     {
         TeamMemo memo = Caretaker.Instance.Load<TeamMemo>();
 
-        //if (memo == null)
-        //{
-
-            Lv = 8;
+        if (memo == null)
+        {
+            Lv = 7;
             Exp = 0;
 
-            TeamScriptableObject data = Resources.Load<TeamScriptableObject>("ScriptableObject/TeamScriptableObject");
+            //TeamScriptableObject data = Resources.Load<TeamScriptableObject>("ScriptableObject/TeamScriptableObject");
 
-            TeamMember member;
-            for (int i = 0; i < data.MemberList.Count; i++)
-            {
-                member = new TeamMember();
-                member.Init(data.MemberList[i], Lv);
-                member.Formation = data.PositionList[i];
-                MemberList.Add(member);
-            }
+            //TeamMember member;
+            //for (int i = 0; i < data.MemberList.Count; i++)
+            //{
+            //    member = new TeamMember();
+            //    member.Init(data.MemberList[i], Lv);
+            //    member.Formation = data.PositionList[i];
+            //    MemberList.Add(member);
+            //}
 
             //temp
             //MemberList[0].SetEquip(42001);
@@ -59,28 +58,32 @@ public class TeamManager
             //MemberList[2].SetEquip(42001);
             //MemberList[2].SetEquip(41002);
 
-            MemberList[0].SetEquip(42002);
-            MemberList[0].SetEquip(41003);
-            MemberList[1].SetEquip(42002);
-            MemberList[1].SetEquip(41004);
-            MemberList[2].SetEquip(42002);
-            MemberList[2].SetEquip(41004);
-            MemberList[3].SetEquip(42002);
-            MemberList[3].SetEquip(41003);
-        //}
-        //else
-        //{
-        //    Lv = memo.Lv;
-        //    Exp = memo.Exp;
-        //    _power = memo.Power;
-        //    TeamMember member;
-        //    for (int i = 0; i < memo.MemberList.Count; i++)
-        //    {
-        //        member = new TeamMember();
-        //        member.Init(memo.MemberList[i]);
-        //        MemberList.Add(member);
-        //    }
-        //}
+            //MemberList[0].SetEquip(42002);
+            //MemberList[0].SetEquip(41003);
+            //MemberList[1].SetEquip(42002);
+            //MemberList[1].SetEquip(41004);
+            //MemberList[2].SetEquip(42002);
+            //MemberList[2].SetEquip(41004);
+            //MemberList[3].SetEquip(42002);
+            //MemberList[3].SetEquip(41003);
+
+            AddMember(1, new Vector2Int(0, 0), 41003, 42002);
+            AddMember(2, new Vector2Int(1, 0), 41004, 42002);
+            AddMember(3, new Vector2Int(-1, 0), 41004, 42002);
+        }
+        else
+        {
+            Lv = memo.Lv;
+            Exp = memo.Exp;
+            _power = memo.Power;
+            TeamMember member;
+            for (int i = 0; i < memo.MemberList.Count; i++)
+            {
+                member = new TeamMember();
+                member.Init(memo.MemberList[i]);
+                MemberList.Add(member);
+            }
+        }
         _power = 50;
     }
 
@@ -143,12 +146,7 @@ public class TeamManager
                 tempLv = _maxLv;
             }
 
-            Lv = tempLv;
-            Exp = addExp;
-            for (int i = 0; i < MemberList.Count; i++)
-            {
-                MemberList[i].LvUp(tempLv, addExp);
-            }
+            SetLv(tempLv, addExp);
         }
     }
 
@@ -172,6 +170,26 @@ public class TeamManager
         else
         {
             return 0;
+        }
+    }
+
+    public void AddMember(int job, Vector2Int position, int weapon, int armor) 
+    {
+        TeamMember member = new TeamMember();
+        member.Init(job, Lv);
+        member.Formation = position;
+        member.SetEquip(weapon);
+        member.SetEquip(armor);
+        MemberList.Add(member);
+    }
+
+    private void SetLv(int lv, int exp) 
+    {
+        Lv = lv;
+        Exp = exp;
+        for (int i = 0; i < MemberList.Count; i++)
+        {
+            MemberList[i].LvUp(lv, exp);
         }
     }
 }

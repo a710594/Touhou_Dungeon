@@ -135,10 +135,14 @@ public class ExploreController
         ArriveFloor = _memo.ArriveFloor;
         if (MySceneManager.Instance.CurrentScene == MySceneManager.SceneType.Explore)
         {
-            LoadingUI.Instance.Open(()=> 
+            LoadingUI.Instance.Open(() =>
             {
                 DungeonPainter.Instance.Paint(_mapInfo);
             });
+        }
+        else
+        {
+            SetFloor();
         }
         AudioSystem.Instance.Play("Forest");
     }
@@ -326,7 +330,6 @@ public class ExploreController
                     MySceneManager.Instance.ChangeScene(MySceneManager.Instance.LastScene, () =>
                     {
                         SetFloorFromMemo();
-                        GameSystem.Instance.AutoSave();
                     });
                 }, ()=> 
                 {
@@ -493,7 +496,7 @@ public class ExploreController
 
         _fieldEnemyList.Clear();
         FieldEnemy enemy;
-        DungeonData.RootObject data;
+        DungeonData.RootObject data = DungeonData.GetData(_mapInfo.ID);
 
         Vector2Int position;
         Vector2Int playerPosition = Vector2Int.RoundToInt(_player.transform.position);
@@ -506,7 +509,6 @@ public class ExploreController
                 {
                     enemy = ResourceManager.Instance.Spawn("FieldEnemy/FieldEnemyRandom", ResourceManager.Type.Other).GetComponent<FieldEnemy>();
                     enemy.OnPlayerEnterHandler += EnterBattle;
-                    data = DungeonData.GetData(_mapInfo.ID);
                     enemy.Init(data.GetRandomBattleGroup(), position);
                     _fieldEnemyList.Add(enemy);
 
@@ -518,8 +520,7 @@ public class ExploreController
             }
         }
 
-        data = DungeonData.GetData(_mapInfo.ID);
-        if (data != null)
+        if (data.GoalBattleGroup != 0)
         {
             for (int i = 0; i < _mapInfo.GuardList.Count; i++)
             {

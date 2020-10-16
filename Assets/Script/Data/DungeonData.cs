@@ -10,7 +10,6 @@ public class DungeonData
         public int ID { get; set; }
         public int Group { get; set; }
         public string FloorName { get; set; }
-        public int LastFloor { get; set; }
         public int NextFloor { get; set; }
         public int SceneIndex { get; set; }
         public int RoomAmount { get; set; }
@@ -28,6 +27,8 @@ public class DungeonData
         public int BattleGroup_3 { get; set; }
         public int BattleGroupProbability_3 { get; set; }
         public int GoalBattleGroup { get; set; }
+        public int MinMoney { get; set; }
+        public int MaxMoney { get; set; }
 
         public List<int> RoomList = new List<int>();
         public int GetRandomRoomID()

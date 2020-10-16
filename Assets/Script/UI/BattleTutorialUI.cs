@@ -10,12 +10,11 @@ public class BattleTutorialUI : MonoBehaviour
     public Button MoveActionButton;
     public Button MoveButton;
     public Button MoveConfirmButton;
-    public Button[] SkillActionButtons;
-    public Button[] SkillButtons;
-    public Button[] SkillPositionButtons;
-    public Button[] SkillConfirmButtons;
+    public Button SkillActionButton;
+    public Button SkillButton;
+    public Button SkillPositionButton;
+    public Button SkillConfirmButton;
     public Button[] ContinueButtons;
-    public Button[] IdleButtons;
     public GameObject Mask;
     public GameObject[] StepGroup;
 
@@ -168,52 +167,19 @@ public class BattleTutorialUI : MonoBehaviour
         MoveActionButton.onClick.AddListener(MoveActionOnClick);
         MoveButton.onClick.AddListener(MoveOnClick);
         MoveConfirmButton.onClick.AddListener(MoveConfirmOnClick);
-        for (int i=0; i<SkillActionButtons.Length; i++)
-        {
-            SkillActionButtons[i].onClick.AddListener(SkillActionOnClick);
-        }
+        SkillActionButton.onClick.AddListener(SkillActionOnClick);
 
-        SkillButtons[0].onClick.AddListener(()=> 
+        SkillButton.onClick.AddListener(()=> 
         {
             SkillOnClick(0);
-        });
-        SkillButtons[1].onClick.AddListener(() =>
-        {
-            SkillOnClick(1);
-        });
-        SkillButtons[2].onClick.AddListener(() =>
-        {
-            SkillOnClick(1);
-        });
-        SkillButtons[3].onClick.AddListener(() =>
-        {
-            SkillOnClick(0);
-        });
-        SkillButtons[4].onClick.AddListener(() =>
-        {
-            SkillOnClick(0);
-        });
-        SkillButtons[5].onClick.AddListener(() =>
-        {
-            SkillOnClick(5);
         });
 
-        for (int i=0; i<SkillPositionButtons.Length; i++)
-        {
-            SkillPositionButtons[i].onClick.AddListener(SkillPositionOnClick);
-        }
-        for (int i=0; i<SkillConfirmButtons.Length; i++)
-        {
-            SkillConfirmButtons[i].onClick.AddListener(SkillConfirmOnClick);
-        }
+        SkillPositionButton.onClick.AddListener(SkillPositionOnClick);
+        SkillConfirmButton.onClick.AddListener(SkillConfirmOnClick);
+        
         for (int i = 0; i < ContinueButtons.Length; i++)
         {
             ContinueButtons[i].onClick.AddListener(ContinueOnClick);
-        }
-
-        for (int i = 0; i < IdleButtons.Length; i++)
-        {
-            IdleButtons[i].onClick.AddListener(IdleOnClick);
         }
 
         for (int i=0; i<StepGroup.Length; i++)

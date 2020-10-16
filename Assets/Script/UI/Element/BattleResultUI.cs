@@ -16,7 +16,6 @@ public class BattleResultUI : MonoBehaviour
     public GameObject ItemGroup;
     public Text LvLabel;
     public ValueBar ExpBar;
-    public CharacterLvCard[] CharacterLvCards;
 
     private Action _callback;
 
@@ -74,20 +73,6 @@ public class BattleResultUI : MonoBehaviour
             LvLabel.text = "Lv." + currentLv.ToString();
             ExpBar.SetValueTween(originalExp, currentExp, needExp, null);
         }
-
-        //List<TeamMember> memberList = TeamManager.Instance.MemberList;
-        //for (int i = 0; i < CharacterLvCards.Length; i++)
-        //{
-        //    if (i < memberList.Count)
-        //    {
-        //        CharacterLvCards[i].gameObject.SetActive(true);
-        //        CharacterLvCards[i].SetData(originalLvList[i], originalExpList[i], memberList[i]);
-        //    }
-        //    else
-        //    {
-        //        CharacterLvCards[i].gameObject.SetActive(false);
-        //    }
-        //}
     }
 
     private void SetItemGroup(List<int> itemList)

@@ -16,7 +16,8 @@ public class GameSystem : MonoBehaviour
 
     public void SaveGame()
     {
-        if (MySceneManager.Instance.CurrentScene == MySceneManager.SceneType.Explore || MySceneManager.Instance.CurrentScene == MySceneManager.SceneType.Villiage)
+        MySceneManager.SceneType sceneType = MySceneManager.Instance.CurrentScene;
+        if (sceneType == MySceneManager.SceneType.Explore || sceneType == MySceneManager.SceneType.Villiage)
         {
             MySceneManager.Instance.Save();
             ItemManager.Instance.Save();

@@ -27,7 +27,7 @@ public class NormalRoom : Room
             tempList.Remove(treasurePosition);
             if (!WallList.Contains(treasurePosition))
             {
-                TreasureDic.Add(treasurePosition, new Treasure(Data.GetRandomTreasureID()));
+                TreasureDic.Add(treasurePosition, new Treasure(RoomData.GetRandomTreasureID()));
             }
             else
             {
@@ -42,7 +42,7 @@ public class NormalRoom : Room
             tempList.Remove(moneyPosition);
             if (!WallList.Contains(moneyPosition))
             {
-                MoneyDic.Add(moneyPosition, Random.Range(Data.MinMoney, Data.MaxMoney + 1));
+                MoneyDic.Add(moneyPosition, Random.Range(DungeonData.MinMoney, DungeonData.MaxMoney + 1));
             }
             else
             {

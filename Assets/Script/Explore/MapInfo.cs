@@ -7,7 +7,6 @@ public class MapInfo
 {
     public int Group;
     public int ID;
-    public int LastFloor;
     public int NextFloor;
     public BoundsInt MapBound;
     public Vector2Int Start;
@@ -31,7 +30,6 @@ public class MapInfo
     {
         ID = memo.ID;
         DungeonData.RootObject dungeonData = DungeonData.GetData(ID);
-        LastFloor = dungeonData.LastFloor;
         NextFloor = dungeonData.NextFloor;
         MapBound = memo.MapBound;
         Start = memo.Start;

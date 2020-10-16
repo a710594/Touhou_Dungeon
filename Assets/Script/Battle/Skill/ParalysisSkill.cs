@@ -38,7 +38,7 @@ public class ParalysisSkill : Skill
 
         Timer timer1 = new Timer(Data.ShowTime / 2f, () =>
         {
-            if (hitType != HitType.Miss)
+            if (_hitType != HitType.Miss)
             {
                 target.SetParalysis(Data.StatusID, Lv);
 

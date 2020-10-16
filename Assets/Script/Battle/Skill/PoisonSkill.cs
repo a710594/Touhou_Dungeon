@@ -41,7 +41,7 @@ public class PoisonSkill : Skill
 
         Timer timer1 = new Timer(Data.ShowTime / 2f, () =>
         {
-            if (hitType != Skill.HitType.Miss)
+            if (_hitType != Skill.HitType.Miss)
             {
                 target.Info.SetPoison(_poison, CalculateDamage(target.Info));
 

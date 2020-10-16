@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections;
+﻿using DG.Tweening;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
-using DG.Tweening;
 
 public class Skill
 {
@@ -238,49 +237,66 @@ public class Skill
 
     public virtual void SetEffects() { }
 
-    protected HitType hitType;
+    protected HitType _hitType;
     public virtual void SetEffect(BattleCharacter target)
     {
         if (target != null)
         {
-            hitType = CheckHit(_user, target.Info, target.LiveState);
+            _hitType = CheckHit(_user, target.Info, target.LiveState);
         }
     }
 
     protected virtual HitType CheckHit(BattleCharacterInfo executor, BattleCharacterInfo target, BattleCharacter.LiveStateEnum targetLiveState)
     {
-        float misssRate;
-        misssRate = (float)(target.AGI - executor.SEN * (Data.HitRate / 100f)) / (float)target.AGI; //迴避率
+        //float misssRate;
+        //misssRate = (float)(target.AGI - executor.SEN * (Data.HitRate / 100f)) / (float)target.AGI; //迴避率
 
-        if (misssRate >= 0) //迴避率為正,骰迴避
+        //if (misssRate >= 0) //迴避率為正,骰迴避
+        //{
+        //    if (misssRate < UnityEngine.Random.Range(0f, 1f))
+        //    {
+        //        return HitType.Hit;
+        //    }
+        //    else
+        //    {
+        //        if (targetLiveState == BattleCharacter.LiveStateEnum.Dying)
+        //        {
+        //            return HitType.Hit;
+        //        }
+        //        else
+        //        {
+        //            return HitType.Miss;
+        //        }
+        //    }
+        //}
+        //else //迴避率為負,骰爆擊
+        //{
+        //    //if (misssRate < UnityEngine.Random.Range(0f, 1f) * -1f)
+        //    //{
+        //    //    return HitType.Critical;
+        //    //}
+        //    //else
+        //    //{
+        //    //    return HitType.Hit;
+        //    //}
+        //    return HitType.Hit;
+        //}
+
+        float hitRate = _user.SEN * (Data.HitRate / 100f) / target.AGI;
+        if (hitRate > UnityEngine.Random.Range(0f, 1f))
         {
-            if (misssRate < UnityEngine.Random.Range(0f, 1f))
+            return HitType.Hit;
+        }
+        else
+        {
+            if (targetLiveState == BattleCharacter.LiveStateEnum.Dying)
             {
                 return HitType.Hit;
             }
             else
             {
-                if (targetLiveState == BattleCharacter.LiveStateEnum.Dying)
-                {
-                    return HitType.Hit;
-                }
-                else
-                {
-                    return HitType.Miss;
-                }
+                return HitType.Miss;
             }
-        }
-        else //迴避率為負,骰爆擊
-        {
-            //if (misssRate < UnityEngine.Random.Range(0f, 1f) * -1f)
-            //{
-            //    return HitType.Critical;
-            //}
-            //else
-            //{
-            //    return HitType.Hit;
-            //}
-            return HitType.Hit;
         }
     }
 

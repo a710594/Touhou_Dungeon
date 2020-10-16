@@ -5,7 +5,6 @@ using UnityEngine;
 public class DungeonFromScene : MonoBehaviour
 {
     public int Floor;
-    public int LastFloor;
     public int NextFloor;
     public TilemapToPositionList TilemapToPositionList;
 
@@ -14,7 +13,6 @@ public class DungeonFromScene : MonoBehaviour
         MapInfo mapInfo = new MapInfo();
 
         mapInfo.ID = Floor;
-        mapInfo.LastFloor = LastFloor;
         mapInfo.NextFloor = NextFloor;
         mapInfo.MapList = TilemapToPositionList.GetPositionList(0);
         mapInfo.Start = TilemapToPositionList.GetPositionList(1)[0];

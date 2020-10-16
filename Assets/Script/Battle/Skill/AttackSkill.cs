@@ -49,33 +49,33 @@ public class AttackSkill : Skill
         base.SetEffect(target);
 
         int damage = 0;
-        if (hitType == HitType.Critical)
+        if (_hitType == HitType.Critical)
         {
             damage = CalculateDamage(_user, target.Info, true, true);
         }
-        else if (hitType == HitType.Hit)
+        else if (_hitType == HitType.Hit)
         {
             damage = CalculateDamage(_user, target.Info, false, true);
         }
 
         string text = "";
         FloatingNumber.Type floatingNumberType = FloatingNumber.Type.Other;
-        if (hitType == Skill.HitType.Critical)
+        if (_hitType == Skill.HitType.Critical)
         {
             floatingNumberType = FloatingNumber.Type.Critical;
             text = damage.ToString();
         }
-        else if (hitType == Skill.HitType.Hit)
+        else if (_hitType == Skill.HitType.Hit)
         {
             floatingNumberType = FloatingNumber.Type.Damage;
             text = damage.ToString();
         }
-        else if (hitType == Skill.HitType.Miss)
+        else if (_hitType == Skill.HitType.Miss)
         {
             floatingNumberType = FloatingNumber.Type.Miss;
             text = "Miss";
         }
-        else if (hitType == Skill.HitType.NoDamage)
+        else if (_hitType == Skill.HitType.NoDamage)
         {
             floatingNumberType = FloatingNumber.Type.Miss;
             text = "NoDamage";
@@ -134,33 +134,13 @@ public class AttackSkill : Skill
 
     protected override HitType CheckHit(BattleCharacterInfo executor, BattleCharacterInfo target, BattleCharacter.LiveStateEnum targetLiveState)
     {
+        HitType hitType = base.CheckHit(executor, target, targetLiveState);
         if (BattleFieldManager.Instance.IsNoDamageField(target.Position))
         {
             return HitType.NoDamage;
         }
 
-        float misssRate;
-        misssRate = (float)(target.AGI - executor.SEN * (Data.HitRate / 100f)) / (float)target.AGI; //迴避率
-
-        if (misssRate >= 0) //迴避率為正,骰迴避
-        {
-            if (misssRate < UnityEngine.Random.Range(0f, 1f))
-            {
-                return HitType.Hit;
-            }
-            else
-            {
-                if (targetLiveState == BattleCharacter.LiveStateEnum.Dying)
-                {
-                    return HitType.Hit;
-                }
-                else
-                {
-                    return HitType.Miss;
-                }
-            }
-        }
-        else //迴避率為負,骰爆擊
+        if (hitType == HitType.Hit)
         {
             if (target.EnemyData != null && target.EnemyData.ID == 7) //新手教學的那隻怪不會被爆擊
             {
@@ -168,7 +148,16 @@ public class AttackSkill : Skill
             }
             else
             {
-                float criticalRate = (_user.SEN - 10) * (Data.HitRate / 100f) *0.02f;
+                float originalSEN = 0; //與等級無關的原始數值A
+                if (_user.JobData != null)
+                {
+                    originalSEN = _user.JobData.SEN;
+                }
+                else if (_user.EnemyData != null)
+                {
+                    originalSEN = _user.EnemyData.SEN;
+                }
+                float criticalRate = (originalSEN - 10) * (Data.HitRate / 100f) * 0.02f;
                 if (criticalRate > UnityEngine.Random.Range(0f, 1f))
                 {
                     return HitType.Critical;
@@ -178,14 +167,59 @@ public class AttackSkill : Skill
                     return HitType.Hit;
                 }
             }
-            //else if (misssRate < UnityEngine.Random.Range(0f, 1f) * -1f)
-            //{
-            //    return HitType.Critical;
-            //}
-            //else
-            //{
-            //    return HitType.Hit;
-            //}
         }
+        else 
+        {
+            return hitType;
+        }
+
+        //float misssRate;
+        //misssRate = (float)(target.AGI - executor.SEN * (Data.HitRate / 100f)) / (float)target.AGI; //迴避率
+
+        //if (misssRate >= 0) //迴避率為正,骰迴避
+        //{
+        //    if (misssRate < UnityEngine.Random.Range(0f, 1f))
+        //    {
+        //        return HitType.Hit;
+        //    }
+        //    else
+        //    {
+        //        if (targetLiveState == BattleCharacter.LiveStateEnum.Dying)
+        //        {
+        //            return HitType.Hit;
+        //        }
+        //        else
+        //        {
+        //            return HitType.Miss;
+        //        }
+        //    }
+        //}
+        //else //迴避率為負,骰爆擊
+        //{
+        //    if (target.EnemyData != null && target.EnemyData.ID == 7) //新手教學的那隻怪不會被爆擊
+        //    {
+        //        return HitType.Hit;
+        //    }
+        //    else
+        //    {
+        //        float criticalRate = (_user.SEN - 10) * (Data.HitRate / 100f) *0.02f;
+        //        if (criticalRate > UnityEngine.Random.Range(0f, 1f))
+        //        {
+        //            return HitType.Critical;
+        //        }
+        //        else
+        //        {
+        //            return HitType.Hit;
+        //        }
+        //    }
+        //    //else if (misssRate < UnityEngine.Random.Range(0f, 1f) * -1f)
+        //    //{
+        //    //    return HitType.Critical;
+        //    //}
+        //    //else
+        //    //{
+        //    //    return HitType.Hit;
+        //    //}
+        //}
     }
 }

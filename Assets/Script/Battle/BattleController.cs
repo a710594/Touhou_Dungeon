@@ -946,7 +946,6 @@ public class BattleController : MachineBehaviour
                     MySceneManager.Instance.ChangeScene(MySceneManager.Instance.LastScene, () =>
                     {
                         ExploreController.Instance.SetFloorFromMemo();
-                        GameSystem.Instance.AutoSave();
                     });
                 });
             }

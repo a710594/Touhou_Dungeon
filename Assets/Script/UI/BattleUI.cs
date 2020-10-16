@@ -177,6 +177,8 @@ public class BattleUI : MonoBehaviour
     {
         SetInfo(false);
         PriorityQueue.transform.parent.gameObject.SetActive(false);
+        PowerLabel.gameObject.SetActive(false);
+        ActionCountLabel.gameObject.SetActive(false);
         TurnLabel.transform.parent.parent.gameObject.SetActive(true);
         TurnLabel.text = "Turn" + turn.ToString();
         TurnLabel.transform.parent.localPosition = Vector3.right * 1280;

@@ -38,13 +38,13 @@ public class BuffSkill : Skill
 
         if (Data.Target == SkillData.TargetType.Us) //目標為我方則必中
         {
-            hitType = HitType.Hit;
+            _hitType = HitType.Hit;
         }
 
         Timer timer1 = new Timer(Data.ShowTime / 2f, () =>
         {
             target.SetBuff(Data.StatusID, Lv);
-            if (hitType != Skill.HitType.Miss)
+            if (_hitType != HitType.Miss)
             {
                 BattleUI.Instance.SetFloatingNumber(target, BattleStatusData.GetData(Data.StatusID).Message, FloatingNumber.Type.Other);
             }

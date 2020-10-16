@@ -7,21 +7,22 @@ public class MazeRoom : Room
     private Queue<Vector2Int> _spaceQueue = new Queue<Vector2Int>();
     private Vector2Int[] _directions = new Vector2Int[4] { Vector2Int.left, Vector2Int.right, Vector2Int.up, Vector2Int.down};
 
-    public override void SetData(RoomData.RootObject data)
+    public override void SetData(RoomData.RootObject roomData, DungeonData.RootObject dungeonData)
     {
-        Data = data;
-        Width = Random.Range(data.MinWidth, data.MaxWidth + 1);
+        RoomData = roomData;
+        DungeonData = dungeonData;
+        Width = Random.Range(roomData.MinWidth, roomData.MaxWidth + 1);
         if (Width % 2 == 1)
         {
             Width += 1;
         }
-        Height = Random.Range(data.MinHeight, data.MaxHeight + 1);
+        Height = Random.Range(roomData.MinHeight, roomData.MaxHeight + 1);
         if (Height % 2 == 1)
         {
             Height += 1;
         }
-        _treasureAmount = Random.Range(data.MinTreasureAmount, data.MaxTreasureAmount + 1);
-        _moneyAmount = Random.Range(data.MinMoneyAmount, data.MaxMoneyAmount + 1);
+        _treasureAmount = Random.Range(roomData.MinTreasureAmount, roomData.MaxTreasureAmount + 1);
+        _moneyAmount = Random.Range(roomData.MinMoneyAmount, roomData.MaxMoneyAmount + 1);
 
         WallDirectionList.Add(Vector2Int.left);
         WallDirectionList.Add(Vector2Int.right);
@@ -43,7 +44,7 @@ public class MazeRoom : Room
             tempList.Remove(moneyPosition);
             if (!WallList.Contains(moneyPosition))
             {
-                MoneyDic.Add(moneyPosition, Random.Range(Data.MinMoney, Data.MaxMoney + 1));
+                MoneyDic.Add(moneyPosition, Random.Range(DungeonData.MinMoney, DungeonData.MaxMoney + 1));
             }
             else
             {
@@ -54,7 +55,6 @@ public class MazeRoom : Room
 
     private void DFS(Vector2Int walker)
     {
-        int treasureId;
         Vector2Int direction = new Vector2Int();
         Vector2Int newWalker = new Vector2Int();
         List<Vector2Int> tempList = new List<Vector2Int>();
@@ -94,7 +94,7 @@ public class MazeRoom : Room
             {
                 if (TreasureDic.Count < _treasureAmount)
                 {
-                    TreasureDic.Add(walker, new Treasure(Data.GetRandomTreasureID()));
+                    TreasureDic.Add(walker, new Treasure(RoomData.GetRandomTreasureID()));
                 }
 
                 DFS(_spaceQueue.Dequeue());

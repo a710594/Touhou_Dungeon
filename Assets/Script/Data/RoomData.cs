@@ -29,8 +29,6 @@ public class RoomData
         public int Probability_2 { get; set; }
         public int Treasure_3 { get; set; }
         public int Probability_3 { get; set; }
-        public int MinMoney { get; set; }
-        public int MaxMoney { get; set; }
         public int MinMoneyAmount { get; set; }
         public int MaxMoneyAmount { get; set; }
 

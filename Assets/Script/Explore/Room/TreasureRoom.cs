@@ -15,7 +15,7 @@ public class TreasureRoom : Room
                 if (i == Position.x || i == Position.x + Width - 1 || j == Position.y || j == Position.y + Height - 1)
                 {
                     WallList.Add(new Vector2Int(i, j));
-                    TreasureDic.Add(new Vector2Int(i, j), new Treasure(Data.GetRandomTreasureID()));
+                    TreasureDic.Add(new Vector2Int(i, j), new Treasure(RoomData.GetRandomTreasureID()));
                 }
             }
         }

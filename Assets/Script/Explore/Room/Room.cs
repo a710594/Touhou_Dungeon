@@ -8,7 +8,8 @@ public class Room
     public int Width;
     public int Height;
     public Vector2Int Position; //矩形房間的左下角
-    public RoomData.RootObject Data;
+    public RoomData.RootObject RoomData;
+    public DungeonData.RootObject DungeonData;
     public List<Vector2Int> PositionList = new List<Vector2Int>();
     public List<Vector2Int> WallDirectionList = new List<Vector2Int>();
     public List<Vector2Int> WallList = new List<Vector2Int>();
@@ -19,13 +20,14 @@ public class Room
     protected int _treasureAmount;
     protected int _moneyAmount;
 
-    public virtual void SetData(RoomData.RootObject data)
+    public virtual void SetData(RoomData.RootObject roomData, DungeonData.RootObject dungeonData)
     {
-        Data = data;
-        Width = Random.Range(data.MinWidth, data.MaxWidth + 1);
-        Height = Random.Range(data.MinHeight, data.MaxHeight + 1);
-        _treasureAmount = Random.Range(data.MinTreasureAmount, data.MaxTreasureAmount + 1);
-        _moneyAmount = Random.Range(data.MinMoneyAmount, data.MaxMoneyAmount + 1);
+        RoomData = roomData;
+        DungeonData = dungeonData;
+        Width = Random.Range(roomData.MinWidth, roomData.MaxWidth + 1);
+        Height = Random.Range(roomData.MinHeight, roomData.MaxHeight + 1);
+        _treasureAmount = Random.Range(roomData.MinTreasureAmount, roomData.MaxTreasureAmount + 1);
+        _moneyAmount = Random.Range(roomData.MinMoneyAmount, roomData.MaxMoneyAmount + 1);
 
         WallDirectionList.Add(Vector2Int.left);
         WallDirectionList.Add(Vector2Int.right);
