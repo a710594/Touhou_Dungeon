@@ -23,7 +23,6 @@ public class RageAttackSkill : AttackSkill
     {
         float damage = base.CalculateDamage(executor, target, isCritical, isRandom);
         damage *= 1 + ((float)_user.LastTurnGetDamage / (float)_user.MaxHP);
-        Debug.Log(((float)_user.LastTurnGetDamage / (float)_user.MaxHP));
 
         return Mathf.RoundToInt(damage);
     }

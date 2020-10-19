@@ -36,14 +36,11 @@ public class StrikingSkill : Skill
     {
         base.SetEffect(target);
 
-        if (Data.Target == SkillData.TargetType.Us) //目標為我方則必中
-        {
-            _hitType = HitType.Hit;
-        }
+        HitType hitType = CheckHit(_user, target.Info, target.LiveState);
 
         Timer timer1 = new Timer(Data.ShowTime / 2f, () =>
         {
-            if (_hitType != Skill.HitType.Miss)
+            if (hitType != Skill.HitType.Miss)
             {
                 target.SetStriking(Data.StatusID);
 
@@ -57,7 +54,7 @@ public class StrikingSkill : Skill
 
         Timer timer2 = new Timer(_floatingNumberTime + Data.ShowTime / 2f, () =>
         {
-            CheckSubSkill(target);
+            CheckSubSkill(target, hitType);
         });
     }
 }

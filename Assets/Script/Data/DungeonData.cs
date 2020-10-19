@@ -128,8 +128,7 @@ public class DungeonData
 
     public static List<RootObject> GetFloorList(int group, int arriveFloor)
     {
-        List<RootObject> floorList = null;
-        _floorDic.TryGetValue(group, out floorList);
+        List<RootObject> floorList = new List<RootObject> (_floorDic[group]);
         for (int i=0; i<floorList.Count; i++) 
         {
             if (floorList[i].ID > arriveFloor)

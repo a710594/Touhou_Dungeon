@@ -35,8 +35,6 @@ public class CureLeastHPSkill : Skill
 
     public override void SetEffect(BattleCharacter target)
     {
-        base.SetEffect(target);
-
         int minHP = int.MaxValue;
         BattleCharacter character;
         List<BattleCharacter> chaarcterList = new List<BattleCharacter>();
@@ -61,7 +59,7 @@ public class CureLeastHPSkill : Skill
 
         Timer timer2 = new Timer(Data.ShowTime / 2f + _floatingNumberTime, () =>
         {
-            CheckSubSkill(target);
+            CheckSubSkill(target, HitType.Hit);
         });
     }
 

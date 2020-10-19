@@ -34,8 +34,6 @@ public class RecoverMPItemSkill : Skill
 
     public override void SetEffect(BattleCharacter target)
     {
-        base.SetEffect(target);
-
         Timer timer1 = new Timer(Data.ShowTime / 2f, () =>
         {
             target.SetRecoverMP(_value);
@@ -44,7 +42,7 @@ public class RecoverMPItemSkill : Skill
 
         Timer timer2 = new Timer(_floatingNumberTime + Data.ShowTime / 2f, () =>
         {
-            CheckSubSkill(target);
+            CheckSubSkill(target, HitType.Hit);
         });
     }
 }

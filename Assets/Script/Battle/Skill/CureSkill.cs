@@ -37,8 +37,6 @@ public class CureSkill : Skill
 
     public override void SetEffect(BattleCharacter target)
     {
-        base.SetEffect(target);
-
         int recover = CalculateRecover(_user);
         Timer timer1 = new Timer(Data.ShowTime / 2f, () =>
         {
@@ -50,7 +48,7 @@ public class CureSkill : Skill
 
         Timer timer2 = new Timer(Data.ShowTime / 2f + _floatingNumberTime, () =>
         {
-            CheckSubSkill(target);
+            CheckSubSkill(target, HitType.Hit);
         });
     }
 

@@ -140,6 +140,12 @@ public class Skill
             positionList = RemovePosition(executor, characterList, positionList);
             positionList = BattleFieldManager.Instance.RemoveBound(positionList);
         }
+
+        if (this is AttackSkill)
+        {
+            positionList.Remove(Vector2Int.FloorToInt(executor.transform.position));
+        }
+
         _skillRangeList = positionList;
 
         return _skillRangeList;
@@ -237,51 +243,12 @@ public class Skill
 
     public virtual void SetEffects() { }
 
-    protected HitType _hitType;
     public virtual void SetEffect(BattleCharacter target)
     {
-        if (target != null)
-        {
-            _hitType = CheckHit(_user, target.Info, target.LiveState);
-        }
     }
 
     protected virtual HitType CheckHit(BattleCharacterInfo executor, BattleCharacterInfo target, BattleCharacter.LiveStateEnum targetLiveState)
     {
-        //float misssRate;
-        //misssRate = (float)(target.AGI - executor.SEN * (Data.HitRate / 100f)) / (float)target.AGI; //迴避率
-
-        //if (misssRate >= 0) //迴避率為正,骰迴避
-        //{
-        //    if (misssRate < UnityEngine.Random.Range(0f, 1f))
-        //    {
-        //        return HitType.Hit;
-        //    }
-        //    else
-        //    {
-        //        if (targetLiveState == BattleCharacter.LiveStateEnum.Dying)
-        //        {
-        //            return HitType.Hit;
-        //        }
-        //        else
-        //        {
-        //            return HitType.Miss;
-        //        }
-        //    }
-        //}
-        //else //迴避率為負,骰爆擊
-        //{
-        //    //if (misssRate < UnityEngine.Random.Range(0f, 1f) * -1f)
-        //    //{
-        //    //    return HitType.Critical;
-        //    //}
-        //    //else
-        //    //{
-        //    //    return HitType.Hit;
-        //    //}
-        //    return HitType.Hit;
-        //}
-
         float hitRate = _user.SEN * (Data.HitRate / 100f) / target.AGI;
         if (hitRate > UnityEngine.Random.Range(0f, 1f))
         {
@@ -300,9 +267,9 @@ public class Skill
         }
     }
 
-    protected void CheckSubSkill(BattleCharacter target)
+    protected void CheckSubSkill(BattleCharacter target, HitType hitType)
     {
-        if (_subSkill != null)
+        if (_subSkill != null && hitType != HitType.Miss && hitType != HitType.NoDamage)
         {
             _subSkill.SetCallback(_targetCount, _skillCallback);
             if (_subSkill is FieldSkill)

@@ -37,7 +37,7 @@ public class TeamCharacterGroup : MonoBehaviour
         SENLabel.Label.text = "感知：" + member.SEN.ToString();
         MOVLabel.Label.text = "移動：" + member.MOV.ToString();
         CharacterImage.overrideSprite = Resources.Load<Sprite>("Image/Character/Origin/" + member.Data.Image);
-        //CharacterImage.SetNativeSize();
+        CharacterImage.SetNativeSize();
 
         FoodBuffLabel.text = "料理效果：\n" + member.FoodBuff.Comment;
     }

@@ -240,7 +240,7 @@ public class BattleUI : MonoBehaviour
         for (int i=0; i<targetList.Count; i++) 
         {
             obj = Instantiate(PowerPoint, Vector3.zero, Quaternion.identity);
-            obj.transform.parent = PowerPoint.transform.parent;
+            obj.transform.SetParent(PowerPoint.transform.parent);
             obj.transform.position = Camera.main.WorldToScreenPoint(targetList[i].transform.position + Vector3.up * 0.5f);
             JumpPowerPoint(obj);
         }

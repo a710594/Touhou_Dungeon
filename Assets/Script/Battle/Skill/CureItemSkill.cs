@@ -34,8 +34,6 @@ public class CureItemSkill : Skill
 
     public override void SetEffect(BattleCharacter target)
     {
-        base.SetEffect(target);
-
         Timer timer1 = new Timer(Data.ShowTime / 2f, () =>
         {
             target.SetRecoverHP(_value); //與 CureSkill 不同的地方之一是回復量的計算
@@ -46,7 +44,7 @@ public class CureItemSkill : Skill
 
         Timer timer2 = new Timer(Data.ShowTime / 2f + _floatingNumberTime, () =>
         {
-            CheckSubSkill(target);
+            CheckSubSkill(target, HitType.Hit);
         });
     }
 }

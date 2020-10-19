@@ -164,7 +164,7 @@ public class BattleCharacter : MonoBehaviour
             if (BattleController.Instance.GetCharacterByPosition(positionList[i]) == null)
             {
                 int pathLength = BattleFieldManager.Instance.GetPathLength(orign, positionList[i], Info.Camp);
-                if (pathLength != -1 && pathLength - 1 <= Info.MOV) //pathLength - 1 是因為要扣掉自己那一格
+                if (pathLength != -1 && pathLength - BattleFieldManager.Instance.GetField(orign).MoveCost <= Info.MOV) //扣掉自己那一格
                 {
                     _moveRangeList.Add(positionList[i]);
                 }
@@ -487,7 +487,7 @@ public class BattleCharacter : MonoBehaviour
         Sprite.DOFade(0, 0.5f).OnComplete(() =>
         {
             BattleUI.Instance.SetLittleHPBar(this, false);
-            BattleUI.Instance.ScrollPriorityQueue(this);
+            BattleController.Instance.RemoveCharacer(this);
 
             if (OnDeathHandler != null)
             {
@@ -500,6 +500,7 @@ public class BattleCharacter : MonoBehaviour
     {
         GrayScale.SetScale(0);
         Animator.SetBool("IsDying", true);
+        BattleController.Instance.RemoveCharacer(this);
     }
 
     private IEnumerator Move(Queue<Vector2Int> path, Action callback)

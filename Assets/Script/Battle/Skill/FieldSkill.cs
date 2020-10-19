@@ -25,8 +25,6 @@ public class FieldSkill : Skill
 
     public override void SetEffect(BattleCharacter target)
     {
-        base.SetEffect(target);
-
         for (int i = 0; i < _skillRangeList.Count; i++)
         {
             BattleFieldManager.Instance.MapDic[_skillRangeList[i]].SetBuff(Data.StatusID, Lv);
@@ -36,7 +34,7 @@ public class FieldSkill : Skill
 
         Timer timer = new Timer(Data.ShowTime / 2f + _floatingNumberTime, ()=> 
         {
-            CheckSubSkill(target);
+            CheckSubSkill(target, HitType.Hit);
         });
     }
 

@@ -322,12 +322,14 @@ public class BattleController : MachineBehaviour
         CharacterList.Add(character);
         BattleUI.Instance.InitCharacter(character);
 
-        //List<ActionQueueElement> tempList = new List<ActionQueueElement>();
-        //tempList.Add(new ActionQueueElement(character));
-        //tempList.AddRange(_actionQueue);
-        //_actionQueue = tempList;
         _actionQueue.Insert(0, character);
         BattleUI.Instance.InitPriorityQueue(new List<BattleCharacter>(_actionQueue));
+    }
+
+    public void RemoveCharacer(BattleCharacter character)
+    {
+        _actionQueue.Remove(character);
+        BattleUI.Instance.ScrollPriorityQueue(character);
     }
 
     public void GiveUp()

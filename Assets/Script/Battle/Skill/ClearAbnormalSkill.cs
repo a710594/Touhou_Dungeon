@@ -34,8 +34,6 @@ public class ClearAbnormalSkill : Skill
 
     public override void SetEffect(BattleCharacter target)
     {
-        base.SetEffect(target);
-
         Timer timer1 = new Timer(Data.ShowTime / 2f, () =>
         {
             target.ClearAbnormal();
@@ -44,7 +42,7 @@ public class ClearAbnormalSkill : Skill
 
         Timer timer2 = new Timer(Data.ShowTime / 2f + _floatingNumberTime, () =>
         {
-            CheckSubSkill(target);
+            CheckSubSkill(target, HitType.Hit);
         });
     }
 }

@@ -6,6 +6,7 @@ public class MapMemo
 {
     public int ArriveFloor; //最多到達第幾樓
     public int ID;
+    public int Group;
     public BoundsInt MapBound;
     public Vector2Int Start;
     public Vector2Int Goal;
@@ -28,6 +29,7 @@ public class MapMemo
     {
         ArriveFloor = arriveFloor;
         ID = info.ID;
+        Group = info.Group;
         MapBound = info.MapBound;
         Start = info.Start;
         Goal = info.Goal;

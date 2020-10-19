@@ -46,36 +46,36 @@ public class AttackSkill : Skill
 
     public override void SetEffect(BattleCharacter target)
     {
-        base.SetEffect(target);
+        HitType hitType = CheckHit(_user, target.Info, target.LiveState);
 
         int damage = 0;
-        if (_hitType == HitType.Critical)
+        if (hitType == HitType.Critical)
         {
             damage = CalculateDamage(_user, target.Info, true, true);
         }
-        else if (_hitType == HitType.Hit)
+        else if (hitType == HitType.Hit)
         {
             damage = CalculateDamage(_user, target.Info, false, true);
         }
 
         string text = "";
         FloatingNumber.Type floatingNumberType = FloatingNumber.Type.Other;
-        if (_hitType == Skill.HitType.Critical)
+        if (hitType == Skill.HitType.Critical)
         {
             floatingNumberType = FloatingNumber.Type.Critical;
             text = damage.ToString();
         }
-        else if (_hitType == Skill.HitType.Hit)
+        else if (hitType == Skill.HitType.Hit)
         {
             floatingNumberType = FloatingNumber.Type.Damage;
             text = damage.ToString();
         }
-        else if (_hitType == Skill.HitType.Miss)
+        else if (hitType == Skill.HitType.Miss)
         {
             floatingNumberType = FloatingNumber.Type.Miss;
             text = "Miss";
         }
-        else if (_hitType == Skill.HitType.NoDamage)
+        else if (hitType == Skill.HitType.NoDamage)
         {
             floatingNumberType = FloatingNumber.Type.Miss;
             text = "NoDamage";
@@ -91,7 +91,7 @@ public class AttackSkill : Skill
         Timer timer2 = new Timer(Data.ShowTime / 2f + _floatingNumberTime, () =>
         {
             target.CheckLiveState();
-            CheckSubSkill(target);
+            CheckSubSkill(target, hitType);
         });
     }
 

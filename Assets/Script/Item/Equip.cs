@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Equip :Item
 {
-    public EquipData.TypeEnum Type;
+    public EquipData.TypeEnum EquipType;
     public int ATK;
     public int DEF;
     public int MTK;
@@ -14,7 +14,7 @@ public class Equip :Item
 
     public Equip(EquipData.TypeEnum type)
     {
-        Type = type;
+        EquipType = type;
         Name = "無";
     }
 
@@ -32,7 +32,9 @@ public class Equip :Item
             Volume = itemData.Volume;
             Price = itemData.Price;
             Amount = 1;
-            Type = equipData.Type;
+            Type = itemData.Type;
+
+            EquipType = equipData.Type;
             ATK = equipData.ATK;
             DEF = equipData.DEF;
             MTK = equipData.MTK;

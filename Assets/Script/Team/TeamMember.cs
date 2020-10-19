@@ -218,12 +218,12 @@ public class TeamMember
     public void SetEquip(Equip equip, out Equip oldEquip)
     {
         oldEquip = null;
-        if (equip.Type == EquipData.TypeEnum.Weapon)
+        if (equip.EquipType == EquipData.TypeEnum.Weapon)
         {
             oldEquip = Weapon;
             Weapon = equip;
         }
-        else if (equip.Type == EquipData.TypeEnum.Armor)
+        else if (equip.EquipType == EquipData.TypeEnum.Armor)
         {
             oldEquip = Armor;
             Armor = equip;
@@ -232,11 +232,11 @@ public class TeamMember
 
     public void TakeOffEquip(Equip equip, ItemManager.Type type)
     {
-        if (equip.Type == EquipData.TypeEnum.Weapon)
+        if (equip.EquipType == EquipData.TypeEnum.Weapon)
         {
             Weapon = _defaultWeapon;
         }
-        else if (equip.Type == EquipData.TypeEnum.Armor)
+        else if (equip.EquipType == EquipData.TypeEnum.Armor)
         {
             Armor = _defaultArmor;
         }

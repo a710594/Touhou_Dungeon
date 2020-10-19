@@ -34,17 +34,17 @@ public class BuffSkill : Skill
 
     public override void SetEffect(BattleCharacter target)
     {
-        base.SetEffect(target);
+        HitType hitType = CheckHit(_user, target.Info, target.LiveState);
 
         if (Data.Target == SkillData.TargetType.Us) //目標為我方則必中
         {
-            _hitType = HitType.Hit;
+            hitType = HitType.Hit;
         }
 
         Timer timer1 = new Timer(Data.ShowTime / 2f, () =>
         {
             target.SetBuff(Data.StatusID, Lv);
-            if (_hitType != HitType.Miss)
+            if (hitType != HitType.Miss)
             {
                 BattleUI.Instance.SetFloatingNumber(target, BattleStatusData.GetData(Data.StatusID).Message, FloatingNumber.Type.Other);
             }
@@ -56,7 +56,7 @@ public class BuffSkill : Skill
 
         Timer timer2 = new Timer(_floatingNumberTime, () =>
         {
-            CheckSubSkill(target);
+            CheckSubSkill(target, hitType);
         });
     }
 }

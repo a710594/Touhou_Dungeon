@@ -5,8 +5,8 @@ using UnityEngine;
 //DungeonBuilder 到 ExploreController 的中間資料
 public class MapInfo
 {
-    public int Group;
     public int ID;
+    public int Group;
     public int NextFloor;
     public BoundsInt MapBound;
     public Vector2Int Start;
@@ -29,6 +29,7 @@ public class MapInfo
     public MapInfo(MapMemo memo)
     {
         ID = memo.ID;
+        Group = memo.Group;
         DungeonData.RootObject dungeonData = DungeonData.GetData(ID);
         NextFloor = dungeonData.NextFloor;
         MapBound = memo.MapBound;

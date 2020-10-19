@@ -37,11 +37,11 @@ public class PoisonSkill : Skill
 
     public override void SetEffect(BattleCharacter target)
     {
-        base.SetEffect(target);
+        HitType hitType = CheckHit(_user, target.Info, target.LiveState);
 
         Timer timer1 = new Timer(Data.ShowTime / 2f, () =>
         {
-            if (_hitType != Skill.HitType.Miss)
+            if (hitType != Skill.HitType.Miss)
             {
                 target.Info.SetPoison(_poison, CalculateDamage(target.Info));
 
@@ -55,7 +55,7 @@ public class PoisonSkill : Skill
 
         Timer timer2 = new Timer(_floatingNumberTime + Data.ShowTime / 2f, () =>
         {
-            CheckSubSkill(target);
+            CheckSubSkill(target, hitType);
         });
     }
 

@@ -11,6 +11,7 @@ public class Item
     public int Volume;
     public int Price;
     public int Amount;
+    public ItemData.TypeEnum Type;
 
     public Item() { }
 
@@ -27,6 +28,7 @@ public class Item
             Volume = itemData.Volume;
             Price = itemData.Price;
             Amount = amount;
+            Type = itemData.Type;
         }
         else
         {

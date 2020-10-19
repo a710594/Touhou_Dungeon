@@ -42,9 +42,8 @@ public class ExploreController
         if (memo != null)
         {
             ArriveFloor = memo.ArriveFloor;
-            ArriveFloor = 7; // temp
         }
-
+        ArriveFloor = 7;
     }
 
     public void GenerateFloor(int id)

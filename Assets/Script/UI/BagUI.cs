@@ -32,7 +32,7 @@ public class BagUI : MonoBehaviour
 
     private ItemManager.Type _managerType;
     private ItemData.TypeEnum _itemType = ItemData.TypeEnum.All;
-    private ItemData.RootObject _selectedItem;
+    private Item _selectedItem;
     private Equip _selectedEquip;
     private TeamMember _selectedMember;
 
@@ -161,7 +161,7 @@ public class BagUI : MonoBehaviour
         if (obj is Equip)
         {
             _selectedEquip = (Equip)obj;
-            _selectedItem = ItemData.GetData(_selectedEquip.ID); ;
+            _selectedItem = _selectedEquip;
             NameLabel.text = _selectedEquip.Name;
             CommentLabel.text = _selectedEquip.Comment;
             EquipComment.SetData(_selectedEquip.ID);
@@ -190,10 +190,10 @@ public class BagUI : MonoBehaviour
         }
         else if (obj is Item)
         {
-            _selectedItem = ItemData.GetData(((Item)obj).ID);
+            _selectedItem = (Item)obj;
             _selectedEquip = null;
-            NameLabel.text = _selectedItem.GetName();
-            CommentLabel.text = _selectedItem.GetComment();
+            NameLabel.text = _selectedItem.Name;
+            CommentLabel.text = _selectedItem.Comment;
             EquipComment.gameObject.SetActive(false);
             VolumeLabel.text = "體積：" + _selectedItem.Volume;
             ItemImage.gameObject.SetActive(true);
@@ -331,29 +331,19 @@ public class BagUI : MonoBehaviour
 
     private void CharacterOnClick(TeamMember member)
     {
-        //if (_selectedItem.Type == ItemData.TypeEnum.Food || _selectedItem.Type == ItemData.TypeEnum.Medicine)
-        //{
-            ItemEffectData.RootObject itemEffectData = ItemEffectData.GetData(_selectedItem.ID);
-            if (itemEffectData.AddHP != 0)
-            {
-                member.AddHP(itemEffectData.AddHP);
-                SelectCharacterGroup.HPBarTween(member);
-            }
-            if (itemEffectData.AddMP != 0)
-            {
-                member.AddMP(itemEffectData.AddMP);
-                SelectCharacterGroup.MPBarTween(member);
-            }
-            if (itemEffectData.HasBuff)
-            {
-                member.SetFoodBuff(itemEffectData);
-            }
-            else
-            {
-                member.ClearFoodBuff();
-            }
-            ItemManager.Instance.MinusItem(_selectedItem.ID, 1, _managerType);
-        //}
+        Food food = (Food)_selectedItem;
+        if (food.AddHP != 0)
+        {
+            member.AddHP(food.AddHP);
+            SelectCharacterGroup.HPBarTween(member);
+        }
+        if (food.AddMP != 0)
+        {
+            member.AddMP(food.AddMP);
+            SelectCharacterGroup.MPBarTween(member);
+        }
+
+        ItemManager.Instance.MinusItem(_selectedItem.ID, 1, _managerType);
 
         SetVolume();
         SetScrollView(_itemType, false);

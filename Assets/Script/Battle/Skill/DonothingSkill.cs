@@ -25,12 +25,10 @@ public class DonothingSkill : Skill
 
     public override void SetEffect(BattleCharacter target)
     {
-        base.SetEffect(target);
-
         Timer timer = new Timer(Data.ShowTime / 2f, () =>
         {
             BattleUI.Instance.SetFloatingNumber(target, BattleStatusData.GetData(Data.StatusID).Message, FloatingNumber.Type.Other);
-            CheckSubSkill(target);
+            CheckSubSkill(target, HitType.Hit);
         });
     }
 }

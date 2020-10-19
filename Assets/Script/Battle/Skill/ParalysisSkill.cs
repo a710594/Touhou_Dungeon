@@ -34,11 +34,11 @@ public class ParalysisSkill : Skill
 
     public override void SetEffect(BattleCharacter target)
     {
-        base.SetEffect(target);
+        HitType hitType = CheckHit(_user, target.Info, target.LiveState);
 
         Timer timer1 = new Timer(Data.ShowTime / 2f, () =>
         {
-            if (_hitType != HitType.Miss)
+            if (hitType != HitType.Miss)
             {
                 target.SetParalysis(Data.StatusID, Lv);
 
@@ -52,7 +52,7 @@ public class ParalysisSkill : Skill
 
         Timer timer2 = new Timer(_floatingNumberTime + Data.ShowTime / 2f, () =>
         {
-            CheckSubSkill(target);
+            CheckSubSkill(target, hitType);
         });
     }
 }

@@ -25,8 +25,6 @@ public class SummonSkill : Skill
 
     public override void SetEffect(BattleCharacter target)
     {
-        base.SetEffect(target);
-
         Timer timer1 = new Timer(Data.ShowTime / 2f, () =>
         {
             BattleCharacter character;
@@ -43,7 +41,7 @@ public class SummonSkill : Skill
 
         Timer timer2 = new Timer(_floatingNumberTime + Data.ShowTime / 2f, () =>
         {
-            CheckSubSkill(target);
+            CheckSubSkill(target, HitType.Hit);
         });
     }
 }

@@ -161,17 +161,26 @@ public class ItemManager
                 AddBagEquip(equip);
             }
         }
-
-        if (BagItemListContains(id))
-        {
-            item = GetBagItem(id);
-            item.Amount += amount;
-        }
         else
         {
-            item = new Item(id, amount);
-            _bagTypeDic[ItemData.TypeEnum.All].Add(item);
-            _bagTypeDic[data.Type].Add(item);
+            if (BagItemListContains(id))
+            {
+                item = GetBagItem(id);
+                item.Amount += amount;
+            }
+            else
+            {
+                if (data.Type == ItemData.TypeEnum.Food || data.Type == ItemData.TypeEnum.Medicine)
+                {
+                    item = new Food(id, amount);
+                }
+                else
+                {
+                    item = new Item(id, amount);
+                }
+                _bagTypeDic[ItemData.TypeEnum.All].Add(item);
+                _bagTypeDic[data.Type].Add(item);
+            }
         }
         CurrentBagVolume += data.Volume * amount;
     }
@@ -199,7 +208,14 @@ public class ItemManager
             }
             else
             {
-                item = new Item(id, amount);
+                if (data.Type == ItemData.TypeEnum.Food || data.Type == ItemData.TypeEnum.Medicine)
+                {
+                    item = new Food(id, amount);
+                }
+                else
+                {
+                    item = new Item(id, amount);
+                }
                 _warehouseTypeDic[ItemData.TypeEnum.All].Add(item);
                 _warehouseTypeDic[data.Type].Add(item);
             }
@@ -220,7 +236,7 @@ public class ItemManager
 
     private void AddBagEquip(Equip equip)
     {
-        _bagEquipDic[equip.Type].Add(equip);
+        _bagEquipDic[equip.EquipType].Add(equip);
         _bagTypeDic[ItemData.TypeEnum.All].Add(equip);
         _bagTypeDic[ItemData.TypeEnum.Equip].Add(equip);
         CurrentBagVolume += equip.Volume;
@@ -228,7 +244,7 @@ public class ItemManager
 
     private void AddWarehouseEquip(Equip equip)
     {
-        _warehouseEquipDic[equip.Type].Add(equip);
+        _warehouseEquipDic[equip.EquipType].Add(equip);
         _warehouseTypeDic[ItemData.TypeEnum.All].Add(equip);
         _warehouseTypeDic[ItemData.TypeEnum.Equip].Add(equip);
     }
@@ -315,7 +331,7 @@ public class ItemManager
 
     private void MinusBagEquip(Equip equip)
     {
-        _bagEquipDic[equip.Type].Remove(equip);
+        _bagEquipDic[equip.EquipType].Remove(equip);
         _bagTypeDic[ItemData.TypeEnum.All].Remove(equip);
         _bagTypeDic[ItemData.TypeEnum.Equip].Remove(equip);
         CurrentBagVolume -= equip.Volume;
@@ -323,7 +339,7 @@ public class ItemManager
 
     private void MinusWarehouseEquip(Equip equip)
     {
-        _warehouseEquipDic[equip.Type].Remove(equip);
+        _warehouseEquipDic[equip.EquipType].Remove(equip);
         _warehouseTypeDic[ItemData.TypeEnum.All].Remove(equip);
         _warehouseTypeDic[ItemData.TypeEnum.Equip].Remove(equip);
     }
