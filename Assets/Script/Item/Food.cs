@@ -9,7 +9,7 @@ public class Food : Item
 
     public Food() { }
 
-    public Food(int id, int amount)
+    public Food(int id, int amount, int addHP = -1, int addMP = -1)
     {
         ItemData.RootObject itemData = ItemData.GetData(id);
 
@@ -25,12 +25,27 @@ public class Food : Item
             Type = itemData.Type;
 
             ItemEffectData.RootObject itemEffectData = ItemEffectData.GetData(id);
-            AddHP = itemEffectData.AddHP;
-            AddMP = itemEffectData.AddMP;
+            if (addHP == -1)
+            {
+                AddHP = itemEffectData.AddHP;
+            }
+            else
+            {
+                AddHP = addHP;
+            }
+
+            if (addMP == -1)
+            {
+                AddMP = itemEffectData.AddMP;
+            }
+            else
+            {
+                AddMP = addMP;
+            }
         }
         else
         {
-            Debug.Log("裝備資料不存在!");
+            Debug.Log("資料不存在!");
         }
     }
 }

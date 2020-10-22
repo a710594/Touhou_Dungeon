@@ -1,8 +1,8 @@
 [{"ID":1,"Image":"Treasure","MinAmount":1,"MaxAmount":1,"Item_1":1007,"Probability_1":1,"Item_2":0,"Probability_2":0,"Item_3":0,"Probability_3":0,"Item_4":0,"Probability_4":0},
-{"ID":2,"Image":"Fruit_Tree","MinAmount":1,"MaxAmount":5,"Item_1":1003,"Probability_1":1,"Item_2":2001,"Probability_2":4,"Item_3":0,"Probability_3":0,"Item_4":0,"Probability_4":0},
-{"ID":3,"Image":"Flower","MinAmount":1,"MaxAmount":5,"Item_1":1005,"Probability_1":1,"Item_2":2004,"Probability_2":4,"Item_3":0,"Probability_3":0,"Item_4":0,"Probability_4":0},
+{"ID":2,"Image":"Fruit_Tree","MinAmount":1,"MaxAmount":5,"Item_1":1003,"Probability_1":1,"Item_2":21001,"Probability_2":4,"Item_3":0,"Probability_3":0,"Item_4":0,"Probability_4":0},
+{"ID":3,"Image":"Flower","MinAmount":1,"MaxAmount":5,"Item_1":1005,"Probability_1":1,"Item_2":21003,"Probability_2":4,"Item_3":0,"Probability_3":0,"Item_4":0,"Probability_4":0},
 {"ID":4,"Image":"Mineral","MinAmount":1,"MaxAmount":2,"Item_1":1001,"Probability_1":1,"Item_2":0,"Probability_2":0,"Item_3":0,"Probability_3":0,"Item_4":0,"Probability_4":0},
 {"ID":5,"Image":"Treasure","MinAmount":1,"MaxAmount":1,"Item_1":1007,"Probability_1":1,"Item_2":0,"Probability_2":0,"Item_3":0,"Probability_3":0,"Item_4":0,"Probability_4":0},
-{"ID":6,"Image":"Fruit_Tree","MinAmount":1,"MaxAmount":5,"Item_1":1003,"Probability_1":1,"Item_2":2001,"Probability_2":4,"Item_3":0,"Probability_3":0,"Item_4":0,"Probability_4":0},
-{"ID":7,"Image":"Flower","MinAmount":1,"MaxAmount":5,"Item_1":1005,"Probability_1":1,"Item_2":2004,"Probability_2":4,"Item_3":0,"Probability_3":0,"Item_4":0,"Probability_4":0},
+{"ID":6,"Image":"Fruit_Tree","MinAmount":1,"MaxAmount":5,"Item_1":1003,"Probability_1":1,"Item_2":21001,"Probability_2":4,"Item_3":0,"Probability_3":0,"Item_4":0,"Probability_4":0},
+{"ID":7,"Image":"Flower","MinAmount":1,"MaxAmount":5,"Item_1":1005,"Probability_1":1,"Item_2":21003,"Probability_2":4,"Item_3":0,"Probability_3":0,"Item_4":0,"Probability_4":0},
 {"ID":8,"Image":"Mineral","MinAmount":1,"MaxAmount":4,"Item_1":1001,"Probability_1":1,"Item_2":1009,"Probability_2":1,"Item_3":0,"Probability_3":0,"Item_4":0,"Probability_4":0}]

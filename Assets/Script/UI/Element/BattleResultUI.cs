@@ -9,7 +9,6 @@ public class BattleResultUI : MonoBehaviour
 {
     public GameObject WinLabel;
     public GameObject LoseLabel;
-    public Button NextButton;
     public Button ConfirmButton;
     public LoopScrollView ScrollView;
     public GameObject CharacterGroup;
@@ -32,23 +31,13 @@ public class BattleResultUI : MonoBehaviour
 
         if (isWin)
         {
-            ItemGroup.SetActive(false);
-            ConfirmButton.gameObject.SetActive(false);
-            CharacterGroup.SetActive(false);
-            NextButton.gameObject.SetActive(false);
-            _timer.Start(0.5f, ()=> 
-            {
-                CharacterGroup.SetActive(true);
-                NextButton.gameObject.SetActive(true);
-                SetCharacterGroup(orignalLv, orignalExp);
-                SetItemGroup(itemList);
-            });
+            SetCharacterGroup(orignalLv, orignalExp);
+            SetItemGroup(itemList);
         }
         else
         {
             CharacterGroup.SetActive(false);
             ItemGroup.SetActive(false);
-            NextButton.gameObject.SetActive(false);
             ConfirmButton.gameObject.SetActive(true);
         }
     }
@@ -85,13 +74,6 @@ public class BattleResultUI : MonoBehaviour
         ScrollView.SetData(new ArrayList(itemPair));
     }
 
-    private void NextOnClick()
-    {
-        CharacterGroup.SetActive(false);
-        ItemGroup.SetActive(true);
-        NextButton.gameObject.SetActive(false);
-        ConfirmButton.gameObject.SetActive(true);
-    }
 
     private void ConfirmOnClick()
     {
@@ -104,37 +86,6 @@ public class BattleResultUI : MonoBehaviour
         }
         else
         {
-            //if (_isWin)
-            //{
-            //    if (_winCallback != null)
-            //    {
-            //        _winCallback();
-            //    }
-            //    else
-            //    {
-            //        AudioSystem.Instance.Stop(false);
-            //        MySceneManager.Instance.ChangeScene(MySceneManager.Instance.LastScene, () =>
-            //        {
-            //            ExploreController.Instance.SetFloorFromMemo();
-            //        });
-            //    }
-            //}
-            //else
-            //{
-            //    if (_loseCallback != null)
-            //    {
-            //        _loseCallback();
-            //    }
-            //    else
-            //    {
-            //        AudioSystem.Instance.Stop(false);
-            //        MySceneManager.Instance.ChangeScene(MySceneManager.SceneType.Villiage, () =>
-            //        {
-            //            ItemManager.Instance.PutBagItemIntoWarehouse();
-            //            TeamManager.Instance.RecoverAllMember();
-            //        });
-            //    }
-            //}
 
             if (_callback != null)
             {
@@ -145,7 +96,6 @@ public class BattleResultUI : MonoBehaviour
 
     void Awake()
     {
-        NextButton.onClick.AddListener(NextOnClick);
         ConfirmButton.onClick.AddListener(ConfirmOnClick);
         //CloseTipButton.onClick.AddListener(CloseTipOnClick);
         //TipGroup.SetActive(false);

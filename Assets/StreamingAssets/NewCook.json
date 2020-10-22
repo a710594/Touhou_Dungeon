@@ -1,0 +1,6 @@
+[{"ID":1,"ResultID":2003,"AddHP":5,"AddMP":5,"Material_1":21002,"Material_2":0,"Material_3":0,"Material_4":0,"Material_5":0,"Priority":1},
+{"ID":2,"ResultID":2005,"AddHP":10,"AddMP":10,"Material_1":21002,"Material_2":21003,"Material_3":0,"Material_4":0,"Material_5":0,"Priority":2},
+{"ID":3,"ResultID":2007,"AddHP":5,"AddMP":5,"Material_1":21004,"Material_2":0,"Material_3":0,"Material_4":0,"Material_5":0,"Priority":1},
+{"ID":4,"ResultID":2008,"AddHP":10,"AddMP":10,"Material_1":21002,"Material_2":21004,"Material_3":0,"Material_4":0,"Material_5":0,"Priority":2},
+{"ID":5,"ResultID":2009,"AddHP":15,"AddMP":15,"Material_1":21002,"Material_2":21003,"Material_3":21004,"Material_4":0,"Material_5":0,"Priority":3},
+{"ID":6,"ResultID":2010,"AddHP":20,"AddMP":20,"Material_1":21002,"Material_2":21003,"Material_3":21004,"Material_4":1006,"Material_5":0,"Priority":4}]
