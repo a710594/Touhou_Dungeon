@@ -26,6 +26,12 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Battle_BOSS_1.unity
     guid: 53a0837d7fd433143a36429d32cfc049
+  - enabled: 1
+    path: Assets/Scenes/Explore_BOSS_2.unity
+    guid: e7db037e3bab1064692d28f9ffd7a7c9
+  - enabled: 1
+    path: Assets/Scenes/Battle_BOSS_2.unity
+    guid: 466a84239e08bf84d92a032d35773b36
   - enabled: 0
     path: Assets/Scenes/test.unity
     guid: 2cda990e2423bbf4892e6590ba056729

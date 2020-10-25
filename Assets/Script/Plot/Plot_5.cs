@@ -19,10 +19,11 @@ public class Plot_5 : Plot
 
     public override void Start()
     {
-        TilePainter.Instance.Painting("Ground", 0, new Vector2Int(0, 4));
+        TilePainter.Instance.Painting("Ground_1", 0, new Vector2Int(0, 4));
+        BattleFieldManager.Instance.SetField(new Vector2(0, 4), 1);
         BattleCharacter character = GameObject.Find("Yukari").GetComponent<BattleCharacter>();
         character.SetActive(true);
-        character.transform.position = new Vector2(0, 4);
+        character.SetPosition(new Vector2(0, 4));
         Vector3 cameraPosition = new Vector3(character.transform.position.x, character.transform.position.y, Camera.main.transform.position.z);
         Camera.main.transform.DOMove(cameraPosition, 1);
         character.Sprite.color = Color.clear;

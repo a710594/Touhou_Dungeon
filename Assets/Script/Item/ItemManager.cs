@@ -37,6 +37,9 @@ public class ItemManager
     private Dictionary<EquipData.TypeEnum, List<Equip>> _bagEquipDic = new Dictionary<EquipData.TypeEnum, List<Equip>>();
     private Dictionary<EquipData.TypeEnum, List<Equip>> _warehouseEquipDic = new Dictionary<EquipData.TypeEnum, List<Equip>>();
 
+    private List<Item> _bagCanCookList = new List<Item>();
+    private List<Item> _warehouseCanCookList = new List<Item>();
+
 
     public void Init()
     {
@@ -180,6 +183,10 @@ public class ItemManager
                 }
                 _bagTypeDic[ItemData.TypeEnum.All].Add(item);
                 _bagTypeDic[data.Type].Add(item);
+                if (item.CanCook)
+                {
+                    _bagCanCookList.Add(item);
+                }
             }
         }
         CurrentBagVolume += data.Volume * amount;
@@ -218,6 +225,10 @@ public class ItemManager
                 }
                 _warehouseTypeDic[ItemData.TypeEnum.All].Add(item);
                 _warehouseTypeDic[data.Type].Add(item);
+                if (item.CanCook)
+                {
+                    _warehouseCanCookList.Add(item);
+                }
             }
         }
     }
@@ -247,6 +258,20 @@ public class ItemManager
         _warehouseEquipDic[equip.EquipType].Add(equip);
         _warehouseTypeDic[ItemData.TypeEnum.All].Add(equip);
         _warehouseTypeDic[ItemData.TypeEnum.Equip].Add(equip);
+    }
+
+    public void AddFood(Food food, Type type)
+    {
+        if (type == Type.Bag)
+        {
+            _bagTypeDic[ItemData.TypeEnum.All].Add(food);
+            _bagTypeDic[ItemData.TypeEnum.Food].Add(food);
+        }
+        else
+        {
+            _warehouseTypeDic[ItemData.TypeEnum.All].Add(food);
+            _warehouseTypeDic[ItemData.TypeEnum.Food].Add(food);
+        }
     }
 
     public void MinusItem(int id, int amount, Type type)
@@ -280,6 +305,7 @@ public class ItemManager
             {
                 _bagTypeDic[ItemData.TypeEnum.All].Remove(item);
                 _bagTypeDic[data.Type].Remove(item);
+                _bagCanCookList.Remove(item);
             }
             CurrentBagVolume -= data.Volume * amount;
             //SortBag();
@@ -309,6 +335,7 @@ public class ItemManager
             {
                 _warehouseTypeDic[ItemData.TypeEnum.All].Remove(item);
                 _warehouseTypeDic[data.Type].Remove(item);
+                _warehouseCanCookList.Remove(item);
             }
         }
         else
@@ -448,6 +475,18 @@ public class ItemManager
             _warehouseEquipDic.TryGetValue(equipType, out equipList);
         }
         return equipList;
+    }
+
+    public List<Item> GetCanCookList(Type type)
+    {
+        if (type == Type.Bag)
+        {
+            return _bagCanCookList;
+        }
+        else
+        {
+            return _warehouseCanCookList;
+        }
     }
 
     public void PutBagItemIntoWarehouse() //回村莊的時候,把背包的東西都放進倉庫裡

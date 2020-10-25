@@ -127,7 +127,7 @@ public class ExploreUI : MonoBehaviour
     private void OpenCook()
     {
         _canMove = false;
-        CookUI.Open(ItemManager.Type.Bag);
+        NewCookUI.Open(ItemManager.Type.Bag);
     }
 
     private void Save() 
@@ -185,6 +185,11 @@ public class ExploreUI : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.F2))
         {
             ExploreController.Instance.BackToVilliage();
+        }
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+            Plot_8 plot_8 = new Plot_8();
+            plot_8.Start();
         }
 
         if (_canMove)

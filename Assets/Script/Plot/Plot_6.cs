@@ -32,16 +32,18 @@ public class Plot_6 : Plot
             {
                 BattleCharacter character;
 
-                TilePainter.Instance.Painting("Ground", 0, new Vector2Int(1, 5));
+                TilePainter.Instance.Painting("Ground_1", 0, new Vector2Int(1, 5));
+                BattleFieldManager.Instance.SetField(new Vector2(1, 5), 1);
                 character = GameObject.Find("Ran").GetComponent<BattleCharacter>();
                 character.SetActive(true);
-                character.transform.position = new Vector2(1, 5);
+                character.SetPosition(new Vector2(1, 5));
                 character.transform.DOJump(character.transform.position, 1, 1, 0.5f);
 
-                TilePainter.Instance.Painting("Ground", 0, new Vector2Int(-1, 5));
+                TilePainter.Instance.Painting("Ground_1", 0, new Vector2Int(-1, 5));
+                BattleFieldManager.Instance.SetField(new Vector2(-1, 5), 1);
                 character = GameObject.Find("Chen").GetComponent<BattleCharacter>();
                 character.SetActive(true);
-                character.transform.position = new Vector2(-1, 5);
+                character.SetPosition(new Vector2(-1, 5));
                 character.transform.DOJump(character.transform.position, 1, 1, 0.5f);
 
                 _timer.Start(1, ()=> 

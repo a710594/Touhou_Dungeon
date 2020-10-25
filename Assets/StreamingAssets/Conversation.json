@@ -1,4 +1,4 @@
-[{"ID":1001,"Name":"博麗靈夢","Comment_Chinese":"「……好熱。」","Background":"Forest","BGM":"Jinja","Image_1":"Reimu_L","Motion_1":0,"Image_2":"x","Motion_2":0,"NextID":1002},
+[{"ID":1001,"Name":"博麗靈夢","Comment_Chinese":"「……好熱。」","Background":"Shrine","BGM":"Jinja","Image_1":"Reimu_L","Motion_1":0,"Image_2":"x","Motion_2":0,"NextID":1002},
 {"ID":1002,"Name":"霧雨魔理沙","Comment_Chinese":"「別光只會喊熱啊，好歹去弄點什麼能變涼的東西吧。只是這樣喊會更熱的。」","Background":"-","BGM":"-","Image_1":"-","Motion_1":0,"Image_2":"Marisa_L","Motion_2":0,"NextID":1003},
 {"ID":1003,"Name":"博麗靈夢","Comment_Chinese":"「不是啊，我會這樣喊就是要你弄涼一點啊。你不是會點魔法什麼嗎？」","Background":"-","BGM":"-","Image_1":"o","Motion_1":0,"Image_2":"-","Motion_2":0,"NextID":1004},
 {"ID":1004,"Name":"霧雨魔理沙","Comment_Chinese":"「我的魔法都是火力加強型的，你是要我把這裡弄的更熱不成？」","Background":"-","BGM":"-","Image_1":"-","Motion_1":0,"Image_2":"o","Motion_2":0,"NextID":1005},
@@ -20,7 +20,7 @@
 {"ID":1020,"Name":"","Comment_Chinese":"（神社外傳來一聲巨大聲響，三人連忙飛奔而出）","Background":"-","BGM":"Battle","Image_1":"x","Motion_1":0,"Image_2":"x","Motion_2":0,"NextID":1021},
 {"ID":1021,"Name":"霧雨魔理沙","Comment_Chinese":"「妖怪？等一下，而且感覺是以往沒看過的──」","Background":"-","BGM":"-","Image_1":"o","Motion_1":0,"Image_2":"x","Motion_2":0,"NextID":1022},
 {"ID":1022,"Name":"博麗靈夢","Comment_Chinese":"「這妖力明顯不是神社附近的妖怪。看來是受到了某種程度的狂化──大家小心！」","Background":"-","BGM":"-","Image_1":"-","Motion_1":0,"Image_2":"o","Motion_2":0,"NextID":0},
-{"ID":2001,"Name":"博麗靈夢","Comment_Chinese":"「呼，輕輕鬆鬆啦。」","Background":"Forest","BGM":"Forest","Image_1":"Reimu_L","Motion_1":0,"Image_2":"x","Motion_2":0,"NextID":2002},
+{"ID":2001,"Name":"博麗靈夢","Comment_Chinese":"「呼，輕輕鬆鬆啦。」","Background":"Shrine","BGM":"Forest","Image_1":"Reimu_L","Motion_1":0,"Image_2":"x","Motion_2":0,"NextID":2002},
 {"ID":2002,"Name":"東風谷早苗","Comment_Chinese":"「不愧是靈夢小姐呢。不過以往神社附近是沒有這麼強力的妖怪吧？」","Background":"-","BGM":"-","Image_1":"-","Motion_1":0,"Image_2":"Sanae_L","Motion_2":0,"NextID":2003},
 {"ID":2003,"Name":"博麗靈夢","Comment_Chinese":"「說沒有好像也不對啦。如果妳把一些我們認識的妖怪考慮進去的話……」","Background":"-","BGM":"-","Image_1":"Reimu_L","Motion_1":0,"Image_2":"-","Motion_2":0,"NextID":2004},
 {"ID":2004,"Name":"霧雨魔理沙","Comment_Chinese":"「等一下，靈夢。妳不覺得神社附近有點詭異嗎？」","Background":"-","BGM":"-","Image_1":"-","Motion_1":0,"Image_2":"Marisa_L","Motion_2":0,"NextID":2005},
@@ -110,4 +110,8 @@
 {"ID":9034,"Name":"東風谷早苗","Comment_Chinese":"「我知道我知道，一般來說這時候要先去酒館打聽……」","Background":"-","BGM":"-","Image_1":"Sanae_L","Motion_1":0,"Image_2":"-","Motion_2":0,"NextID":9035},
 {"ID":9035,"Name":"八雲紫","Comment_Chinese":"「早苗小姐遊戲打的不少呢，不過提示的話倒真的不需要這麼勞師動眾──只要你們去冥界幫幫我一個老朋友就好。她身上，自有你們想要的線索。」","Background":"-","BGM":"-","Image_1":"-","Motion_1":0,"Image_2":"Yukari_L","Motion_2":0,"NextID":9036},
 {"ID":9036,"Name":"","Comment_Chinese":"（紫打了個晌指，一旁的隙間憑空浮現）","Background":"-","BGM":"-","Image_1":"-","Motion_1":0,"Image_2":"-","Motion_2":0,"NextID":9037},
-{"ID":9037,"Name":"八雲紫","Comment_Chinese":"「好了，出發吧。各位幻想鄉的『冒險者』。」","Background":"-","BGM":"-","Image_1":"-","Motion_1":0,"Image_2":"Yukari_L","Motion_2":0,"NextID":0}]
+{"ID":9037,"Name":"八雲紫","Comment_Chinese":"「好了，出發吧。各位幻想鄉的『冒險者』。」","Background":"-","BGM":"-","Image_1":"-","Motion_1":0,"Image_2":"Yukari_L","Motion_2":0,"NextID":0},
+{"ID":10001,"Name":"博麗靈夢","Comment_Chinese":"test1","Background":"x","BGM":"x","Image_1":"Reimu_L","Motion_1":0,"Image_2":"x","Motion_2":0,"NextID":10002},
+{"ID":10002,"Name":"西行寺幽幽子","Comment_Chinese":"test2","Background":"-","BGM":"-","Image_1":"-","Motion_1":0,"Image_2":"uuz_L","Motion_2":0,"NextID":10003},
+{"ID":10003,"Name":"博麗靈夢","Comment_Chinese":"test3","Background":"-","BGM":"-","Image_1":"Reimu_L","Motion_1":0,"Image_2":"-","Motion_2":0,"NextID":10004},
+{"ID":10004,"Name":"西行寺幽幽子","Comment_Chinese":"test4","Background":"-","BGM":"-","Image_1":"-","Motion_1":0,"Image_2":"uuz_L","Motion_2":0,"NextID":0}]

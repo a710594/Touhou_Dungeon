@@ -33,7 +33,7 @@ public class VilliageUI : MonoBehaviour
 
     private void CookOnClick() 
     {
-        CookUI.Open(ItemManager.Type.Warehouse);
+        NewCookUI.Open(ItemManager.Type.Warehouse);
     }
 
     private void TeamOnClick() 

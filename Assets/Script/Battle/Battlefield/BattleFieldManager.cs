@@ -124,6 +124,16 @@ public class BattleFieldManager
         return battleField;
     }
 
+    public void SetField(Vector2 position, int id)
+    {
+        BattleField battleField = null;
+        MapDic.TryGetValue(Vector2Int.RoundToInt(position), out battleField);
+        if (battleField != null)
+        {
+            battleField.SetData(BattleTileData.GetData(id));
+        }
+    }
+
     public float GetFieldBuff(Vector2 position, BattleStatusData.TypeEnum valueType)
     {
         BattleField battleField;

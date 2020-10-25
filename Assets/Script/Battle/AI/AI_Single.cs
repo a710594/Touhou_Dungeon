@@ -37,11 +37,6 @@ public class AI_Single : AI
                             positionList.RemoveAt(i);
                             i--;
                         }
-                        //else if (BattleController.Instance.GetCharacterByPosition(positionList[i]) != null) //移除有角色的位置
-                        //{
-                        //    positionList.RemoveAt(i);
-                        //    i--;
-                        //}
                     }
 
                     if (positionList.Count > 0) //可以打到目標

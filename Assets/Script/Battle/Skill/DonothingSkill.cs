@@ -27,7 +27,7 @@ public class DonothingSkill : Skill
     {
         Timer timer = new Timer(Data.ShowTime / 2f, () =>
         {
-            BattleUI.Instance.SetFloatingNumber(target, BattleStatusData.GetData(Data.StatusID).Message, FloatingNumber.Type.Other);
+            //BattleUI.Instance.SetFloatingNumber(target, Data.Name, FloatingNumber.Type.Other);
             CheckSubSkill(target, HitType.Hit);
         });
     }

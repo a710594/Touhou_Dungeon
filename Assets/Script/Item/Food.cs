@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -17,11 +18,11 @@ public class Food : Item
         {
             ID = id;
             Name = itemData.GetName();
-            Comment = itemData.GetComment();
             Icon = itemData.Icon;
             Volume = itemData.Volume;
             Price = itemData.Price;
             Amount = amount;
+            CanCook = itemData.CanCook;
             Type = itemData.Type;
 
             ItemEffectData.RootObject itemEffectData = ItemEffectData.GetData(id);
@@ -42,6 +43,8 @@ public class Food : Item
             {
                 AddMP = addMP;
             }
+
+            Comment = String.Format(itemData.GetComment(), AddHP, AddMP);
         }
         else
         {

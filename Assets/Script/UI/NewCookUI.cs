@@ -8,17 +8,14 @@ public class NewCookUI : MonoBehaviour
     public static NewCookUI Instance;
 
     public LoopScrollView ScrollView;
-    public Text NameLabel;
-    public Text CommentLabel;
-    public Text VolumeLabel;
     public Text ResultNameLabel;
     public Text ResultCommentLabel;
-    public Image ItemImage;
     public Image ResultItemImage;
     public Button MakeButton;
     public Button CloseButton;
     public ButtonPlus[] MaterialButtons;
 
+    private Food _food;
     private ItemManager.Type _managerType;
     private List<Item> MaterialList = new List<Item>();
 
@@ -35,8 +32,6 @@ public class NewCookUI : MonoBehaviour
 
     public static void Close()
     {
-        ExploreController.Instance.ContinueEnemy();
-        ExploreUI.SetCanMove();
         Destroy(Instance.gameObject);
         Instance = null;
     }
@@ -51,8 +46,7 @@ public class NewCookUI : MonoBehaviour
 
     private void SetScrollView(bool isRefresh)
     {
-        List<Item> itemList = new List<Item>();
-        itemList = ItemManager.Instance.GetItemListByType(_managerType, ItemData.TypeEnum.All);
+        List<Item> itemList = ItemManager.Instance.GetCanCookList(_managerType);
 
         if (isRefresh)
         {
@@ -64,72 +58,107 @@ public class NewCookUI : MonoBehaviour
         }
     }
 
+
+    private void SetResult()
+    {
+        _food = NewCookData.GetFood(MaterialList);
+        if (_food != null)
+        {
+            ResultNameLabel.text = _food.Name;
+            ResultCommentLabel.text = _food.Comment;
+            ResultItemImage.gameObject.SetActive(true);
+            ResultItemImage.overrideSprite = Resources.Load<Sprite>("Image/Item/" + _food.Icon);
+            MakeButton.gameObject.SetActive(true);
+        }
+        else
+        {
+            ResultNameLabel.text = string.Empty;
+            ResultCommentLabel.text = string.Empty;
+            ResultItemImage.gameObject.SetActive(false);
+            MakeButton.gameObject.SetActive(false);
+        }
+    }
+
     private void IconOnClick(object obj) 
     {
         Item item = (Item)obj;
 
-        CommentLabel.text = item.Comment;
-        VolumeLabel.text = "體積：" + item.Volume;
-        ItemImage.gameObject.SetActive(true);
-        ItemImage.overrideSprite = Resources.Load<Sprite>("Image/Item/" + item.Icon);
+        ItemManager.Instance.MinusItem(item.ID, 1, _managerType);
+        SetScrollView(true);
 
         if (MaterialList.Count < MaterialButtons.Length)
         {
-            Debug.Log(item.Name);
             MaterialList.Add(item);
             MaterialButtons[MaterialList.Count - 1].SetData(item);
             MaterialButtons[MaterialList.Count - 1].Image.overrideSprite = Resources.Load<Sprite>("Image/Item/" + item.Icon);
         }
 
-        Food food = NewCookData.GetFood(MaterialList);
-        if (food != null)
-        {
-            ResultNameLabel.text = food.Name;
-            ResultCommentLabel.text = food.Comment;
-            ResultItemImage.gameObject.SetActive(true);
-            ResultItemImage.overrideSprite = Resources.Load<Sprite>("Image/Item/" + food.Icon);
-        }
-
-        ItemManager.Instance.MinusItem(item.ID, 1, _managerType);
-        SetScrollView(true);
+        SetResult();
     }
 
     private void MaterialOnClick(ButtonPlus button) 
     {
         Item item = (Item)button.Data;
-        Debug.Log(item.Name);
+
         if (item != null)
         {
-            MaterialList.Remove(item);
-            for (int i = 0; i < MaterialButtons.Length; i++)
+            ItemManager.Instance.AddItem(item.ID, 1, _managerType);
+            SetScrollView(true);
+
+            if (item != null)
             {
-                if (i < MaterialList.Count)
+                MaterialList.Remove(item);
+                for (int i = 0; i < MaterialButtons.Length; i++)
                 {
-                    MaterialButtons[i].SetData(MaterialList[i]);
-                    MaterialButtons[i].Image.overrideSprite = Resources.Load<Sprite>("Image/Item/" + MaterialList[i].Icon);
-                }
-                else
-                {
-                    MaterialButtons[i].SetData(null);
-                    MaterialButtons[i].Image.overrideSprite = null;
+                    if (i < MaterialList.Count)
+                    {
+                        MaterialButtons[i].SetData(MaterialList[i]);
+                        MaterialButtons[i].Image.overrideSprite = Resources.Load<Sprite>("Image/Item/" + MaterialList[i].Icon);
+                    }
+                    else
+                    {
+                        MaterialButtons[i].SetData(null);
+                        MaterialButtons[i].Image.overrideSprite = null;
+                    }
                 }
             }
+            SetResult();
+        }
+    }
+
+    private void MakeOnClick()
+    {
+        ItemManager.Instance.AddFood(_food, _managerType);
+
+        MaterialList.Clear();
+        for (int i = 0; i < MaterialButtons.Length; i++)
+        {
+            MaterialButtons[i].SetData(null);
+            MaterialButtons[i].Image.overrideSprite = null;
         }
 
-        ItemManager.Instance.AddItem(item.ID, 1, _managerType);
-        SetScrollView(true);
+        SetResult();
+        ClearInfo();
     }
 
     private void CloseOnClick()
     {
+        ExploreController.Instance.ContinueEnemy();
+        ExploreUI.SetCanMove();
+
+        for (int i=0; i<MaterialList.Count; i++)
+        {
+            ItemManager.Instance.AddItem(MaterialList[i].ID, 1, _managerType);
+        }
+
         Close();
     }
 
     private void ClearInfo()
     {
-        NameLabel.text = "";
-        CommentLabel.text = "";
-        ItemImage.gameObject.SetActive(false);
+        ResultNameLabel.text = string.Empty;
+        ResultCommentLabel.text = string.Empty;
+        ResultItemImage.gameObject.SetActive(false);
         MakeButton.gameObject.SetActive(false);
     }
 
@@ -138,7 +167,7 @@ public class NewCookUI : MonoBehaviour
         MakeButton.gameObject.SetActive(false);
 
         CloseButton.onClick.AddListener(CloseOnClick);
-        //MakeButton.onClick.AddListener(UseOnClick);
+        MakeButton.onClick.AddListener(MakeOnClick);
         ScrollView.AddClickHandler(IconOnClick);
 
         for (int i=0; i<MaterialButtons.Length; i++) 

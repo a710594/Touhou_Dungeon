@@ -65,6 +65,7 @@ public class GameSystem : MonoBehaviour
         ShopData.Load();
         DungeonGroupData.Load();
         ExpData.Load();
+        NewCookData.Load();
 
         yield return new WaitForEndOfFrame();
 
@@ -76,6 +77,13 @@ public class GameSystem : MonoBehaviour
         ProgressManager.Instance.Init();
 
         MySceneManager.Instance.Load();
+
+        //ItemManager.Instance.AddItem(1001, 3, ItemManager.Type.Warehouse);
+        //ItemManager.Instance.AddItem(1006, 3, ItemManager.Type.Warehouse);
+        //ItemManager.Instance.AddItem(21001, 3, ItemManager.Type.Warehouse);
+        //ItemManager.Instance.AddItem(21002, 3, ItemManager.Type.Warehouse);
+        //ItemManager.Instance.AddItem(21003, 3, ItemManager.Type.Warehouse);
+        //ItemManager.Instance.AddItem(21004, 3, ItemManager.Type.Warehouse);
     }
 
     private void Awake()

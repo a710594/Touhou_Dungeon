@@ -43,7 +43,7 @@ public class ExploreController
         {
             ArriveFloor = memo.ArriveFloor;
         }
-        ArriveFloor = 7;
+        ArriveFloor = 12;
     }
 
     public void GenerateFloor(int id)

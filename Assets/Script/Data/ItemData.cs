@@ -30,7 +30,7 @@ public class ItemData
         public string Comment_Chinese { get; set; }
         public string Icon { get; set; }
         public TypeEnum Type { get; set; }
-        public SeedTypeEnum SeedType { get; set; }
+        public bool CanCook;
         public int Price { get; set; }
         public int Volume { get; set; }
         public int Skill { get; set; }

@@ -15,9 +15,10 @@ public class test : MonoBehaviour
         ItemManager.Instance.Init();
         ItemManager.Instance.AddItem(1001, 3, ItemManager.Type.Warehouse);
         ItemManager.Instance.AddItem(1006, 3, ItemManager.Type.Warehouse);
-        ItemManager.Instance.AddItem(2002, 3, ItemManager.Type.Warehouse);
-        ItemManager.Instance.AddItem(2004, 3, ItemManager.Type.Warehouse);
-        ItemManager.Instance.AddItem(2006, 3, ItemManager.Type.Warehouse);
+        ItemManager.Instance.AddItem(21001, 3, ItemManager.Type.Warehouse);
+        ItemManager.Instance.AddItem(21002, 3, ItemManager.Type.Warehouse);
+        ItemManager.Instance.AddItem(21003, 3, ItemManager.Type.Warehouse);
+        ItemManager.Instance.AddItem(21004, 3, ItemManager.Type.Warehouse);
 
         NewCookUI.Open(ItemManager.Type.Warehouse);
     }

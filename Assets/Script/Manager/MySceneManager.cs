@@ -15,6 +15,8 @@ public class MySceneManager
         FirstBattle,
         Explore_BOSS_1,
         Battle_BOSS_1,
+        Explore_BOSS_2,
+        Battle_BOSS_2,
     }
 
     private static MySceneManager _instance;

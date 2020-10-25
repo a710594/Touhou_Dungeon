@@ -38,6 +38,11 @@ public class StrikingSkill : Skill
 
         HitType hitType = CheckHit(_user, target.Info, target.LiveState);
 
+        if (Data.Target == SkillData.TargetType.Us) //目標為我方則必中
+        {
+            hitType = HitType.Hit;
+        }
+
         Timer timer1 = new Timer(Data.ShowTime / 2f, () =>
         {
             if (hitType != Skill.HitType.Miss)
