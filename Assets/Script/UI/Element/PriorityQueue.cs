@@ -5,63 +5,92 @@ using UnityEngine.UI;
 
 public class PriorityQueue : MonoBehaviour
 {
-    public PriorityQueueElement Element;
+    public Image Image;
 
-    private int _index;
-    private List<KeyValuePair<BattleCharacter, PriorityQueueElement>> _imageList = new List<KeyValuePair<BattleCharacter, PriorityQueueElement>>();
+
+    //private List<KeyValuePair<BattleCharacter, PriorityQueueElement>> _imageList = new List<KeyValuePair<BattleCharacter, PriorityQueueElement>>();
+    private Dictionary<BattleCharacter, Image> _imageDic = new Dictionary<BattleCharacter, Image>();
+    private Dictionary<BattleCharacter, bool> _activeDic = new Dictionary<BattleCharacter, bool>();
 
     public void Init(List<BattleCharacter> characterList)
     {
-        _index = -1;
-        for (int i=1; i<_imageList.Count; i++)
-        {
-            Destroy(_imageList[i].Value.gameObject);
-        }
-        _imageList.Clear();
+        //for (int i=1; i<_imageList.Count; i++)
+        //{
+        //    Destroy(_imageList[i].Value.gameObject);
+        //}
+        //_imageList.Clear();
 
-        PriorityQueueElement element;
+        foreach (KeyValuePair<BattleCharacter, Image> item in _imageDic) 
+        {
+            if (!ReferenceEquals(item.Value, Image)) //把第一個 Image 以外的刪掉
+            {
+                Destroy(item.Value.gameObject);
+            }
+        }
+        _imageDic.Clear();
+        _activeDic.Clear();
+
+        Image image;
         for (int i = 0; i < characterList.Count; i++)
         {
             if (i > 0)
             {
-                element = Instantiate(Element);
+                image = Instantiate(Image);
             }
             else
             {
-                element = Element;
+                image = Image;
             }
-            element.transform.SetParent(Element.transform.parent);
-            element.transform.localScale = Vector3.one;
-            _imageList.Add(new KeyValuePair<BattleCharacter, PriorityQueueElement>(characterList[i], element));
+            image.transform.SetParent(Image.transform.parent);
+            image.transform.localScale = Vector3.one;
+            //_imageList.Add(new KeyValuePair<BattleCharacter, PriorityQueueElement>(characterList[i], image));
+            _imageDic.Add(characterList[i], image);
 
             if (characterList[i].Info.JobData != null)
             {
-                element.SetData(characterList[i].Info.JobData.SmallImage);
+                //image.SetData(characterList[i].Info.JobData.SmallImage);
+                image.overrideSprite = Resources.Load<Sprite>("Image/Character/Small/" + characterList[i].Info.JobData.SmallImage);
             }
             else if (characterList[i].Info.EnemyData != null)
             {
-                element.SetData(characterList[i].Info.EnemyData.Image);
+                //image.SetData(characterList[i].Info.EnemyData.Image);
+                image.overrideSprite = Resources.Load<Sprite>("Image/Character/Small/" + characterList[i].Info.EnemyData.Image);
             }
-            _imageList[i].Value.gameObject.SetActive(true);
+            //_imageList[i].Value.gameObject.SetActive(true);
+            image.gameObject.SetActive(true);
+            _activeDic.Add(characterList[i], true);
         }
     }
 
     public void Scroll(BattleCharacter character)
     {
-        for (int i = 0; i < _imageList.Count; i++)
+        //for (int i = 0; i < _imageList.Count; i++)
+        //{
+        //    if (!_imageList[i].Value.isActiveAndEnabled)
+        //    {
+        //        continue;
+        //    }
+        //    if (GameObject.ReferenceEquals(character, _imageList[i].Key))
+        //    {
+        //        _imageList[i].Value.gameObject.SetActive(false);
+
+        //        if (character.Info.ActionCount > 0 && character.LiveState == BattleCharacter.LiveStateEnum.Alive)
+        //        {
+        //            break;
+        //        }
+        //    }
+        //}
+
+        foreach (KeyValuePair<BattleCharacter, Image> item in _imageDic)
         {
-            if (!_imageList[i].Value.isActiveAndEnabled)
+            if (!_activeDic[item.Key])
             {
                 continue;
             }
-            if (GameObject.ReferenceEquals(character, _imageList[i].Key))
+            if (ReferenceEquals(character, item.Key))
             {
-                _imageList[i].Value.gameObject.SetActive(false);
-
-                if (character.Info.ActionCount > 0 && character.LiveState == BattleCharacter.LiveStateEnum.Alive)
-                {
-                    break;
-                }
+                item.Value.gameObject.SetActive(false);
+                _activeDic[item.Key] = false;
             }
         }
     }

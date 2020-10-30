@@ -6,22 +6,32 @@ using DG.Tweening;
 
 public class Plot_6 : Plot
 {
+    private bool _start1 = false;
+    private bool _start2 = false;
     private Timer _timer = new Timer();
 
-    public void Check(int remain) //檢查紫還剩幾條血
+    public void Check(Action callback) //檢查紫還剩幾條血
     {
-        if (remain == 1) //剩一條血時觸發
+        BattleCharacter character = GameObject.Find("Yukari").GetComponent<BattleCharacter>();
+        if (!_start1 &&character.Info.HPQueue.Count == 1) //剩一條血時觸發
         {
 
-            Start_1();
+            Start_1(callback);
+            _start1 = true;
+        }
+        else if (!_start2 &&  character.Info.HPQueue.Count == 0)
+        {
+            Start_2(callback);
+            _start2 = true;
+            BattleController.Instance.ShowEndHandler -= Check;
         }
         else
         {
-            Start_2();
+            callback();
         }
     }
 
-    public void Start_1() //剩下一條血時,召喚藍和橙
+    public void Start_1(Action callback) //剩下一條血時,召喚藍和橙
     {
         BattleUI.Instance.SetVisible(false);
         GameObject yukari = GameObject.Find("Yukari");
@@ -49,12 +59,13 @@ public class Plot_6 : Plot
                 _timer.Start(1, ()=> 
                 {
                     BattleUI.Instance.SetVisible(true);
+                    callback();
                 });
             });
         });
     }
 
-    public void Start_2() //剩下0條血的時候進行該戰鬥中最後一段對話
+    public void Start_2(Action callback) //剩下0條血的時候進行該戰鬥中最後一段對話
     {
         BattleUI.Instance.SetVisible(false);
         GameObject yukari = GameObject.Find("Yukari");
@@ -64,6 +75,7 @@ public class Plot_6 : Plot
             ConversationUI.Open(7001, false, () =>
             {
                 BattleUI.Instance.SetVisible(true);
+                callback();
             });
         });
     }

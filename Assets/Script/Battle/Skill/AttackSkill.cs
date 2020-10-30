@@ -173,53 +173,6 @@ public class AttackSkill : Skill
             return hitType;
         }
 
-        //float misssRate;
-        //misssRate = (float)(target.AGI - executor.SEN * (Data.HitRate / 100f)) / (float)target.AGI; //迴避率
 
-        //if (misssRate >= 0) //迴避率為正,骰迴避
-        //{
-        //    if (misssRate < UnityEngine.Random.Range(0f, 1f))
-        //    {
-        //        return HitType.Hit;
-        //    }
-        //    else
-        //    {
-        //        if (targetLiveState == BattleCharacter.LiveStateEnum.Dying)
-        //        {
-        //            return HitType.Hit;
-        //        }
-        //        else
-        //        {
-        //            return HitType.Miss;
-        //        }
-        //    }
-        //}
-        //else //迴避率為負,骰爆擊
-        //{
-        //    if (target.EnemyData != null && target.EnemyData.ID == 7) //新手教學的那隻怪不會被爆擊
-        //    {
-        //        return HitType.Hit;
-        //    }
-        //    else
-        //    {
-        //        float criticalRate = (_user.SEN - 10) * (Data.HitRate / 100f) *0.02f;
-        //        if (criticalRate > UnityEngine.Random.Range(0f, 1f))
-        //        {
-        //            return HitType.Critical;
-        //        }
-        //        else
-        //        {
-        //            return HitType.Hit;
-        //        }
-        //    }
-        //    //else if (misssRate < UnityEngine.Random.Range(0f, 1f) * -1f)
-        //    //{
-        //    //    return HitType.Critical;
-        //    //}
-        //    //else
-        //    //{
-        //    //    return HitType.Hit;
-        //    //}
-        //}
     }
 }

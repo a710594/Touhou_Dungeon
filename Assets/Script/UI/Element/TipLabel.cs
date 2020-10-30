@@ -8,6 +8,7 @@ public class TipLabel : MonoBehaviour
 {
     public CanvasGroup CanvasGroup;
     public Text Label;
+    public float Time = 2;
 
     private Tweener _tweener;
     private Timer _timer = new Timer();
@@ -19,7 +20,7 @@ public class TipLabel : MonoBehaviour
         if (isTween)
         {
             CanvasGroup.DORestart();
-            _tweener = CanvasGroup.DOFade(0, 2f).SetEase(Ease.InExpo).OnComplete(()=> 
+            _tweener = CanvasGroup.DOFade(0, Time).SetEase(Ease.InExpo).OnComplete(()=> 
             {
                 if (callback != null)
                 {
@@ -30,7 +31,7 @@ public class TipLabel : MonoBehaviour
         }
         else
         {
-            _timer.Start(2, ()=>
+            _timer.Start(Time, ()=>
             {
                 CanvasGroup.alpha = 0;
                 if (callback != null)

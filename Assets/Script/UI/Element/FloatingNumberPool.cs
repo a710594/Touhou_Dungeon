@@ -40,7 +40,7 @@ public class FloatingNumberPool : MonoBehaviour
             _isLock = true;
             Debug.Log("dequeue");
             FloatingNumber floatingNumber = _poolQueue.Dequeue();
-            floatingNumber.Play(text, type);
+            floatingNumber.Play(text, type, transform.position);
 
             //if (beforeCallback != null)
             //{

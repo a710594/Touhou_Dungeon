@@ -6,23 +6,35 @@ using DG.Tweening;
 
 public class Plot_5 : Plot
 {
-    private int _count = 0;
-
-    public void Check() //縫隙死掉時檢查,死掉兩個的時候觸發 Start
+    public void Check(Action callback) //縫隙死掉時檢查,死掉兩個的時候觸發 Start
     {
-        _count++;
-        if (_count == 2)
+        int count = 0;
+        List<BattleCharacter> characterList = BattleController.Instance.CharacterList;
+        for (int i=0; i< characterList.Count; i++) 
         {
-            Start();
+            if (characterList[i].EnemyId == 8 && characterList[i].LiveState == BattleCharacter.LiveStateEnum.Dead)
+            {
+                count++;
+            }
+        }
+
+        if (count == 2)
+        {
+            Start(callback);
+            BattleController.Instance.ShowEndHandler -= Check;
+        }
+        else
+        {
+            callback();
         }
     }
 
-    public override void Start()
+    public override void Start(Action callback)
     {
         TilePainter.Instance.Painting("Ground_1", 0, new Vector2Int(0, 4));
         BattleFieldManager.Instance.SetField(new Vector2(0, 4), 1);
         BattleCharacter character = GameObject.Find("Yukari").GetComponent<BattleCharacter>();
-        character.SetActive(true);
+        BattleController.Instance.SetCharacerActive(character);
         character.SetPosition(new Vector2(0, 4));
         Vector3 cameraPosition = new Vector3(character.transform.position.x, character.transform.position.y, Camera.main.transform.position.z);
         Camera.main.transform.DOMove(cameraPosition, 1);
@@ -33,10 +45,11 @@ public class Plot_5 : Plot
             ConversationUI.Open(5001, false, () =>
             {
                 BattleUI.Instance.SetVisible(true);
+                callback();
             });
 
             Plot_6 plot_6 = new Plot_6();
-            character.OnHPDequeueHandler += plot_6.Check;
+            BattleController.Instance.ShowEndHandler += plot_6.Check;
         });
     }
 }

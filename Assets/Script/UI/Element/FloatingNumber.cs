@@ -25,15 +25,13 @@ public class FloatingNumber : MonoBehaviour
     public float Height;
     public float Duration;
 
-    private Vector2 _originalPosition;
-
     public void SetValue(float height, float duration)
     {
         Height = height;
         Duration = duration;
     }
 
-    public void Play(string text, Type type)
+    public void Play(string text, Type type, Vector2 position)
     {
         //if (Encoding.Default.GetByteCount(text) > 10)
         //{
@@ -53,7 +51,7 @@ public class FloatingNumber : MonoBehaviour
             Label.fontSize = 30;
         }
 
-        this.transform.localPosition = _originalPosition;
+        this.transform.position = position;
         Label.text = text;
 
         if (type == Type.Damage)
@@ -93,7 +91,7 @@ public class FloatingNumber : MonoBehaviour
             Label.color = Color.black;
         }
 
-        this.transform.DOLocalMoveY(_originalPosition.y + Height, Duration).SetEase(Ease.OutCubic).OnComplete(()=> 
+        this.transform.DOMoveY(position.y + Height, Duration).SetEase(Ease.OutCubic).OnComplete(()=> 
         {
         });
 
@@ -104,7 +102,7 @@ public class FloatingNumber : MonoBehaviour
 
     void OnEnable()
     {
-        _originalPosition = this.transform.localPosition;
+        Debug.Log(this.transform.localPosition);
     }
 
     void Awake()

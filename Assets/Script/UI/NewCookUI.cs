@@ -13,6 +13,7 @@ public class NewCookUI : MonoBehaviour
     public Image ResultItemImage;
     public Button MakeButton;
     public Button CloseButton;
+    public TipLabel TipLabel;
     public ButtonPlus[] MaterialButtons;
 
     private Food _food;
@@ -136,6 +137,8 @@ public class NewCookUI : MonoBehaviour
             MaterialButtons[i].SetData(null);
             MaterialButtons[i].Image.overrideSprite = null;
         }
+
+        TipLabel.SetLabel("獲得！");
 
         SetResult();
         ClearInfo();

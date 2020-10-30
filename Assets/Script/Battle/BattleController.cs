@@ -18,7 +18,7 @@ public class BattleController : MachineBehaviour
     public Action InitHandler;
     public Action TurnStartHandler;
     public Action TurnEndHandler;
-    public Action ShowEndHandler;
+    public Action<Action> ShowEndHandler;
     public Action SelectActionStartHandler;
 
     public static BattleController Instance;
@@ -318,11 +318,20 @@ public class BattleController : MachineBehaviour
     public void AddCharacer(BattleCharacter character)
     {
         character.InitActionCount();
-        character.InitGetDamage();
         CharacterList.Add(character);
         BattleUI.Instance.InitCharacter(character);
 
         _actionQueue.Insert(0, character);
+        BattleUI.Instance.InitPriorityQueue(new List<BattleCharacter>(_actionQueue));
+    }
+
+
+    public void SetCharacerActive(BattleCharacter character)
+    {
+        character.InitActionCount();
+        character.SetActive(true);
+
+        _actionQueue.Add(character);
         BattleUI.Instance.InitPriorityQueue(new List<BattleCharacter>(_actionQueue));
     }
 
@@ -772,52 +781,66 @@ public class BattleController : MachineBehaviour
             BattleUI.Instance.SetInfo(false);
             if (parent.SelectedCharacter.Info.IsAI && !parent.SelectedCharacter.CanHitTarget)
             {
-                parent.ChangeState<SelectCharacterState>();
+                if (parent.ShowEndHandler != null)
+                {
+                    parent.ShowEndHandler(() => { parent.ChangeState<SelectCharacterState>(); });
+                }
+                else
+                {
+                    parent.ChangeState<SelectCharacterState>();
+                }
             }
             else
             {
+                TilePainter.Instance.Clear(2);
                 parent.SelectedCharacter.UseSkill(() =>
                 {
-                    TilePainter.Instance.Clear(2);
-
-                    ResultType result = parent.CheckResult();
-                    if (result == ResultType.None)
+                    if (parent.ShowEndHandler != null)
                     {
-                        parent.SelectedCharacter.SkillDone();
-                        if (parent.SelectedCharacter.Info.ActionCount > 0)
-                        {
-                            if (!parent.SelectedCharacter.Info.IsAI)
-                            {
-                                parent.ChangeState<SelectActionState>();
-                            }
-                            else
-                            {
-                                parent.ChangeState<AIState>();
-                            }
-                        }
-                        else
-                        {
-                            parent.ChangeState<SelectCharacterState>();
-                        }
+                        parent.ShowEndHandler(() => { SetNextState(); });
                     }
-                    else if (result == ResultType.Win)
+                    else
                     {
-                        parent.ChangeState<WinState>();
-                    }
-                    else if (result == ResultType.Lose)
-                    {
-                        parent.ChangeState<LoseState>();
+                        SetNextState();
                     }
                 });
             }
         }
 
+        private void SetNextState() 
+        {
+            ResultType result = parent.CheckResult();
+            if (result == ResultType.None)
+            {
+                parent.SelectedCharacter.SkillDone();
+                if (parent.SelectedCharacter.Info.ActionCount > 0)
+                {
+                    if (!parent.SelectedCharacter.Info.IsAI)
+                    {
+                        parent.ChangeState<SelectActionState>();
+                    }
+                    else
+                    {
+                        parent.ChangeState<AIState>();
+                    }
+                }
+                else
+                {
+                    parent.ChangeState<SelectCharacterState>();
+                }
+            }
+            else if (result == ResultType.Win)
+            {
+                parent.ChangeState<WinState>();
+            }
+            else if (result == ResultType.Lose)
+            {
+                parent.ChangeState<LoseState>();
+            }
+        }
+
         public override void Exit()
         {
-            if (parent.ShowEndHandler != null)
-            {
-                parent.ShowEndHandler();
-            }
         }
     }
 
