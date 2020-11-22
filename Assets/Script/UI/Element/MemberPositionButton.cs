@@ -20,11 +20,12 @@ public class MemberPositionButton : MonoBehaviour
         Member = member;
         if (member != null)
         {
+            Image.gameObject.SetActive(true);
             Image.overrideSprite = Resources.Load<Sprite>("Image/Character/Small/" + member.Data.SmallImage);
         }
         else
         {
-            Image.overrideSprite = null;
+            Image.gameObject.SetActive(false);
         }
     }
 

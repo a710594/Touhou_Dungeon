@@ -17,11 +17,6 @@ public class Plot_4 : Plot
         }
 
         Plot_5 plot_5 = new Plot_5();
-        BattleController.Instance.ShowEndHandler += plot_5.Check;
-        //BattleCharacter character;
-        //character = GameObject.Find("Gap_1").GetComponent<BattleCharacter>();
-        //character.OnDeathHandler += plot_5.Check;
-        //character = GameObject.Find("Gap_2").GetComponent<BattleCharacter>();
-        //character.OnDeathHandler += plot_5.Check;
+        BattleController.Instance.ShowEndHandler += plot_5.Start;
     }
 }

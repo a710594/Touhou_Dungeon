@@ -15,10 +15,10 @@ public class TreasureRoom : Room
                 if (i == Position.x || i == Position.x + Width - 1 || j == Position.y || j == Position.y + Height - 1)
                 {
                     WallList.Add(new Vector2Int(i, j));
-                    TreasureDic.Add(new Vector2Int(i, j), new Treasure(RoomData.GetRandomTreasureID()));
                 }
             }
         }
+        TreasureDic.Add(new Vector2Int(Position.x + Width/2, Position.y + Height/2), new Treasure(RoomData.GetRandomTreasureID()));
     }
 
     public override Vector2Int GetDoor()

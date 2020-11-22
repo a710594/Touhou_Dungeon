@@ -569,6 +569,46 @@ public class BattleCharacterInfo
         return total;
     }
 
+    public void SetNoDamage(int id)
+    {
+        NoDamage noDamage;
+
+        if (!StatusDic.ContainsKey(id))
+        {
+            noDamage = new NoDamage(id);
+            StatusDic.Add(id, noDamage);
+        }
+        else
+        {
+            noDamage = (NoDamage)StatusDic[id];
+            noDamage.ResetTurn();
+        }
+    }
+
+    public bool IsNoDamage() //有無敵狀態
+    {
+        foreach (KeyValuePair<int, BattleStatus> item in StatusDic)
+        {
+            if (item.Value is NoDamage)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void RemoveStasus(int id)
+    {
+        foreach (KeyValuePair<int, BattleStatus> item in StatusDic)
+        {
+            if (item.Key == id)
+            {
+                StatusDic.Remove(id);
+                break;
+            }
+        }
+    }
+
     public void HPDequeue() 
     {
         MaxHP = Mathf.RoundToInt(HPQueue.Dequeue() * (1 + (Lv - 1) * 0.1f));

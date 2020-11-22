@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 
-public class Plot_8 : Plot
+public class Plot_8 : Plot //第二場BOSS戰前的對話
 {
     public override void Start()
     {
-        if (ProgressManager.Instance.Memo.BOSS_1_Flag)
+        if (ProgressManager.Instance.Memo.BOSS_2_Flag)
         {
             return;
         }
@@ -24,8 +24,9 @@ public class Plot_8 : Plot
                     AudioSystem.Instance.Stop(true);
                     MySceneManager.Instance.ChangeScene(MySceneManager.SceneType.Battle_BOSS_2, () =>
                     {
-                        //Plot_4 plot_4 = new Plot_4();
-                        //BattleController.Instance.TurnStartHandler += plot_4.Start;
+                        Plot_9 plot_9 = new Plot_9();
+                        BattleController.Instance.ShowEndHandler += plot_9.Start;
+
                         BattleController.Instance.SpecialInit(() =>
                         {
                             ProgressManager.Instance.Memo.BOSS_2_Flag = true;

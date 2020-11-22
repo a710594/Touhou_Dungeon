@@ -141,7 +141,7 @@ public class Skill
             positionList = BattleFieldManager.Instance.RemoveBound(positionList);
         }
 
-        if (this is AttackSkill)
+        if (this is AttackSkill && Data.Distance == 0)
         {
             positionList.Remove(Vector2Int.FloorToInt(executor.transform.position));
         }
@@ -399,12 +399,7 @@ public class Skill
         if (Data.ParticleName != "x")
         {
             GameObject particle;
-            //for (int i = 0; i < _skillRangeList.Count; i++)
-            //{
-            //    particle = ResourceManager.Instance.Spawn("Particle/" + Data.ParticleName, ResourceManager.Type.Other);
-            //    particle.transform.position = _skillRangeList[i] + Vector2.up; // + Vector2.up 是為了調整特效生成的位置
-            //}
-            particle = ResourceManager.Instance.Spawn("Particle/" + Data.ParticleName, ResourceManager.Type.Other);
+            particle = ResourceManager.Instance.Spawn("Skill/" + Data.ParticleName, ResourceManager.Type.Other);
             particle.transform.position = ((Vector2)_targetPosition) + Vector2.up; // + Vector2.up 是為了調整特效生成的位置
 
             SpriteRenderer sprite = particle.GetComponent<SpriteRenderer>();

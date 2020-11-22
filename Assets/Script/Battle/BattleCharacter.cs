@@ -20,6 +20,7 @@ public class BattleCharacter : MonoBehaviour
         Dead,
     }
 
+    public Action<BattleCharacter> GetDamageHandler;
     public Action OnDeathHandler;
     public Action<int> OnHPDequeueHandler;
 
@@ -125,8 +126,12 @@ public class BattleCharacter : MonoBehaviour
         {
             Animator.runtimeAnimatorController = Resources.Load<RuntimeAnimatorController>("Animator/" + data.Animator);
         }
-        gameObject.AddComponent(Type.GetType(data.AI));
         AI = GetComponent(Type.GetType(data.AI)) as AI;
+        if (AI == null)
+        {
+            gameObject.AddComponent(Type.GetType(data.AI));
+            AI = GetComponent(Type.GetType(data.AI)) as AI;
+        }
         AI.Init(this, data.SkillList);
 
         BattleController.Instance.TurnEndHandler += CheckBattleStatus;
@@ -377,6 +382,11 @@ public class BattleCharacter : MonoBehaviour
             //解除睡眠狀態
             Info.RemoveSleep();
         }
+
+        if (GetDamageHandler != null)
+        {
+            GetDamageHandler(this);
+        }
     }
 
     public void SetPoison(Poison poison, int damage, Skill.HitType hitType, Action<BattleCharacter> callback)
@@ -431,6 +441,11 @@ public class BattleCharacter : MonoBehaviour
     public void SetBuff(int id, int lv)
     {
         Info.SetBuff(id, lv);
+    }
+
+    public void SetNoDamage(int id)
+    {
+        Info.SetNoDamage(id);
     }
 
     public void SetOutline(bool show)

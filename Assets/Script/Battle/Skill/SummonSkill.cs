@@ -33,7 +33,7 @@ public class SummonSkill : Skill
                 character = ResourceManager.Instance.Spawn("BattleCharacter/BattleCharacter", ResourceManager.Type.Other).GetComponent<BattleCharacter>();
                 character.Init(Data.Summon, _user.Lv);
                 character.SetPosition(_skillRangeList[i]);
-                BattleController.Instance.AddCharacer(character);
+                BattleController.Instance.AddCharacer(character, false);
             }
 
             BattleUI.Instance.SetSkillLabel(false);

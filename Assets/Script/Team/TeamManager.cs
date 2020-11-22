@@ -39,10 +39,10 @@ public class TeamManager
             Lv = 12;
             Exp = 0;
 
-            AddMember(1, new Vector2Int(0, 0), 41003, 42002);
-            AddMember(2, new Vector2Int(1, 0), 41004, 42002);
-            AddMember(3, new Vector2Int(-1, 0), 41004, 42002);
-            AddMember(4, new Vector2Int(0, 1), 41003, 42002); //temp
+            AddMember(1, new Vector2Int(0, 0), 41005, 42003);
+            AddMember(2, new Vector2Int(1, 0), 41006, 42003);
+            AddMember(3, new Vector2Int(-1, 0), 41006, 42003);
+            AddMember(4, new Vector2Int(0, 1), 41005, 42003); //temp
         }
         else
         {
@@ -57,7 +57,6 @@ public class TeamManager
                 MemberList.Add(member);
             }
         }
-        _power = 50;
     }
 
     public void Save() 
@@ -133,12 +132,12 @@ public class TeamManager
         }
     }
 
-    private static readonly int _maxLv = 99;
+    private static readonly int _maxLv = 19;
     public int NeedExp(int lv)
     {
         if (lv < _maxLv)
         {
-            return ExpData.NeedExp(lv - 1);
+            return ExpData.NeedExp(lv);
         }
         else
         {

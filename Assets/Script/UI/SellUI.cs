@@ -11,7 +11,6 @@ public class SellUI : MonoBehaviour
     public Text NameLabel;
     public Text AmountLabel;
     public Text CommentLabel;
-    public Image Icon;
     public Button CloseButton;
     public Button AllButton;
     public Button MaterialButton;
@@ -57,12 +56,10 @@ public class SellUI : MonoBehaviour
         NameLabel.text = data.GetName();
         AmountLabel.text = "庫存：" + ItemManager.Instance.GetItemAmount(data.ID, ItemManager.Type.Warehouse);
         CommentLabel.text = data.GetComment();
-        Icon.gameObject.SetActive(true);
-        Icon.overrideSprite = Resources.Load<Sprite>("Image/Item/" + data.Icon);
-        if (data.Type == ItemData.TypeEnum.Equip)
+        if (_selectedItem is Equip)
         {
             EquipComment.gameObject.SetActive(true);
-            EquipComment.SetData(data.ID);
+            EquipComment.SetData((Equip)_selectedItem);
         }
         else
         {
@@ -109,7 +106,6 @@ public class SellUI : MonoBehaviour
         AmountLabel.text = "";
         EquipComment.gameObject.SetActive(false);
         SellButton.gameObject.SetActive(false);
-        Icon.gameObject.SetActive(false);
     }
 
     private void MenuOnClick(object obj)

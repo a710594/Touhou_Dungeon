@@ -75,6 +75,7 @@ public class VilliageUI : MonoBehaviour
 
     private void Awake()
     {
+        ShopGroup.SetActive(false);
         SelectDestinationUI.gameObject.SetActive(false);
 
         AdventureButton.onClick.AddListener(AdventureOnClick);

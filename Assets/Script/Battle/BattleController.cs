@@ -315,13 +315,17 @@ public class BattleController : MachineBehaviour
         BattleUI.Instance.SetPower(_power);
     }
 
-    public void AddCharacer(BattleCharacter character)
+    public void AddCharacer(BattleCharacter character, bool needSort)
     {
         character.InitActionCount();
         CharacterList.Add(character);
         BattleUI.Instance.InitCharacter(character);
 
         _actionQueue.Insert(0, character);
+        if (needSort)
+        {
+            SortCharacter();
+        }
         BattleUI.Instance.InitPriorityQueue(new List<BattleCharacter>(_actionQueue));
     }
 
@@ -380,6 +384,28 @@ public class BattleController : MachineBehaviour
         }
     }
 
+    private void SortCharacter()
+    {
+        _actionQueue.Sort((x, y) =>
+        {
+            if (x.Info.AGI == y.Info.AGI) //比較角色的敏捷 * 技能優先值
+            {
+                if (x.Info.Camp == BattleCharacterInfo.CampEnum.Enemy && y.Info.Camp == BattleCharacterInfo.CampEnum.Partner) //若相同,則玩家優先
+                {
+                    return 1;
+                }
+                else
+                {
+                    return -1;
+                }
+            }
+            else
+            {
+                return (y.Info.AGI).CompareTo(x.Info.AGI);
+            }
+        });
+    }
+
     //
     //State
     //
@@ -413,24 +439,7 @@ public class BattleController : MachineBehaviour
                 }
             }
 
-            parent._actionQueue.Sort((x, y) =>
-            {
-                if (x.Info.AGI == y.Info.AGI) //比較角色的敏捷 * 技能優先值
-                {
-                    if (x.Info.Camp == BattleCharacterInfo.CampEnum.Enemy && y.Info.Camp == BattleCharacterInfo.CampEnum.Partner) //若相同,則玩家優先
-                    {
-                        return 1;
-                    }
-                    else
-                    {
-                        return -1;
-                    }
-                }
-                else
-                {
-                    return (y.Info.AGI).CompareTo(x.Info.AGI);
-                }
-            });
+            parent.SortCharacter();
 
             BattleUI.Instance.SetTurnLabel(parent.Turn, ()=> 
             {

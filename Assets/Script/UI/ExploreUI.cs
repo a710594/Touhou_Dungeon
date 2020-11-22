@@ -186,7 +186,7 @@ public class ExploreUI : MonoBehaviour
         {
             ExploreController.Instance.BackToVilliage();
         }
-        if (Input.GetKeyDown(KeyCode.A))
+        if (Input.GetKeyDown(KeyCode.Space))
         {
             Plot_8 plot_8 = new Plot_8();
             plot_8.Start();

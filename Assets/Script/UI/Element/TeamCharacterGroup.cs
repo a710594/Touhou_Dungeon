@@ -9,6 +9,10 @@ public class TeamCharacterGroup : MonoBehaviour
     public Text LvLabel;
     public Text FoodBuffLabel;
     public Text TipLabel;
+    public Text EquipATKLabel;
+    public Text EquipDEFLabel;
+    public Text EquipMTKLabel;
+    public Text EquipMEFLabel;
     public TextButton ATKLabel;
     public TextButton DEFLabel;
     public TextButton MTKLabel;
@@ -16,26 +20,37 @@ public class TeamCharacterGroup : MonoBehaviour
     public TextButton AGILabel;
     public TextButton SENLabel;
     public TextButton MOVLabel;
+    public TextButton WeaponButton;
+    public TextButton ArmorButton;
     public ValueBar HPBar;
     public ValueBar MPBar;
     public ValueBar EXPBar;
     public Image CharacterImage;
     public Button CloseTipButton;
 
+    private TeamMember _selectedMember;
+
     public void SetData(TeamMember member)
     {
+        _selectedMember = member;
         CharacterNameLabel.text = member.Data.GetName();
-        LvLabel.text = "Lv." + TeamManager.Instance.Lv.ToString();
+        LvLabel.text = TeamManager.Instance.Lv.ToString();
         HPBar.SetValue(member.CurrentHP, member.MaxHP);
         MPBar.SetValue(member.CurrentMP, member.MaxMP);
         EXPBar.SetValue(TeamManager.Instance.Exp, TeamManager.Instance.NeedExp(TeamManager.Instance.Lv));
-        ATKLabel.Label.text = "力量：" + member.ATK.ToString();
-        DEFLabel.Label.text = "體質：" + member.DEF.ToString();
-        MTKLabel.Label.text = "智力：" + member.MTK.ToString();
-        MEFLabel.Label.text = "意志：" + member.MEF.ToString();
-        AGILabel.Label.text = "敏捷：" + member.AGI.ToString();
-        SENLabel.Label.text = "感知：" + member.SEN.ToString();
-        MOVLabel.Label.text = "移動：" + member.MOV.ToString();
+        ATKLabel.Label.text = member.ATK.ToString();
+        DEFLabel.Label.text = member.DEF.ToString();
+        MTKLabel.Label.text = member.MTK.ToString();
+        MEFLabel.Label.text = member.MEF.ToString();
+        AGILabel.Label.text = member.AGI.ToString();
+        SENLabel.Label.text = member.SEN.ToString();
+        MOVLabel.Label.text = member.MOV.ToString();
+        WeaponButton.SetData(member.Weapon.Name, member.Weapon);
+        EquipATKLabel.text = member.Weapon.ATK.ToString();
+        EquipMTKLabel.text = member.Weapon.MTK.ToString();
+        ArmorButton.SetData(member.Armor.Name, member.Armor);
+        EquipDEFLabel.text = member.Armor.DEF.ToString();
+        EquipMEFLabel.text = member.Armor.MEF.ToString();
         CharacterImage.overrideSprite = Resources.Load<Sprite>("Image/Character/Origin/" + member.Data.Image);
         CharacterImage.SetNativeSize();
 
@@ -73,7 +88,7 @@ public class TeamCharacterGroup : MonoBehaviour
     private void AGIOnClick(object obj)
     {
         TipLabel.transform.parent.gameObject.SetActive(true);
-        TipLabel.text = "影響行動順序、迴避率、被爆擊率";
+        TipLabel.text = "影響行動順序與迴避率";
         CloseTipButton.gameObject.SetActive(true);
     }
 
@@ -97,6 +112,20 @@ public class TeamCharacterGroup : MonoBehaviour
         CloseTipButton.gameObject.SetActive(false);
     }
 
+    private void EquipOnClick(object data)
+    {
+        ItemManager.Type type;
+        if (MySceneManager.Instance.CurrentScene == MySceneManager.SceneType.Villiage)
+        {
+            type = ItemManager.Type.Warehouse;
+        }
+        else
+        {
+            type = ItemManager.Type.Bag;
+        }
+        BagUI.Open(type, _selectedMember, (Equip)data);
+    }
+
     private void Awake()
     {
         ATKLabel.OnClickHandler = ATKOnClick;
@@ -106,6 +135,8 @@ public class TeamCharacterGroup : MonoBehaviour
         AGILabel.OnClickHandler = AGIOnClick;
         SENLabel.OnClickHandler = SENOnClick;
         MOVLabel.OnClickHandler = MOVOnClick;
+        WeaponButton.OnClickHandler = EquipOnClick;
+        ArmorButton.OnClickHandler = EquipOnClick;
         CloseTipButton.onClick.AddListener(CloseTipOnClick); 
     }
 }

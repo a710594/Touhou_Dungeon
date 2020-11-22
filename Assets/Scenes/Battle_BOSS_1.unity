@@ -1616,7 +1616,7 @@ MonoBehaviour:
   SelectedCharacter: {fileID: 0}
   CharacterList: []
   BattlefieldId: 1
-  Exp: 0
+  Exp: 100
   Enemys:
   - {fileID: 1172946493}
   - {fileID: 651277101}

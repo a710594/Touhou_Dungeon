@@ -6,6 +6,14 @@ using UnityEngine;
 public class AI_Guard : AI
 {
     private bool _startAttack = false; //有目標進入攻擊範圍後就會進入攻擊狀態
+    public AI_Guard[] Partner;
+
+    public override void Init(BattleCharacter character, List<int> list)
+    {
+        base.Init(character, list);
+        _myself.GetDamageHandler += OnGetDamage;
+        BattleController.Instance.TurnEndHandler += CheckAttack;
+    }
 
     public override void StartAI(Action callback)
     {
@@ -167,5 +175,35 @@ public class AI_Guard : AI
         }
 
         return target;
+    }
+
+    public void SetAttack()
+    {
+        _startAttack = true;
+    }
+
+    private void OnGetDamage(BattleCharacter character)
+    {
+        _startAttack = true;
+        SetPartnerAttack();
+    }
+
+    private void CheckAttack()
+    {
+        if (_startAttack)
+        {
+            SetPartnerAttack();
+        }
+    }
+
+    private void SetPartnerAttack()
+    {
+        if (Partner != null)
+        {
+            for (int i = 0; i < Partner.Length; i++)
+            {
+                Partner[i].SetAttack();
+            }
+        }
     }
 }

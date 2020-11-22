@@ -55,7 +55,7 @@ public class TeamUI : MonoBehaviour
         SetCharacterData();
     }
 
-    private void SetCharacterData()
+    public void SetCharacterData()
     {
         CharacterGroup.SetData(_selectedMember);
     }
@@ -77,9 +77,7 @@ public class TeamUI : MonoBehaviour
 
     private void TeamMemberOnClick(object data) //左邊的角色欄
     {
-        _teamMemaberButtonDic[_selectedMember].SetColor(Color.gray);
         _selectedMember = (TeamMember)data;
-        _teamMemaberButtonDic[_selectedMember].SetColor(Color.white);
 
         if (_currentState == State.Character)
         {
@@ -104,10 +102,6 @@ public class TeamUI : MonoBehaviour
         CharacterGroup.gameObject.SetActive(true);
         SkillGroup.gameObject.SetActive(false);
         EquipGroup.gameObject.SetActive(false);
-        CharacterButton.Image.color = Color.white;
-        SkillButton.Image.color = Color.gray;
-        SpellCardButton.Image.color = Color.gray;
-        EquipButton.Image.color = Color.gray;
         SetCharacterData();
         _currentState = State.Character;
     }
@@ -117,10 +111,6 @@ public class TeamUI : MonoBehaviour
         CharacterGroup.gameObject.SetActive(false);
         SkillGroup.gameObject.SetActive(true);
         EquipGroup.gameObject.SetActive(false);
-        CharacterButton.Image.color = Color.gray;
-        SkillButton.Image.color = Color.white;
-        SpellCardButton.Image.color = Color.gray;
-        EquipButton.Image.color = Color.gray;
         SetSkillData();
         _currentState = State.Skill;
     }
@@ -130,10 +120,6 @@ public class TeamUI : MonoBehaviour
         CharacterGroup.gameObject.SetActive(false);
         SkillGroup.gameObject.SetActive(true);
         EquipGroup.gameObject.SetActive(false);
-        CharacterButton.Image.color = Color.gray;
-        SkillButton.Image.color = Color.gray;
-        SpellCardButton.Image.color = Color.white;
-        EquipButton.Image.color = Color.gray;
         SetSpellCardData();
         _currentState = State.SpellCard;
     }
@@ -143,10 +129,6 @@ public class TeamUI : MonoBehaviour
         CharacterGroup.gameObject.SetActive(false);
         SkillGroup.gameObject.SetActive(false);
         EquipGroup.gameObject.SetActive(true);
-        CharacterButton.Image.color = Color.gray;
-        SkillButton.Image.color = Color.gray;
-        SpellCardButton.Image.color = Color.gray;
-        EquipButton.Image.color = Color.white;
         SetEquipData();
         _currentState = State.Equip;
     }
@@ -174,7 +156,6 @@ public class TeamUI : MonoBehaviour
             {
                 TeamMemaberButton[i].OnClickHandler = TeamMemberOnClick;
                 TeamMemaberButton[i].SetData(TeamManager.Instance.MemberList[i].Data.GetName(), TeamManager.Instance.MemberList[i]);
-                TeamMemaberButton[i].SetColor(Color.gray);
                 TeamMemaberButton[i].gameObject.SetActive(true);
                 _teamMemaberButtonDic.Add(TeamManager.Instance.MemberList[i], TeamMemaberButton[i]);
             }

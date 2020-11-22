@@ -40,6 +40,8 @@ public class ItemManager
     private List<Item> _bagCanCookList = new List<Item>();
     private List<Item> _warehouseCanCookList = new List<Item>();
 
+    private Equip _defaultWeapon = new Equip(EquipData.TypeEnum.Weapon);
+    private Equip _defaultArmor = new Equip(EquipData.TypeEnum.Armor);
 
     public void Init()
     {
@@ -73,7 +75,9 @@ public class ItemManager
             }
         }
 
-        //AddItem(3006, 1, Type.Warehouse);
+        AddItem(1011, 5, Type.Warehouse);
+        AddItem(1012, 5, Type.Warehouse);
+        AddItem(1013, 5, Type.Warehouse);
     }
 
     public void Save()
@@ -468,12 +472,22 @@ public class ItemManager
         List<Equip> equipList;
         if (type == Type.Bag)
         {
-            _bagEquipDic.TryGetValue(equipType, out equipList);
+            equipList = new List<Equip>(_bagEquipDic[equipType]);
         }
         else
         {
-            _warehouseEquipDic.TryGetValue(equipType, out equipList);
+            equipList = new List<Equip>(_warehouseEquipDic[equipType]);
         }
+
+        if (equipType == EquipData.TypeEnum.Weapon)
+        {
+            equipList.Insert(0, _defaultWeapon);
+        }
+        else if (equipType == EquipData.TypeEnum.Armor)
+        {
+            equipList.Insert(0, _defaultArmor);
+        }
+
         return equipList;
     }
 

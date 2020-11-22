@@ -10,8 +10,6 @@ public class EquipData
     {
         Weapon = 1,
         Armor,
-        Helmet,
-        Jewelry,
     }
 
     public class RootObject

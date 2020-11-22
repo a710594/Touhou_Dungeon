@@ -100,11 +100,6 @@ public class FloatingNumber : MonoBehaviour
         });
     }
 
-    void OnEnable()
-    {
-        Debug.Log(this.transform.localPosition);
-    }
-
     void Awake()
     {
         Label.color = Color.clear;

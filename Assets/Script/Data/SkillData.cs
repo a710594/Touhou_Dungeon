@@ -53,6 +53,7 @@ public class SkillData
         public int Value_3 { get; set; }
         public int Value_4 { get; set; }
         public int Value_5 { get; set; }
+        public int MaxLv { get; set; }
         public int HitRate { get; set; }
         public int Distance { get; set; }
         public RangeTypeEnum RangeType { get; set; }

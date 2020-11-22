@@ -135,7 +135,7 @@ public class AttackSkill : Skill
     protected override HitType CheckHit(BattleCharacterInfo executor, BattleCharacterInfo target, BattleCharacter.LiveStateEnum targetLiveState)
     {
         HitType hitType = base.CheckHit(executor, target, targetLiveState);
-        if (BattleFieldManager.Instance.IsNoDamageField(target.Position))
+        if (target.IsNoDamage() ||  BattleFieldManager.Instance.IsNoDamageField(target.Position))
         {
             return HitType.NoDamage;
         }

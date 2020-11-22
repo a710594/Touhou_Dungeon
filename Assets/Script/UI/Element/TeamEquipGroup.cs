@@ -82,7 +82,7 @@ public class TeamEquipGroup : MonoBehaviour
         {
             type = ItemManager.Type.Bag;
         }
-        BagUI.Open(type, _selectedMember, _selectedEquip.EquipType);
+        BagUI.Open(type, _selectedMember, _selectedEquip);
     }
 
     private void TakeOffOnClick()

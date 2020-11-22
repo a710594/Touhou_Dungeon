@@ -23,4 +23,16 @@ public class EquipComment : MonoBehaviour
         MEFLabel.text = data.MEF.ToString();
         MEFLabel.transform.parent.gameObject.SetActive(data.MEF != 0);
     }
+
+    public void SetData(Equip equip)
+    {
+        ATKLabel.text = equip.ATK.ToString();
+        ATKLabel.transform.parent.gameObject.SetActive(equip.ATK != 0);
+        DEFLabel.text = equip.DEF.ToString();
+        DEFLabel.transform.parent.gameObject.SetActive(equip.DEF != 0);
+        MTKLabel.text = equip.MTK.ToString();
+        MTKLabel.transform.parent.gameObject.SetActive(equip.MTK != 0);
+        MEFLabel.text = equip.MEF.ToString();
+        MEFLabel.transform.parent.gameObject.SetActive(equip.MEF != 0);
+    }
 }

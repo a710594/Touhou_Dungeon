@@ -5,7 +5,9 @@ using UnityEngine.UI;
 
 public class TeamSkillGroup : MonoBehaviour
 {
-    private static readonly int _bookId = 1007;
+    private static readonly int _bookId_1 = 1011;
+    private static readonly int _bookId_2 = 1012;
+    private static readonly int _bookId_3 = 1013;
 
     public Text NameLabel;
     public Text LvLabel;
@@ -20,14 +22,16 @@ public class TeamSkillGroup : MonoBehaviour
     public Text CommentLabel;
     public Text ItemAmountLabel;
     public Text BattleStatusTitlle;
+    public Text NeedBookLabel;
+    public Image NeedBookIcon;
     public Button UpgradeButton;
     public TipLabel TipLabel;
     public LoopScrollView SkillScrollView;
     public Text[] BattleStatusComment;
 
     private bool _isSpellCard;
-    private int _needItemAmount;
     private int _currentItemAmount;
+    private int _consumeBookId;
     private TeamMember _member;
     private SkillData.RootObject _data;
     private ItemManager.Type _itemManagerType;
@@ -39,19 +43,6 @@ public class TeamSkillGroup : MonoBehaviour
         _member = member;
         _isSpellCard = isSpellCard;
 
-        //if (!isSpellCard)
-        //{
-        //    List<TeamSkillScrollItem.UnlockData> dataList = new List<TeamSkillScrollItem.UnlockData>();
-        //    foreach (KeyValuePair<int, int> item in member.Data.SkillUnlockDic)
-        //    {
-        //        dataList.Add(new TeamSkillScrollItem.UnlockData(member.Data, SkillData.GetData(item.Key), member.Lv));
-        //    }
-        //    SkillScrollView.SetData(new ArrayList(dataList));
-        //}
-        //else
-        //{
-        //    SkillScrollView.SetData(new ArrayList(member.Data.SpellCardList));
-        //}
         if (isSpellCard)
         {
             SkillScrollView.SetData(new ArrayList(member.SpellCardDic));
@@ -74,12 +65,13 @@ public class TeamSkillGroup : MonoBehaviour
     private void SetData(SkillData.RootObject data, int lv)
     {
         _data = data;
-        _needItemAmount = lv;
-        _currentItemAmount = ItemManager.Instance.GetItemAmount(_bookId, _itemManagerType);
         NameLabel.text = data.GetName();
-        LvLabel.text = "Lv." + lv;
+        NameLabel.transform.parent.gameObject.SetActive(true);
+        LvLabel.text = lv.ToString();
+        LvLabel.transform.parent.gameObject.SetActive(true);
+        MPLabel.text = data.MP.ToString();
+        MPLabel.transform.parent.gameObject.SetActive(true);
         HitRateLabel.text = "命中："+data.HitRate+"%";
-        MPLabel.text = "MP：" + data.MP;
         CDLabel.text = "冷卻：" + data.CD;
         AddPowerLabel.text = "增加 Power：" + data.AddPower;
         NeedPowerLabel.text = "需要 Power：" + data.NeedPower;
@@ -113,20 +105,42 @@ public class TeamSkillGroup : MonoBehaviour
             TargetLabel.text = "目標：全體";
         }
 
-        if (lv < 5)
+        if (lv < data.MaxLv)
         {
             ItemAmountLabel.gameObject.SetActive(true);
             UpgradeButton.gameObject.SetActive(true);
 
-            if (_needItemAmount > _currentItemAmount)
+            if (lv == 1)
+            {
+                _currentItemAmount = ItemManager.Instance.GetItemAmount(_bookId_1, _itemManagerType);
+                NeedBookLabel.text = "初級技能書";
+                NeedBookIcon.overrideSprite = Resources.Load<Sprite>("Image/Item/Book_1");
+                _consumeBookId = _bookId_1;
+            }
+            else if (lv == 2)
+            {
+                _currentItemAmount = ItemManager.Instance.GetItemAmount(_bookId_2, _itemManagerType);
+                NeedBookLabel.text = "中級技能書";
+                NeedBookIcon.overrideSprite = Resources.Load<Sprite>("Image/Item/Book_2");
+                _consumeBookId = _bookId_2;
+            }
+            else if (lv == 3)
+            {
+                _currentItemAmount = ItemManager.Instance.GetItemAmount(_bookId_3, _itemManagerType);
+                NeedBookLabel.text = "高級技能書";
+                NeedBookIcon.overrideSprite = Resources.Load<Sprite>("Image/Item/Book_3");
+                _consumeBookId = _bookId_3;
+            }
+
+            if ( _currentItemAmount < 1)
             {
                 UpgradeButton.GetComponent<Image>().color = Color.gray;
-                ItemAmountLabel.text = "<color=#FF0000>" + _currentItemAmount + "</color>/" + _needItemAmount;
+                ItemAmountLabel.text = "<color=#FF0000>" + _currentItemAmount + "</color>/" + 1;
             }
             else
             {
                 UpgradeButton.GetComponent<Image>().color = Color.white;
-                ItemAmountLabel.text = _currentItemAmount + "/" + _needItemAmount;
+                ItemAmountLabel.text = _currentItemAmount + "/" + 1;
             }
         }
         else
@@ -136,6 +150,12 @@ public class TeamSkillGroup : MonoBehaviour
         }
 
         BattleStatusTitlle.gameObject.SetActive(true);
+
+        for (int i = 0; i < BattleStatusComment.Length; i++)
+        {
+            BattleStatusComment[i].gameObject.SetActive(false);
+        }
+
         for (int i=0; i<BattleStatusComment.Length; i++)
         {
             if (data != null)
@@ -143,19 +163,12 @@ public class TeamSkillGroup : MonoBehaviour
                 if (data.StatusID != 0)
                 {
                     BattleStatusData.RootObject statusData = BattleStatusData.GetData(data.StatusID);
-                    if ((int)statusData.ValueType <= 7)
-                    {
-                        BattleStatusComment[i].gameObject.SetActive(true);
-                        BattleStatusComment[i].text = statusData.GetComment(lv);
-                    }
-                    else
-                    {
-                        BattleStatusComment[i].gameObject.SetActive(false);
-                    }
+                    BattleStatusComment[i].gameObject.SetActive(true);
+                    BattleStatusComment[i].text = statusData.GetComment(lv);
                 }
                 else
                 {
-                    BattleStatusComment[i].gameObject.SetActive(false);
+                    i--;
                 }
 
                 if (data.SubID != 0)
@@ -169,7 +182,7 @@ public class TeamSkillGroup : MonoBehaviour
             }
             else
             {
-                BattleStatusComment[i].gameObject.SetActive(false);
+                break;
             }
         }
     }
@@ -177,11 +190,14 @@ public class TeamSkillGroup : MonoBehaviour
     private void Clear()
     {
         NameLabel.text = string.Empty;
+        NameLabel.transform.parent.gameObject.SetActive(false);
         LvLabel.text = string.Empty;
+        LvLabel.transform.parent.gameObject.SetActive(false);
+        MPLabel.text = string.Empty;
+        MPLabel.transform.parent.gameObject.SetActive(false);
         DamageLabel.text = string.Empty;
         TargetLabel.text = string.Empty;
         PriorityLabel.text = string.Empty;
-        MPLabel.text = string.Empty;
         CDLabel.text = string.Empty;
         AddPowerLabel.text = string.Empty;
         NeedPowerLabel.text = string.Empty;
@@ -204,7 +220,7 @@ public class TeamSkillGroup : MonoBehaviour
 
     private void UpgradeOnClick()
     {
-        if (_needItemAmount > _currentItemAmount)
+        if (_currentItemAmount < 1)
         {
             TipLabel.SetLabel("素材不足");
         }
@@ -221,7 +237,7 @@ public class TeamSkillGroup : MonoBehaviour
                 _member.SkillLvUp(_data.ID);
                 currentLv = _member.SkillDic[_data.ID];
             }
-            ItemManager.Instance.MinusItem(_bookId, currentLv - 1, _itemManagerType);
+            ItemManager.Instance.MinusItem(_consumeBookId, 1, _itemManagerType);
             SetData(_data, currentLv);
 
             if (_isSpellCard)

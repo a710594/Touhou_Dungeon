@@ -12,13 +12,13 @@ public class FloorScrollItem : ScrollItem
         if (obj is DungeonGroupData.RootObject)
         {
             DungeonGroupData.RootObject data = (DungeonGroupData.RootObject)obj;
-            base.SetData(data.ID);
+            base.SetData(data);
             Label.text = data.Name;
         }
         else if (obj is DungeonData.RootObject)
         {
             DungeonData.RootObject data = (DungeonData.RootObject)obj;
-            base.SetData(data.ID);
+            base.SetData(data);
             Label.text = data.FloorName;
         }
     }

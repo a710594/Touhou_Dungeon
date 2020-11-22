@@ -16,7 +16,6 @@ public class BagUI : MonoBehaviour
     public Text NameLabel;
     public Text CommentLabel;
     public Text VolumeLabel;
-    public Image ItemImage;
     public Button CloseButton;
     public Button AllButton;
     public Button MaterialButton;
@@ -26,6 +25,7 @@ public class BagUI : MonoBehaviour
     public Button DiscardButton;
     public Button UseButton;
     public GameObject ItemTypeGroup;
+    public GameObject UsingLabel;
     public BagSelectCharacterGroup SelectCharacterGroup;
     public SetAmountGroup SetAmountGroup;
     public EquipComment EquipComment;
@@ -34,6 +34,7 @@ public class BagUI : MonoBehaviour
     private ItemData.TypeEnum _itemType = ItemData.TypeEnum.All;
     private Item _selectedItem;
     private Equip _selectedEquip;
+    private Equip _currentEquip;
     private TeamMember _selectedMember;
 
     public static void Open(ItemManager.Type type)
@@ -47,7 +48,7 @@ public class BagUI : MonoBehaviour
         Instance.Init(type);
     }
 
-    public static void Open(ItemManager.Type type, TeamMember teamMember, EquipData.TypeEnum equipType)
+    public static void Open(ItemManager.Type type, TeamMember teamMember, Equip currentEquip)
     {
         ExploreController.Instance.StopEnemy();
         if (Instance == null)
@@ -55,7 +56,7 @@ public class BagUI : MonoBehaviour
             Instance = ResourceManager.Instance.Spawn("BagUI", ResourceManager.Type.UI).GetComponent<BagUI>();
         }
 
-        Instance.Init(type, teamMember, equipType);
+        Instance.Init(type, teamMember, currentEquip);
     }
 
     public static void Close()
@@ -84,14 +85,15 @@ public class BagUI : MonoBehaviour
         }
     }
 
-    private void Init(ItemManager.Type type, TeamMember member, EquipData.TypeEnum equipType) //換裝備用
+    private void Init(ItemManager.Type type, TeamMember member, Equip currentEquip) //換裝備用
     {
         _managerType = type;
         _selectedMember = member;
+        _currentEquip = currentEquip;
 
         MoneyLabel.text = ItemManager.Instance.Money.ToString();
         KeyLabel.text = ItemManager.Instance.KeyAmount.ToString();
-        SetScrollView(ItemManager.Instance.GetEquipListByType(type, equipType));
+        SetScrollView(ItemManager.Instance.GetEquipListByType(type, currentEquip.EquipType));
         ItemTypeGroup.SetActive(false);
         SetVolume();
         ClearInfo();
@@ -122,6 +124,7 @@ public class BagUI : MonoBehaviour
 
     private void SetScrollView(List<Equip> list)
     {
+        list.Insert(1, _currentEquip);
         ScrollView.SetData(new ArrayList(list));
     }
 
@@ -151,7 +154,6 @@ public class BagUI : MonoBehaviour
         CommentLabel.text = "";
         VolumeLabel.text = "";
         EquipComment.gameObject.SetActive(false);
-        ItemImage.gameObject.SetActive(false);
         DiscardButton.gameObject.SetActive(false);
         UseButton.gameObject.SetActive(false);
     }
@@ -164,11 +166,10 @@ public class BagUI : MonoBehaviour
             _selectedItem = _selectedEquip;
             NameLabel.text = _selectedEquip.Name;
             CommentLabel.text = _selectedEquip.Comment;
-            EquipComment.SetData(_selectedEquip.ID);
+            EquipComment.SetData(_selectedEquip);
             EquipComment.gameObject.SetActive(true);
             VolumeLabel.text = "體積：" + _selectedEquip.Volume;
-            ItemImage.gameObject.SetActive(true);
-            ItemImage.overrideSprite = Resources.Load<Sprite>("Image/Item/" + _selectedEquip.Icon);
+            UsingLabel.SetActive(_selectedEquip == _currentEquip);
 
             if (_managerType == ItemManager.Type.Bag && _selectedMember == null)
             {
@@ -179,7 +180,7 @@ public class BagUI : MonoBehaviour
                 DiscardButton.gameObject.SetActive(false);
             }
 
-            if (_selectedMember != null)
+            if (_selectedMember != null && _selectedEquip != _currentEquip)
             {
                 UseButton.gameObject.SetActive(true);
             }
@@ -196,8 +197,6 @@ public class BagUI : MonoBehaviour
             CommentLabel.text = _selectedItem.Comment;
             EquipComment.gameObject.SetActive(false);
             VolumeLabel.text = "體積：" + _selectedItem.Volume;
-            ItemImage.gameObject.SetActive(true);
-            ItemImage.overrideSprite = Resources.Load<Sprite>("Image/Item/" + _selectedItem.Icon);
 
             if (_managerType == ItemManager.Type.Bag)
             {
@@ -288,6 +287,7 @@ public class BagUI : MonoBehaviour
 
             Close();
             TeamUI.Instance.SetEquipData();
+            TeamUI.Instance.SetCharacterData();
         }
         else if (_selectedItem != null) //使用道具
         {
@@ -355,6 +355,7 @@ public class BagUI : MonoBehaviour
         DiscardButton.gameObject.SetActive(false);
         UseButton.gameObject.SetActive(false);
         SelectCharacterGroup.gameObject.SetActive(false);
+        UsingLabel.SetActive(false);
 
         CloseButton.onClick.AddListener(CloseOnClick);
         AllButton.onClick.AddListener(AllOnClick);

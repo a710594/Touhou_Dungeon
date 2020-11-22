@@ -114,4 +114,9 @@
 {"ID":10001,"Name":"博麗靈夢","Comment_Chinese":"test1","Background":"x","BGM":"x","Image_1":"Reimu_L","Motion_1":0,"Image_2":"x","Motion_2":0,"NextID":10002},
 {"ID":10002,"Name":"西行寺幽幽子","Comment_Chinese":"test2","Background":"-","BGM":"-","Image_1":"-","Motion_1":0,"Image_2":"uuz_L","Motion_2":0,"NextID":10003},
 {"ID":10003,"Name":"博麗靈夢","Comment_Chinese":"test3","Background":"-","BGM":"-","Image_1":"Reimu_L","Motion_1":0,"Image_2":"-","Motion_2":0,"NextID":10004},
-{"ID":10004,"Name":"西行寺幽幽子","Comment_Chinese":"test4","Background":"-","BGM":"-","Image_1":"-","Motion_1":0,"Image_2":"uuz_L","Motion_2":0,"NextID":0}]
+{"ID":10004,"Name":"西行寺幽幽子","Comment_Chinese":"test4","Background":"-","BGM":"-","Image_1":"-","Motion_1":0,"Image_2":"uuz_L","Motion_2":0,"NextID":0},
+{"ID":11001,"Name":"博麗靈夢","Comment_Chinese":"「無效？怎麼可能？！」","Background":"x","BGM":"x","Image_1":"Reimu_L","Motion_1":0,"Image_2":"x","Motion_2":0,"NextID":11002},
+{"ID":11002,"Name":"魂魄妖夢","Comment_Chinese":"「對方的力量太強了！必需先將她重新封印才行！四周的幽靈正在破壞封印，要先將他們打倒才行！」","Background":"-","BGM":"-","Image_1":"-","Motion_1":9,"Image_2":"Youmu_L","Motion_2":0,"NextID":0},
+{"ID":12001,"Name":"博麗靈夢","Comment_Chinese":"「終於解決了。現在封印的力量恢復了，回去打西行妖吧！」","Background":"x","BGM":"x","Image_1":"Reimu_L","Motion_1":0,"Image_2":"x","Motion_2":0,"NextID":0},
+{"ID":13001,"Name":"博麗靈夢","Comment_Chinese":"「幽靈又出現了？看來只能繼續將幽靈打到再對付西行妖了！」","Background":"x","BGM":"x","Image_1":"Reimu_L","Motion_1":0,"Image_2":"x","Motion_2":0,"NextID":0},
+{"ID":14001,"Name":"博麗靈夢","Comment_Chinese":"「幽靈似乎全數退去了，一鼓作氣解決異變吧！」","Background":"x","BGM":"x","Image_1":"Reimu_L","Motion_1":0,"Image_2":"x","Motion_2":0,"NextID":0}]

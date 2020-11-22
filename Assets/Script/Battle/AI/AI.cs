@@ -12,7 +12,7 @@ public class AI : MonoBehaviour
     protected BattleCharacter _myself;
     protected List<Skill> _skillList = new List<Skill>();
 
-    public void Init(BattleCharacter character, List<int> list)
+    public virtual void Init(BattleCharacter character, List<int> list)
     {
         _myself = character;
 

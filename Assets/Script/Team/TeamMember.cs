@@ -101,9 +101,7 @@ public class TeamMember
     public Vector2Int Formation; //隊伍位置
     public JobData.RootObject Data;
     public Equip Weapon = new Equip(EquipData.TypeEnum.Weapon);
-    //public Equip Helmet = new Equip(EquipData.TypeEnum.Helmet);
     public Equip Armor = new Equip(EquipData.TypeEnum.Armor);
-    //public Equip Jewelry = new Equip(EquipData.TypeEnum.Jewelry);
     public FoodBuff FoodBuff = new FoodBuff(); //食物的效果一次只會有一個,戰鬥結束後就會消失
     public Dictionary<int, int> SkillDic = new Dictionary<int, int>(); //id, lv
     public Dictionary<int, int> SpellCardDic = new Dictionary<int, int>(); //id, lv
@@ -117,9 +115,7 @@ public class TeamMember
     public int _sen;
 
     private Equip _defaultWeapon = new Equip(EquipData.TypeEnum.Weapon);
-    private Equip _defaultHelmet = new Equip(EquipData.TypeEnum.Helmet);
     private Equip _defaultArmor = new Equip(EquipData.TypeEnum.Armor);
-    private Equip _defaultJewelry = new Equip(EquipData.TypeEnum.Jewelry);
 
     public void Init(int jobId, int lv = 1)
     {

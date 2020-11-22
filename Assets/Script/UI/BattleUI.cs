@@ -189,6 +189,8 @@ public class BattleUI : MonoBehaviour
                 TurnLabel.transform.parent.DOLocalMoveX(-1280, 0.25f).SetEase(Ease.Linear).OnComplete(() =>
                 {
                     TurnLabel.transform.parent.parent.gameObject.SetActive(false);
+                    PowerLabel.gameObject.SetActive(true);
+                    ActionCountLabel.gameObject.SetActive(true);
                     if (callback != null)
                     {
                         callback();
