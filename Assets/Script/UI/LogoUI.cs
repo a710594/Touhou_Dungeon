@@ -14,8 +14,10 @@ public class LogoUI : MachineBehaviour
     public Button LoadButton;
     public Button NewButton;
     public Button StaffButton;
+    public Button CloseStaffButton;
     public GameObject ClickLabel;
     public GameObject PlayGroup;
+    public GameObject StaffGroup;
 
     //private IEnumerator ShowLogo()
     //{
@@ -215,10 +217,23 @@ public class LogoUI : MachineBehaviour
 
     private void NewOnClick()
     {
-        GameSystem.Instance.ClearMemo();
-        gameObject.SetActive(false);
-        Plot_1 plot_1 = new Plot_1();
-        plot_1.Start();
+        ConfirmUI.Open("請問你確定要重新開始遊戲嗎？", "確定", "取消", ()=> 
+        {
+            GameSystem.Instance.ClearMemo();
+            gameObject.SetActive(false);
+            Plot_1 plot_1 = new Plot_1();
+            plot_1.Start();
+        }, null);
+    }
+
+    private void StaffOnClick()
+    {
+        StaffGroup.SetActive(true);
+    }
+
+    private void CloseStaffOnClick()
+    {
+        StaffGroup.SetActive(false);
     }
 
     private void Awake()
@@ -234,5 +249,7 @@ public class LogoUI : MachineBehaviour
         Button.onClick.AddListener(OnClick);
         LoadButton.onClick.AddListener(LoadOnClick);
         NewButton.onClick.AddListener(NewOnClick);
+        StaffButton.onClick.AddListener(StaffOnClick);
+        CloseStaffButton.onClick.AddListener(CloseStaffOnClick);
     }
 }
