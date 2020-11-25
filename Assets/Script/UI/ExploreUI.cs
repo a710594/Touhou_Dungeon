@@ -14,6 +14,7 @@ public class ExploreUI : MonoBehaviour
     public Button FormationButton;
     public Button CookButton;
     public Button SaveButton;
+    public Button CloseMoveTutorialButton;
     public ButtonPlus[] InteractiveButtons;
     public MapUI MapUI;
     public TipLabel TipLabel;
@@ -36,6 +37,11 @@ public class ExploreUI : MonoBehaviour
     public static void Close()
     {
         Destroy(Instance.gameObject);
+    }
+
+    public void SetVisible(bool isVisible)
+    {
+        gameObject.SetActive(isVisible);
     }
 
     public static void SetCanMove()
@@ -142,9 +148,10 @@ public class ExploreUI : MonoBehaviour
         ExploreController.Instance.Interactive((Vector2Int)button.Data);
     }
 
-    public void SetVisible(bool isVisible)
+    private void CloseMoveTutorialOnClick() 
     {
-        gameObject.SetActive(isVisible);
+        CloseMoveTutorialButton.gameObject .SetActive(false);
+        ProgressManager.Instance.Memo.MoveTutorial = true;
     }
 
     void Awake()
@@ -158,6 +165,7 @@ public class ExploreUI : MonoBehaviour
         FormationButton.onClick.AddListener(OpenFormation);
         CookButton.onClick.AddListener(OpenCook);
         SaveButton.onClick.AddListener(Save);
+        CloseMoveTutorialButton.onClick.AddListener(CloseMoveTutorialOnClick);
 
         for (int i=0; i<InteractiveButtons.Length; i++)
         {
@@ -167,6 +175,7 @@ public class ExploreUI : MonoBehaviour
         SaveButton.interactable = (MySceneManager.Instance.CurrentScene == MySceneManager.SceneType.Explore);
 
         StairsGroup.gameObject.SetActive(false);
+        CloseMoveTutorialButton.gameObject.SetActive(!ProgressManager.Instance.Memo.MoveTutorial);
     }
 
     // Start is called before the first frame update
