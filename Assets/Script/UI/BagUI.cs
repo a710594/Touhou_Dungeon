@@ -103,14 +103,7 @@ public class BagUI : MonoBehaviour
     private void SetScrollView(ItemData.TypeEnum type, bool isRefresh)
     {
         List<Item> itemList = new List<Item>();
-        if (_managerType == ItemManager.Type.Bag)
-        {
-            itemList = ItemManager.Instance.GetItemListByType(ItemManager.Type.Bag, type);
-        }
-        else
-        {
-            itemList = ItemManager.Instance.GetItemListByType(ItemManager.Type.Warehouse, type);
-        }
+        itemList = ItemManager.Instance.GetItemListByType(_managerType, type);
 
         if (isRefresh)
         {

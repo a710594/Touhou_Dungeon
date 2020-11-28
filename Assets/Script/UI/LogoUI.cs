@@ -217,13 +217,23 @@ public class LogoUI : MachineBehaviour
 
     private void NewOnClick()
     {
-        ConfirmUI.Open("請問你確定要重新開始遊戲嗎？", "確定", "取消", ()=> 
+        if (ProgressManager.Instance.Memo.FirstFlag) //已完成新手教學
         {
-            GameSystem.Instance.ClearMemo();
+            ConfirmUI.Open("請問你確定要重新開始遊戲嗎？", "確定", "取消", () =>
+            {
+                GameSystem.Instance.ClearMemo();
+                GameSystem.Instance.InitManager();
+                gameObject.SetActive(false);
+                Plot_1 plot_1 = new Plot_1();
+                plot_1.Start();
+            }, null);
+        }
+        else
+        {
             gameObject.SetActive(false);
             Plot_1 plot_1 = new Plot_1();
             plot_1.Start();
-        }, null);
+        }
     }
 
     private void StaffOnClick()

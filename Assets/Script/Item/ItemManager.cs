@@ -45,13 +45,16 @@ public class ItemManager
 
     public void Init()
     {
+        _bagTypeDic.Clear();
+        _warehouseTypeDic.Clear();
         foreach (ItemData.TypeEnum type in (ItemData.TypeEnum[])Enum.GetValues(typeof(ItemData.TypeEnum)))
         {
             _bagTypeDic.Add(type, new List<Item>());
             _warehouseTypeDic.Add(type, new List<Item>());
         }
 
-
+        _bagEquipDic.Clear();
+        _warehouseEquipDic.Clear();
         foreach (EquipData.TypeEnum type in Enum.GetValues(typeof(EquipData.TypeEnum)))
         {
             _bagEquipDic.Add(type, new List<Equip>());
@@ -75,9 +78,10 @@ public class ItemManager
             }
         }
 
-        AddItem(1011, 5, Type.Warehouse);
-        AddItem(1012, 5, Type.Warehouse);
-        AddItem(1013, 5, Type.Warehouse);
+        AddItem(1006, 5, Type.Warehouse);
+        AddItem(21002, 5, Type.Warehouse);
+        AddItem(21003, 5, Type.Warehouse);
+        AddItem(21004, 5, Type.Warehouse);
     }
 
     public void Save()

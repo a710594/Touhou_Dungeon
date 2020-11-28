@@ -10,7 +10,6 @@ public class NewCookUI : MonoBehaviour
     public LoopScrollView ScrollView;
     public Text ResultNameLabel;
     public Text ResultCommentLabel;
-    public Image ResultItemImage;
     public Button MakeButton;
     public Button CloseButton;
     public TipLabel TipLabel;
@@ -67,15 +66,12 @@ public class NewCookUI : MonoBehaviour
         {
             ResultNameLabel.text = _food.Name;
             ResultCommentLabel.text = _food.Comment;
-            ResultItemImage.gameObject.SetActive(true);
-            ResultItemImage.overrideSprite = Resources.Load<Sprite>("Image/Item/" + _food.Icon);
             MakeButton.gameObject.SetActive(true);
         }
         else
         {
             ResultNameLabel.text = string.Empty;
             ResultCommentLabel.text = string.Empty;
-            ResultItemImage.gameObject.SetActive(false);
             MakeButton.gameObject.SetActive(false);
         }
     }
@@ -161,7 +157,6 @@ public class NewCookUI : MonoBehaviour
     {
         ResultNameLabel.text = string.Empty;
         ResultCommentLabel.text = string.Empty;
-        ResultItemImage.gameObject.SetActive(false);
         MakeButton.gameObject.SetActive(false);
     }
 

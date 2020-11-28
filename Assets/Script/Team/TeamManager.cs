@@ -36,13 +36,14 @@ public class TeamManager
 
         if (memo == null)
         {
-            Lv = 12;
+            Lv = 1;
             Exp = 0;
 
-            AddMember(1, new Vector2Int(0, 0), 41005, 42003);
-            AddMember(2, new Vector2Int(1, 0), 41006, 42003);
-            AddMember(3, new Vector2Int(-1, 0), 41006, 42003);
-            AddMember(4, new Vector2Int(0, 1), 41005, 42003); //temp
+            MemberList.Clear();
+            AddMember(1, new Vector2Int(0, 0), 41001, 42001);
+            AddMember(2, new Vector2Int(1, 0), 41002, 42001);
+            AddMember(3, new Vector2Int(-1, 0), 41002, 42001);
+            //AddMember(4, new Vector2Int(0, 1), 41005, 42003); //temp
         }
         else
         {

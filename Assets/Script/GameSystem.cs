@@ -43,6 +43,16 @@ public class GameSystem : MonoBehaviour
         Caretaker.Instance.ClearData<MapMemo>();
     }
 
+    public void InitManager()
+    {
+        Caretaker.Instance.Init();
+        ExploreController.Instance.Init();
+        TeamManager.Instance.Init();
+        ItemManager.Instance.Init();
+        MySceneManager.Instance.Init();
+        ProgressManager.Instance.Init();
+    }
+
     // Start is called before the first frame update
     private IEnumerator Init()
     {
@@ -69,21 +79,9 @@ public class GameSystem : MonoBehaviour
 
         yield return new WaitForEndOfFrame();
 
-        Caretaker.Instance.Init();
-        ExploreController.Instance.Init();
-        TeamManager.Instance.Init();
-        ItemManager.Instance.Init();
-        MySceneManager.Instance.Init();
-        ProgressManager.Instance.Init();
+        InitManager();
 
         MySceneManager.Instance.Load();
-
-        //ItemManager.Instance.AddItem(1001, 3, ItemManager.Type.Warehouse);
-        //ItemManager.Instance.AddItem(1006, 3, ItemManager.Type.Warehouse);
-        //ItemManager.Instance.AddItem(21001, 3, ItemManager.Type.Warehouse);
-        //ItemManager.Instance.AddItem(21002, 3, ItemManager.Type.Warehouse);
-        //ItemManager.Instance.AddItem(21003, 3, ItemManager.Type.Warehouse);
-        //ItemManager.Instance.AddItem(21004, 3, ItemManager.Type.Warehouse);
     }
 
     private void Awake()
@@ -123,6 +121,11 @@ public class GameSystem : MonoBehaviour
             AudioSystem.Instance.Stop(true);
             AudioSystem.Instance.Play("Forest", true);
             ExploreController.Instance.GenerateFloor(6);
+        }
+
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+            EquipUpgradeUI.Open(ItemManager.Type.Warehouse);
         }
     }
 
