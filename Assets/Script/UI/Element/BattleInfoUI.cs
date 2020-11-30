@@ -24,7 +24,7 @@ public class BattleInfoUI : MonoBehaviour
     public void SetData(BattleCharacter character)
     {
         NameLabel.text = character.Info.Name;
-        LvLabel.text = "Lv." + character.Info.Lv.ToString();
+        LvLabel.text = character.Info.Lv.ToString();
         HpBar.SetValue(character.Info.CurrentHP, character.Info.MaxHP);
 
         _foodBuff = character.Info.FoodBuff;
@@ -103,6 +103,7 @@ public class BattleInfoUI : MonoBehaviour
     {
         FoodBuffButton.onClick.AddListener(FoodBuffOnClick);
         BattleStatusButton.onClick.AddListener(BattleStatusOnClick);
+        BattleStatusUI.gameObject.SetActive(false);
     }
 }
 
