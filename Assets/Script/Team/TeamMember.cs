@@ -170,7 +170,7 @@ public class TeamMember
         CurrentMP = character.Info.CurrentMP;
     }
 
-    public void LvUp(int lv, int exp)
+    public void LvUp(int lv)
     {
         int originalMaxHP = MaxHP;
         int originalMaxMP = MaxMP;
@@ -205,10 +205,9 @@ public class TeamMember
         }
     }
 
-    public void SetEquip(int id) //for calculater
+    public void SetEquip(int id)
     {
-        Equip oldEquip;
-        SetEquip(new Equip(id), out oldEquip);
+        SetEquip(new Equip(id), out Equip oldEquip);
     }
 
     public void SetEquip(Equip equip, out Equip oldEquip)
@@ -224,20 +223,28 @@ public class TeamMember
             oldEquip = Armor;
             Armor = equip;
         }
+        equip.SetOwner(Data.GetName());
+        if (oldEquip != null)
+        {
+            oldEquip.SetOwner(string.Empty);
+        }
     }
 
-    public void TakeOffEquip(Equip equip, ItemManager.Type type)
+    public void TakeOffEquip(EquipData.TypeEnum type, out Equip oldEquip)
     {
-        if (equip.EquipType == EquipData.TypeEnum.Weapon)
+        oldEquip = null;
+        if (type == EquipData.TypeEnum.Weapon)
         {
-            Weapon = _defaultWeapon;
+            //Weapon = _defaultWeapon;
+            SetEquip(_defaultWeapon, out oldEquip);
         }
-        else if (equip.EquipType == EquipData.TypeEnum.Armor)
+        else if (type == EquipData.TypeEnum.Armor)
         {
-            Armor = _defaultArmor;
+            //Armor = _defaultArmor;
+            SetEquip(_defaultArmor, out oldEquip);
         }
 
-        ItemManager.Instance.AddEquip(type, equip);
+        //ItemManager.Instance.AddEquip(type, equip);
     }
 
     public void SetFoodBuff(ItemEffectData.RootObject data)

@@ -117,7 +117,10 @@ public class BagUI : MonoBehaviour
 
     private void SetScrollView(List<Equip> list)
     {
-        list.Insert(1, _currentEquip);
+        if (_currentEquip.ID != 0)
+        {
+            list.Insert(1, _currentEquip);
+        }
         ScrollView.SetData(new ArrayList(list));
     }
 

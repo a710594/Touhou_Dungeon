@@ -54,7 +54,7 @@ public class TrainSkill : AttackSkill
 
     protected override void ShowAnimation()
     {
-        GameObject particle = ResourceManager.Instance.Spawn("Particle/" + Data.ParticleName, ResourceManager.Type.Other);
+        GameObject particle = ResourceManager.Instance.Spawn("Skill/" + Data.Animation, ResourceManager.Type.Other);
         particle.transform.position = _skillRangeList[_skillRangeList.Count - 1] + Vector2.up; // + Vector2.up 是為了調整特效生成的位置
     }
 }

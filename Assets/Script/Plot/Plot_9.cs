@@ -1,54 +1,71 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 
-public class Plot_9 : Plot
+public class Plot_9 : Plot //第二場BOSS戰前的對話
 {
-    private BattleCharacter _getDamageCharacter;
-    private Plot_9_1 _plot_9_1 = new Plot_9_1();
-    private Plot_9_2 _plot_9_2 = new Plot_9_2();
-
-    public Plot_9()
+    public override void Start()
     {
-        BattleCharacter character;
-        character = GameObject.Find("uuz").GetComponent<BattleCharacter>();
-        character.GetDamageHandler += OnGetDamage;
-
-        for (int i = 1; i <= 6; i++)
+        if (ProgressManager.Instance.Memo.BOSS_2_Flag)
         {
-            character = GameObject.Find("Ghost_" + i).GetComponent<BattleCharacter>();
-            character.GetDamageHandler += OnGetDamage;
+            return;
         }
+
+        ExploreUI.Instance.SetVisible(false);
+        ExploreController.Instance.PlayerPause();
+        ExploreController.Instance.Write();
+        Camera.main.transform.DOMoveY(32, 2).OnComplete(() =>
+        {
+            ConversationUI.Open(12001, false, () =>
+            {
+                ChangeSceneUI.Instance.StartClock(() =>
+                {
+                    AudioSystem.Instance.Stop(true);
+                    MySceneManager.Instance.ChangeScene(MySceneManager.SceneType.Battle_BOSS_2, () =>
+                    {
+                        Plot_10 plot_10 = new Plot_10();
+                        BattleController.Instance.TurnStartHandler += plot_10.Start;
+
+                        BattleController.Instance.SpecialInit(() =>
+                        {
+                            ProgressManager.Instance.Memo.BOSS_2_Flag = true;
+                            AudioSystem.Instance.Stop(false);
+                            MySceneManager.Instance.ChangeScene(MySceneManager.Instance.LastScene, () =>
+                            {
+                                ExploreController.Instance.SetFloorFromMemo();
+                                ExploreUI.Instance.SetVisible(false);
+                                ConversationUI.Open(18001, false, () =>
+                                {
+                                    ExploreUI.Instance.SetVisible(true);
+                                });
+                            });
+                        }, () =>
+                        {
+                            AudioSystem.Instance.Stop(false);
+                            MySceneManager.Instance.ChangeScene(MySceneManager.SceneType.Villiage, () =>
+                            {
+                                ItemManager.Instance.PutBagItemIntoWarehouse();
+                                TeamManager.Instance.RecoverAllMember();
+                            });
+                        });
+                    });
+                });
+            });
+            ConversationUI.Instance.Handler = OnConversationHandler;
+        });
     }
 
-    public override void Start(Action callback)
+    private void OnConversationHandler(int id)
     {
-        if (_getDamageCharacter != null)
+        if (id == 12010)
         {
-            if (_getDamageCharacter.EnemyId == 24)
-            {
-                _plot_9_1.Check(_getDamageCharacter, callback);
-            }
-            else if ((_getDamageCharacter.EnemyId == 22 || _getDamageCharacter.EnemyId == 23))
-            {
-                _plot_9_2.Check(_getDamageCharacter, callback);
-            }
-            else
-            {
-                callback();
-            }
-            _getDamageCharacter = null;
+            Camera.main.transform.DOMoveY(34, 1);
         }
-        else
+        else if (id == 12015)
         {
-            callback();
+            SpriteRenderer sprite = GameObject.Find("uuz").GetComponent<SpriteRenderer>();
+            sprite.DOColor(Color.white, 1);
         }
-    }
-
-    private void OnGetDamage(BattleCharacter character)
-    {
-        _getDamageCharacter = character;
     }
 }

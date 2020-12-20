@@ -68,7 +68,7 @@ public class SkillData
         public int NeedPower { get; set; }
         public int Summon { get; set; }
         public int SubID { get; set; }
-        public string ParticleName { get; set; }
+        public string Animation { get; set; }
         public float ShowTime { get; set; }
         public string Name { get; set; }
         public string Comment { get; set; }

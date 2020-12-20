@@ -14,9 +14,8 @@ public class AI_Yukari : AI //八雲紫專用
             BattleCharacter target;
             if (_myself.Info.HPQueue.Count > 0)
             {
-                _selectedSkill = _skillList[1]; //電車
-                //target = GetTarget();
-                target = _myself;
+                _selectedSkill = _skillList[0]; //電車
+                target = GetTarget();
             }
             else
             {

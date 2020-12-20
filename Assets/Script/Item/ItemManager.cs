@@ -82,6 +82,7 @@ public class ItemManager
         AddItem(21002, 5, Type.Warehouse);
         AddItem(21003, 5, Type.Warehouse);
         AddItem(21004, 5, Type.Warehouse);
+        Money = 1000;
     }
 
     public void Save()

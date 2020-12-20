@@ -31,6 +31,7 @@ public class ExploreController
     private MapInfo _mapInfo;
     private MapMemo _memo; // 存檔用的
     private Vector2 _playerPosition;
+    private ExplorePlotChecker _plotChecker = new ExplorePlotChecker();
     private List<GameObject> _coinList = new List<GameObject>();
     private List<FieldEnemy> _fieldEnemyList = new List<FieldEnemy>();
     public List<Vector2Int> _pathFindList = new List<Vector2Int>();
@@ -43,6 +44,7 @@ public class ExploreController
         {
             ArriveFloor = memo.ArriveFloor;
         }
+        ArriveFloor = 12;
     }
 
     public void GenerateFloor(int id)
@@ -119,6 +121,8 @@ public class ExploreController
         GenerateCoin();
         GenerateEnemy();
         GameSystem.Instance.AutoSave();
+
+        _plotChecker.Check();
     }
 
     public void SetFloorFromMemo()

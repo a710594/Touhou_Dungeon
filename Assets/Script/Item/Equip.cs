@@ -11,13 +11,13 @@ public class Equip :Item
     public int DEF;
     public int MTK;
     public int MEF;
-
-
-    private int _lv;
+    public int Lv;
+    public int UpgradePrice;
+    public string Owner;
 
     public Equip() { }
 
-    public Equip(EquipData.TypeEnum type)
+    public Equip(EquipData.TypeEnum type) //default equip
     {
         EquipType = type;
         Name = "無";
@@ -32,9 +32,10 @@ public class Equip :Item
         {
             ID = id;
             Name = itemData.GetName();
+            Lv = lv;
             if (lv > 1) 
             {
-                Name += "+" + (_lv - 1);
+                Name += "+" + (Lv - 1);
             }
             Comment = itemData.GetComment();
             Icon = itemData.Icon;
@@ -44,10 +45,11 @@ public class Equip :Item
             Type = itemData.Type;
 
             EquipType = equipData.Type;
-            ATK = Mathf.RoundToInt(equipData.ATK * (1+(_lv-1)*0.1f));
-            DEF = Mathf.RoundToInt(equipData.DEF * (1 + (_lv - 1) * 0.1f));
-            MTK = Mathf.RoundToInt(equipData.MTK * (1 + (_lv - 1) * 0.1f));
-            MEF = Mathf.RoundToInt(equipData.MEF * (1 + (_lv - 1) * 0.1f));
+            ATK = Mathf.RoundToInt(equipData.ATK * (1+(Lv-1)*0.1f));
+            DEF = Mathf.RoundToInt(equipData.DEF * (1 + (Lv - 1) * 0.1f));
+            MTK = Mathf.RoundToInt(equipData.MTK * (1 + (Lv - 1) * 0.1f));
+            MEF = Mathf.RoundToInt(equipData.MEF * (1 + (Lv - 1) * 0.1f));
+            UpgradePrice = equipData.UpgradePrice;
         }
         else
         {
@@ -55,20 +57,24 @@ public class Equip :Item
         }
     }
 
-    public void SetData(int lv) 
+    public void LvUp()
     {
         ItemData.RootObject itemData = ItemData.GetData(ID);
         EquipData.RootObject equipData = EquipData.GetData(ID);
-
-        _lv = lv;
-        if (lv > 1)
+        if (Lv < MaxLv)
         {
-            Name = itemData.GetName();
-            Name += "+" + (_lv - 1);
+            Lv += 1;
         }
-        ATK = Mathf.RoundToInt(equipData.ATK * (1 + (_lv - 1) * 0.1f));
-        DEF = Mathf.RoundToInt(equipData.DEF * (1 + (_lv - 1) * 0.1f));
-        MTK = Mathf.RoundToInt(equipData.MTK * (1 + (_lv - 1) * 0.1f));
-        MEF = Mathf.RoundToInt(equipData.MEF * (1 + (_lv - 1) * 0.1f));
+        Name = itemData.GetName();
+        Name += "+" + (Lv - 1);
+        ATK = Mathf.RoundToInt(equipData.ATK * (1 + (Lv - 1) * 0.1f));
+        DEF = Mathf.RoundToInt(equipData.DEF * (1 + (Lv - 1) * 0.1f));
+        MTK = Mathf.RoundToInt(equipData.MTK * (1 + (Lv - 1) * 0.1f));
+        MEF = Mathf.RoundToInt(equipData.MEF * (1 + (Lv - 1) * 0.1f));
+    }
+
+    public void SetOwner(string owner)
+    {
+        Owner = owner;
     }
 }

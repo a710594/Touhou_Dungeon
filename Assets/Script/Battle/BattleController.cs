@@ -1009,7 +1009,7 @@ public class BattleController : MachineBehaviour
     public override void Update()
     {
         base.Update();
-
+#if UNITY_EDITOR
         if (Input.GetKeyDown(KeyCode.F1))
         {
             ChangeState<WinState>();
@@ -1018,5 +1018,6 @@ public class BattleController : MachineBehaviour
         {
             ChangeState<LoseState>();
         }
+#endif
     }
 }

@@ -22,7 +22,7 @@ public class ConversationData
         public MotionEnum Motion_1 { get; set; }
         public string Image_2 { get; set; }
         public MotionEnum Motion_2 { get; set; }
-        public int NextID { get; set; }
+        //public int NextID { get; set; }
 
         public string[] Images = new string[2];
         public MotionEnum[] Motions = new MotionEnum[2];

@@ -14,6 +14,7 @@ public class VilliageUI : MonoBehaviour
     public Button SaveButton;
     public Button BuyButton;
     public Button SellButton;
+    public Button EquipUpgradeButton;
     public Button CloseShopGroupButton;
     public GameObject MainGroup;
     public GameObject ShopGroup;
@@ -67,6 +68,11 @@ public class VilliageUI : MonoBehaviour
         SellUI.Open();
     }
 
+    private void EquipUpgradeOnClick()
+    {
+        EquipUpgradeUI.Open(ItemManager.Type.Warehouse);
+    }
+
     private void CloseShopGroupOnClick()
     {
         ShopGroup.SetActive(false);
@@ -87,6 +93,7 @@ public class VilliageUI : MonoBehaviour
         SaveButton.onClick.AddListener(SaveOnClick);
         BuyButton.onClick.AddListener(BuyOnClick);
         SellButton.onClick.AddListener(SellOnClick);
+        EquipUpgradeButton.onClick.AddListener(EquipUpgradeOnClick);
         CloseShopGroupButton.onClick.AddListener(CloseShopGroupOnClick);
 
         AudioSystem.Instance.Stop();

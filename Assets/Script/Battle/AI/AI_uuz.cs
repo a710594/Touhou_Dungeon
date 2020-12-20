@@ -11,6 +11,7 @@ public class AI_uuz : AI
     {
         base.Init(character, list);
         _myself.SetNoDamage(11002);
+        _myself.Animator.SetBool("IsShadow", true);
         _myself.Animator.SetBool("NoDamage", true);
     }
 
@@ -26,6 +27,7 @@ public class AI_uuz : AI
             }
             else
             {
+                _myself.Animator.SetBool("IsShadow", false);
                 if (_startTurn == -1)
                 {
                     _startTurn = BattleController.Instance.Turn;

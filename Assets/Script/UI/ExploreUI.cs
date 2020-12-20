@@ -187,6 +187,7 @@ public class ExploreUI : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+#if UNITY_EDITOR
         if (Input.GetKeyDown(KeyCode.F1))
         {
             ExploreController.Instance.ForceEnterBattle();
@@ -197,10 +198,10 @@ public class ExploreUI : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            Plot_8 plot_8 = new Plot_8();
+            Plot_9 plot_8 = new Plot_9();
             plot_8.Start();
         }
-
+#endif
         if (_canMove)
         {
             if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A))

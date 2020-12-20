@@ -396,10 +396,10 @@ public class Skill
 
     protected virtual void ShowAnimation()
     {
-        if (Data.ParticleName != "x")
+        if (Data.Animation != "x")
         {
             GameObject particle;
-            particle = ResourceManager.Instance.Spawn("Skill/" + Data.ParticleName, ResourceManager.Type.Other);
+            particle = ResourceManager.Instance.Spawn("Skill/" + Data.Animation, ResourceManager.Type.Other);
             particle.transform.position = ((Vector2)_targetPosition) + Vector2.up; // + Vector2.up 是為了調整特效生成的位置
 
             SpriteRenderer sprite = particle.GetComponent<SpriteRenderer>();

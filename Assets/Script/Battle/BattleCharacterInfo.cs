@@ -289,8 +289,6 @@ public class BattleCharacterInfo
         EquipMTK = EnemyData.Equip_MTK;
         EquipMEF = EnemyData.Equip_MEF;
         Camp = CampEnum.Enemy;
-
-        SkillData.RootObject skillData = SkillData.GetData(EnemyData.SkillList[0]);
     }
 
     public virtual void Init(int id, int lv, int EquipAtk,int EquipMtk, int EquipDef, int EquipMef) //計算機中的玩家

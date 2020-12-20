@@ -102,6 +102,7 @@ public class GameSystem : MonoBehaviour
 
     private void Update()
     {
+#if UNITY_EDITOR
         if (Input.GetKeyDown(KeyCode.F3))
         {
             SaveGame();
@@ -122,11 +123,7 @@ public class GameSystem : MonoBehaviour
             AudioSystem.Instance.Play("Forest", true);
             ExploreController.Instance.GenerateFloor(6);
         }
-
-        if (Input.GetKeyDown(KeyCode.A))
-        {
-            EquipUpgradeUI.Open(ItemManager.Type.Warehouse);
-        }
+#endif
     }
 
     //void OnApplicationPause()

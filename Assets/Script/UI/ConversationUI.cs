@@ -61,16 +61,16 @@ public class ConversationUI : MonoBehaviour
 
     private void NextConversationID(int nextId)
     {
-        if (nextId == 0)
+        ConversationData.RootObject data = ConversationData.GetData(nextId);
+        if (data == null)
         {
             Finish();
-
-            return;
         }
-
-        ConversationData.RootObject data = ConversationData.GetData(nextId);
-        _data = data;
-        SetData(data);
+        else
+        {
+            _data = data;
+            SetData(data);
+        }
     }
 
     private void SetData(ConversationData.RootObject data)
@@ -181,7 +181,7 @@ public class ConversationUI : MonoBehaviour
 
         if (!Typewriter.IsTyping)
         {
-            NextConversationID(_data.NextID);
+            NextConversationID(_data.ID + 1);
         }
         else
         {

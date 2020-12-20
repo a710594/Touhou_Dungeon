@@ -20,7 +20,11 @@ public class AI : MonoBehaviour
         {
             _skillList.Add(SkillFactory.GetNewSkill(list[i], _myself.Info, 1)); //等級填1是暫時的
         }
-        _myself.SelectedSkill = _skillList[0];
+
+        if (_skillList.Count > 0)
+        {
+            _myself.SelectedSkill = _skillList[0];
+        }
     }
 
     public virtual void StartAI(Action callback)

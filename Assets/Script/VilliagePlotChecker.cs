@@ -14,9 +14,4 @@ public class VilliagePlotChecker : MonoBehaviour
             plot_7.Start();
         }
     }
-
-    void Update()
-    {
-        
-    }
 }

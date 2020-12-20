@@ -21,6 +21,7 @@ public class EquipData
         public int DEF { get; set; }
         public int MTK { get; set; }
         public int MEF { get; set; }
+        public int UpgradePrice { get; set; }
     }
 
     private static Dictionary<int, RootObject> _dataDic = new Dictionary<int, RootObject>();

@@ -8,7 +8,6 @@ public class ProgressMemo
     public bool MoveTutorial = false; //探索場景的移動教學
     public bool BOSS_1_Flag= false; //第一場 BOSS 戰
     public bool Youmu_Flag = false; //妖夢入隊
+    public bool Floor7_Flag = false; //第7樓的對話
     public bool BOSS_2_Flag = false; //第二場 BOSS 戰
-    public bool LeftEnemyDestroy = false; //左邊的敵人全滅
-    public bool RightEnemyDestroy = false; //右邊的敵人全滅
 }

@@ -6,28 +6,42 @@ using DG.Tweening;
 
 public class Plot_5_2 : Plot
 {
-    private bool _start1 = false;
-    private bool _start2 = false;
+    private CheckState _start1 = CheckState.NotSatisfy;
+    private CheckState _start2 = CheckState.NotSatisfy;
     private Timer _timer = new Timer();
 
-    public void Check(Action callback) //檢查紫還剩幾條血
+    public Plot_5_2()
     {
-        BattleCharacter character = GameObject.Find("Yukari").GetComponent<BattleCharacter>();
-        if (!_start1 &&character.Info.HPQueue.Count == 1) //剩一條血時觸發
-        {
+        BattleCharacter character;
+        character = GameObject.Find("Yukari").GetComponent<BattleCharacter>();
+        character.GetDamageHandler += Check;
+    }
 
+    public override void Start(Action callback)
+    {
+        if (_start1 == CheckState.Satisfy)
+        {
             Start_1(callback);
-            _start1 = true;
         }
-        else if (!_start2 &&  character.Info.HPQueue.Count == 0)
+        else if (_start2 == CheckState.Satisfy)
         {
             Start_2(callback);
-            _start2 = true;
-            BattleController.Instance.ShowEndHandler -= Check;
         }
         else
         {
             callback();
+        }
+    }
+
+    private void Check(BattleCharacter character) //檢查紫還剩幾條血
+    {
+        if (_start1 == CheckState.NotSatisfy &&character.Info.HPQueue.Count == 2 && character.Info.CurrentHP == 0) //剩一條血時觸發
+        {
+            _start1 = CheckState.Satisfy;
+        }
+        else if (_start2 == CheckState .NotSatisfy &&  character.Info.HPQueue.Count == 1 && character.Info.CurrentHP == 0)
+        {
+            _start2 = CheckState.Satisfy;
         }
     }
 
@@ -59,6 +73,7 @@ public class Plot_5_2 : Plot
                 _timer.Start(1, ()=> 
                 {
                     BattleUI.Instance.SetVisible(true);
+                    _start1 = CheckState.Completed;
                     callback();
                 });
             });
@@ -75,6 +90,7 @@ public class Plot_5_2 : Plot
             ConversationUI.Open(7001, false, () =>
             {
                 BattleUI.Instance.SetVisible(true);
+                _start2 = CheckState.Completed;
                 callback();
             });
         });
