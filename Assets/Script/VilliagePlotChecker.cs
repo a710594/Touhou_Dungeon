@@ -8,10 +8,15 @@ public class VilliagePlotChecker : MonoBehaviour
 
     void Start()
     {
-        if (ProgressManager.Instance.Memo.BOSS_1_Flag && !ProgressManager.Instance.Memo.Youmu_Flag)
+        if (ProgressManager.Instance.Memo.BOSS_1_Flag && !ProgressManager.Instance.Memo.Stage_2_Flag)
         {
             Plot_7 plot_7 = new Plot_7();
             plot_7.Start();
+        }
+        else if (ProgressManager.Instance.Memo.BOSS_2_Flag && !ProgressManager.Instance.Memo.Stage_3_Flag)
+        {
+            Plot_12 plot_12 = new Plot_12();
+            plot_12.Start();
         }
     }
 }

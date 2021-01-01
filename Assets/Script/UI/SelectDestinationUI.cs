@@ -39,17 +39,31 @@ public class SelectDestinationUI : MonoBehaviour
                 MapButtons[i].gameObject.SetActive(false);
             }
         }
+
+        //等第三關做好之後要改
+        if (ExploreController.Instance.ArriveFloor == 13)
+        {
+            MapButtons[2].SetData("紅魔館", null);
+            MapButtons[2].gameObject.SetActive(true);
+        }
     }
 
     private void MapOnClick(object obj) 
     {
-        DungeonGroupData.RootObject group = (DungeonGroupData.RootObject)obj;
-        List<DungeonData.RootObject> floorList = DungeonData.GetFloorList(group.ID, ExploreController.Instance.ArriveFloor);
-        FloorScrollView.SetData(new ArrayList(floorList));
-        FloorScrollView.gameObject.SetActive(true);
-        //GroupScrollView.gameObject.SetActive(false);
-        MapGroup.SetActive(false);
-        GroupLabel.text = group.Name;
+        if (obj != null)
+        {
+            DungeonGroupData.RootObject group = (DungeonGroupData.RootObject)obj;
+            List<DungeonData.RootObject> floorList = DungeonData.GetFloorList(group.ID, ExploreController.Instance.ArriveFloor);
+            FloorScrollView.SetData(new ArrayList(floorList));
+            FloorScrollView.gameObject.SetActive(true);
+            //GroupScrollView.gameObject.SetActive(false);
+            MapGroup.SetActive(false);
+            GroupLabel.text = group.Name;
+        }
+        else
+        {
+            ConfirmUI.Open("敬請期待！", "確定", null);
+        }
     }
 
     private void FloorOnClick(object floor)

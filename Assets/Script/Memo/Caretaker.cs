@@ -25,9 +25,10 @@ public class Caretaker
     public void Init()
     {
 #if UNITY_EDITOR || UNITY_STANDALONE_WIN
-        _prePath = Path.Combine(Application.dataPath, "Resources/SaveData/");
+        _prePath = Path.Combine(Application.dataPath, "Resources/SaveData/StoryMode/");
 #elif UNITY_ANDROID || UNITY_IOS
         _prePath = Application.persistentDataPath;
+        _prePath = Path.Combine(Application.persistentDataPath, "SaveData/StoryMode/");
 #endif
 
         if (!Directory.Exists(_prePath))

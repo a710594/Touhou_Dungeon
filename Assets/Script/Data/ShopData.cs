@@ -16,9 +16,10 @@ public class ShopData
     {
         public int ID { get; set; }
         public TypeEnum Type { get; set; }
+        public int UnlockFloor { get; set; }
     }
     private static Dictionary<int, RootObject> _dataDic = new Dictionary<int, RootObject>();
-    private static Dictionary<TypeEnum, List<int>> _typeIdDic = new Dictionary<TypeEnum, List<int>>();
+    private static Dictionary<TypeEnum, List<RootObject>> _typeIdDic = new Dictionary<TypeEnum, List<RootObject>>();
 
     public static void Load()
     {
@@ -35,13 +36,13 @@ public class ShopData
         jsonString = www.downloadHandler.text;
 #endif
         var dataList = JsonConvert.DeserializeObject<List<RootObject>>(jsonString);
-        _typeIdDic.Add(TypeEnum.Item, new List<int>());
-        _typeIdDic.Add(TypeEnum.Equip, new List<int>());
+        _typeIdDic.Add(TypeEnum.Item, new List<RootObject>());
+        _typeIdDic.Add(TypeEnum.Equip, new List<RootObject>());
 
         for (int i = 0; i < dataList.Count; i++)
         {
             _dataDic.Add(dataList[i].ID, dataList[i]);
-            _typeIdDic[dataList[i].Type].Add(dataList[i].ID);
+            _typeIdDic[dataList[i].Type].Add(dataList[i]);
         }
     }
 
@@ -54,6 +55,15 @@ public class ShopData
 
     public static List<int> GetIDList(TypeEnum type)
     {
-        return _typeIdDic[type];
+        List<int> list = new List<int>();
+        for (int i=0; i<_typeIdDic[type].Count; i++) 
+        {
+            if (ExploreController.Instance.ArriveFloor >= _typeIdDic[type][i].UnlockFloor)
+            {
+                list.Add(_typeIdDic[type][i].ID);
+            }
+        }
+
+        return list;
     }
 }
