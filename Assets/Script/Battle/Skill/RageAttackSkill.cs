@@ -9,6 +9,7 @@ public class RageAttackSkill : AttackSkill
         Data = data;
         Lv = lv;
         _user = user;
+        _hasNoTarget = false;
         _value = data.ValueList[lv - 1];
         _isMagic = data.IsMagic;
         if (data.SubID != 0)

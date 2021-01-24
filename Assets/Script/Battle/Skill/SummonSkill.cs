@@ -10,6 +10,7 @@ public class SummonSkill : Skill
         Data = data;
         Lv = lv;
         _user = user;
+        _hasNoTarget = true;
         if (data.SubID != 0)
         {
             SkillData.RootObject skillData = SkillData.GetData(Data.SubID);
@@ -18,15 +19,10 @@ public class SummonSkill : Skill
         }
     }
 
-    public override void SetEffects()
+    public override void SetEffect(BattleCharacter target, Dictionary<BattleCharacter, List<FloatingNumberData>> floatingNumberDic)
     {
-        SetEffect(null);
-    }
-
-    public override void SetEffect(BattleCharacter target)
-    {
-        Timer timer1 = new Timer(Data.ShowTime / 2f, () =>
-        {
+        //Timer timer1 = new Timer(Data.ShowTime / 2f, () =>
+        //{
             BattleCharacter character;
             for (int i = 0; i < _skillRangeList.Count; i++)
             {
@@ -37,11 +33,11 @@ public class SummonSkill : Skill
             }
 
             BattleUI.Instance.SetSkillLabel(false);
-        });
+        //});
 
-        Timer timer2 = new Timer(_floatingNumberTime + Data.ShowTime / 2f, () =>
-        {
+        //Timer timer2 = new Timer(_floatingNumberTime + Data.ShowTime / 2f, () =>
+        //{
             CheckSubSkill(target, HitType.Hit);
-        });
+        //});
     }
 }

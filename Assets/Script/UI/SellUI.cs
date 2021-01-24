@@ -125,7 +125,7 @@ public class SellUI : MonoBehaviour
         SetAmountGroup.Open(maxAmount, "要賣幾個？", (amount) =>
         {
             ItemManager.Instance.AddMoney(sellPrice * amount);
-            ItemManager.Instance.MinusItem(_selectedItem.ID, amount, ItemManager.Type.Warehouse);
+            ItemManager.Instance.MinusItem(_selectedItem, amount, ItemManager.Type.Warehouse);
 
             SetData();
             SetScrollView(_itemType, true);

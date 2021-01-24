@@ -10,6 +10,7 @@ public class FieldSkill : Skill
         Data = data;
         Lv = lv;
         _user = user;
+        _hasNoTarget = true;
         if (data.SubID != 0)
         {
             SkillData.RootObject skillData = SkillData.GetData(Data.SubID);
@@ -18,12 +19,7 @@ public class FieldSkill : Skill
         }
     }
 
-    public override void SetEffects()
-    {
-        SetEffect(null);
-    }
-
-    public override void SetEffect(BattleCharacter target)
+    public override void SetEffect(BattleCharacter target, Dictionary<BattleCharacter, List<FloatingNumberData>> floatingNumberDic)
     {
         for (int i = 0; i < _skillRangeList.Count; i++)
         {
@@ -32,10 +28,12 @@ public class FieldSkill : Skill
 
         BattleUI.Instance.SetSkillLabel(false);
 
-        Timer timer = new Timer(Data.ShowTime / 2f + _floatingNumberTime, ()=> 
-        {
-            CheckSubSkill(target, HitType.Hit);
-        });
+        //Timer timer = new Timer(Data.ShowTime / 2f + _floatingNumberTime, ()=> 
+        //{
+        //    CheckSubSkill(target, HitType.Hit);
+        //});
+
+        CheckSubSkill(target, HitType.Hit);
     }
 
     public void SetSkillRange(List<Vector2Int> list) //for subskill

@@ -12,6 +12,7 @@ public class CureSkill : Skill
         Data = data;
         Lv = lv;
         _user = user;
+        _hasNoTarget = false;
         _value = data.ValueList[lv - 1];
         if (data.SubID != 0)
         {
@@ -21,35 +22,29 @@ public class CureSkill : Skill
         }
     }
 
-    public override void SetEffects()
-    {
-        for (int i = 0; i < _targetList.Count; i++)
-        {
-            SetEffect(_targetList[i]);
-        }
-
-        if (_targetList.Count == 0)
-        {
-            BattleUI.Instance.SetSkillLabel(false);
-            _skillCallback();
-        }
-    }
-
-    public override void SetEffect(BattleCharacter target)
+    public override void SetEffect(BattleCharacter target, Dictionary<BattleCharacter, List<FloatingNumberData>> floatingNumberDic)
     {
         int recover = CalculateRecover(_user);
-        Timer timer1 = new Timer(Data.ShowTime / 2f, () =>
-        {
-            target.SetRecoverHP(recover);
 
-            BattleUI.Instance.SetFloatingNumber(target, recover.ToString(), FloatingNumber.Type.Recover);
-            BattleUI.Instance.SetLittleHPBar(target, true);
-        });
+        target.SetRecoverHP(recover);
 
-        Timer timer2 = new Timer(Data.ShowTime / 2f + _floatingNumberTime, () =>
-        {
-            CheckSubSkill(target, HitType.Hit);
-        });
+        _floatingNumberDic = floatingNumberDic;
+        SetFloatingNumberDic(target, FloatingNumber.Type.Recover, recover.ToString());
+
+        CheckSubSkill(target, HitType.Hit);
+
+        //    Timer timer1 = new Timer(Data.ShowTime / 2f, () =>
+        //    {
+        //        target.SetRecoverHP(recover);
+
+        //        BattleUI.Instance.SetFloatingNumber(target, recover.ToString(), FloatingNumber.Type.Recover);
+        //        BattleUI.Instance.SetLittleHPBar(target, true);
+        //    });
+
+        //    Timer timer2 = new Timer(Data.ShowTime / 2f + _floatingNumberTime, () =>
+        //    {
+        //        CheckSubSkill(target, HitType.Hit);
+        //    });
     }
 
     public int CalculateRecover(BattleCharacterInfo executor)

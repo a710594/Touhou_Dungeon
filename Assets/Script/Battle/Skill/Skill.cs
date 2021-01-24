@@ -23,6 +23,7 @@ public class Skill
     protected int _skillCallBackCount = 0;
     protected int _targetCount = 0;
     protected int _value;
+    protected bool _hasNoTarget; //有些種類的技能天生沒有目標
     protected Vector3 _targetPosition;
     protected Action _skillCallback;
     protected Skill _subSkill;
@@ -31,6 +32,7 @@ public class Skill
     protected List<Vector2Int> _skillDistanceList = new List<Vector2Int>();
     protected List<Vector2Int> _skillRangeList = new List<Vector2Int>();
     protected List<BattleCharacter> _targetList = new List<BattleCharacter>();
+    protected Dictionary<BattleCharacter, List<FloatingNumberData>> _floatingNumberDic = new Dictionary<BattleCharacter, List<FloatingNumberData>>();
 
     public Skill() { }
 
@@ -190,6 +192,19 @@ public class Skill
         _skillCallback = callback;
         GetTargetList();
 
+        _floatingNumberDic.Clear();
+        if (_hasNoTarget)
+        {
+            SetEffect(null, _floatingNumberDic);
+        }
+        else
+        {
+            for (int i = 0; i < _targetList.Count; i++)
+            {
+                SetEffect(_targetList[i], _floatingNumberDic);
+            }
+        }
+
         if (IsSpellCard)
         {
             string largeImage = "";
@@ -222,7 +237,7 @@ public class Skill
     public bool CheckSkillCallbackCount()
     {
         //這幾種技能的目標比較特殊,不走一般計算目標數的流程
-        if (Data.Type == SkillData.TypeEnum.Field || Data.Type == SkillData.TypeEnum.CureLeastHP || Data.Type == SkillData.TypeEnum.Summon)
+        if (_hasNoTarget)
         {
             return true;
         }
@@ -241,9 +256,7 @@ public class Skill
         }
     }
 
-    public virtual void SetEffects() { }
-
-    public virtual void SetEffect(BattleCharacter target)
+    public virtual void SetEffect(BattleCharacter target, Dictionary<BattleCharacter, List<FloatingNumberData>> floatingNumberDic)
     {
     }
 
@@ -275,13 +288,13 @@ public class Skill
             if (_subSkill is FieldSkill)
             {
                 ((FieldSkill)_subSkill).SetSkillRange(_skillRangeList);
-                _subSkill.SetEffect(null);
+                _subSkill.SetEffect(null, _floatingNumberDic);
             }
             else
             {
-                _subSkill.SetEffect(target);
+                _subSkill.SetEffect(target, _floatingNumberDic);
             }
-            CheckSkillCallbackCount();
+            //CheckSkillCallbackCount();
         }
         else
         {
@@ -293,19 +306,25 @@ public class Skill
     {
         if (CheckSkillCallbackCount())
         {
-            float totalShowTime = Data.ShowTime;
-            Skill skill = this;
-            while (skill._partnerSkill!= null)
-            {
-                skill = skill._partnerSkill;
-                totalShowTime += skill.Data.ShowTime;
-            }
+            //float totalShowTime = Data.ShowTime;
+            //Skill skill = this;
+            //while (skill._partnerSkill!= null)
+            //{
+            //    skill = skill._partnerSkill;
+            //    totalShowTime += skill.Data.ShowTime;
+            //}
 
-            Timer timer = new Timer(totalShowTime / 2f, ()=> 
-            {
-                BattleUI.Instance.SetSkillLabel(false);
-                _skillCallback();
-            });
+            //Timer timer = new Timer(totalShowTime / 2f, ()=> 
+            //{
+                //foreach (KeyValuePair<BattleCharacter, List<FloatingNumberData>> item in _floatingNumberDic)
+                //{
+                //    BattleUI.Instance.SetFloatingNumber(item.Key, item.Value);
+                //    BattleUI.Instance.SetLittleHPBar(item.Key, true);
+                //}
+
+                //BattleUI.Instance.SetSkillLabel(false);
+                //_skillCallback();
+            //});
         }
     }
 
@@ -384,13 +403,15 @@ public class Skill
             Camera.main.transform.DOMove(_targetPosition + Vector3.up, Vector2.Distance(_user.Position, _targetPosition) / 4f).OnComplete(() =>
             {
                 ShowAnimation();
-                SetEffects();
+                ShowFloatingNumber();
+                RunCallback();
             });
         }
         else
         {
             ShowAnimation();
-            SetEffects();
+            ShowFloatingNumber();
+            RunCallback();
         }
     }
 
@@ -430,14 +451,47 @@ public class Skill
             }
         }
 
-        if (_targetList.Count > 0 && _user.Camp == BattleCharacterInfo.CampEnum.Partner && !IsSpellCard)
+
+        Timer timer = new Timer();
+        timer.Start(Data.ShowTime, () =>
         {
-            BattleController.Instance.AddPower(_targetList.Count * Data.AddPower);
-            Timer timer = new Timer();
-            timer.Start(Data.ShowTime, ()=> 
+            if (_targetList.Count > 0 && _user.Camp == BattleCharacterInfo.CampEnum.Partner && !IsSpellCard)
             {
+                BattleController.Instance.AddPower(_targetList.Count * Data.AddPower);
                 BattleUI.Instance.DropPowerPoint(_targetList);
-            });
+            }
+        });
+    }
+
+    protected void ShowFloatingNumber()
+    {
+        Timer timer = new Timer(Data.ShowTime / 2f, () =>
+        {
+            foreach (KeyValuePair<BattleCharacter, List<FloatingNumberData>> item in _floatingNumberDic)
+            {
+                BattleUI.Instance.SetFloatingNumber(item.Key, item.Value);
+                BattleUI.Instance.SetLittleHPBar(item.Key, true);
+                item.Key.CheckLiveState();
+            }
+        });
+    }
+
+    protected void RunCallback()
+    {
+        Timer timer = new Timer();
+        timer.Start(Data.ShowTime + 0.5f, () =>
+        {
+            BattleUI.Instance.SetSkillLabel(false);
+            _skillCallback();
+        });
+    }
+
+    protected void SetFloatingNumberDic(BattleCharacter character, FloatingNumber.Type type, string text)
+    {
+        if (!_floatingNumberDic.ContainsKey(character))
+        {
+            _floatingNumberDic.Add(character, new List<FloatingNumberData>());
         }
+        _floatingNumberDic[character].Add(new FloatingNumberData(type, text));
     }
 }

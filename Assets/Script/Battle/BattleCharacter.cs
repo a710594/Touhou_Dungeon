@@ -22,7 +22,6 @@ public class BattleCharacter : MonoBehaviour
 
     public Action<BattleCharacter> GetDamageHandler;
     public Action OnDeathHandler;
-    public Action<int> OnHPDequeueHandler;
 
     public Vector2Int TargetPosition = new Vector2Int();
     public SpriteRenderer Sprite;
@@ -40,24 +39,24 @@ public class BattleCharacter : MonoBehaviour
 
     private int _getDamage = 0; //該回合累積的傷害
 
-    public LiveStateEnum LiveState
-    {
-        get
-        {
-            if (Info.CurrentHP > 0)
-            {
-                return LiveStateEnum.Alive;
-            }
-            else if (Info.CurrentHP == 0 && Info.IsTeamMember)
-            {
-                return LiveStateEnum.Dying;
-            }
-            else
-            {
-                return LiveStateEnum.Dead;
-            }
-        }
-    }
+    public LiveStateEnum LiveState;
+    //{
+    //    get
+    //    {
+    //        if (Info.CurrentHP > 0)
+    //        {
+    //            return LiveStateEnum.Alive;
+    //        }
+    //        else if (Info.CurrentHP == 0 && Info.IsTeamMember)
+    //        {
+    //            return LiveStateEnum.Dying;
+    //        }
+    //        else
+    //        {
+    //            return LiveStateEnum.Dead;
+    //        }
+    //    }
+    //}
 
     public bool CanHitTarget
     {
@@ -383,6 +382,33 @@ public class BattleCharacter : MonoBehaviour
             Info.RemoveSleep();
         }
 
+        if (Info.CurrentHP <= 0)
+        {
+            if (Info.HPQueue.Count > 0)
+            {
+                Info.HPDequeue();
+            }
+            else
+            {
+                if (!Info.IsTeamMember)
+                {
+                    LiveState = LiveStateEnum.Dead;
+                }
+                else
+                {
+                    if (LiveState == LiveStateEnum.Alive)
+                    {
+                        LiveState = LiveStateEnum.Dying;
+                    }
+                    else if (LiveState == LiveStateEnum.Dying)
+                    {
+                        LiveState = LiveStateEnum.Dead;
+                    }
+                }
+            }
+        }
+
+
         if (GetDamageHandler != null)
         {
             GetDamageHandler(this);
@@ -396,14 +422,15 @@ public class BattleCharacter : MonoBehaviour
 
     public virtual void SetPoisonDamage() //回合結束時計算毒傷害
     {
+        int totalDamage = 0;
         List<int> damageList = Info.GetPoisonDamageList();
         for(int i=0; i< damageList.Count; i++)
         {
-            Info.CurrentHP -= damageList[i];
-
-            BattleUI.Instance.SetFloatingNumber(this, damageList[i].ToString(), FloatingNumber.Type.Poison);
-            BattleUI.Instance.SetLittleHPBar(this, true);
+            totalDamage += damageList[i];
         }
+        SetDamage(totalDamage);
+        BattleUI.Instance.SetFloatingNumber(this, totalDamage.ToString(), FloatingNumber.Type.Poison);
+        BattleUI.Instance.SetLittleHPBar(this, true);
         CheckLiveState();
     }
 
@@ -419,8 +446,9 @@ public class BattleCharacter : MonoBehaviour
 
     public void SetRecoverHP(int recover)
     {
-        if (LiveState == BattleCharacter.LiveStateEnum.Dying)
+        if (LiveState == LiveStateEnum.Dying)
         {
+            LiveState = LiveStateEnum.Alive;
             GrayScale.SetScale(1);
             Animator.SetBool("IsDying", false);
         }
@@ -476,7 +504,8 @@ public class BattleCharacter : MonoBehaviour
             {
                 if (Info.HPQueue.Count > 0)
                 {
-                    HPDequeue();
+                    //HPDequeue();
+                    BattleUI.Instance.SetLittleHPBar(this, true);
                 }
                 else
                 {
@@ -486,16 +515,16 @@ public class BattleCharacter : MonoBehaviour
         }
     }
 
-    public void HPDequeue()
-    {
-        Info.HPDequeue();
-        BattleUI.Instance.SetLittleHPBar(this, true);
+    //public void HPDequeue()
+    //{
+    //    Info.HPDequeue();
+    //    BattleUI.Instance.SetLittleHPBar(this, true);
 
-        if (OnHPDequeueHandler != null)
-        {
-            OnHPDequeueHandler(Info.HPQueue.Count);
-        }
-    }
+    //    if (OnHPDequeueHandler != null)
+    //    {
+    //        OnHPDequeueHandler(Info.HPQueue.Count);
+    //    }
+    //}
 
     public void SetDeath()
     {

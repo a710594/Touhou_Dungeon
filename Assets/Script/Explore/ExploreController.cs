@@ -270,7 +270,7 @@ public class ExploreController
 
         MySceneManager.Instance.ChangeScene(MySceneManager.SceneType.Villiage, () =>
         {
-            ItemManager.Instance.PutBagItemIntoWarehouse();
+            ItemManager.Instance.BagToWarehouse();
             TeamManager.Instance.RecoverAllMember();
             GameSystem.Instance.AutoSave();
         });
@@ -337,7 +337,7 @@ public class ExploreController
                     AudioSystem.Instance.Stop(false);
                     MySceneManager.Instance.ChangeScene(MySceneManager.SceneType.Villiage, () =>
                     {
-                        ItemManager.Instance.PutBagItemIntoWarehouse();
+                        ItemManager.Instance.BagToWarehouse();
                         TeamManager.Instance.RecoverAllMember();
                     });
                 });

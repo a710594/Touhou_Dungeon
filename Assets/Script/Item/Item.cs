@@ -12,6 +12,7 @@ public class Item
     public int Price;
     public int Amount;
     public bool CanCook;
+    public bool CanBeStacked;
     public ItemData.TypeEnum Type;
 
     public Item() { }
@@ -30,11 +31,26 @@ public class Item
             Price = itemData.Price;
             Amount = amount;
             CanCook = itemData.CanCook;
+            CanBeStacked = itemData.CanBeStacked;
             Type = itemData.Type;
         }
         else
         {
             Debug.Log("裝備資料不存在!");
         }
+    }
+
+    public Item(Item item, int amount)
+    {
+        ID = item.ID;
+        Name = item.Name;
+        Comment = item.Comment;
+        Icon = item.Icon;
+        Volume = item.Volume;
+        Price = item.Price;
+        Amount = amount;
+        CanCook = item.CanCook;
+        CanBeStacked = item.CanBeStacked;
+        Type = item.Type;
     }
 }

@@ -81,10 +81,10 @@ public class IconCard : MonoBehaviour {
         Icon.gameObject.SetActive(true);
         Icon.overrideSprite = Resources.Load<Sprite>("Image/Item/" + equip.Icon);
         NameLabel.text = equip.Name;
-        AmountLabel.gameObject.SetActive(false);
-        //AmountLabel.gameObject.SetActive(true);
+        //AmountLabel.gameObject.SetActive(false);
+        AmountLabel.gameObject.SetActive(true);
+        AmountLabel.text = "1";
         //AmountLabel.text = "Lv." + equip.Lv;
-        //Amount = 0;
     }
 
     private void Init(ItemData.RootObject data, int have, int need)

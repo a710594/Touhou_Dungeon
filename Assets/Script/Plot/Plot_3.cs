@@ -46,7 +46,7 @@ public class Plot_3 : Plot
                                 AudioSystem.Instance.Stop(false);
                                 MySceneManager.Instance.ChangeScene(MySceneManager.SceneType.Villiage, () =>
                                 {
-                                    ItemManager.Instance.PutBagItemIntoWarehouse();
+                                    ItemManager.Instance.BagToWarehouse();
                                     TeamManager.Instance.RecoverAllMember();
                                 });
                             });

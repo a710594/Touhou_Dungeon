@@ -34,12 +34,6 @@ public class ItemManager
     private Dictionary<ItemData.TypeEnum, List<Item>> _bagTypeDic = new Dictionary<ItemData.TypeEnum, List<Item>>();
     private Dictionary<ItemData.TypeEnum, List<Item>> _warehouseTypeDic = new Dictionary<ItemData.TypeEnum, List<Item>>();
 
-    private Dictionary<EquipData.TypeEnum, List<Equip>> _bagEquipDic = new Dictionary<EquipData.TypeEnum, List<Equip>>();
-    private Dictionary<EquipData.TypeEnum, List<Equip>> _warehouseEquipDic = new Dictionary<EquipData.TypeEnum, List<Equip>>();
-
-    private List<Item> _bagCanCookList = new List<Item>();
-    private List<Item> _warehouseCanCookList = new List<Item>();
-
     private Equip _defaultWeapon = new Equip(EquipData.TypeEnum.Weapon);
     private Equip _defaultArmor = new Equip(EquipData.TypeEnum.Armor);
 
@@ -53,31 +47,26 @@ public class ItemManager
             _warehouseTypeDic.Add(type, new List<Item>());
         }
 
-        _bagEquipDic.Clear();
-        _warehouseEquipDic.Clear();
-        foreach (EquipData.TypeEnum type in Enum.GetValues(typeof(EquipData.TypeEnum)))
-        {
-            _bagEquipDic.Add(type, new List<Equip>());
-            _warehouseEquipDic.Add(type, new List<Equip>());
-        }
-
         ItemMemo memo = Caretaker.Instance.Load<ItemMemo>();
         if (memo != null)
         {
             Money = memo.Money;
             KeyAmount = memo.KeyAmount;
 
-            foreach (Item item in memo.BagItemList)
+            List<Item> bagList = memo.GetBagList();
+            for(int i=0; i<bagList.Count; i++)
             {
-                AddBagItem(item.ID, item.Amount);
+                _bagTypeDic[ItemData.TypeEnum.All].Add(bagList[i]);
+                _bagTypeDic[bagList[i].Type].Add(bagList[i]);
             }
 
-            foreach (Item item in memo.WarehouseItemList)
+            List<Item> warehouseList = memo.GetWarehouseList();
+            for (int i = 0; i < warehouseList.Count; i++)
             {
-                AddWarehouseItem(item.ID, item.Amount);
+                _warehouseTypeDic[ItemData.TypeEnum.All].Add(warehouseList[i]);
+                _warehouseTypeDic[warehouseList[i].Type].Add(warehouseList[i]);
             }
         }
-
         AddItem(1006, 5, Type.Warehouse);
         AddItem(21002, 5, Type.Warehouse);
         AddItem(21003, 5, Type.Warehouse);
@@ -92,15 +81,8 @@ public class ItemManager
         memo.CurrentBagVolume = CurrentBagVolume;
         memo.KeyAmount = KeyAmount;
 
-        foreach (Item item in _bagTypeDic[ItemData.TypeEnum.All])
-        {
-            memo.BagItemList.Add(item);
-        }
-
-        foreach (Item item in _warehouseTypeDic[ItemData.TypeEnum.All])
-        {
-            memo.WarehouseItemList.Add(item);
-        }
+        memo.SetBagGroup(_bagTypeDic[ItemData.TypeEnum.All]);
+        memo.SetWarehouseGroup(_warehouseTypeDic[ItemData.TypeEnum.All]);
 
         Caretaker.Instance.Save<ItemMemo>(memo);
     }
@@ -164,40 +146,18 @@ public class ItemManager
         Item item;
         ItemData.RootObject data = ItemData.GetData(id);
 
-        if (data.Type == ItemData.TypeEnum.Equip)
+        if (BagItemListContains(id) && data.CanBeStacked)
         {
-            Equip equip;
-            for (int i = 0; i < amount; i++)
-            {
-                equip = new Equip(data.ID);
-                AddBagEquip(equip);
-            }
+            item = GetBagItem(id);
+            item.Amount += amount;
         }
         else
         {
-            if (BagItemListContains(id))
-            {
-                item = GetBagItem(id);
-                item.Amount += amount;
-            }
-            else
-            {
-                if (data.Type == ItemData.TypeEnum.Food || data.Type == ItemData.TypeEnum.Medicine)
-                {
-                    item = new Food(id, amount);
-                }
-                else
-                {
-                    item = new Item(id, amount);
-                }
-                _bagTypeDic[ItemData.TypeEnum.All].Add(item);
-                _bagTypeDic[data.Type].Add(item);
-                if (item.CanCook)
-                {
-                    _bagCanCookList.Add(item);
-                }
-            }
+            item = GetNewItem(id, data.Type, amount);
+            _bagTypeDic[ItemData.TypeEnum.All].Add(item);
+            _bagTypeDic[data.Type].Add(item);
         }
+
         CurrentBagVolume += data.Volume * amount;
     }
 
@@ -206,80 +166,66 @@ public class ItemManager
         Item item;
         ItemData.RootObject data = ItemData.GetData(id);
 
-        if (data.Type == ItemData.TypeEnum.Equip)
+
+        if (WarehouseItemListContains(id) && data.CanBeStacked)
         {
-            Equip equip;
-            for (int i = 0; i < amount; i++)
-            {
-                equip = new Equip(data.ID);
-                AddWarehouseEquip(equip);
-            }
+            item = GetWarehouseItem(id);
+            item.Amount += amount;
         }
         else
         {
-            if (WarehouseItemListContains(id))
-            {
-                item = GetWarehouseItem(id);
-                item.Amount += amount;
-            }
-            else
-            {
-                if (data.Type == ItemData.TypeEnum.Food || data.Type == ItemData.TypeEnum.Medicine)
-                {
-                    item = new Food(id, amount);
-                }
-                else
-                {
-                    item = new Item(id, amount);
-                }
-                _warehouseTypeDic[ItemData.TypeEnum.All].Add(item);
-                _warehouseTypeDic[data.Type].Add(item);
-                if (item.CanCook)
-                {
-                    _warehouseCanCookList.Add(item);
-                }
-            }
+            item = GetNewItem(id, data.Type, amount);
+            _warehouseTypeDic[ItemData.TypeEnum.All].Add(item);
+            _warehouseTypeDic[data.Type].Add(item);
         }
+        
     }
 
-    public void AddEquip(Type type, Equip equip)
+    public void AddItem(Item item, int amount, Type type)
     {
         if (type == Type.Bag)
         {
-            AddBagEquip(equip);
+            AddBagItem(item, amount);
         }
         else
         {
-            AddWarehouseEquip(equip);
+            AddWarehouseItem(item, amount);
         }
     }
 
-    private void AddBagEquip(Equip equip)
+    public void AddBagItem(Item item, int amount)
     {
-        _bagEquipDic[equip.EquipType].Add(equip);
-        _bagTypeDic[ItemData.TypeEnum.All].Add(equip);
-        _bagTypeDic[ItemData.TypeEnum.Equip].Add(equip);
-        CurrentBagVolume += equip.Volume;
-    }
+        Item bagItem;
 
-    private void AddWarehouseEquip(Equip equip)
-    {
-        _warehouseEquipDic[equip.EquipType].Add(equip);
-        _warehouseTypeDic[ItemData.TypeEnum.All].Add(equip);
-        _warehouseTypeDic[ItemData.TypeEnum.Equip].Add(equip);
-    }
-
-    public void AddFood(Food food, Type type)
-    {
-        if (type == Type.Bag)
+        if (BagItemListContains(item.ID) && item.CanBeStacked)
         {
-            _bagTypeDic[ItemData.TypeEnum.All].Add(food);
-            _bagTypeDic[ItemData.TypeEnum.Food].Add(food);
+            bagItem = GetBagItem(item.ID);
+            bagItem.Amount += amount;
         }
         else
         {
-            _warehouseTypeDic[ItemData.TypeEnum.All].Add(food);
-            _warehouseTypeDic[ItemData.TypeEnum.Food].Add(food);
+            bagItem = GetNewItem(item, amount);
+            _bagTypeDic[ItemData.TypeEnum.All].Add(bagItem);
+            _bagTypeDic[item.Type].Add(bagItem);
+        }
+
+        CurrentBagVolume += item.Volume;
+    }
+
+    public void AddWarehouseItem(Item item, int amount)
+    {
+        Item warehouseItem;
+
+        if (WarehouseItemListContains(item.ID) && item.CanBeStacked)
+        {
+            warehouseItem = GetWarehouseItem(item.ID);
+            warehouseItem.Amount += amount;
+        }
+        else
+        {
+            warehouseItem = GetNewItem(item, amount);
+            _warehouseTypeDic[ItemData.TypeEnum.All].Add(warehouseItem);
+            _warehouseTypeDic[item.Type].Add(warehouseItem);
         }
     }
 
@@ -302,22 +248,27 @@ public class ItemManager
 
         if (BagItemListContains(id))
         {
-            item = GetBagItem(id);
-            item.Amount -= amount;
+            if (data.CanBeStacked)
+            {
+                item = GetBagItem(id);
+                item.Amount -= amount;
 
-            if (item.Amount < 0)
-            {
-                Debug.Log("道具不足,差 " + item.Amount * -1 + " 個");
-                item.Amount += amount;
+                if (item.Amount < 0)
+                {
+                    Debug.Log("道具不足,差 " + item.Amount * -1 + " 個");
+                    item.Amount += amount;
+                }
+                else if (item.Amount == 0)
+                {
+                    _bagTypeDic[ItemData.TypeEnum.All].Remove(item);
+                    _bagTypeDic[data.Type].Remove(item);
+                }
+                CurrentBagVolume -= data.Volume * amount;
             }
-            else if (item.Amount == 0)
+            else
             {
-                _bagTypeDic[ItemData.TypeEnum.All].Remove(item);
-                _bagTypeDic[data.Type].Remove(item);
-                _bagCanCookList.Remove(item);
+                Debug.Log(data.GetName() + "不是可堆疊的道具");
             }
-            CurrentBagVolume -= data.Volume * amount;
-            //SortBag();
         }
         else
         {
@@ -325,31 +276,112 @@ public class ItemManager
         }
     }
 
-    private void MinusWarehouseItem(int id, int amount) //obj 有可能為 id 或 equip
+    private void MinusWarehouseItem(int id, int amount)
     {
         Item item;
         ItemData.RootObject data = ItemData.GetData(id);
 
         if (WarehouseItemListContains(id))
         {
-            item = GetWarehouseItem(id);
-            item.Amount -= amount;
+            if (data.CanBeStacked)
+            {
+                item = GetWarehouseItem(id);
+                item.Amount -= amount;
 
-            if (item.Amount < 0)
-            {
-                Debug.Log("道具不足,差 " + item.Amount * -1 + " 個");
-                item.Amount += amount;
+                if (item.Amount < 0)
+                {
+                    Debug.Log("道具不足,差 " + item.Amount * -1 + " 個");
+                    item.Amount += amount;
+                }
+                else if (item.Amount == 0)
+                {
+                    _warehouseTypeDic[ItemData.TypeEnum.All].Remove(item);
+                    _warehouseTypeDic[data.Type].Remove(item);
+                }
             }
-            else if (item.Amount == 0)
+            else
             {
-                _warehouseTypeDic[ItemData.TypeEnum.All].Remove(item);
-                _warehouseTypeDic[data.Type].Remove(item);
-                _warehouseCanCookList.Remove(item);
+                Debug.Log(data.GetName() + "不是可堆疊的道具");
             }
         }
         else
         {
             Debug.Log("沒有這個道具: " + data.GetName());
+        }
+    }
+
+    public void MinusItem(Item item, int amount, Type type)
+    {
+        if (type == Type.Bag)
+        {
+            MinusBagItem(item, amount);
+        }
+        else
+        {
+            MinusWarehouseItem(item, amount);
+        }
+    }
+
+    private void MinusBagItem(Item item, int amount)
+    {
+        if (BagItemListContains(item.ID))
+        {
+            if (item.CanBeStacked)
+            {
+                item.Amount -= amount;
+
+                if (item.Amount < 0)
+                {
+                    Debug.Log("道具不足,差 " + item.Amount * -1 + " 個");
+                    item.Amount += amount;
+                }
+                else if (item.Amount == 0)
+                {
+                    _bagTypeDic[ItemData.TypeEnum.All].Remove(item);
+                    _bagTypeDic[item.Type].Remove(item);
+                }
+            }
+            else
+            {
+                _bagTypeDic[ItemData.TypeEnum.All].Remove(item);
+                _bagTypeDic[ItemData.TypeEnum.Equip].Remove(item);
+            }
+            CurrentBagVolume -= item.Volume * amount;
+        }
+        else
+        {
+            Debug.Log("沒有這個道具: " + item.Name);
+        }
+    }
+
+    private void MinusWarehouseItem(Item item, int amount)
+    {
+        if (WarehouseItemListContains(item.ID))
+        {
+            if (item.CanBeStacked)
+            {
+                item.Amount -= amount;
+
+                if (item.Amount < 0)
+                {
+                    Debug.Log("道具不足,差 " + item.Amount * -1 + " 個");
+                    item.Amount += amount;
+                }
+                else if (item.Amount == 0)
+                {
+                    _warehouseTypeDic[ItemData.TypeEnum.All].Remove(item);
+                    _warehouseTypeDic[item.Type].Remove(item);
+                }
+            }
+            else
+            {
+                _warehouseTypeDic[ItemData.TypeEnum.All].Remove(item);
+                _warehouseTypeDic[item.Type].Remove(item);
+            }
+        }
+        else
+        {
+            Debug.Log("沒有這個道具: " + item.Name);
         }
     }
 
@@ -357,27 +389,15 @@ public class ItemManager
     {
         if (type == Type.Bag)
         {
-            MinusBagEquip(equip);
+            _bagTypeDic[ItemData.TypeEnum.All].Remove(equip);
+            _bagTypeDic[ItemData.TypeEnum.Equip].Remove(equip);
+            CurrentBagVolume -= equip.Volume;
         }
         else
         {
-            MinusWarehouseEquip(equip);
+            _warehouseTypeDic[ItemData.TypeEnum.All].Remove(equip);
+            _warehouseTypeDic[ItemData.TypeEnum.Equip].Remove(equip);
         }
-    }
-
-    private void MinusBagEquip(Equip equip)
-    {
-        _bagEquipDic[equip.EquipType].Remove(equip);
-        _bagTypeDic[ItemData.TypeEnum.All].Remove(equip);
-        _bagTypeDic[ItemData.TypeEnum.Equip].Remove(equip);
-        CurrentBagVolume -= equip.Volume;
-    }
-
-    private void MinusWarehouseEquip(Equip equip)
-    {
-        _warehouseEquipDic[equip.EquipType].Remove(equip);
-        _warehouseTypeDic[ItemData.TypeEnum.All].Remove(equip);
-        _warehouseTypeDic[ItemData.TypeEnum.Equip].Remove(equip);
     }
 
     public void AddKey()
@@ -474,14 +494,25 @@ public class ItemManager
 
     public List<Equip> GetEquipListByType(Type type, EquipData.TypeEnum equipType)
     {
-        List<Equip> equipList;
+        Equip equip;
+        List<Item> itemList;
+        List<Equip> equipList = new List<Equip>();
         if (type == Type.Bag)
         {
-            equipList = new List<Equip>(_bagEquipDic[equipType]);
+            itemList = _bagTypeDic[ItemData.TypeEnum.Equip];
         }
         else
         {
-            equipList = new List<Equip>(_warehouseEquipDic[equipType]);
+            itemList = _warehouseTypeDic[ItemData.TypeEnum.Equip];
+        }
+
+        for (int i = 0; i < itemList.Count; i++)
+        {
+            equip = (Equip)itemList[i];
+            if (equip.EquipType == equipType)
+            {
+                equipList.Add(equip);
+            }
         }
 
         if (equipType == EquipData.TypeEnum.Weapon)
@@ -498,36 +529,44 @@ public class ItemManager
 
     public List<Item> GetCanCookList(Type type)
     {
+        Item item;
+        List<Item> itemList;
+        List<Item> canCookList = new List<Item>();
         if (type == Type.Bag)
         {
-            return _bagCanCookList;
+            itemList = _bagTypeDic[ItemData.TypeEnum.All];
         }
         else
         {
-            return _warehouseCanCookList;
+            itemList = _warehouseTypeDic[ItemData.TypeEnum.All];
         }
+
+        for (int i = 0; i < itemList.Count; i++)
+        {
+            item = itemList[i];
+            if (item.CanCook)
+            {
+                canCookList.Add(item);
+            }
+        }
+
+        return canCookList;
     }
 
-    public void PutBagItemIntoWarehouse() //回村莊的時候,把背包的東西都放進倉庫裡
+    public void BagToWarehouse() //回村莊的時候,把背包的東西都放進倉庫裡
     {
         foreach (Item item in _bagTypeDic[ItemData.TypeEnum.All])
         {
-            AddWarehouseItem(item.ID, item.Amount);
+            AddWarehouseItem(item, item.Amount);
         }
 
         CurrentBagVolume = 0;
         KeyAmount = 0;
         _bagTypeDic.Clear();
-        _bagEquipDic.Clear();
 
         foreach (ItemData.TypeEnum type in (ItemData.TypeEnum[])Enum.GetValues(typeof(ItemData.TypeEnum)))
         {
             _bagTypeDic.Add(type, new List<Item>());
-        }
-
-        foreach (EquipData.TypeEnum type in Enum.GetValues(typeof(EquipData.TypeEnum)))
-        {
-            _bagEquipDic.Add(type, new List<Equip>());
         }
     }
 
@@ -553,6 +592,38 @@ public class ItemManager
             }
         }
         return false;
+    }
+
+    private Item GetNewItem(int id, ItemData.TypeEnum type, int amount)
+    {
+        if (type == ItemData.TypeEnum.Equip)
+        {
+            return new Equip(id);
+        }
+        if (type == ItemData.TypeEnum.Food || type == ItemData.TypeEnum.Medicine)
+        {
+            return new Food(id, amount);
+        }
+        else
+        {
+            return new Item(id, amount);
+        }
+    }
+
+    private Item GetNewItem(Item item, int amount)
+    {
+        if (item is Equip)
+        {
+            return new Equip((Equip)item);
+        }
+        if (item is Food)
+        {
+            return new Food((Food)item, amount);
+        }
+        else
+        {
+            return new Item(item, amount);
+        }
     }
 
     private Item GetBagItem(int id)

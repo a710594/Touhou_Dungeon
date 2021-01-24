@@ -151,11 +151,29 @@ public class BattleUI : MonoBehaviour
         _floatingNumberPoolDic[character].Play(text, type);
     }
 
+    public void SetFloatingNumber(BattleCharacter character, List<FloatingNumberData> list)
+    {
+        _floatingNumberPoolDic[character].transform.position = Camera.main.WorldToScreenPoint(character.Sprite.transform.position);
+        _floatingNumberPoolDic[character].Play(list);
+    }
+
     public void SetLittleHPBar(BattleCharacter character, bool isVisible)
     {
         _littleHPBarDic[character].gameObject.SetActive(isVisible);
-        _littleHPBarDic[character].SetValueTween(character.Info.CurrentHP, character.Info.MaxHP, null);
-        _littleHPBarDic[character].SetHPQueue(character.Info.HPQueue.Count);
+
+        int lastHPQueueAmount = _littleHPBarDic[character].GetHPQueueAmount();
+        if (lastHPQueueAmount == character.Info.HPQueue.Count)
+        {
+            _littleHPBarDic[character].SetValueTween(character.Info.CurrentHP, character.Info.MaxHP, null);
+        }
+        else
+        {
+            _littleHPBarDic[character].SetValueTween(0, character.Info.MaxHP, ()=> 
+            {
+                _littleHPBarDic[character].SetValueTween(character.Info.CurrentHP, character.Info.MaxHP, null);
+                _littleHPBarDic[character].SetHPQueue(character.Info.HPQueue.Count);
+            });
+        }
     }
 
     public void SetPredictionHP(BattleCharacter character, int damage)

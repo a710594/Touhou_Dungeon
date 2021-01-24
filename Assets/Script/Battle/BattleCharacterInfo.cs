@@ -27,14 +27,14 @@ public class BattleCharacterInfo
         {
             if (value < 0)
             {
-                if (_currentHP > 0)
-                {
+                //if (_currentHP > 0)
+                //{
                     _currentHP = 0;
-                }
-                else
-                {
-                    _currentHP = -1;
-                }
+                //}
+                //else
+                //{
+                //    _currentHP = -1;
+                //}
             }
             else
             {

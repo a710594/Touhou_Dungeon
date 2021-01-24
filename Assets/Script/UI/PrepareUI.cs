@@ -52,8 +52,9 @@ public class PrepareUI : MonoBehaviour
 
     private void WarehouseIconOnClick(object obj)
     {
-        ItemManager.Instance.MinusItem(((Item)obj).ID, 1, ItemManager.Type.Warehouse);
-        ItemManager.Instance.AddItem(((Item)obj).ID, 1, ItemManager.Type.Bag);
+        Item item = (Item)obj;
+        ItemManager.Instance.AddBagItem(item, 1);
+        ItemManager.Instance.MinusItem(item, 1, ItemManager.Type.Warehouse);
 
         Refresh();
     }
@@ -67,8 +68,8 @@ public class PrepareUI : MonoBehaviour
         }
         else
         {
-            ItemManager.Instance.MinusItem(item.ID, 1, ItemManager.Type.Bag);
-            ItemManager.Instance.AddItem(item.ID, 1, ItemManager.Type.Warehouse);
+            ItemManager.Instance.AddWarehouseItem(item, 1);
+            ItemManager.Instance.MinusItem(item, 1, ItemManager.Type.Bag);
             Refresh();
         }
     }
@@ -82,7 +83,7 @@ public class PrepareUI : MonoBehaviour
 
     private void CloseOnClick()
     {
-        ItemManager.Instance.PutBagItemIntoWarehouse();
+        ItemManager.Instance.BagToWarehouse();
         Close();
     }
 

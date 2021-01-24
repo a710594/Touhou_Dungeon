@@ -19,6 +19,7 @@ public class Equip :Item
 
     public Equip(EquipData.TypeEnum type) //default equip
     {
+        Type = ItemData.TypeEnum.Equip;
         EquipType = type;
         Name = "無";
     }
@@ -55,6 +56,26 @@ public class Equip :Item
         {
             Debug.Log("裝備資料不存在!");
         }
+    }
+
+    public Equip(Equip equip)
+    {
+        ID = equip.ID;
+        Name = equip.Name;
+        Lv = equip.Lv;
+        Comment = equip.Comment;
+        Icon = equip.Icon;
+        Volume = equip.Volume;
+        Price = equip.Price;
+        Amount = 1;
+        Type = equip.Type;
+
+        EquipType = equip.EquipType;
+        ATK = equip.ATK;
+        DEF = equip.DEF;
+        MTK = equip.MTK;
+        MEF = equip.MEF;
+        UpgradePrice = equip.UpgradePrice;
     }
 
     public void LvUp()

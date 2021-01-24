@@ -14,6 +14,7 @@ public class AttackSkill : Skill
         Data = data;
         Lv = lv;
         _user = user;
+        _hasNoTarget = false;
         _value = data.ValueList[lv - 1];
         _isMagic = data.IsMagic;
         if (data.SubID != 0)
@@ -30,21 +31,7 @@ public class AttackSkill : Skill
         _isMagic = isMagic;
     }
 
-    public override void SetEffects()
-    {
-        for (int i = 0; i < _targetList.Count; i++)
-        {
-            SetEffect(_targetList[i]);
-        }
-
-        if (_targetList.Count == 0)
-        {
-            BattleUI.Instance.SetSkillLabel(false);
-            _skillCallback();
-        }
-    }
-
-    public override void SetEffect(BattleCharacter target)
+    public override void SetEffect(BattleCharacter target, Dictionary<BattleCharacter, List<FloatingNumberData>> floatingNumberDic)
     {
         HitType hitType = CheckHit(_user, target.Info, target.LiveState);
 
@@ -81,18 +68,20 @@ public class AttackSkill : Skill
             text = "NoDamage";
         }
 
-        Timer timer1 = new Timer(Data.ShowTime / 2f, ()=> 
-        {
-            target.SetDamage(damage);
-            BattleUI.Instance.SetFloatingNumber(target, text, floatingNumberType);
-            BattleUI.Instance.SetLittleHPBar(target, true);
-        });
+        target.SetDamage(damage);
+        //target.CheckLiveState();
 
-        Timer timer2 = new Timer(Data.ShowTime / 2f + _floatingNumberTime, () =>
-        {
-            target.CheckLiveState();
-            CheckSubSkill(target, hitType);
-        });
+        //Timer timer1 = new Timer(Data.ShowTime / 2f, () =>
+        //{
+        //    target.SetDamage(damage);
+        //    BattleUI.Instance.SetFloatingNumber(target, text, floatingNumberType);
+        //    BattleUI.Instance.SetLittleHPBar(target, true);
+        //});
+
+        _floatingNumberDic = floatingNumberDic;
+        SetFloatingNumberDic(target, floatingNumberType, text);
+
+        CheckSubSkill(target, hitType);
     }
 
     public virtual int CalculateDamage(BattleCharacterInfo executor, BattleCharacterInfo target, bool isCritical, bool isRandom)

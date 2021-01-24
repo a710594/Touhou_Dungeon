@@ -31,6 +31,7 @@ public class ItemData
         public string Icon { get; set; }
         public TypeEnum Type { get; set; }
         public bool CanCook;
+        public bool CanBeStacked;
         public int Price { get; set; }
         public int Volume { get; set; }
         public int Skill { get; set; }

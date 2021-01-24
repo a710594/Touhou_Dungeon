@@ -7,6 +7,7 @@ public class CureItemSkill : Skill
 {
     public CureItemSkill(SkillData.RootObject data, int lv)
     {
+        _hasNoTarget = false;
         Data = data;
         Lv = lv;
         _value = data.ValueList[lv - 1];
@@ -18,33 +19,26 @@ public class CureItemSkill : Skill
         }
     }
 
-    public override void SetEffects()
+    public override void SetEffect(BattleCharacter target, Dictionary<BattleCharacter, List<FloatingNumberData>> floatingNumberDic)
     {
-        for (int i = 0; i < _targetList.Count; i++)
-        {
-            SetEffect(_targetList[i]);
-        }
+        target.SetRecoverHP(_value); //與 CureSkill 不同的地方之一是回復量的計算
 
-        if (_targetList.Count == 0)
-        {
-            BattleUI.Instance.SetSkillLabel(false);
-            _skillCallback();
-        }
-    }
+        _floatingNumberDic = floatingNumberDic;
+        SetFloatingNumberDic(target, FloatingNumber.Type.Other, "解除異常狀態");
 
-    public override void SetEffect(BattleCharacter target)
-    {
-        Timer timer1 = new Timer(Data.ShowTime / 2f, () =>
-        {
-            target.SetRecoverHP(_value); //與 CureSkill 不同的地方之一是回復量的計算
+        CheckSubSkill(target, HitType.Hit);
 
-            BattleUI.Instance.SetFloatingNumber(target, _value.ToString(), FloatingNumber.Type.Recover);
-            BattleUI.Instance.SetLittleHPBar(target, true);
-        });
+        //Timer timer1 = new Timer(Data.ShowTime / 2f, () =>
+        //{
+        //    target.SetRecoverHP(_value); //與 CureSkill 不同的地方之一是回復量的計算
 
-        Timer timer2 = new Timer(Data.ShowTime / 2f + _floatingNumberTime, () =>
-        {
-            CheckSubSkill(target, HitType.Hit);
-        });
+        //    BattleUI.Instance.SetFloatingNumber(target, _value.ToString(), FloatingNumber.Type.Recover);
+        //    BattleUI.Instance.SetLittleHPBar(target, true);
+        //});
+
+        //Timer timer2 = new Timer(Data.ShowTime / 2f + _floatingNumberTime, () =>
+        //{
+        //    CheckSubSkill(target, HitType.Hit);
+        //});
     }
 }

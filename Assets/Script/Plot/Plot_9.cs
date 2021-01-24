@@ -45,7 +45,7 @@ public class Plot_9 : Plot //第二場BOSS戰前的對話
                             AudioSystem.Instance.Stop(false);
                             MySceneManager.Instance.ChangeScene(MySceneManager.SceneType.Villiage, () =>
                             {
-                                ItemManager.Instance.PutBagItemIntoWarehouse();
+                                ItemManager.Instance.BagToWarehouse();
                                 TeamManager.Instance.RecoverAllMember();
                             });
                         });

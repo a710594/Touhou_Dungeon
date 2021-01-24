@@ -8,6 +8,7 @@ public class BuffSkill : Skill
     public BuffSkill(SkillData.RootObject data, BattleCharacterInfo user, int lv)
     {
         _user = user;
+        _hasNoTarget = false;
         Data = data;
         Lv = lv;
         if (data.SubID != 0)
@@ -18,21 +19,7 @@ public class BuffSkill : Skill
         }
     }
 
-    public override void SetEffects()
-    {
-        for (int i = 0; i < _targetList.Count; i++)
-        {
-            SetEffect(_targetList[i]);
-        }
-
-        if (_targetList.Count == 0)
-        {
-            BattleUI.Instance.SetSkillLabel(false);
-            _skillCallback();
-        }
-    }
-
-    public override void SetEffect(BattleCharacter target)
+    public override void SetEffect(BattleCharacter target, Dictionary<BattleCharacter, List<FloatingNumberData>> floatingNumberDic)
     {
         HitType hitType = CheckHit(_user, target.Info, target.LiveState);
 
@@ -41,22 +28,41 @@ public class BuffSkill : Skill
             hitType = HitType.Hit;
         }
 
-        Timer timer1 = new Timer(Data.ShowTime / 2f, () =>
+        //Timer timer1 = new Timer(Data.ShowTime / 2f, () =>
+        //{
+        //    target.SetBuff(Data.StatusID, Lv);
+        //    if (hitType != HitType.Miss)
+        //    {
+        //        BattleUI.Instance.SetFloatingNumber(target, BattleStatusData.GetData(Data.StatusID).Message, FloatingNumber.Type.Other);
+        //    }
+        //    else
+        //    {
+        //        BattleUI.Instance.SetFloatingNumber(target, "Miss", FloatingNumber.Type.Miss);
+        //    }
+        //});
+
+        if (hitType != HitType.Miss)
         {
             target.SetBuff(Data.StatusID, Lv);
-            if (hitType != HitType.Miss)
-            {
-                BattleUI.Instance.SetFloatingNumber(target, BattleStatusData.GetData(Data.StatusID).Message, FloatingNumber.Type.Other);
-            }
-            else
-            {
-                BattleUI.Instance.SetFloatingNumber(target, "Miss", FloatingNumber.Type.Miss);
-            }
-        });
+        }
 
-        Timer timer2 = new Timer(_floatingNumberTime, () =>
+        string text = "";
+        FloatingNumber.Type floatingNumberType = FloatingNumber.Type.Other;
+
+        if (hitType == HitType.Hit)
         {
-            CheckSubSkill(target, hitType);
-        });
+            floatingNumberType = FloatingNumber.Type.Other;
+            text = BattleStatusData.GetData(Data.StatusID).Message;
+        }
+        else if (hitType == HitType.Miss)
+        {
+            floatingNumberType = FloatingNumber.Type.Miss;
+            text = "Miss";
+        }
+
+        _floatingNumberDic = floatingNumberDic;
+        SetFloatingNumberDic(target, floatingNumberType, text);
+
+        CheckSubSkill(target, hitType);
     }
 }

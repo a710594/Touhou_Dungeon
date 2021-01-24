@@ -51,4 +51,19 @@ public class Food : Item
             Debug.Log("資料不存在!");
         }
     }
+
+    public Food(Food food, int amount)
+    {
+        ID = food.ID;
+        Name = food.Name;
+        Icon = food.Icon;
+        Volume = food.Volume;
+        Price = food.Price;
+        Amount = amount;
+        CanCook = food.CanCook;
+        Type = food.Type;
+        AddHP = food.AddHP;
+        AddMP = food.AddMP;
+        Comment = food.Comment;
+    }
 }

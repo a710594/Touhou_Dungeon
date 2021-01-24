@@ -10,6 +10,7 @@ public class DonothingSkill : Skill
         Data = data;
         Lv = lv;
         _user = user;
+        _hasNoTarget = true;
         if (data.SubID != 0)
         {
             SkillData.RootObject skillData = SkillData.GetData(Data.SubID);
@@ -18,18 +19,19 @@ public class DonothingSkill : Skill
         }
     }
 
-    public override void SetEffects()
+    public override void SetEffect(BattleCharacter target, Dictionary<BattleCharacter, List<FloatingNumberData>> floatingNumberDic)
     {
-        SetEffect(null);
-    }
+        _floatingNumberDic = floatingNumberDic;
+        BattleCharacter myself = BattleController.Instance.GetCharacterByPosition(_user.Position);
+        SetFloatingNumberDic(myself, FloatingNumber.Type.Other, Data.Name);
 
-    public override void SetEffect(BattleCharacter target)
-    {
-        Timer timer = new Timer(Data.ShowTime / 2f, () =>
-        {
-            BattleCharacter myself = BattleController.Instance.GetCharacterByPosition(_user.Position);
-            BattleUI.Instance.SetFloatingNumber(myself, Data.Name, FloatingNumber.Type.Other);
-            CheckSubSkill(target, HitType.Hit);
-        });
+        CheckSubSkill(target, HitType.Hit);
+
+        //Timer timer = new Timer(Data.ShowTime / 2f, () =>
+        //{
+        //    BattleCharacter myself = BattleController.Instance.GetCharacterByPosition(_user.Position);
+        //    BattleUI.Instance.SetFloatingNumber(myself, Data.Name, FloatingNumber.Type.Other);
+        //    CheckSubSkill(target, HitType.Hit);
+        //});
     }
 }

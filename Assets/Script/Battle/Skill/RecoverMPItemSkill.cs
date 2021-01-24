@@ -7,6 +7,7 @@ public class RecoverMPItemSkill : Skill
 {
     public RecoverMPItemSkill(SkillData.RootObject data, int lv)
     {
+        _hasNoTarget = false;
         Data = data;
         Lv = lv;
         _value = data.ValueList[lv - 1];
@@ -18,31 +19,24 @@ public class RecoverMPItemSkill : Skill
         }
     }
 
-    public override void SetEffects()
+    public override void SetEffect(BattleCharacter target, Dictionary<BattleCharacter, List<FloatingNumberData>> floatingNumberDic)
     {
-        for (int i = 0; i < _targetList.Count; i++)
-        {
-            SetEffect(_targetList[i]);
-        }
+        target.SetRecoverMP(_value);
 
-        if (_targetList.Count == 0)
-        {
-            BattleUI.Instance.SetSkillLabel(false);
-            _skillCallback();
-        }
-    }
+        _floatingNumberDic = floatingNumberDic;
+        SetFloatingNumberDic(target, FloatingNumber.Type.Other, "解除異常狀態");
 
-    public override void SetEffect(BattleCharacter target)
-    {
-        Timer timer1 = new Timer(Data.ShowTime / 2f, () =>
-        {
-            target.SetRecoverMP(_value);
-            BattleUI.Instance.SetFloatingNumber(target, _value.ToString(), FloatingNumber.Type.Recover);
-        });
+        CheckSubSkill(target, HitType.Hit);
 
-        Timer timer2 = new Timer(_floatingNumberTime + Data.ShowTime / 2f, () =>
-        {
-            CheckSubSkill(target, HitType.Hit);
-        });
+        //Timer timer1 = new Timer(Data.ShowTime / 2f, () =>
+        //{
+        //    target.SetRecoverMP(_value);
+        //    BattleUI.Instance.SetFloatingNumber(target, _value.ToString(), FloatingNumber.Type.Recover);
+        //});
+
+        //Timer timer2 = new Timer(_floatingNumberTime + Data.ShowTime / 2f, () =>
+        //{
+        //    CheckSubSkill(target, HitType.Hit);
+        //});
     }
 }

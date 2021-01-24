@@ -40,15 +40,15 @@ public class TeamManager
             Exp = 0;
 
             MemberList.Clear();
-            //AddMember(1, new Vector2Int(0, 0), 41001, 42001);
-            //AddMember(2, new Vector2Int(1, 0), 41002, 42001);
-            //AddMember(3, new Vector2Int(-1, 0), 41002, 42001);
+            AddMember(1, new Vector2Int(0, 0), 41001, 42001);
+            AddMember(2, new Vector2Int(1, 0), 41002, 42001);
+            AddMember(3, new Vector2Int(-1, 0), 41002, 42001);
 
             //test
-            AddMember(1, new Vector2Int(0, 0), 41005, 42003);
-            AddMember(2, new Vector2Int(1, 0), 41006, 42003);
-            AddMember(3, new Vector2Int(-1, 0), 41006, 42003);
-            AddMember(4, new Vector2Int(0, 1), 41005, 42003);
+            //AddMember(1, new Vector2Int(0, 0), 41005, 42003);
+            //AddMember(2, new Vector2Int(1, 0), 41006, 42003);
+            //AddMember(3, new Vector2Int(-1, 0), 41006, 42003);
+            //AddMember(4, new Vector2Int(0, 1), 41005, 42003);
         }
         else
         {
@@ -63,8 +63,8 @@ public class TeamManager
                 MemberList.Add(member);
             }
         }
-        _power = 50;
-        SetLv(12, 0);
+        //_power = 50;
+        //SetLv(12, 0);
     }
 
     public void Save() 

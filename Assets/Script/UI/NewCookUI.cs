@@ -125,7 +125,7 @@ public class NewCookUI : MonoBehaviour
 
     private void MakeOnClick()
     {
-        ItemManager.Instance.AddFood(_food, _managerType);
+        ItemManager.Instance.AddItem(_food, 1, _managerType);
 
         MaterialList.Clear();
         for (int i = 0; i < MaterialButtons.Length; i++)

@@ -10,6 +10,7 @@ public class TrainSkill : AttackSkill
         Data = data;
         Lv = lv;
         _user = user;
+        _hasNoTarget = false;
         _value = data.ValueList[lv - 1];
         if (data.SubID != 0)
         {
@@ -36,20 +37,6 @@ public class TrainSkill : AttackSkill
         _skillRangeList = positionList;
 
         return _skillRangeList;
-    }
-
-    public override void SetEffects()
-    {
-        for (int i = 0; i < _targetList.Count; i++)
-        {
-            SetEffect(_targetList[i]);
-        }
-
-        if (_targetList.Count == 0)
-        {
-            BattleUI.Instance.SetSkillLabel(false);
-            _skillCallback();
-        }
     }
 
     protected override void ShowAnimation()

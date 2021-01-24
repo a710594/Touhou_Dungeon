@@ -35,11 +35,11 @@ public class Plot_5_2 : Plot
 
     private void Check(BattleCharacter character) //檢查紫還剩幾條血
     {
-        if (_start1 == CheckState.NotSatisfy &&character.Info.HPQueue.Count == 2 && character.Info.CurrentHP == 0) //剩一條血時觸發
+        if (_start1 == CheckState.NotSatisfy &&character.Info.HPQueue.Count == 1) //剩一條血時觸發
         {
             _start1 = CheckState.Satisfy;
         }
-        else if (_start2 == CheckState .NotSatisfy &&  character.Info.HPQueue.Count == 1 && character.Info.CurrentHP == 0)
+        else if (_start2 == CheckState .NotSatisfy &&  character.Info.HPQueue.Count == 0)
         {
             _start2 = CheckState.Satisfy;
         }

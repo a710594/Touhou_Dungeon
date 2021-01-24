@@ -5,12 +5,12 @@ using UnityEngine;
 
 public class FloatingNumberPool : MonoBehaviour
 {
-    private class FloatingNumberData
+    private class Data
     {
         public string Text;
         public FloatingNumber.Type Type;
 
-        public FloatingNumberData(string text, FloatingNumber.Type type)
+        public Data(string text, FloatingNumber.Type type)
         {
             Text = text;
             Type = type;
@@ -25,7 +25,7 @@ public class FloatingNumberPool : MonoBehaviour
     private bool _isLock = false;
 
     private Queue<FloatingNumber> _poolQueue = new Queue<FloatingNumber>();
-    private Queue<FloatingNumberData> _dataQueue = new Queue<FloatingNumberData>();
+    private Queue<Data> _dataQueue = new Queue<Data>();
 
     public void SetAnchor(Transform anchor)
     {
@@ -33,7 +33,7 @@ public class FloatingNumberPool : MonoBehaviour
         transform.localPosition = Vector3.zero;
     }
 
-    public void Play(string text, FloatingNumber.Type type/*, Action beforeCallback, Action afterCallBack*/) //beforeCallback:跳數字的同時會發生的事件 afterCallBack:數字消失時會發生的事件
+    public void Play(string text, FloatingNumber.Type type)
     {
         if (!_isLock)
         {
@@ -42,18 +42,13 @@ public class FloatingNumberPool : MonoBehaviour
             FloatingNumber floatingNumber = _poolQueue.Dequeue();
             floatingNumber.Play(text, type, transform.position);
 
-            //if (beforeCallback != null)
-            //{
-            //    beforeCallback();
-            //}
-
             Timer unlockTimer = new Timer(CycleTime, () => //顯示下一個數字
             {
                 _isLock = false;
                 if (_dataQueue.Count > 0)
                 {
-                    FloatingNumberData data = _dataQueue.Dequeue();
-                    Play(data.Text, data.Type/*, data.BeforeCallback, data.AfterCallback*/);
+                    Data data = _dataQueue.Dequeue();
+                    Play(data.Text, data.Type);
                 }
             });
 
@@ -61,18 +56,51 @@ public class FloatingNumberPool : MonoBehaviour
             {
                 Debug.Log("enqueue");
                 _poolQueue.Enqueue(floatingNumber);
-
-                //if (afterCallBack != null)
-                //{
-                //    afterCallBack();
-                //}
             });
         }
         else
         {
-            FloatingNumberData data = new FloatingNumberData(text, type);
+            Data data = new Data(text, type);
             _dataQueue.Enqueue(data);
         }
+    }
+
+    public void Play(List<FloatingNumberData> list)
+    {
+        Data data;
+        for (int i=0; i< list.Count; i++)
+        {
+            data = new Data(list[i].Text, list[i].Type);
+            _dataQueue.Enqueue(data);
+        }
+
+
+        if (!_isLock)
+        {
+            Play(_dataQueue.Dequeue());
+        }
+    }
+
+    private void Play(Data data)
+    {
+        _isLock = true;
+        FloatingNumber floatingNumber = _poolQueue.Dequeue();
+        floatingNumber.Play(data.Text, data.Type, transform.position);
+
+        Timer unlockTimer = new Timer(CycleTime, () => //顯示下一個數字
+        {
+            _isLock = false;
+            if (_dataQueue.Count > 0)
+            {
+                Play(_dataQueue.Dequeue());
+            }
+        });
+
+        Timer recycleTimer = new Timer(Duration, () => //當前的數字消失
+        {
+            Debug.Log("enqueue");
+            _poolQueue.Enqueue(floatingNumber);
+        });
     }
 
     void Awake()

@@ -77,6 +77,12 @@ public class AI_uuz : AI
         for (int i = 0; i < BattleController.Instance.CharacterList.Count; i++)
         {
             character = BattleController.Instance.CharacterList[i];
+
+            if (character.Info.JobData != null && character.Info.JobData.ID == 4)
+            {
+                Debug.Log(character.LiveState);
+            }
+
             if (character.LiveState != BattleCharacter.LiveStateEnum.Dead)
             {
                 if (character.Info.Camp == BattleCharacterInfo.CampEnum.Partner)

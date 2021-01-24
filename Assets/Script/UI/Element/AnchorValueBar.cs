@@ -26,6 +26,19 @@ public class AnchorValueBar : ValueBar
         }
     }
 
+    public int GetHPQueueAmount()
+    {
+        int amount = 0;
+        for (int i = 0; i < HPQueue.Length; i++)
+        {
+            if (HPQueue[i].activeSelf)
+            {
+                amount++;
+            }
+        }
+        return amount;
+    }
+
     public void SetPrediction(int origin, int prediction, int max) //預覽傷害後的血量
     {
         Bar.DOColor(Color.clear, 0.5f).SetLoops(-1, LoopType.Yoyo).SetEase(Ease.Linear);

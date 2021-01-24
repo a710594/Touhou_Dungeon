@@ -9,17 +9,20 @@ public class BagScrollItem : ScrollItem
 
     public override void SetData(object obj)
     {
-        if (obj is Equip)
-        {
-            Equip equip = (Equip)obj;
-            base.SetData(equip);
-            Card.Init(equip);
-        }
-        else if (obj is Item)
+        if (obj is Item)
         {
             Item item = (Item)obj;
-            base.SetData(item);
-            Card.Init(item.ID, item.Amount);
+            if (item.Type == ItemData.TypeEnum.Equip)
+            {
+                Equip equip = (Equip)item;
+                base.SetData(equip);
+                Card.Init(equip);
+            }
+            else
+            {
+                base.SetData(item);
+                Card.Init(item.ID, item.Amount);
+            }
         }
         else if(obj is KeyValuePair<int, int>)
         {

@@ -10,6 +10,7 @@ public class ClearAbnormalSkill : Skill
         Data = data;
         Lv = lv;
         _user = user;
+        _hasNoTarget = false;
         if (data.SubID != 0)
         {
             SkillData.RootObject skillData = SkillData.GetData(Data.SubID);
@@ -18,31 +19,24 @@ public class ClearAbnormalSkill : Skill
         }
     }
 
-    public override void SetEffects()
+    public override void SetEffect(BattleCharacter target, Dictionary<BattleCharacter, List<FloatingNumberData>> floatingNumberDic)
     {
-        for (int i = 0; i < _targetList.Count; i++)
-        {
-            SetEffect(_targetList[i]);
-        }
+        target.ClearAbnormal();
 
-        if (_targetList.Count == 0)
-        {
-            BattleUI.Instance.SetSkillLabel(false);
-            _skillCallback();
-        }
-    }
+        _floatingNumberDic = floatingNumberDic;
+        SetFloatingNumberDic(target, FloatingNumber.Type.Other, "解除異常狀態");
 
-    public override void SetEffect(BattleCharacter target)
-    {
-        Timer timer1 = new Timer(Data.ShowTime / 2f, () =>
-        {
-            target.ClearAbnormal();
-            BattleUI.Instance.SetFloatingNumber(target, "解除異常狀態", FloatingNumber.Type.Other);
-        });
+        CheckSubSkill(target, HitType.Hit);
 
-        Timer timer2 = new Timer(Data.ShowTime / 2f + _floatingNumberTime, () =>
-        {
-            CheckSubSkill(target, HitType.Hit);
-        });
+        //Timer timer1 = new Timer(Data.ShowTime / 2f, () =>
+        //{
+        //    target.ClearAbnormal();
+        //    BattleUI.Instance.SetFloatingNumber(target, "解除異常狀態", FloatingNumber.Type.Other);
+        //});
+
+        //Timer timer2 = new Timer(Data.ShowTime / 2f + _floatingNumberTime, () =>
+        //{
+        //    CheckSubSkill(target, HitType.Hit);
+        //});
     }
 }

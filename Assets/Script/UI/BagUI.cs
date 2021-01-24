@@ -105,6 +105,14 @@ public class BagUI : MonoBehaviour
         List<Item> itemList = new List<Item>();
         itemList = ItemManager.Instance.GetItemListByType(_managerType, type);
 
+        if (type == ItemData.TypeEnum.Equip)
+        {
+            for (int i = 0; i < itemList.Count; i++)
+            {
+                Debug.Log(((Equip)itemList[i]).EquipType);
+            }
+        }
+
         if (isRefresh)
         {
             ScrollView.Refresh(new ArrayList(itemList));
@@ -277,7 +285,7 @@ public class BagUI : MonoBehaviour
             _selectedMember.SetEquip(_selectedEquip, out oldEquip);
             if (oldEquip != null && oldEquip.ID != 0)
             {
-                ItemManager.Instance.AddEquip(_managerType, oldEquip);
+                ItemManager.Instance.AddItem(oldEquip, 1, _managerType);
             }
             ItemManager.Instance.MinusEquip(_managerType, _selectedEquip);
 
@@ -318,7 +326,7 @@ public class BagUI : MonoBehaviour
             }
             else
             {
-                ItemManager.Instance.MinusItem(_selectedItem.ID, amount, _managerType);
+                ItemManager.Instance.MinusItem(_selectedItem, amount, _managerType);
             }
             SetVolume();
             SetScrollView(_itemType, true);
@@ -339,7 +347,7 @@ public class BagUI : MonoBehaviour
             SelectCharacterGroup.MPBarTween(member);
         }
 
-        ItemManager.Instance.MinusItem(_selectedItem.ID, 1, _managerType);
+        ItemManager.Instance.MinusItem(_selectedItem, 1, _managerType);
 
         SetVolume();
         SetScrollView(_itemType, false);

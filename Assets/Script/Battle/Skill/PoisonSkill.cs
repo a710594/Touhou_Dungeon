@@ -12,6 +12,7 @@ public class PoisonSkill : Skill
         Data = data;
         Lv = lv;
         _user = user;
+        _hasNoTarget = false;
         _poison = new Poison(Data.StatusID, lv);
         if (data.SubID != 0)
         {
@@ -21,42 +22,52 @@ public class PoisonSkill : Skill
         }
     }
 
-    public override void SetEffects()
-    {
-        for (int i = 0; i < _targetList.Count; i++)
-        {
-            SetEffect(_targetList[i]);
-        }
-
-        if (_targetList.Count == 0)
-        {
-            BattleUI.Instance.SetSkillLabel(false);
-            _skillCallback();
-        }
-    }
-
-    public override void SetEffect(BattleCharacter target)
+    public override void SetEffect(BattleCharacter target, Dictionary<BattleCharacter, List<FloatingNumberData>> floatingNumberDic)
     {
         HitType hitType = CheckHit(_user, target.Info, target.LiveState);
 
-        Timer timer1 = new Timer(Data.ShowTime / 2f, () =>
+        if (hitType != HitType.Miss)
         {
-            if (hitType != Skill.HitType.Miss)
-            {
-                target.Info.SetPoison(_poison, CalculateDamage(target.Info));
+            target.Info.SetPoison(_poison, CalculateDamage(target.Info));
+        }
 
-                BattleUI.Instance.SetFloatingNumber(target, _poison.Data.Message, FloatingNumber.Type.Other);
-            }
-            else
-            {
-                BattleUI.Instance.SetFloatingNumber(target, "Miss", FloatingNumber.Type.Miss);
-            }
-        });
+        string text = "";
+        FloatingNumber.Type floatingNumberType = FloatingNumber.Type.Other;
 
-        Timer timer2 = new Timer(_floatingNumberTime + Data.ShowTime / 2f, () =>
+        if (hitType == HitType.Hit)
         {
-            CheckSubSkill(target, hitType);
-        });
+            floatingNumberType = FloatingNumber.Type.Other;
+            text = BattleStatusData.GetData(Data.StatusID).Message;
+        }
+        else if (hitType == HitType.Miss)
+        {
+            floatingNumberType = FloatingNumber.Type.Miss;
+            text = "Miss";
+        }
+
+        _floatingNumberDic = floatingNumberDic;
+        SetFloatingNumberDic(target, floatingNumberType, text);
+
+        CheckSubSkill(target, hitType);
+
+        //Timer timer1 = new Timer(Data.ShowTime / 2f, () =>
+        //{
+        //    if (hitType != Skill.HitType.Miss)
+        //    {
+        //        target.Info.SetPoison(_poison, CalculateDamage(target.Info));
+
+        //        BattleUI.Instance.SetFloatingNumber(target, _poison.Data.Message, FloatingNumber.Type.Other);
+        //    }
+        //    else
+        //    {
+        //        BattleUI.Instance.SetFloatingNumber(target, "Miss", FloatingNumber.Type.Miss);
+        //    }
+        //});
+
+        //Timer timer2 = new Timer(_floatingNumberTime + Data.ShowTime / 2f, () =>
+        //{
+        //    CheckSubSkill(target, hitType);
+        //});
     }
 
     private int CalculateDamage(BattleCharacterInfo target)

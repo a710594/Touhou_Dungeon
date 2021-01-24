@@ -9,14 +9,14 @@ public class Plot_11_2 :Plot
     private CheckState _summonGhost = CheckState.NotSatisfy; //uuz 剩一條血的時候召喚幽靈
     private CheckState _uuzLastHP = CheckState.NotSatisfy; //uuz 剩最後一條血的時候
     private int _startTurn; //開始召喚幽靈的回合
+    BattleCharacter _uuz;
     private List<Vector2Int> _positionList = new List<Vector2Int>(); //幽靈可能出現的位置
 
 
     public Plot_11_2()
     {
-        BattleCharacter character;
-        character = GameObject.Find("uuz").GetComponent<BattleCharacter>();
-        character.GetDamageHandler += Check;
+        _uuz = GameObject.Find("uuz").GetComponent<BattleCharacter>();
+        _uuz.GetDamageHandler += Check;
 
         _positionList.Add(new Vector2Int(-2, 3));
         _positionList.Add(new Vector2Int(2, 3));
@@ -49,11 +49,11 @@ public class Plot_11_2 :Plot
 
     private void Check(BattleCharacter character)
     {
-        if (_summonGhost == CheckState .NotSatisfy && character.Info.HPQueue.Count == 2 && character.Info.CurrentHP == 0) //剩一條血時觸發
+        if (_summonGhost == CheckState .NotSatisfy && character.Info.HPQueue.Count == 1) //剩一條血時觸發
         {
             _summonGhost = CheckState.Satisfy;
         }
-        else if (_uuzLastHP == CheckState .NotSatisfy && character.Info.HPQueue.Count == 1 && character.Info.CurrentHP == 0) //剩零條血時觸發
+        else if (_uuzLastHP == CheckState .NotSatisfy && character.Info.HPQueue.Count == 0) //剩零條血時觸發
         {
             _uuzLastHP = CheckState.Satisfy;
         }
@@ -88,13 +88,12 @@ public class Plot_11_2 :Plot
         {
             BattleCharacter character = ResourceManager.Instance.Spawn("BattleCharacter/BattleCharacter", ResourceManager.Type.Other).GetComponent<BattleCharacter>();
             int id = 22 + UnityEngine.Random.Range(0, 1); //隨機選擇戰士幽靈或法師幽靈
-            character.Init(id, 1); //temp
+            character.Init(id, _uuz.Lv); //temp
             character.SetPosition(position);
             character.GetDamageHandler += SummonGhostGetDamage;
             BattleController.Instance.AddCharacer(character, true);
-            BattleCharacter uuz = GameObject.Find("uuz").GetComponent<BattleCharacter>();
-            uuz.SetNoDamage(11002);
-            uuz.Animator.SetBool("NoDamage", true);
+            _uuz.SetNoDamage(11002);
+            _uuz.Animator.SetBool("NoDamage", true);
 
             Camera.main.transform.DOMove(new Vector3(position.x, position.y, Camera.main.transform.position.z), 0.5f).OnComplete(() =>
             {
@@ -142,13 +141,12 @@ public class Plot_11_2 :Plot
         {
             BattleCharacter character = ResourceManager.Instance.Spawn("BattleCharacter/BattleCharacter", ResourceManager.Type.Other).GetComponent<BattleCharacter>();
             int id = 22 + UnityEngine.Random.Range(0, 1); //隨機選擇戰士幽靈或法師幽靈
-            character.Init(id, 1); //temp
+            character.Init(id, _uuz.Lv); //temp
             character.SetPosition(position);
             character.GetDamageHandler += SummonGhostGetDamage;
             BattleController.Instance.AddCharacer(character, true);
-            BattleCharacter uuz = GameObject.Find("uuz").GetComponent<BattleCharacter>();
-            uuz.SetNoDamage(11002);
-            uuz.Animator.SetBool("NoDamage", true);
+            _uuz.SetNoDamage(11002);
+            _uuz.Animator.SetBool("NoDamage", true);
         }
     }
 
@@ -166,17 +164,15 @@ public class Plot_11_2 :Plot
 
         if (count == 0)
         {
-            BattleCharacter uuz = GameObject.Find("uuz").GetComponent<BattleCharacter>();
-            uuz.Info.RemoveStasus(11002);
-            uuz.Animator.SetBool("NoDamage", false);
+            _uuz.Info.RemoveStasus(11002);
+            _uuz.Animator.SetBool("NoDamage", false);
         }
     }
 
     private void UuzLastHP(Action callback) //uuz 最後一條血的對話
     {
         BattleUI.Instance.SetVisible(false);
-        GameObject yukari = GameObject.Find("uuz");
-        Vector3 position = new Vector3(yukari.transform.position.x, yukari.transform.position.y, Camera.main.transform.position.z);
+        Vector3 position = new Vector3(_uuz.transform.position.x, _uuz.transform.position.y, Camera.main.transform.position.z);
         Camera.main.transform.DOMove(position, 0.5f).OnComplete(() =>
         {
             ConversationUI.Open(17001, false, () =>
