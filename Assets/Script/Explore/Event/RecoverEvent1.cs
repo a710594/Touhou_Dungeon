@@ -14,10 +14,11 @@ public class RecoverEvent1 : Event
 
         public override void Execute()
         {
-            for (int i = 0; i < TeamManager.Instance.MemberList.Count; i++)
+            List<TeamMember> memberList = TeamManager.Instance.GetAttendList();
+            for (int i = 0; i < memberList.Count; i++)
             {
-                TeamManager.Instance.MemberList[i].AddHP((int)(TeamManager.Instance.MemberList[i].MaxHP));
-                TeamManager.Instance.MemberList[i].AddMP((int)(TeamManager.Instance.MemberList[i].MaxMP));
+                memberList[i].AddHP((int)(memberList[i].MaxHP));
+                memberList[i].AddMP((int)(memberList[i].MaxMP));
             }
             ItemManager.Instance.MinusMoney((int)(ItemManager.Instance.Money * 0.1f));
         }

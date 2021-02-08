@@ -50,7 +50,7 @@ public class TeamUI : MonoBehaviour
 
     public void Init()
     {
-        _selectedMember = TeamManager.Instance.MemberList[0];
+        _selectedMember = TeamManager.Instance.GetAttendList()[0];
         _teamMemaberButtonDic[_selectedMember].SetColor(Color.white);
         SetCharacterData();
     }
@@ -152,12 +152,13 @@ public class TeamUI : MonoBehaviour
 
         for (int i=0; i<TeamMemaberButton.Length; i++)
         {
-            if (i < TeamManager.Instance.MemberList.Count)
+            List<TeamMember> memberList = TeamManager.Instance.GetAttendList();
+            if (i < memberList.Count)
             {
                 TeamMemaberButton[i].OnClickHandler = TeamMemberOnClick;
-                TeamMemaberButton[i].SetData(TeamManager.Instance.MemberList[i].Data.GetName(), TeamManager.Instance.MemberList[i]);
+                TeamMemaberButton[i].SetData(memberList[i].Data.GetName(), memberList[i]);
                 TeamMemaberButton[i].gameObject.SetActive(true);
-                _teamMemaberButtonDic.Add(TeamManager.Instance.MemberList[i], TeamMemaberButton[i]);
+                _teamMemaberButtonDic.Add(memberList[i], TeamMemaberButton[i]);
             }
             else
             {

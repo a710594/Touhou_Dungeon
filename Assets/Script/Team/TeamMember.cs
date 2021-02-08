@@ -98,6 +98,7 @@ public class TeamMember
         }
     }
     public int MOV;
+    public bool IsAttend; //在戰鬥時出場
     public Vector2Int Formation; //隊伍位置
     public JobData.RootObject Data;
     public Equip Weapon = new Equip(EquipData.TypeEnum.Weapon);
@@ -117,7 +118,7 @@ public class TeamMember
     private Equip _defaultWeapon = new Equip(EquipData.TypeEnum.Weapon);
     private Equip _defaultArmor = new Equip(EquipData.TypeEnum.Armor);
 
-    public void Init(int jobId, int lv = 1)
+    public void Init(int jobId, bool isAttend, int lv = 1)
     {
         Data = JobData.GetData(jobId);
         MaxHP = Mathf.RoundToInt(Data.HP * (1 + ((lv - 1) * 0.1f)));
@@ -131,7 +132,7 @@ public class TeamMember
         _agi = Mathf.RoundToInt(Data.AGI * (1 + ((lv - 1) * 0.1f)));
         _sen = Mathf.RoundToInt(Data.SEN * (1 + ((lv - 1) * 0.1f)));
         MOV = Data.MOV;
-        //SkillList = Data.GetUnlockSkill(Lv);
+        IsAttend = isAttend;
         for (int i=0; i<Data.SkillList.Count; i++)
         {
             SkillDic.Add(Data.SkillList[i], 1);
@@ -156,6 +157,7 @@ public class TeamMember
         _agi = memo.AGI;
         _sen = memo.SEN;
         MOV = memo.MOV;
+        IsAttend = memo.IsAttend;
         SkillDic = memo.SkillList;
         SpellCardDic = memo.SpellCardList;
         Formation = memo.Formation;

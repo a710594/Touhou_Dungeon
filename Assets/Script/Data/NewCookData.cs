@@ -79,12 +79,12 @@ public class NewCookData : MonoBehaviour
     {
         bool IsContain = true;
         Food food = null;
-        List<int> idList = new List<int>();
+        List<int> tagList = new List<int>();
         List<RootObject> resultList = new List<RootObject>();
 
         for (int i=0; i<materialList.Count; i++) 
         {
-            idList.Add(materialList[i].ID);
+            tagList.Add(materialList[i].CookTag);
         }
 
         foreach (KeyValuePair<int, RootObject> item in _dataDic) 
@@ -92,7 +92,7 @@ public class NewCookData : MonoBehaviour
             IsContain = true;
             for (int i=0; i<item.Value.MaterialList.Count; i++) 
             {
-                if (!idList.Contains(item.Value.MaterialList[i]))
+                if (!tagList.Contains(item.Value.MaterialList[i]))
                 {
                     IsContain = false;
                     continue;
@@ -117,7 +117,7 @@ public class NewCookData : MonoBehaviour
             ItemEffectData.RootObject itemEffectData;
             for (int i = 0; i < materialList.Count; i++)
             {
-                itemEffectData = ItemEffectData.GetData(idList[i]);
+                itemEffectData = ItemEffectData.GetData(materialList[i].ID);
                 if (itemEffectData != null)
                 {
                     addHP += itemEffectData.AddHP;

@@ -430,21 +430,24 @@ public class BattleUI : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A))
+        if (ProgressManager.Instance.Memo.FirstFlag) //已完成新手教學
         {
-            CameraController.Instance.CameraMove(Vector2Int.left);
-        }
-        else if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D))
-        {
-            CameraController.Instance.CameraMove(Vector2Int.right);
-        }
-        else if (Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.W))
-        {
-            CameraController.Instance.CameraMove(Vector2Int.up);
-        }
-        else if (Input.GetKey(KeyCode.DownArrow) || Input.GetKey(KeyCode.S))
-        {
-            CameraController.Instance.CameraMove(Vector2Int.down);
+            if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A))
+            {
+                CameraController.Instance.CameraMove(Vector2Int.left);
+            }
+            else if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D))
+            {
+                CameraController.Instance.CameraMove(Vector2Int.right);
+            }
+            else if (Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.W))
+            {
+                CameraController.Instance.CameraMove(Vector2Int.up);
+            }
+            else if (Input.GetKey(KeyCode.DownArrow) || Input.GetKey(KeyCode.S))
+            {
+                CameraController.Instance.CameraMove(Vector2Int.down);
+            }
         }
     }
 

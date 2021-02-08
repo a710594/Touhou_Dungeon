@@ -15,6 +15,7 @@ public class TeamMemberMemo
     public int AGI;
     public int SEN;
     public int MOV;
+    public bool IsAttend; //在戰鬥時出場
     public Vector2Int Formation;
     public int DataId;
     public Equip Weapon;
@@ -38,6 +39,7 @@ public class TeamMemberMemo
         AGI = member._agi;
         SEN = member._sen;
         MOV = member.MOV;
+        IsAttend = member.IsAttend;
         Formation = member.Formation;
         DataId = member.Data.ID;
         Weapon = member.Weapon;

@@ -49,16 +49,17 @@ public class EquipUpgradeUI : MonoBehaviour
     private void SetScrollView(bool isRefresh)
     {
         List<Item> itemList = new List<Item>(ItemManager.Instance.GetItemListByType(_managerType, ItemData.TypeEnum.Equip));
+        List<TeamMember> memberList = TeamManager.Instance.GetAttendList();
 
-        for (int i= TeamManager.Instance.MemberList.Count - 1; i>=0; i--) 
+        for (int i= memberList.Count - 1; i>=0; i--) 
         {
-            if (TeamManager.Instance.MemberList[i].Armor.ID != 0)
+            if (memberList[i].Armor.ID != 0)
             {
-                itemList.Insert(0, TeamManager.Instance.MemberList[i].Armor);
+                itemList.Insert(0, memberList[i].Armor);
             }
-            if (TeamManager.Instance.MemberList[i].Weapon.ID != 0)
+            if (memberList[i].Weapon.ID != 0)
             {
-                itemList.Insert(0, TeamManager.Instance.MemberList[i].Weapon);
+                itemList.Insert(0, memberList[i].Weapon);
             }
         }
 

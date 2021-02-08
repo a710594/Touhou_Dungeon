@@ -14,6 +14,7 @@ public class Item
     public bool CanCook;
     public bool CanBeStacked;
     public ItemData.TypeEnum Type;
+    public int CookTag;
 
     public Item() { }
 
@@ -33,6 +34,7 @@ public class Item
             CanCook = itemData.CanCook;
             CanBeStacked = itemData.CanBeStacked;
             Type = itemData.Type;
+            CookTag = itemData.CookTag;
         }
         else
         {
@@ -52,5 +54,6 @@ public class Item
         CanCook = item.CanCook;
         CanBeStacked = item.CanBeStacked;
         Type = item.Type;
+        CookTag = item.CookTag;
     }
 }

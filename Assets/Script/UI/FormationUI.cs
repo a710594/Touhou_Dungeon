@@ -42,9 +42,10 @@ public class FormationUI : MonoBehaviour
             MemberPositionButton[j].SetData(null);
         }
 
-        for (int i = 0; i < TeamManager.Instance.MemberList.Count; i++)
+        List<TeamMember> memberList = TeamManager.Instance.GetAttendList();
+        for (int i = 0; i < memberList.Count; i++)
         {
-            member = TeamManager.Instance.MemberList[i];
+            member = memberList[i];
             position = member.Formation;
 
             for (int j = 0; j < MemberPositionButton.Length; j++)

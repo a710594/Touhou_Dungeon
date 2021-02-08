@@ -19,11 +19,13 @@ public class BagSelectCharacterGroup : MonoBehaviour
     {
         for (int i = 0; i < CharacterButtons.Length; i++)
         {
-            if (i < TeamManager.Instance.MemberList.Count)
+
+            List<TeamMember> memberList = TeamManager.Instance.GetAttendList();
+            if (i < memberList.Count)
             {
                 CharacterButtons[i].gameObject.SetActive(true);
-                CharacterButtons[i].SetData(TeamManager.Instance.MemberList[i]);
-                CharacterButtonDic.Add(TeamManager.Instance.MemberList[i], CharacterButtons[i]);
+                CharacterButtons[i].SetData(memberList[i]);
+                CharacterButtonDic.Add(memberList[i], CharacterButtons[i]);
             }
             else
             {

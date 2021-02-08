@@ -12,12 +12,15 @@ public class ConversationUI : MonoBehaviour
     public Action<int> Handler;
 
     public Text NameLabel;
-    public Typewriter Typewriter;
+    public Typewriter NormalTypewriter;
+    public Typewriter VOTypewriter;
     public Button NextButton;
     public Button SkipButton;
     public Image Background;
     public Image FadeImage;
     public Image[] CharacterImage;
+    public GameObject NormalGroup;
+    public GameObject VOGroup;
 
     private int _siblingIndex;
     private bool _isPlayingBGM = false;
@@ -49,7 +52,8 @@ public class ConversationUI : MonoBehaviour
     private void Init(int id, bool isFadeEnd, Action callback = null)
     {
         ConversationData.RootObject data = ConversationData.GetData(id);
-        Typewriter.ClearText();
+        NormalTypewriter.ClearText();
+        VOTypewriter.ClearText();
         SetData(data);
 
         _data = data;
@@ -75,8 +79,19 @@ public class ConversationUI : MonoBehaviour
 
     private void SetData(ConversationData.RootObject data)
     {
-        NameLabel.text = data.Name;
-        Typewriter.Show(data.GetComment());
+        if (data.Type == ConversationData.TypeEnum.Normal)
+        {
+            NormalGroup.SetActive(true);
+            VOGroup.SetActive(false);
+            NameLabel.text = data.Name;
+            NormalTypewriter.Show(data.GetComment());
+        }
+        else
+        {
+            NormalGroup.SetActive(false);
+            VOGroup.SetActive(true);
+            VOTypewriter.Show(data.GetComment());
+        }
 
         if (data.Background == "x")
         {
@@ -148,7 +163,7 @@ public class ConversationUI : MonoBehaviour
         }
 
         NameLabel.text = string.Empty;
-        Typewriter.ClearText();
+        NormalTypewriter.ClearText();
 
         _isClickable = false;
         if (_isFadeEnd)
@@ -179,13 +194,13 @@ public class ConversationUI : MonoBehaviour
             return;
         }
 
-        if (!Typewriter.IsTyping)
+        if (!NormalTypewriter.IsTyping)
         {
             NextConversationID(_data.ID + 1);
         }
         else
         {
-            Typewriter.SetText();
+            NormalTypewriter.SetText();
         }
     }
 

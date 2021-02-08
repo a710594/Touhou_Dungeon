@@ -67,11 +67,12 @@ public class ItemManager
                 _warehouseTypeDic[warehouseList[i].Type].Add(warehouseList[i]);
             }
         }
-        AddItem(1006, 5, Type.Warehouse);
-        AddItem(21002, 5, Type.Warehouse);
-        AddItem(21003, 5, Type.Warehouse);
-        AddItem(21004, 5, Type.Warehouse);
-        Money = 1000;
+        //AddItem(21002, 5, Type.Warehouse);
+        //AddItem(21003, 5, Type.Warehouse);
+        //AddItem(21004, 5, Type.Warehouse);
+        //AddItem(21005, 5, Type.Warehouse);
+        //AddItem(21006, 5, Type.Warehouse);
+        //AddItem(21007, 5, Type.Warehouse);
     }
 
     public void Save()

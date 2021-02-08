@@ -70,7 +70,6 @@ public class GameSystem : MonoBehaviour
         DungeonData.Load();
         RoomData.Load();
         TreasureData.Load();
-        CookData.Load();
         ConversationData.Load();
         ShopData.Load();
         DungeonGroupData.Load();

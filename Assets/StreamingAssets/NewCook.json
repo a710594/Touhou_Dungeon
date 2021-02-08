@@ -1,7 +1,7 @@
-[{"ID":1,"ResultID":22001,"AddHP":10,"AddMP":10,"Material_1":21002,"Material_2":0,"Material_3":0,"Material_4":0,"Material_5":0,"Priority":1},
-{"ID":2,"ResultID":22002,"AddHP":10,"AddMP":10,"Material_1":21003,"Material_2":0,"Material_3":0,"Material_4":0,"Material_5":0,"Priority":1},
-{"ID":3,"ResultID":22003,"AddHP":10,"AddMP":10,"Material_1":21004,"Material_2":0,"Material_3":0,"Material_4":0,"Material_5":0,"Priority":1},
-{"ID":4,"ResultID":22004,"AddHP":20,"AddMP":20,"Material_1":21002,"Material_2":21003,"Material_3":0,"Material_4":0,"Material_5":0,"Priority":2},
-{"ID":5,"ResultID":22005,"AddHP":20,"AddMP":20,"Material_1":21002,"Material_2":21004,"Material_3":0,"Material_4":0,"Material_5":0,"Priority":2},
-{"ID":6,"ResultID":22006,"AddHP":20,"AddMP":20,"Material_1":21003,"Material_2":21004,"Material_3":0,"Material_4":0,"Material_5":0,"Priority":2},
-{"ID":7,"ResultID":22007,"AddHP":30,"AddMP":30,"Material_1":21002,"Material_2":21003,"Material_3":21004,"Material_4":0,"Material_5":0,"Priority":3}]
+[{"ID":1,"ResultID":22001,"AddHP":10,"AddMP":10,"Material_1":1,"Material_2":0,"Material_3":0,"Material_4":0,"Material_5":0,"Priority":1},
+{"ID":2,"ResultID":22002,"AddHP":10,"AddMP":10,"Material_1":2,"Material_2":0,"Material_3":0,"Material_4":0,"Material_5":0,"Priority":1},
+{"ID":3,"ResultID":22003,"AddHP":10,"AddMP":10,"Material_1":3,"Material_2":0,"Material_3":0,"Material_4":0,"Material_5":0,"Priority":1},
+{"ID":4,"ResultID":22004,"AddHP":20,"AddMP":20,"Material_1":1,"Material_2":2,"Material_3":0,"Material_4":0,"Material_5":0,"Priority":2},
+{"ID":5,"ResultID":22005,"AddHP":20,"AddMP":20,"Material_1":1,"Material_2":3,"Material_3":0,"Material_4":0,"Material_5":0,"Priority":2},
+{"ID":6,"ResultID":22006,"AddHP":20,"AddMP":20,"Material_1":2,"Material_2":3,"Material_3":0,"Material_4":0,"Material_5":0,"Priority":2},
+{"ID":7,"ResultID":22007,"AddHP":30,"AddMP":30,"Material_1":1,"Material_2":2,"Material_3":3,"Material_4":0,"Material_5":0,"Priority":3}]

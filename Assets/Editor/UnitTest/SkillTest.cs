@@ -15,7 +15,7 @@ public class SkillTest
 
         BattleCharacterInfo Info = new BattleCharacterInfo();
         TeamMember teamMember = new TeamMember();
-        teamMember.Init(1, 1);
+        teamMember.Init(1, true, 1);
         Info.Init(teamMember, 1);
         Info.SetBuff(1, 1);
         Assert.AreEqual(27, Info.DEF);
@@ -32,7 +32,7 @@ public class SkillTest
         CureSkill cureSkill = (CureSkill)SkillFactory.GetNewSkill(3, null, 1);
         BattleCharacterInfo Info = new BattleCharacterInfo();
         TeamMember teamMember = new TeamMember();
-        teamMember.Init(3, 1);
+        teamMember.Init(3, true, 1);
         Info.Init(teamMember, 1);
         Debug.Log(Info.MEF + " " + cureSkill.Data.ValueList[0]);
         Assert.AreEqual(18, cureSkill.CalculateRecover(Info));

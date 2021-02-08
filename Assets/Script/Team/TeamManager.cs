@@ -28,7 +28,7 @@ public class TeamManager
 
     public int Lv;
     public int Exp;
-    public List<TeamMember> MemberList = new List<TeamMember>();
+    private List<TeamMember> MemberList = new List<TeamMember>();
 
     public void Init()
     {
@@ -40,9 +40,9 @@ public class TeamManager
             Exp = 0;
 
             MemberList.Clear();
-            AddMember(1, new Vector2Int(0, 0), 41001, 42001);
-            AddMember(2, new Vector2Int(1, 0), 41002, 42001);
-            AddMember(3, new Vector2Int(-1, 0), 41002, 42001);
+            AddMember(1, true, new Vector2Int(0, 0), 41001, 42001);
+            AddMember(2, true, new Vector2Int(1, 0), 41002, 42001);
+            AddMember(3, true, new Vector2Int(-1, 0), 41002, 42001);
 
             //test
             //AddMember(1, new Vector2Int(0, 0), 41005, 42003);
@@ -65,6 +65,10 @@ public class TeamManager
         }
         //_power = 50;
         //SetLv(12, 0);
+        //MemberList[0].IsAttend = true;
+        //MemberList[1].IsAttend = true;
+        //MemberList[2].IsAttend = true;
+        //MemberList[3].IsAttend = false;
     }
 
     public void Save() 
@@ -153,14 +157,27 @@ public class TeamManager
         }
     }
 
-    public void AddMember(int job, Vector2Int position, int weapon, int armor) 
+    public void AddMember(int job, bool isAttend, Vector2Int position, int weapon, int armor) 
     {
         TeamMember member = new TeamMember();
-        member.Init(job, Lv);
+        member.Init(job, isAttend, Lv);
         member.Formation = position;
         member.SetEquip(weapon);
         member.SetEquip(armor);
         MemberList.Add(member);
+    }
+
+    public List<TeamMember> GetAttendList()
+    {
+        List<TeamMember> attendList = new List<TeamMember>();
+        for (int i=0; i<MemberList.Count; i++)
+        {
+            if (MemberList[i].IsAttend)
+            {
+                attendList.Add(MemberList[i]);
+            }
+        }
+        return attendList;
     }
 
     private void SetLv(int lv, int exp) 

@@ -6,6 +6,12 @@ using Newtonsoft.Json;
 
 public class ConversationData
 {
+    public enum TypeEnum
+    {
+        Normal = 1,
+        VO,
+    }
+
     public enum MotionEnum 
     {
         Jump = 1,
@@ -18,6 +24,7 @@ public class ConversationData
         public string Comment_Chinese { get; set; }
         public string Background { get; set; }
         public string BGM { get; set; }
+        public TypeEnum Type;
         public string Image_1 { get; set; }
         public MotionEnum Motion_1 { get; set; }
         public string Image_2 { get; set; }

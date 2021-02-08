@@ -67,9 +67,10 @@ public class BattleController : MachineBehaviour
         BattleCharacter character;
 
         TeamMember member;
-        for (int i = 0; i < TeamManager.Instance.MemberList.Count; i++)
+        List<TeamMember> memberList = TeamManager.Instance.GetAttendList();
+        for (int i = 0; i < memberList.Count; i++)
         {
-            member = TeamManager.Instance.MemberList[i];
+            member = memberList[i];
             character = ResourceManager.Instance.Spawn("BattleCharacter/BattleCharacter", ResourceManager.Type.Other).GetComponent<BattleCharacter>();
             character.name = member.Data.Animator;
             character.Init(member, TeamManager.Instance.Lv);
@@ -142,9 +143,10 @@ public class BattleController : MachineBehaviour
         BattleCharacter character;
 
         TeamMember member;
-        for (int i = 0; i < TeamManager.Instance.MemberList.Count; i++)
+        List<TeamMember> memberList = TeamManager.Instance.GetAttendList();
+        for (int i = 0; i < memberList.Count; i++)
         {
-            member = TeamManager.Instance.MemberList[i];
+            member = memberList[i];
             character = ResourceManager.Instance.Spawn("BattleCharacter/BattleCharacter", ResourceManager.Type.Other).GetComponent<BattleCharacter>();
             character.name = member.Data.Animator;
             character.Init(member, TeamManager.Instance.Lv);

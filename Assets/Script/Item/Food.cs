@@ -24,6 +24,7 @@ public class Food : Item
             Amount = amount;
             CanCook = itemData.CanCook;
             Type = itemData.Type;
+            CookTag = itemData.CookTag;
 
             ItemEffectData.RootObject itemEffectData = ItemEffectData.GetData(id);
             if (addHP == -1)
@@ -65,5 +66,6 @@ public class Food : Item
         AddHP = food.AddHP;
         AddMP = food.AddMP;
         Comment = food.Comment;
+        CookTag = food.CookTag;
     }
 }
