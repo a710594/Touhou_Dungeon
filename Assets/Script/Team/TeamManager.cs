@@ -68,7 +68,7 @@ public class TeamManager
         //MemberList[0].IsAttend = true;
         //MemberList[1].IsAttend = true;
         //MemberList[2].IsAttend = true;
-        //MemberList[3].IsAttend = false;
+        //MemberList[3].IsAttend = true;
     }
 
     public void Save() 
@@ -178,6 +178,12 @@ public class TeamManager
             }
         }
         return attendList;
+    }
+
+    //for debug
+    public void SetPower(int power)
+    {
+        _power = power;
     }
 
     private void SetLv(int lv, int exp) 

@@ -13,7 +13,7 @@
 {"ID":7001,"Icon":"x","Field":"x","Value_1":-3,"Value_2":0,"Value_3":0,"Value_4":0,"Value_5":0,"ValueType":7,"Turn":1,"Name":"移動Debuff","Message":"移動降低","Comment":"移動-3"},
 {"ID":8001,"Icon":"Poison","Field":"x","Value_1":20,"Value_2":0,"Value_3":0,"Value_4":0,"Value_5":0,"ValueType":8,"Turn":3,"Name":"毒","Message":"中毒","Comment":"回合結束時造成最大HP的20%傷害"},
 {"ID":9001,"Icon":"Paralysis","Field":"x","Value_1":50,"Value_2":0,"Value_3":0,"Value_4":0,"Value_5":0,"ValueType":9,"Turn":3,"Name":"麻痺","Message":"麻痺","Comment":"50%機率無法行動"},
-{"ID":9002,"Icon":"Dizzy","Field":"x","Value_1":100,"Value_2":0,"Value_3":0,"Value_4":0,"Value_5":0,"ValueType":9,"Turn":1,"Name":"暈眩","Message":"暈眩","Comment":"無法行動"},
-{"ID":10001,"Icon":"Striking","Field":"x","Value_1":0,"Value_2":0,"Value_3":0,"Value_4":0,"Value_5":0,"ValueType":10,"Turn":1,"Name":"注目","Message":"注目","Comment":"吸引對手攻擊自己"},
-{"ID":11001,"Icon":"NoDamage","Field":"Shield_Invincible","Value_1":0,"Value_2":0,"Value_3":0,"Value_4":0,"Value_5":0,"ValueType":11,"Turn":1,"Name":"無敵","Message":"無敵","Comment":"使攻擊的傷害無效化"},
-{"ID":11002,"Icon":"NoDamage","Field":"Shield_Invincible","Value_1":0,"Value_2":0,"Value_3":0,"Value_4":0,"Value_5":0,"ValueType":11,"Turn":-1,"Name":"無敵","Message":"無敵","Comment":"使攻擊的傷害無效化"}]
+{"ID":10001,"Icon":"Sleep","Field":"x","Value_1":0,"Value_2":0,"Value_3":0,"Value_4":0,"Value_5":0,"ValueType":10,"Turn":3,"Name":"睡眠","Message":"睡眠","Comment":"無法行動，睡眠期間遭受攻擊會承受兩倍傷害"},
+{"ID":11001,"Icon":"Striking","Field":"x","Value_1":0,"Value_2":0,"Value_3":0,"Value_4":0,"Value_5":0,"ValueType":11,"Turn":1,"Name":"注目","Message":"注目","Comment":"吸引對手攻擊自己"},
+{"ID":12001,"Icon":"NoDamage","Field":"Shield_Invincible","Value_1":0,"Value_2":0,"Value_3":0,"Value_4":0,"Value_5":0,"ValueType":12,"Turn":1,"Name":"無敵","Message":"無敵","Comment":"使攻擊的傷害無效化"},
+{"ID":12002,"Icon":"NoDamage","Field":"Shield_Invincible","Value_1":0,"Value_2":0,"Value_3":0,"Value_4":0,"Value_5":0,"ValueType":12,"Turn":-1,"Name":"無敵","Message":"無敵","Comment":"使攻擊的傷害無效化"}]

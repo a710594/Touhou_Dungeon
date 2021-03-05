@@ -331,6 +331,13 @@ public class BattleController : MachineBehaviour
         BattleUI.Instance.InitPriorityQueue(new List<BattleCharacter>(_actionQueue));
     }
 
+    public void ActAgain(BattleCharacter character)
+    {
+        character.InitActionCount();
+        _actionQueue.Insert(0, character);
+        BattleUI.Instance.InitPriorityQueue(new List<BattleCharacter>(_actionQueue));
+    }
+
 
     public void SetCharacerActive(BattleCharacter character)
     {
@@ -351,6 +358,11 @@ public class BattleController : MachineBehaviour
     {
         ChangeState<LoseState>();
     }
+
+    //public void CancelAction(BattleCharacter character)
+    //{
+    //    character.Info.ActionDoneCompletely();
+    //}
 
     private ResultType CheckResult()
     {

@@ -12,6 +12,13 @@ public class BattleCharacterInfo
         None,
     }
 
+    public enum AbnormalEnum
+    {
+        Poison,
+        Paralysis,
+        Sleep,
+    }
+
     private static readonly int _maxActionCount = 2;
 
     public int MaxHP;
@@ -27,14 +34,7 @@ public class BattleCharacterInfo
         {
             if (value < 0)
             {
-                //if (_currentHP > 0)
-                //{
-                    _currentHP = 0;
-                //}
-                //else
-                //{
-                //    _currentHP = -1;
-                //}
+                _currentHP = 0;
             }
             else
             {
@@ -160,7 +160,14 @@ public class BattleCharacterInfo
     {
         get
         {
-            return SleepingId != -1;
+            foreach (KeyValuePair<int, BattleStatus> item in StatusDic)
+            {
+                if (item.Value is Sleeping)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 
@@ -168,7 +175,15 @@ public class BattleCharacterInfo
     {
         get
         {
-            return StrikingId != -1;
+            //return StrikingId != -1;
+            foreach (KeyValuePair<int, BattleStatus> item in StatusDic)
+            {
+                if (item.Value is Striking)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 
@@ -196,7 +211,6 @@ public class BattleCharacterInfo
     public Queue<int> HPQueue = new Queue<int>();
 
     public Dictionary<int, BattleStatus> StatusDic = new Dictionary<int, BattleStatus>();
-    public int SleepingId = -1;
     public int StrikingId = -1;
     public Dictionary<int, int> ParalysisDic = new Dictionary<int, int>(); //id, Probability
     public Dictionary<int, int> PoisonDic = new Dictionary<int, int>(); //id, damage
@@ -205,6 +219,8 @@ public class BattleCharacterInfo
     public List<Skill> SpellCardList = new List<Skill>();
 
     public int LastTurnGetDamage = 0; //上回合累積的傷害
+
+    public List<AbnormalEnum> AbnormalRecorder = new List<AbnormalEnum>();
 
     public void Init(TeamMember member, int lv) //for player
     {
@@ -347,10 +363,6 @@ public class BattleCharacterInfo
                     {
                         ParalysisDic.Remove(keyList[i]);
                     }
-                    else if (statusList[i] is Sleeping)
-                    {
-                        SleepingId = -1;
-                    }
                     else if (statusList[i] is Striking)
                     {
                         StrikingId = -1;
@@ -371,10 +383,19 @@ public class BattleCharacterInfo
                 battleStatus = item.Value;
                 return false;
             }
-            else if (item.Value is Paralysis && Random.Range(0, 100) < ((Paralysis)item.Value).Probability)
+            else if (item.Value is Paralysis)
             {
-                battleStatus = item.Value;
-                return false;
+                int random = Random.Range(0, 100);
+                if (random < ((Paralysis)item.Value).Probability)
+                {
+                    battleStatus = item.Value;
+                    return false;
+                }
+                else
+                {
+                    battleStatus = null;
+                    return true;
+                }
             }
         }
         battleStatus = null;
@@ -416,8 +437,19 @@ public class BattleCharacterInfo
 
     public void RemoveSleep()
     {
-        StatusDic.Remove(SleepingId);
-        SleepingId = -1;
+        List<int> keyList = new List<int>(StatusDic.Keys);
+        List<BattleStatus> statusList = new List<BattleStatus>(StatusDic.Values);
+
+        for (int i = 0; i < keyList.Count; i++)
+        {
+            if (statusList[i].RemainTurn != -1)
+            {
+                if (statusList[i] is Sleeping)
+                {
+                    StatusDic.Remove(keyList[i]);
+                }
+            }
+        }
     }
 
     public void SetPoison(Poison poison, int damage)
@@ -428,11 +460,7 @@ public class BattleCharacterInfo
             StatusDic.Add(id, poison);
             PoisonDic.Add(id, damage);
         }
-        else
-        {
-            poison = (Poison)StatusDic[id];
-            poison.ResetTurn();
-        }
+        AbnormalRecorder.Add(AbnormalEnum.Poison);
     }
 
     public List<int> GetPoisonDamageList()
@@ -450,11 +478,18 @@ public class BattleCharacterInfo
             StatusDic.Add(id, paralysis);
             ParalysisDic.Add(id, paralysis.Probability);
         }
-        else
+        AbnormalRecorder.Add(AbnormalEnum.Paralysis);
+    }
+
+    public void SetSleep(int id)
+    {
+        Sleeping sleeping;
+        if (!StatusDic.ContainsKey(id))
         {
-            paralysis = (Paralysis)StatusDic[id];
-            paralysis.ResetTurn();
+            sleeping = new Sleeping(id);
+            StatusDic.Add(id, sleeping);
         }
+        AbnormalRecorder.Add(AbnormalEnum.Sleep);
     }
 
     public void SetStriking(int id)
@@ -492,7 +527,6 @@ public class BattleCharacterInfo
         }
         PoisonDic.Clear();
         ParalysisDic.Clear();
-        SleepingId = -1;
 
     }
 
@@ -567,9 +601,10 @@ public class BattleCharacterInfo
         return total;
     }
 
-    public void SetNoDamage(int id)
+    public void SetNoDamage()
     {
         NoDamage noDamage;
+        int id = 12002;
 
         if (!StatusDic.ContainsKey(id))
         {

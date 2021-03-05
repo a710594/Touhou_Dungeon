@@ -10,7 +10,7 @@ public class AI_uuz : AI
     public override void Init(BattleCharacter character, List<int> list)
     {
         base.Init(character, list);
-        _myself.SetNoDamage(11002);
+        _myself.SetNoDamage();
         _myself.Animator.SetBool("IsShadow", true);
         _myself.Animator.SetBool("NoDamage", true);
     }

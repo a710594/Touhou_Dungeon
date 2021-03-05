@@ -33,6 +33,10 @@ public class SkillFactory
         {
             skill = new ParalysisSkill(skillData, user, lv);
         }
+        else if (skillData.Type == SkillData.TypeEnum.Sleeping)
+        {
+            skill = new SleepSkill(skillData, user, lv);
+        }
         else if (skillData.Type == SkillData.TypeEnum.ClearAbnormal)
         {
             skill = new ClearAbnormalSkill(skillData, user, lv);
@@ -69,9 +73,17 @@ public class SkillFactory
         {
             skill = new RecoverMPItemSkill(skillData, lv);
         }
-        else if (skillData.Type == SkillData.TypeEnum.RageAttackSkill)
+        else if (skillData.Type == SkillData.TypeEnum.RageAttack)
         {
             skill = new RageAttackSkill(skillData, user, lv);
+        }
+        else if (skillData.Type == SkillData.TypeEnum.AbnormalAttack)
+        {
+            skill = new AbnormalAttackSkill(skillData, user, lv);
+        }
+        else if (skillData.Type == SkillData.TypeEnum.CancelAction)
+        {
+            skill = new CancelActionSkill(skillData, user, lv);
         }
 
         return skill;

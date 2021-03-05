@@ -40,23 +40,6 @@ public class BattleCharacter : MonoBehaviour
     private int _getDamage = 0; //該回合累積的傷害
 
     public LiveStateEnum LiveState;
-    //{
-    //    get
-    //    {
-    //        if (Info.CurrentHP > 0)
-    //        {
-    //            return LiveStateEnum.Alive;
-    //        }
-    //        else if (Info.CurrentHP == 0 && Info.IsTeamMember)
-    //        {
-    //            return LiveStateEnum.Dying;
-    //        }
-    //        else
-    //        {
-    //            return LiveStateEnum.Dead;
-    //        }
-    //    }
-    //}
 
     public bool CanHitTarget
     {
@@ -439,6 +422,11 @@ public class BattleCharacter : MonoBehaviour
         Info.SetParalysis(id, lv);
     }
 
+    public void SetSleep(int id)
+    {
+        Info.SetSleep(id);
+    }
+
     public void SetStriking(int id)
     {
         Info.SetStriking(id);
@@ -471,9 +459,9 @@ public class BattleCharacter : MonoBehaviour
         Info.SetBuff(id, lv);
     }
 
-    public void SetNoDamage(int id)
+    public void SetNoDamage()
     {
-        Info.SetNoDamage(id);
+        Info.SetNoDamage();
     }
 
     public void SetOutline(bool show)

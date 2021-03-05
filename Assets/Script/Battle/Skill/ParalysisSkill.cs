@@ -33,7 +33,7 @@ public class ParalysisSkill : Skill
 
         if (hitType == HitType.Hit)
         {
-            floatingNumberType = FloatingNumber.Type.Other;
+            floatingNumberType = FloatingNumber.Type.Paralysis;
             text = BattleStatusData.GetData(Data.StatusID).Message;
         }
         else if (hitType == HitType.Miss)
@@ -46,24 +46,26 @@ public class ParalysisSkill : Skill
         SetFloatingNumberDic(target, floatingNumberType, text);
 
         CheckSubSkill(target, hitType);
+    }
 
-        //Timer timer1 = new Timer(Data.ShowTime / 2f, () =>
-        //{
-        //    if (hitType != HitType.Miss)
-        //    {
-        //        target.SetParalysis(Data.StatusID, Lv);
+    protected override HitType CheckHit(BattleCharacterInfo executor, BattleCharacterInfo target, BattleCharacter.LiveStateEnum targetLiveState)
+    {
+        HitType hitType = base.CheckHit(executor, target, targetLiveState);
 
-        //        BattleUI.Instance.SetFloatingNumber(target, BattleStatusData.GetData(Data.StatusID).Message, FloatingNumber.Type.Other);
-        //    }
-        //    else
-        //    {
-        //        BattleUI.Instance.SetFloatingNumber(target, "Miss", FloatingNumber.Type.Miss);
-        //    }
-        //});
-
-        //Timer timer2 = new Timer(_floatingNumberTime + Data.ShowTime / 2f, () =>
-        //{
-        //    CheckSubSkill(target, hitType);
-        //});
+        if (hitType == HitType.Hit)
+        {
+            if (target.AbnormalRecorder.Contains(BattleCharacterInfo.AbnormalEnum.Paralysis))
+            {
+                return HitType.Miss;
+            }
+            else
+            {
+                return HitType.Hit;
+            }
+        }
+        else
+        {
+            return hitType;
+        }
     }
 }

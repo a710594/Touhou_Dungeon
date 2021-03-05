@@ -17,6 +17,7 @@ public class BattleStatusData
         MOV,
         Damage,
         Probability,
+        Sleep,
         Striking,
         NoDamage, //無敵
     }

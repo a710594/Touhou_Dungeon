@@ -14,8 +14,7 @@ public class AI_Single : AI
 
             Vector2Int targetPosition;
             List<Vector2Int> rangeList;
-            List<Vector2Int> detectRangeList = _myself.GetDetectRange();
-            BattleCharacter target = GetTarget(detectRangeList);
+            BattleCharacter target = GetTarget();
 
             if (target != null)
             {
@@ -43,8 +42,9 @@ public class AI_Single : AI
                     {
                         CanHitTarget = true;
                         //尋找最短路徑
-                        path = _myself.GetPath(positionList[0]);
-                        Queue<Vector2Int> shortestPath = path;
+                        //path = _myself.GetPath(positionList[0]);
+                        //Queue<Vector2Int> shortestPath = path;
+                        Queue<Vector2Int> shortestPath = _myself.GetPath(positionList[0]);
                         for (int i = 1; i < positionList.Count; i++)
                         {
                             path = _myself.GetPath(positionList[i]);
@@ -107,9 +107,10 @@ public class AI_Single : AI
         }
     }
 
-    protected BattleCharacter GetTarget(List<Vector2Int> detectRangeList)
+    protected BattleCharacter GetTarget()
     {
         BattleCharacter character;
+        List<Vector2Int> detectRangeList = _myself.GetDetectRange();
         List<BattleCharacter> candidateList = new List<BattleCharacter>(); //只要是目標陣營活著的角色都算
         List<BattleCharacter> inRangeList = new List<BattleCharacter>(); //符合上述條件且打得到的角色才算
         List<BattleCharacter> strikingList = new List<BattleCharacter>(); //符合上述條件且有注目狀態的角色
@@ -142,6 +143,20 @@ public class AI_Single : AI
         {
             candidateList = inRangeList;
         }
+        else //排除走不到的目標
+        {
+            List<Vector2Int> path;
+            for (int i = 0; i < candidateList.Count; i++)
+            {
+                path = BattleFieldManager.Instance.GetPath(transform.position, candidateList[i].transform.position, BattleCharacterInfo.CampEnum.None);
+                if (path == null)
+                {
+                    candidateList.RemoveAt(i);
+                    i--;
+                }
+            }
+        }
+
 
         BattleCharacter target = null;
         if (candidateList.Count > 0)

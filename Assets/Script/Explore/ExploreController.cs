@@ -118,7 +118,7 @@ public class ExploreController
         }
 
         GenerateCoin();
-        GenerateEnemy();
+        //GenerateEnemy(); //temp
         GameSystem.Instance.AutoSave();
 
         _plotChecker.Check();

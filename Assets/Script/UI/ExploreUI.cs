@@ -13,13 +13,14 @@ public class ExploreUI : MonoBehaviour
     public Button TeamButton;
     public Button FormationButton;
     public Button CookButton;
-    public Button SaveButton;
+    public Button SystemButton;
     public Button CloseMoveTutorialButton;
     public ButtonPlus[] InteractiveButtons;
     public MapUI MapUI;
     public TipLabel TipLabel;
     public GameObject LoadingGroup;
     public StairsGroup StairsGroup;
+    public SystemGroup SystemGroup;
     public Joystick Joystick;
 
     private bool _canMove = true;  //角色是否可移動
@@ -136,10 +137,9 @@ public class ExploreUI : MonoBehaviour
         NewCookUI.Open(ItemManager.Type.Bag);
     }
 
-    private void Save() 
+    private void SystemOnClick() 
     {
-        GameSystem.Instance.SaveGame();
-        TipLabel.SetLabel("存檔成功");
+        SystemGroup.Open();
     }
 
     private void InteractiveOnClick(ButtonPlus button)
@@ -164,7 +164,7 @@ public class ExploreUI : MonoBehaviour
         TeamButton.onClick.AddListener(OpenTeam);
         FormationButton.onClick.AddListener(OpenFormation);
         CookButton.onClick.AddListener(OpenCook);
-        SaveButton.onClick.AddListener(Save);
+        SystemButton.onClick.AddListener(SystemOnClick);
         CloseMoveTutorialButton.onClick.AddListener(CloseMoveTutorialOnClick);
 
         for (int i=0; i<InteractiveButtons.Length; i++)
@@ -172,9 +172,10 @@ public class ExploreUI : MonoBehaviour
             InteractiveButtons[i].ClickHandler = InteractiveOnClick;
         }
 
-        SaveButton.interactable = (MySceneManager.Instance.CurrentScene == MySceneManager.SceneType.Explore);
+        SystemButton.interactable = (MySceneManager.Instance.CurrentScene == MySceneManager.SceneType.Explore);
 
         StairsGroup.gameObject.SetActive(false);
+        SystemGroup.gameObject.SetActive(false);
         CloseMoveTutorialButton.gameObject.SetActive(!ProgressManager.Instance.Memo.MoveTutorial);
     }
 

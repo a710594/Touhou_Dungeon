@@ -43,6 +43,8 @@ public class Equip :Item
             Volume = itemData.Volume;
             Price = itemData.Price;
             Amount = 1;
+            CanCook = itemData.CanCook;
+            CanBeStacked = itemData.CanBeStacked;
             Type = itemData.Type;
 
             EquipType = equipData.Type;
@@ -68,6 +70,8 @@ public class Equip :Item
         Volume = equip.Volume;
         Price = equip.Price;
         Amount = 1;
+        CanCook = equip.CanCook;
+        CanBeStacked = equip.CanBeStacked;
         Type = equip.Type;
 
         EquipType = equip.EquipType;

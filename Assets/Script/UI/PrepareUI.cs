@@ -53,7 +53,7 @@ public class PrepareUI : MonoBehaviour
     private void WarehouseIconOnClick(object obj)
     {
         Item item = (Item)obj;
-        ItemManager.Instance.AddBagItem(item, 1);
+        ItemManager.Instance.AddItem(item, 1, ItemManager.Type.Bag);
         ItemManager.Instance.MinusItem(item, 1, ItemManager.Type.Warehouse);
 
         Refresh();
@@ -68,7 +68,7 @@ public class PrepareUI : MonoBehaviour
         }
         else
         {
-            ItemManager.Instance.AddWarehouseItem(item, 1);
+            ItemManager.Instance.AddItem(item, 1, ItemManager.Type.Warehouse);
             ItemManager.Instance.MinusItem(item, 1, ItemManager.Type.Bag);
             Refresh();
         }

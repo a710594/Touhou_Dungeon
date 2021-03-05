@@ -367,6 +367,11 @@ public class Skill
             {
                 for (int i = 0; i < characterList.Count; i++)
                 {
+                    if (Data.RangeType == SkillData.RangeTypeEnum.All && characterList[i] == executor) //如果技能範圍是全體,則不排除自己為射程範圍
+                    {
+                        continue;
+                    }
+
                     if (characterList[i].Info.Camp == BattleCharacterInfo.CampEnum.Enemy && characterList[i].LiveState != BattleCharacter.LiveStateEnum.Dead)
                     {
                         positionList.Remove(Vector2Int.RoundToInt(characterList[i].transform.position));
@@ -377,6 +382,11 @@ public class Skill
             {
                 for (int i = 0; i < characterList.Count; i++)
                 {
+                    if (Data.RangeType == SkillData.RangeTypeEnum.All && characterList[i] == executor) //如果技能範圍是全體,則不排除自己為射程範圍
+                    {
+                        continue;
+                    }
+
                     if (characterList[i].Info.Camp == BattleCharacterInfo.CampEnum.Partner && characterList[i].LiveState != BattleCharacter.LiveStateEnum.Dead)
                     {
                         positionList.Remove(Vector2Int.RoundToInt(characterList[i].transform.position));

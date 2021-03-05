@@ -8,7 +8,6 @@ public class test : MonoBehaviour
 {
     private void Start()
     {
-        ConversationData.Load();
-        ConversationUI.Open(1001, false);
+        Debug.Log(Resources.Load("Prefab/Skill/SleepKnife"));
     }
 }

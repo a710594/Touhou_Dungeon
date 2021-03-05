@@ -12,11 +12,10 @@ public class BattleInfoUI : MonoBehaviour
     public ValueBar HpBar;
     public ValueBar MpBar;
     public Button FoodBuffButton;
-    public Button BattleStatusButton;
     public FoodBuffGroup FoodBuffGroup;
     public BattleStatusUI BattleStatusUI;
     public Image FoodBuffIcon;
-    public Image[] BattleStatusIcon;
+    public ButtonPlus[] BattleStatusButton;
 
     private FoodBuff _foodBuff;
     private List<BattleStatus> _statusList = new List<BattleStatus>();
@@ -39,16 +38,18 @@ public class BattleInfoUI : MonoBehaviour
             FoodBuffIcon.gameObject.SetActive(false);
         }
 
-        for (int i=0; i<BattleStatusIcon.Length; i++)
+        for (int i=0; i< BattleStatusButton.Length; i++)
         {
             if (i < _statusList.Count)
             {
-                BattleStatusIcon[i].gameObject.SetActive(true);
-                BattleStatusIcon[i].overrideSprite = Resources.Load<Sprite>("Image/BattleStatus/" + _statusList[i].Icon);
+                BattleStatusButton[i].gameObject.SetActive(true);
+                BattleStatusButton[i].SetData(_statusList[i]);
+                BattleStatusButton[i].Image.overrideSprite = Resources.Load<Sprite>("Image/BattleStatus/" + _statusList[i].Icon);
             }
             else
             {
-                BattleStatusIcon[i].gameObject.SetActive(false);
+                BattleStatusButton[i].SetData(null);
+                BattleStatusButton[i].gameObject.SetActive(false);
             }
         }
 
@@ -83,9 +84,9 @@ public class BattleInfoUI : MonoBehaviour
         MpBar.SetValue(currentMP, maxMp);
     }
 
-    private void BattleStatusOnClick() 
+    private void BattleStatusOnClick(ButtonPlus button) 
     {
-        if (_statusList.Count > 0)
+        if (button.Data != null)
         {
             BattleStatusUI.Open(_statusList);
         }
@@ -102,7 +103,11 @@ public class BattleInfoUI : MonoBehaviour
     void Awake()
     {
         FoodBuffButton.onClick.AddListener(FoodBuffOnClick);
-        BattleStatusButton.onClick.AddListener(BattleStatusOnClick);
+        for (int i=0; i< BattleStatusButton.Length; i++)
+        {
+            BattleStatusButton[i].ClickHandler = BattleStatusOnClick;
+        }
+
         BattleStatusUI.gameObject.SetActive(false);
     }
 }

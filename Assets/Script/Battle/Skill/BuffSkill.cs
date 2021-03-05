@@ -28,19 +28,6 @@ public class BuffSkill : Skill
             hitType = HitType.Hit;
         }
 
-        //Timer timer1 = new Timer(Data.ShowTime / 2f, () =>
-        //{
-        //    target.SetBuff(Data.StatusID, Lv);
-        //    if (hitType != HitType.Miss)
-        //    {
-        //        BattleUI.Instance.SetFloatingNumber(target, BattleStatusData.GetData(Data.StatusID).Message, FloatingNumber.Type.Other);
-        //    }
-        //    else
-        //    {
-        //        BattleUI.Instance.SetFloatingNumber(target, "Miss", FloatingNumber.Type.Miss);
-        //    }
-        //});
-
         if (hitType != HitType.Miss)
         {
             target.SetBuff(Data.StatusID, Lv);

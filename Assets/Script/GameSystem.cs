@@ -81,6 +81,10 @@ public class GameSystem : MonoBehaviour
         InitManager();
 
         MySceneManager.Instance.Load();
+
+#if UNITY_EDITOR
+        DebugCommand.Start();
+#endif
     }
 
     private void Awake()
@@ -114,13 +118,7 @@ public class GameSystem : MonoBehaviour
         {
             AudioSystem.Instance.Stop(true);
             AudioSystem.Instance.Play("Forest", true);
-            ExploreController.Instance.GenerateFloor(5);
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha6))
-        {
-            AudioSystem.Instance.Stop(true);
-            AudioSystem.Instance.Play("Forest", true);
-            ExploreController.Instance.GenerateFloor(6);
+            ExploreController.Instance.GenerateFloor(13);
         }
 #endif
     }

@@ -36,7 +36,7 @@ public class PoisonSkill : Skill
 
         if (hitType == HitType.Hit)
         {
-            floatingNumberType = FloatingNumber.Type.Other;
+            floatingNumberType = FloatingNumber.Type.Poison;
             text = BattleStatusData.GetData(Data.StatusID).Message;
         }
         else if (hitType == HitType.Miss)
@@ -49,29 +49,31 @@ public class PoisonSkill : Skill
         SetFloatingNumberDic(target, floatingNumberType, text);
 
         CheckSubSkill(target, hitType);
-
-        //Timer timer1 = new Timer(Data.ShowTime / 2f, () =>
-        //{
-        //    if (hitType != Skill.HitType.Miss)
-        //    {
-        //        target.Info.SetPoison(_poison, CalculateDamage(target.Info));
-
-        //        BattleUI.Instance.SetFloatingNumber(target, _poison.Data.Message, FloatingNumber.Type.Other);
-        //    }
-        //    else
-        //    {
-        //        BattleUI.Instance.SetFloatingNumber(target, "Miss", FloatingNumber.Type.Miss);
-        //    }
-        //});
-
-        //Timer timer2 = new Timer(_floatingNumberTime + Data.ShowTime / 2f, () =>
-        //{
-        //    CheckSubSkill(target, hitType);
-        //});
     }
 
     private int CalculateDamage(BattleCharacterInfo target)
     {
         return (int)(_poison.Damage / 100f * (float)target.MaxHP);
+    }
+
+    protected override HitType CheckHit(BattleCharacterInfo executor, BattleCharacterInfo target, BattleCharacter.LiveStateEnum targetLiveState)
+    {
+        HitType hitType = base.CheckHit(executor, target, targetLiveState);
+
+        if (hitType == HitType.Hit)
+        {
+            if (target.AbnormalRecorder.Contains(BattleCharacterInfo.AbnormalEnum.Poison))
+            {
+                return HitType.Miss;
+            }
+            else
+            {
+                return HitType.Hit;
+            }
+        }
+        else
+        {
+            return hitType;
+        }
     }
 }

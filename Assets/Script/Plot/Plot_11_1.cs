@@ -7,6 +7,7 @@ public class Plot_11_1 : Plot
 {
     public bool IsCompleted = false;
 
+    private int _noDamageId = 12002;
     private CheckState _allDead = CheckState.NotSatisfy; //幽靈和魔法陣死光
     private CheckState _uuzGetNoDamage = CheckState.NotSatisfy; //uuz 在無敵狀態中被攻擊
 
@@ -74,7 +75,7 @@ public class Plot_11_1 : Plot
     private void AllGhostDead(Action callback) //所有的幽靈和魔法陣死掉
     {
         BattleCharacter uuz = GameObject.Find("uuz").GetComponent<BattleCharacter>();
-        uuz.Info.RemoveStasus(11002);
+        uuz.Info.RemoveStasus(_noDamageId);
         uuz.Animator.SetBool("NoDamage", false);
 
         BattleUI.Instance.SetVisible(false);

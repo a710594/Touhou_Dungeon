@@ -6,6 +6,7 @@ using DG.Tweening;
 
 public class Plot_11_2 :Plot
 {
+    private int _noDamageId = 12002;
     private CheckState _summonGhost = CheckState.NotSatisfy; //uuz 剩一條血的時候召喚幽靈
     private CheckState _uuzLastHP = CheckState.NotSatisfy; //uuz 剩最後一條血的時候
     private int _startTurn; //開始召喚幽靈的回合
@@ -92,7 +93,7 @@ public class Plot_11_2 :Plot
             character.SetPosition(position);
             character.GetDamageHandler += SummonGhostGetDamage;
             BattleController.Instance.AddCharacer(character, true);
-            _uuz.SetNoDamage(11002);
+            _uuz.SetNoDamage();
             _uuz.Animator.SetBool("NoDamage", true);
 
             Camera.main.transform.DOMove(new Vector3(position.x, position.y, Camera.main.transform.position.z), 0.5f).OnComplete(() =>
@@ -145,7 +146,7 @@ public class Plot_11_2 :Plot
             character.SetPosition(position);
             character.GetDamageHandler += SummonGhostGetDamage;
             BattleController.Instance.AddCharacer(character, true);
-            _uuz.SetNoDamage(11002);
+            _uuz.SetNoDamage();
             _uuz.Animator.SetBool("NoDamage", true);
         }
     }
@@ -164,7 +165,7 @@ public class Plot_11_2 :Plot
 
         if (count == 0)
         {
-            _uuz.Info.RemoveStasus(11002);
+            _uuz.Info.RemoveStasus(_noDamageId);
             _uuz.Animator.SetBool("NoDamage", false);
         }
     }

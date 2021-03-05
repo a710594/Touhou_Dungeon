@@ -187,6 +187,19 @@ public class AI_Cure : AI
             {
                 candidateList = inRangeList;
             }
+            else //排除走不到的目標
+            {
+                List<Vector2Int> path;
+                for (int i = 0; i < candidateList.Count; i++)
+                {
+                    path = BattleFieldManager.Instance.GetPath(transform.position, candidateList[i].transform.position, BattleCharacterInfo.CampEnum.None);
+                    if (path == null)
+                    {
+                        candidateList.RemoveAt(i);
+                        i--;
+                    }
+                }
+            }
 
             BattleCharacter target = null;
             if (candidateList.Count > 0)

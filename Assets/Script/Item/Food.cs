@@ -23,6 +23,7 @@ public class Food : Item
             Price = itemData.Price;
             Amount = amount;
             CanCook = itemData.CanCook;
+            CanBeStacked = itemData.CanBeStacked;
             Type = itemData.Type;
             CookTag = itemData.CookTag;
 
@@ -62,6 +63,7 @@ public class Food : Item
         Price = food.Price;
         Amount = amount;
         CanCook = food.CanCook;
+        CanBeStacked = food.CanBeStacked;
         Type = food.Type;
         AddHP = food.AddHP;
         AddMP = food.AddMP;

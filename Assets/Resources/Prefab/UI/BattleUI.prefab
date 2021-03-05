@@ -217,6 +217,7 @@ GameObject:
   - component: {fileID: 2084250151774613617}
   - component: {fileID: 6578767637602517802}
   - component: {fileID: 8810222055974748809}
+  - component: {fileID: 6015855393767336008}
   m_Layer: 5
   m_Name: BattleStatus_Icon
   m_TagString: Untagged
@@ -281,6 +282,22 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &6015855393767336008
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 211904005236249624}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0984a42a2ba0a9e4abe3cc0ffb96f391, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  DownThreshold: 1
+  PressDuration: 0.1
+  Label: {fileID: 0}
+  Image: {fileID: 8810222055974748809}
 --- !u!1 &363672491102781013
 GameObject:
   m_ObjectHideFlags: 0
@@ -465,6 +482,7 @@ GameObject:
   - component: {fileID: 7371164025800622854}
   - component: {fileID: 3820086707633304252}
   - component: {fileID: 5244812076850323175}
+  - component: {fileID: 3333278890787559321}
   m_Layer: 5
   m_Name: BattleStatus_Icon (4)
   m_TagString: Untagged
@@ -529,6 +547,22 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &3333278890787559321
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 465336046908012899}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0984a42a2ba0a9e4abe3cc0ffb96f391, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  DownThreshold: 1
+  PressDuration: 0.1
+  Label: {fileID: 0}
+  Image: {fileID: 5244812076850323175}
 --- !u!1 &537854585635731100
 GameObject:
   m_ObjectHideFlags: 0
@@ -4804,18 +4838,17 @@ MonoBehaviour:
   HpBar: {fileID: 2584636080210728818}
   MpBar: {fileID: 8338397267495854809}
   FoodBuffButton: {fileID: 8015446367046584250}
-  BattleStatusButton: {fileID: 8442657296264758826}
   FoodBuffGroup: {fileID: 2557141740433419482}
   BattleStatusUI: {fileID: 7114688695194844564}
   FoodBuffIcon: {fileID: 7705899191677755164}
-  BattleStatusIcon:
-  - {fileID: 8810222055974748809}
-  - {fileID: 7629873943028168459}
-  - {fileID: 7561232278460797377}
-  - {fileID: 7685646971562797184}
-  - {fileID: 5244812076850323175}
-  - {fileID: 3267100652742443794}
-  - {fileID: 3635348487577395455}
+  BattleStatusButton:
+  - {fileID: 6015855393767336008}
+  - {fileID: 1549211754331387576}
+  - {fileID: 4909751531854990794}
+  - {fileID: 5081158555824440782}
+  - {fileID: 3333278890787559321}
+  - {fileID: 719218490070757358}
+  - {fileID: 5074639155600065056}
 --- !u!1 &4799680508955404370
 GameObject:
   m_ObjectHideFlags: 0
@@ -4906,6 +4939,7 @@ GameObject:
   - component: {fileID: 3787995482804149144}
   - component: {fileID: 6423198515063809750}
   - component: {fileID: 3267100652742443794}
+  - component: {fileID: 719218490070757358}
   m_Layer: 5
   m_Name: BattleStatus_Icon (5)
   m_TagString: Untagged
@@ -4970,6 +5004,22 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &719218490070757358
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5399540711601439645}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0984a42a2ba0a9e4abe3cc0ffb96f391, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  DownThreshold: 1
+  PressDuration: 0.1
+  Label: {fileID: 0}
+  Image: {fileID: 3267100652742443794}
 --- !u!1 &5462666957310752289
 GameObject:
   m_ObjectHideFlags: 0
@@ -5056,6 +5106,7 @@ GameObject:
   - component: {fileID: 1422683590242589941}
   - component: {fileID: 549053736290616485}
   - component: {fileID: 3635348487577395455}
+  - component: {fileID: 5074639155600065056}
   m_Layer: 5
   m_Name: BattleStatus_Icon (6)
   m_TagString: Untagged
@@ -5120,6 +5171,22 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &5074639155600065056
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5487744740796144234}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0984a42a2ba0a9e4abe3cc0ffb96f391, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  DownThreshold: 1
+  PressDuration: 0.1
+  Label: {fileID: 0}
+  Image: {fileID: 3635348487577395455}
 --- !u!1 &5508810423349705623
 GameObject:
   m_ObjectHideFlags: 0
@@ -5786,7 +5853,6 @@ GameObject:
   - component: {fileID: 8301369572837581573}
   - component: {fileID: 5251463144514988737}
   - component: {fileID: 3373149706891632804}
-  - component: {fileID: 8442657296264758826}
   m_Layer: 5
   m_Name: BattleStatus_Icon_Group
   m_TagString: Untagged
@@ -5867,7 +5933,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 0}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -5883,49 +5949,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &8442657296264758826
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6540223659206202544}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Navigation:
-    m_Mode: 3
-    m_SelectOnUp: {fileID: 0}
-    m_SelectOnDown: {fileID: 0}
-    m_SelectOnLeft: {fileID: 0}
-    m_SelectOnRight: {fileID: 0}
-  m_Transition: 1
-  m_Colors:
-    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
-    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
-    m_ColorMultiplier: 1
-    m_FadeDuration: 0.1
-  m_SpriteState:
-    m_HighlightedSprite: {fileID: 0}
-    m_PressedSprite: {fileID: 0}
-    m_SelectedSprite: {fileID: 0}
-    m_DisabledSprite: {fileID: 0}
-  m_AnimationTriggers:
-    m_NormalTrigger: Normal
-    m_HighlightedTrigger: Highlighted
-    m_PressedTrigger: Pressed
-    m_SelectedTrigger: Selected
-    m_DisabledTrigger: Disabled
-  m_Interactable: 1
-  m_TargetGraphic: {fileID: 3373149706891632804}
-  m_OnClick:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!1 &6552114016948869806
 GameObject:
   m_ObjectHideFlags: 0
@@ -5937,6 +5960,7 @@ GameObject:
   - component: {fileID: 2849963495501874414}
   - component: {fileID: 4082231046713974546}
   - component: {fileID: 7629873943028168459}
+  - component: {fileID: 1549211754331387576}
   m_Layer: 5
   m_Name: BattleStatus_Icon (1)
   m_TagString: Untagged
@@ -6001,6 +6025,22 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &1549211754331387576
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6552114016948869806}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0984a42a2ba0a9e4abe3cc0ffb96f391, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  DownThreshold: 1
+  PressDuration: 0.1
+  Label: {fileID: 0}
+  Image: {fileID: 7629873943028168459}
 --- !u!1 &6634412660322178161
 GameObject:
   m_ObjectHideFlags: 0
@@ -6012,6 +6052,7 @@ GameObject:
   - component: {fileID: 8537545440509281402}
   - component: {fileID: 7947138487581049341}
   - component: {fileID: 7561232278460797377}
+  - component: {fileID: 4909751531854990794}
   m_Layer: 5
   m_Name: BattleStatus_Icon (2)
   m_TagString: Untagged
@@ -6076,6 +6117,22 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &4909751531854990794
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6634412660322178161}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0984a42a2ba0a9e4abe3cc0ffb96f391, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  DownThreshold: 1
+  PressDuration: 0.1
+  Label: {fileID: 0}
+  Image: {fileID: 7561232278460797377}
 --- !u!1 &6639761045652279076
 GameObject:
   m_ObjectHideFlags: 0
@@ -6565,6 +6622,7 @@ GameObject:
   - component: {fileID: 2459666126464409521}
   - component: {fileID: 563614371361665299}
   - component: {fileID: 7685646971562797184}
+  - component: {fileID: 5081158555824440782}
   m_Layer: 5
   m_Name: BattleStatus_Icon (3)
   m_TagString: Untagged
@@ -6629,6 +6687,22 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &5081158555824440782
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6967155489810397699}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0984a42a2ba0a9e4abe3cc0ffb96f391, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  DownThreshold: 1
+  PressDuration: 0.1
+  Label: {fileID: 0}
+  Image: {fileID: 7685646971562797184}
 --- !u!1 &7024065206665506970
 GameObject:
   m_ObjectHideFlags: 0
@@ -8499,12 +8573,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: da60dfc3b0d2e4642bc2905a1d51ce0a, type: 3}
---- !u!224 &27962704382401926 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 1172539211556568708, guid: da60dfc3b0d2e4642bc2905a1d51ce0a,
-    type: 3}
-  m_PrefabInstance: {fileID: 1163870291670573826}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &27962704382401925 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1172539211556568711, guid: da60dfc3b0d2e4642bc2905a1d51ce0a,
@@ -8517,6 +8585,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 088c5d1bd6020124b9655a9c24bdf6e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!224 &27962704382401926 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 1172539211556568708, guid: da60dfc3b0d2e4642bc2905a1d51ce0a,
+    type: 3}
+  m_PrefabInstance: {fileID: 1163870291670573826}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1690555721139923985
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8934,6 +9008,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5f984c9bf39ad4747957c72cb81f5ffa, type: 3}
+--- !u!224 &4971415775964432018 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 7945632783671298609, guid: 5f984c9bf39ad4747957c72cb81f5ffa,
+    type: 3}
+  m_PrefabInstance: {fileID: 3078925739745021091}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &7967065839553598371 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4911807126628916992, guid: 5f984c9bf39ad4747957c72cb81f5ffa,
@@ -8946,12 +9026,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ff5dbb5ccad56d4fbef65c1f2a3bd3e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!224 &4971415775964432018 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 7945632783671298609, guid: 5f984c9bf39ad4747957c72cb81f5ffa,
-    type: 3}
-  m_PrefabInstance: {fileID: 3078925739745021091}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &4155295780976078016
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9179,12 +9253,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 093637499742d79408953ddad1ba521d, type: 3}
---- !u!224 &4230848142950815424 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 224175607879465472, guid: 093637499742d79408953ddad1ba521d,
-    type: 3}
-  m_PrefabInstance: {fileID: 4155295780976078016}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &4052197008215794058 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 114517206453734730, guid: 093637499742d79408953ddad1ba521d,
@@ -9197,6 +9265,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4595f1ac81bf2254baac42806933d125, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!224 &4230848142950815424 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 224175607879465472, guid: 093637499742d79408953ddad1ba521d,
+    type: 3}
+  m_PrefabInstance: {fileID: 4155295780976078016}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &5124963920502544826
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9514,12 +9588,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e046e715561488e4391af5dd4242c694, type: 3}
---- !u!224 &2246747602987462797 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 5018758301057025089, guid: e046e715561488e4391af5dd4242c694,
-    type: 3}
-  m_PrefabInstance: {fileID: 6523529065046684876}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &896966336601795980 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 6267481528535161152, guid: e046e715561488e4391af5dd4242c694,
@@ -9532,3 +9600,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 217b966c8ef89b64aba59962fef2156e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!224 &2246747602987462797 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 5018758301057025089, guid: e046e715561488e4391af5dd4242c694,
+    type: 3}
+  m_PrefabInstance: {fileID: 6523529065046684876}
+  m_PrefabAsset: {fileID: 0}

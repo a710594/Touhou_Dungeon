@@ -194,7 +194,7 @@ public class ItemManager
         }
     }
 
-    public void AddBagItem(Item item, int amount)
+    private void AddBagItem(Item item, int amount)
     {
         Item bagItem;
 
@@ -213,7 +213,7 @@ public class ItemManager
         CurrentBagVolume += item.Volume;
     }
 
-    public void AddWarehouseItem(Item item, int amount)
+    private void AddWarehouseItem(Item item, int amount)
     {
         Item warehouseItem;
 

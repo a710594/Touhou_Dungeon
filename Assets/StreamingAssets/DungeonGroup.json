@@ -1,2 +1,3 @@
 [{"ID":1,"Name":"神社附近","UnlockFloor":0,"GroundTile":"Ground_1","WallTile":"Wall_1","DoorTile":"Door","GrassTile":"Grass_1"},
-{"ID":2,"Name":"白玉樓","UnlockFloor":7,"GroundTile":"Ground_2","WallTile":"Wall_2","DoorTile":"Door","GrassTile":"Grass_2"}]
+{"ID":2,"Name":"白玉樓","UnlockFloor":7,"GroundTile":"Ground_2","WallTile":"Wall_2","DoorTile":"Door","GrassTile":"Grass_2"},
+{"ID":3,"Name":"紅魔館","UnlockFloor":13,"GroundTile":"Ground_3","WallTile":"Wall_3","DoorTile":"Door","GrassTile":"Grass_3"}]

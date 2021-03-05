@@ -24,7 +24,9 @@ public class SkillData
         Train,
         Donothing,
         RecoverMP,
-        RageAttackSkill,
+        RageAttack,
+        AbnormalAttack,
+        CancelAction,
     }
 
     public enum RangeTypeEnum
