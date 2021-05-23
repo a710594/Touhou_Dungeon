@@ -96,27 +96,6 @@ public class BattleFieldManager
         return newList;
     }
 
-    /*public Vector2 GetRandomPosition() //隨機取得空格
-    {
-        Vector2Int position = new Vector2Int();
-        List<Vector2Int> positionList = new List<Vector2Int>(MapDic.Keys);
-
-        while (positionList.Count > 0)
-        {
-            position = positionList[Random.Range(0, positionList.Count)];
-
-            if (BattleController.Instance.GetCharacterByPosition(position) == null && MapDic[Vector2Int.RoundToInt(position)].MoveCost != -1)
-            {
-                return position;
-            }
-            else
-            {
-                positionList.Remove(position);
-            }
-        }
-        return Vector2.zero;
-    }*/
-
     public BattleField GetField(Vector2 position) 
     {
         BattleField battleField = null;
@@ -183,5 +162,31 @@ public class BattleFieldManager
         {
             return false;
         }
+    }
+
+    public Vector2Int GetValidPosition()
+    {
+        //Refresh(from, to, true);
+
+        List<Vector2Int> positionList = new List<Vector2Int>(); 
+        foreach (KeyValuePair<Vector2Int, BattleField> item in MapDic)
+        {
+            if (item.Value.MoveCost != -1)
+            {
+                positionList.Add(item.Key);
+            }
+        }
+
+        Vector2Int position = new Vector2Int();
+        for (int i = 0; i < BattleController.Instance.CharacterList.Count; i++)
+        {
+            if (BattleController.Instance.CharacterList[i].LiveState != BattleCharacter.LiveStateEnum.Dead)
+            {
+                position = Vector2Int.RoundToInt(BattleController.Instance.CharacterList[i].transform.position);
+                positionList.Remove(position);
+            }
+        }
+
+        return positionList[Random.Range(0, positionList.Count)];
     }
 }

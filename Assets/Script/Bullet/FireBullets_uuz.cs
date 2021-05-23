@@ -33,7 +33,7 @@ public class FireBullets_uuz : FireBullets
             bullet.transform.position = transform.position + (Vector3)direction * 2f;
             bullet.transform.eulerAngles = new Vector3(0, 0, angle - 90);
             bullet.gameObject.SetActive(true);
-            bullet.SetData(direction, 3, 0.1f, 10f, 1);
+            bullet.SetData(direction, 3, 0.1f, 10f, 1, 0);
             angle += angleStep;
         }
 

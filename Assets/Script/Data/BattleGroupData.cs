@@ -16,6 +16,7 @@ public class BattleGroupData
         public int Enemy_3 { get; set; }
         public int Enemy_4 { get; set; }
         public int Enemy_5 { get; set; }
+        public int Enemy_6 { get; set; }
         public int Exp;
         public bool CanEscape { get; set; }
 
@@ -76,6 +77,11 @@ public class BattleGroupData
             if (dataList[i].Enemy_5 != 0)
             {
                 dataList[i].EnemyList.Add(dataList[i].Enemy_5);
+            }
+
+            if (dataList[i].Enemy_6 != 0)
+            {
+                dataList[i].EnemyList.Add(dataList[i].Enemy_6);
             }
 
             _dataDic.Add(dataList[i].ID, dataList[i]);

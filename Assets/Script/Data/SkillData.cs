@@ -27,6 +27,7 @@ public class SkillData
         RageAttack,
         AbnormalAttack,
         CancelAction,
+        CureMySelf,
     }
 
     public enum RangeTypeEnum

@@ -164,7 +164,7 @@ public class AI_Cure : AI
                 character = BattleController.Instance.CharacterList[i];
                 if (character.LiveState != BattleCharacter.LiveStateEnum.Dead)
                 {
-                    if (character.Info.Camp == _myself.Info.Camp && character.Info.EnemyData.ID != _myself.Info.EnemyData.ID)
+                    if (character.Info.Camp == BattleCharacterInfo.CampEnum.Partner)
                     {
                         candidateList.Add(character);
                         if (detectRangeList.Contains(Vector2Int.RoundToInt(character.transform.position)))

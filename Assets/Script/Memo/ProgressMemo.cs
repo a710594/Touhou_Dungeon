@@ -11,4 +11,5 @@ public class ProgressMemo
     public bool Floor7_Flag = false; //第7樓的對話
     public bool BOSS_2_Flag = false; //第二場 BOSS 戰
     public bool Stage_3_Flag = false; //開啟第三關
+    public bool BOSS_3_Flag = false; //第三場 BOSS 戰
 }

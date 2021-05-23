@@ -5,6 +5,9 @@
 {"ID":41004,"Name":"花苞木杖","Type":1,"ATK":0,"DEF":0,"MTK":15,"MEF":0,"UpgradePrice":100},
 {"ID":41005,"Name":"鋼劍","Type":1,"ATK":21,"DEF":0,"MTK":0,"MEF":0,"UpgradePrice":250},
 {"ID":41006,"Name":"鬼火法杖","Type":1,"ATK":0,"DEF":0,"MTK":21,"MEF":0,"UpgradePrice":250},
+{"ID":41007,"Name":"黑曜石劍","Type":1,"ATK":27,"DEF":0,"MTK":0,"MEF":0,"UpgradePrice":500},
+{"ID":41008,"Name":"水晶法杖","Type":1,"ATK":0,"DEF":0,"MTK":27,"MEF":0,"UpgradePrice":500},
 {"ID":42001,"Name":"襯衫","Type":2,"ATK":0,"DEF":10,"MTK":0,"MEF":10,"UpgradePrice":50},
 {"ID":42002,"Name":"皮甲","Type":2,"ATK":0,"DEF":15,"MTK":0,"MEF":15,"UpgradePrice":100},
-{"ID":42003,"Name":"鐵甲","Type":2,"ATK":0,"DEF":21,"MTK":0,"MEF":21,"UpgradePrice":250}]
+{"ID":42003,"Name":"鐵甲","Type":2,"ATK":0,"DEF":21,"MTK":0,"MEF":21,"UpgradePrice":250},
+{"ID":42004,"Name":"鋼甲","Type":2,"ATK":0,"DEF":27,"MTK":0,"MEF":27,"UpgradePrice":500}]

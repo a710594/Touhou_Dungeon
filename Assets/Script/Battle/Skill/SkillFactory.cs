@@ -85,6 +85,10 @@ public class SkillFactory
         {
             skill = new CancelActionSkill(skillData, user, lv);
         }
+        else if (skillData.Type == SkillData.TypeEnum.CureMySelf)
+        {
+            skill = new CureMyselfSkill(skillData, user, lv);
+        }
 
         return skill;
     }

@@ -31,7 +31,7 @@ public class FireBullets_Sample : FireBullets
             bullet.transform.position = transform.position;
             bullet.transform.rotation = transform.rotation;
             bullet.gameObject.SetActive(true);
-            bullet.SetData(direction, 3, 1, 1, 0);
+            bullet.SetData(direction, 3, 1, 1, 0, 0);
             angle += angleStep;
         }
     }

@@ -1,2 +1,3 @@
 [{"ID":1,"MinWidth":10,"MaxWidth":12,"MinHeight":10,"MaxHeight":12,"MinBlockCount":5,"MaxBlockCount":10,"MinGrassCount":10,"MaxGrassCount":20,"GroundID":1,"BlockID":2,"GrassID":3},
-{"ID":2,"MinWidth":10,"MaxWidth":12,"MinHeight":10,"MaxHeight":12,"MinBlockCount":5,"MaxBlockCount":10,"MinGrassCount":10,"MaxGrassCount":20,"GroundID":4,"BlockID":5,"GrassID":6}]
+{"ID":2,"MinWidth":10,"MaxWidth":12,"MinHeight":10,"MaxHeight":12,"MinBlockCount":5,"MaxBlockCount":10,"MinGrassCount":10,"MaxGrassCount":20,"GroundID":4,"BlockID":5,"GrassID":6},
+{"ID":3,"MinWidth":10,"MaxWidth":12,"MinHeight":10,"MaxHeight":12,"MinBlockCount":5,"MaxBlockCount":10,"MinGrassCount":10,"MaxGrassCount":20,"GroundID":7,"BlockID":8,"GrassID":9}]

@@ -285,9 +285,18 @@ public class BattleCharacter : MonoBehaviour
         GetMoveRange();
         _detectRangeList = new List<Vector2Int>(_moveRangeList);
 
+        int distance = 0;
         Vector2Int position = new Vector2Int();
         List<Vector2Int> newPositionList = new List<Vector2Int>();
-        for (int i = 0; i < SelectedSkill.Data.Distance; i++)
+        if (SelectedSkill.Data.Distance > 0)
+        {
+            distance = SelectedSkill.Data.Distance;
+        }
+        else
+        {
+            distance = SelectedSkill.Data.Range_1 - 1;
+        }
+        for (int i = 0; i < distance; i++)
         {
             for (int j = 0; j < _detectRangeList.Count; j++)
             {

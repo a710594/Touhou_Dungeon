@@ -118,7 +118,7 @@ public class GameSystem : MonoBehaviour
         {
             AudioSystem.Instance.Stop(true);
             AudioSystem.Instance.Play("Forest", true);
-            ExploreController.Instance.GenerateFloor(13);
+            ExploreController.Instance.GenerateFloor(18);
         }
 #endif
     }

@@ -69,17 +69,14 @@ public class AttackSkill : Skill
         }
 
         target.SetDamage(damage);
-        //target.CheckLiveState();
-
-        //Timer timer1 = new Timer(Data.ShowTime / 2f, () =>
-        //{
-        //    target.SetDamage(damage);
-        //    BattleUI.Instance.SetFloatingNumber(target, text, floatingNumberType);
-        //    BattleUI.Instance.SetLittleHPBar(target, true);
-        //});
 
         _floatingNumberDic = floatingNumberDic;
         SetFloatingNumberDic(target, floatingNumberType, text);
+
+        if (_subSkill != null && _subSkill.Data.Type == SkillData.TypeEnum.CureMySelf && hitType != HitType.Miss && hitType != HitType.NoDamage)
+        {
+            ((CureMyselfSkill)_subSkill).SetDamage(damage);
+        }
 
         CheckSubSkill(target, hitType);
     }

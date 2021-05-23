@@ -186,7 +186,7 @@ public class TeamManager
         _power = power;
     }
 
-    private void SetLv(int lv, int exp) 
+    public void SetLv(int lv, int exp) 
     {
         Lv = lv;
         Exp = exp;
@@ -194,5 +194,12 @@ public class TeamManager
         {
             MemberList[i].LvUp(lv);
         }
+    }
+
+    public void SetEquip(int index, int weapon, int armor)
+    {
+        TeamMember member = MemberList[index];
+        member.SetEquip(weapon);
+        member.SetEquip(armor);
     }
 }
