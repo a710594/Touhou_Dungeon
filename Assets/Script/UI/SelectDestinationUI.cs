@@ -41,11 +41,11 @@ public class SelectDestinationUI : MonoBehaviour
         }
 
         //等第三關做好之後要改
-        if (ExploreController.Instance.ArriveFloor == 13)
-        {
-            MapButtons[2].SetData("紅魔館", null);
-            MapButtons[2].gameObject.SetActive(true);
-        }
+        //if (ExploreController.Instance.ArriveFloor == 13)
+        //{
+        //    MapButtons[2].SetData("紅魔館", null);
+        //    MapButtons[2].gameObject.SetActive(true);
+        //}
     }
 
     private void MapOnClick(object obj) 

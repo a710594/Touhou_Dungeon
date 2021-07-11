@@ -150,10 +150,7 @@ public class ExploreController
 
     public void Save()
     {
-        if (_player != null)
-        {
-            Write();
-        }
+        Write();
 
         if (_memo != null)
         {
@@ -541,7 +538,10 @@ public class ExploreController
 
     public void Write()
     {
-        _playerPosition = Vector2Int.RoundToInt(_player.transform.position);
+        if (_player != null)
+        {
+            _playerPosition = Vector2Int.RoundToInt(_player.transform.position);
+        }
         _memo = new MapMemo(ArriveFloor, _mapInfo, _playerPosition);
     }
 }

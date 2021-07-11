@@ -13,5 +13,10 @@ public class ExplorePlotChecker
             Plot_8 plot_8 = new Plot_8();
             plot_8.Start();
         }
+        else if (ExploreController.Instance.CurrentFloor == 13 && ProgressManager.Instance.Memo.Stage_3_Flag && !ProgressManager.Instance.Memo.Floor13_Flag)
+        {
+            Plot_13 plot_13 = new Plot_13();
+            plot_13.Start();
+        }
     }
 }

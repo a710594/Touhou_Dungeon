@@ -12,6 +12,7 @@ public class Plot_15 : Plot
         _startTurn = BattleController.Instance.Turn;
         _remilia = GameObject.Find("Remilia").GetComponent<BattleCharacter>();
         BattleController.Instance.TurnStartHandler += SummonBat;
+        BattleController.Instance.TurnStartHandler -= Start;
     }
 
     private void SummonBat() //雷米利亞活著且血大於一條的時候每2回合召喚一次蝙蝠

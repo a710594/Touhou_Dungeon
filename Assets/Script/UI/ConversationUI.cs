@@ -18,6 +18,7 @@ public class ConversationUI : MonoBehaviour
     public Button SkipButton;
     public Image Background;
     public Image FadeImage;
+    public Image FlashImage;
     public Image[] CharacterImage;
     public GameObject NormalGroup;
     public GameObject VOGroup;
@@ -149,9 +150,19 @@ public class ConversationUI : MonoBehaviour
             }
         }
 
+        SetSpeical(data.Special);
+
         if (Handler != null)
         {
             Handler(data.ID);
+        }
+    }
+    private void SetSpeical(string special)
+    {
+        if (special == "RedFlash")
+        {
+            FlashImage.color = new Color(1, 0, 0, 0);
+            FlashImage.DOFade(1, 0.2f).SetLoops(2, LoopType.Yoyo);
         }
     }
 

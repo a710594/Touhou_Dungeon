@@ -202,4 +202,9 @@ public class TeamManager
         member.SetEquip(weapon);
         member.SetEquip(armor);
     }
+
+    public void RemoveMember(int index)
+    {
+        MemberList.RemoveAt(index);
+    }
 }

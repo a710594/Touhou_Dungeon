@@ -28,38 +28,41 @@ public class MapMemo
     public MapMemo(int arriveFloor, MapInfo info, Vector2 playerPosition)
     {
         ArriveFloor = arriveFloor;
-        ID = info.ID;
-        Group = info.Group;
-        MapBound = info.MapBound;
-        Start = info.Start;
-        Goal = info.Goal;
         PlayerPosition = playerPosition;
-        MapList = Utility.Vector2IntToString(info.MapList);
-        GrassList = Utility.Vector2IntToString(info.GrassList);
-        KeyList = Utility.Vector2IntToString(info.KeyList);
-        DoorList = Utility.Vector2IntToString(info.DoorList);
-        ExploredList = Utility.Vector2IntToString(info.ExploredList);
-        ExploredWallList = Utility.Vector2IntToString(info.ExploredWallList);
-        GuardList = Utility.Vector2IntToString(info.GuardList);
-
-        for (int i=0; i<info.RoomPositionList.Count; i++)
+        if (info != null)
         {
-            RoomPositionList.Add(Utility.Vector2IntToString(info.RoomPositionList[i]));
-        }
+            ID = info.ID;
+            Group = info.Group;
+            MapBound = info.MapBound;
+            Start = info.Start;
+            Goal = info.Goal;
+            MapList = Utility.Vector2IntToString(info.MapList);
+            GrassList = Utility.Vector2IntToString(info.GrassList);
+            KeyList = Utility.Vector2IntToString(info.KeyList);
+            DoorList = Utility.Vector2IntToString(info.DoorList);
+            ExploredList = Utility.Vector2IntToString(info.ExploredList);
+            ExploredWallList = Utility.Vector2IntToString(info.ExploredWallList);
+            GuardList = Utility.Vector2IntToString(info.GuardList);
 
-        foreach (KeyValuePair<Vector2Int, int> item in info.MoneyDic)
-        {
-            MoneyDic.Add(Utility.Vector2IntToString(item.Key), item.Value);
-        }
+            for (int i = 0; i < info.RoomPositionList.Count; i++)
+            {
+                RoomPositionList.Add(Utility.Vector2IntToString(info.RoomPositionList[i]));
+            }
 
-        foreach (KeyValuePair<Vector2Int, Event> item in info.ExploreEventDic)
-        {
-            ExploreEventDic.Add(Utility.Vector2IntToString(item.Key), item.Value.Type);
-        }
+            foreach (KeyValuePair<Vector2Int, int> item in info.MoneyDic)
+            {
+                MoneyDic.Add(Utility.Vector2IntToString(item.Key), item.Value);
+            }
 
-        foreach (KeyValuePair<Vector2Int, Treasure> item in info.TreasureDic)
-        {
-            TreasureDic.Add(Utility.Vector2IntToString(item.Key), item.Value);
+            foreach (KeyValuePair<Vector2Int, Event> item in info.ExploreEventDic)
+            {
+                ExploreEventDic.Add(Utility.Vector2IntToString(item.Key), item.Value.Type);
+            }
+
+            foreach (KeyValuePair<Vector2Int, Treasure> item in info.TreasureDic)
+            {
+                TreasureDic.Add(Utility.Vector2IntToString(item.Key), item.Value);
+            }
         }
     }
 }
