@@ -55,6 +55,7 @@ public class MySceneManager
 
     public void Init()
     {
+        SceneManager.sceneLoaded -= SceneLoaded;
         SceneManager.sceneLoaded += SceneLoaded;
     }
 
